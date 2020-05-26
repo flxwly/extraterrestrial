@@ -1,4 +1,5 @@
 cmake-build-debug
+.idea
 map_interpreter/.idea
 .floo
 .flooignore
