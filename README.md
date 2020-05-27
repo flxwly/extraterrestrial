@@ -1,7 +1,5 @@
 # CoSpaceChallenge - Extraterrestrial
 
-## This repository includes all important source files.
-
 ## A quick overview about the folders
 
 >code
