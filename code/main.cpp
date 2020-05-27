@@ -503,23 +503,6 @@ int bounds(int lastAction) {
 }
 
 void Game1() {
-    /*if (cycles % 10 == 1 && PositionX != 0 && PositionY != 0) {
-        for (auto &i : consoleBuffer) {
-            i.Char.AsciiChar = (unsigned char) 254;
-            i.Attributes = 0;
-        }
-        for (int i = 0; i < GAME1MAXX; i++) {
-            for (int j = 0; j < GAME1MAXY; j++) {
-                consoleBuffer[i + WIDTH * j].Attributes = GAME1[i][j] % 256;
-            }
-        }
-        for (const auto &element : PathfinderGame1.path) {
-            if (element.x >= 0 && element.x < WIDTH && element.y >= 0 && element.y < HEIGHT)
-                consoleBuffer[element.x + WIDTH * element.y].Attributes = 25;
-        }
-        printMap();
-    }*/
-
 
     updateHSL();
 
