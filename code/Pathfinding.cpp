@@ -21,12 +21,16 @@ double heuristic(const node &cur, const node &end) {
 AStar::AStar(const std::vector<std::vector<int>>& MAP) {
     DEBUG_MESSAGE("Init new Pathfinder... ", 0);
     for (unsigned int i = 0; i < MAP.size(); i++) {
+        const std::vector<node> _v;
+        this->map.push_back(_v);
         for (unsigned int j = 0; j < MAP[i].size(); j++) {
-            map[i][j].x = static_cast<int>(i), map[i][j].y = static_cast<int>(j);
-            map[i][j].f = 0, map[i][j].g = 0;
-            map[i][j].previous = nullptr;
+            node _n;
+            _n.x = static_cast<int>(i), _n.y = static_cast<int>(j);
+            _n.f = 0, _n.g = 0;
+            _n.previous = nullptr;
             // Set Traps
-            map[i][j].isTrap = MAP[i][j] == 2;
+            _n.isTrap = MAP[i][j] == 2;
+            this->map[i].push_back(_n);
             // get neighbours
             for (int x = static_cast<int>(i) - 1; x <= static_cast<int>(i) + 1; x++) {
                 for (int y = static_cast<int>(j) - 1; y <= static_cast<int>(j) + 1; y++) {

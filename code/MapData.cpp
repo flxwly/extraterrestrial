@@ -9,45 +9,34 @@ MapData::MapData(int mapX, int mapY,
                  std::vector<std::pair<int, int>> *traps,
                  std::vector<std::pair<int, int>> *swamps) {
     // Map Init
-    std::cout << "create new Map Data" << std::endl;
     this->MapX = mapX;
     this->MapY = mapY;
-    std::cout << this->MapX << " | " << this->MapY << std::endl;
-    std::cout << "swtting map..." << std::endl;
     for (int i = 0; i < MapX; i++) {
-        std::vector<int> p;
-        this->Map.push_back(p);
+        const std::vector<int> _v;
+        this->Map.push_back(_v);
         for (int j = 0; j < MapY; j++) {
             this->Map[i].push_back(0);
         }
     }
-    std::cout << "swtting walls..." << std::endl;
     for (std::pair<int, int> wall : *walls) {
         this->Map[wall.first][wall.second] = 1;
     }
-    std::cout << "swtting traps..." << std::endl;
     for (std::pair<int, int> trap : *traps) {
         this->Map[trap.first][trap.second] = 2;
     }
-    std::cout << "swtting swamps..." << std::endl;
     for (std::pair<int, int> swamp : *swamps) {
         this->Map[swamp.first][swamp.second] = 3;
     }
     // Point Init
-    std::cout << "swtting points..." << std::endl;
-    std::cout << "\tred..." << std::endl;
     for (std::pair<int, int> redPoint : *redPoints) {
         this->RedPoints.push_back(redPoint);
     }
-    std::cout << "\tcyan..." << std::endl;
     for (std::pair<int, int> greenPoint : *greenPoints) {
         this->GreenPoints.push_back(greenPoint);
     }
-    std::cout << "\tblack..." << std::endl;
     for (std::pair<int, int> blackPoint : *blackPoints) {
         this->BlackPoints.push_back(blackPoint);
     }
-    std::cout << "\tdeposit..." << std::endl;
     for (std::pair<int, int> deposit : *deposits) {
         this->DepositAreas.push_back(deposit);
     }
