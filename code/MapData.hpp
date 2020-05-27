@@ -2,6 +2,7 @@
 #define MAPDATA_HPP
 
 #include <vector>
+#include <iostream>
 
 class MapData {
 public:
@@ -9,25 +10,35 @@ public:
 	int MapY;
 	std::vector<std::vector<int>> Map;
 	MapData(int mapX, int mapY,
-		std::vector<std::pair<int, int>> *redPoints,
-		std::vector<std::pair<int, int>> *greenPoints,
-		std::vector<std::pair<int, int>> *blackPoints,
-		std::vector<std::pair<int, int>> *deposits,
-		std::vector<std::pair<int, int>> *walls,
-		std::vector<std::pair<int, int>> *traps,
-		std::vector<std::pair<int, int>> *swamps);
-	int getPointCount(int pColor);
-	int findPoint(std::pair<int, int> p, int pColor);
-	int erasePoint(std::pair<int, int> p, int pColor);
-	std::pair<int, int> getPoint(int index, int pColor);
+            std::vector<std::pair<int, int>> *redPoints,
+            std::vector<std::pair<int, int>> *greenPoints,
+            std::vector<std::pair<int, int>> *blackPoints,
+            std::vector<std::pair<int, int>> *deposits,
+            std::vector<std::pair<int, int>> *walls,
+            std::vector<std::pair<int, int>> *traps,
+            std::vector<std::pair<int, int>> *swamps);
+
+    int getPointCount(int pColor);
+
+    int findPoint(std::pair<int, int> p, int pColor);
+
+    int erasePoint(std::pair<int, int> p, int pColor);
+
+    int erasePoint(int index, int pColor);
+
+    std::pair<int, int> getPoint(int index, int pColor);
+
     std::vector<std::pair<int, int>> getDepositAreas();
-	int availableColors();
+
+    int availableColors();
+
 private:
-	std::vector<std::pair<int, int>> *getPtrToArr(int pColor);
-	std::vector<std::pair<int, int>> DepositAreas;
-	std::vector<std::pair<int, int>> RedPoints;
-	std::vector<std::pair<int, int>> GreenPoints;
-	std::vector<std::pair<int, int>> BlackPoints;
+    std::vector<std::pair<int, int>> *getPtrToArr(int pColor);
+
+    std::vector<std::pair<int, int>> DepositAreas;
+    std::vector<std::pair<int, int>> RedPoints;
+    std::vector<std::pair<int, int>> GreenPoints;
+    std::vector<std::pair<int, int>> BlackPoints;
 };
 
 /*walls*/ extern std::vector<std::pair<int, int>> GAME0WALLS;
