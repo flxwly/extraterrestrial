@@ -49,6 +49,7 @@ This is simply a compiled version of the c++ code from above.
 
 This python-script automattically compiles the code in the "code" folder. 
 It will do so after it detected any changes in that directory.
+We actually never thought it would be easely possible to not use the in-build compiler from CoSpace. It turns out you can just run a simple gnu compiler command in cmd and compile a whole bunch of files into one .dll file. In addition youre not even bound to pure c.
+This opens many possibilities and we want to thank team Ninja for sharing their knowledge. ([Link to their Project on Github](https://github.com/2lu3/cospace2019-ninja-share))
 
-
-#### DISCLAIMER: To run the python-scripts you need python and the libaries [opencv](https://pypi.org/project/opencv-python/) and [watchdog](https://pypi.org/project/watchdog/).
+#### DISCLAIMER: T(https://github.com/2lu3/cospace2019-ninja-share)o run the python-scripts you need python and the libaries [opencv](https://pypi.org/project/opencv-python/) and [watchdog](https://pypi.org/project/watchdog/).
