@@ -67,7 +67,7 @@ int MapData::erasePoint(const std::pair<int, int> p, const int pColor) {
 
 int MapData::erasePoint(const int index, const int pColor) {
     std::vector<std::pair<int, int>> *ptr = this->getPtrToArr(pColor);
-    if (index >= 0 && index < ptr->size()) {
+    if (index >= 0 && index < static_cast<int>(ptr->size())) {
         ptr->erase(ptr->begin() + index);
         return 1;
     }

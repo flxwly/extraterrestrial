@@ -74,22 +74,42 @@ void steerToPoint(int x, int y) { // control wheels depending on obstacles and c
             // the angle is pretty straight
             if (abs(angle) < 10) {
                 DEBUG_MESSAGE("No turning required\n", 0);
+                if (dist(PositionX, x, PositionY, y) < 15) {
+                    wheels(2, 2);
+                } else {
+                    wheels(5, 5);
+                }
                 // slightly to the left or right
-                wheels(5, 5);
             } else if (abs(angle) < 30) {
                 DEBUG_MESSAGE("Turn normal\n", 0);
                 if (angle < 0) {
-                    wheels(5, 4);
+                    if (dist(PositionX, x, PositionY, y) < 15) {
+                        wheels(2, 1);
+                    } else {
+                        wheels(5, 4);
+                    }
                 } else {
-                    wheels(4, 5);
+                    if (dist(PositionX, x, PositionY, y) < 15) {
+                        wheels(1, 2);
+                    } else {
+                        wheels(4, 5);
+                    }
                 }
                 // little more to the left or right
             } else if (abs(angle) < 60) {
                 DEBUG_MESSAGE("Turning fast\n", 0);
                 if (angle < 0) {
-                    wheels(5, 2);
+                    if (dist(PositionX, x, PositionY, y) < 15) {
+                        wheels(2, -1);
+                    } else {
+                        wheels(5, 2);
+                    }
                 } else {
-                    wheels(2, 5);
+                    if (dist(PositionX, x, PositionY, y) < 15) {
+                        wheels(-1, 2);
+                    } else {
+                        wheels(2, 5);
+                    }
                 }
                 // going nuts to the left or right
             } else {

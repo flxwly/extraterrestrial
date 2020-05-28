@@ -13,6 +13,8 @@
 #define OUTOFAREA 8
 #define CORNER 9
 
+#define ROBOT_SIZE 10
+
 #define ENABLE_PATHFINDING true
 
 #include <iostream>
@@ -86,8 +88,10 @@ void updateHSL() {
     DEBUG_MESSAGE("finished updating HSL \n", 3);
 }
 
-MapData GAME0(240, 180, &GAME0REDPOINTS, &GAME0GREENPOINTS, &GAME0BLACKPOINTS, &GAME0DEPOSITAREAS, &GAME0WALLS,&GAME0TRAPS, &GAME0SWAMPS);
-MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &GAME1DEPOSITAREAS, &GAME1WALLS, &GAME1TRAPS, &GAME1SWAMPS);
+MapData GAME0(240, 180, &GAME0REDPOINTS, &GAME0GREENPOINTS, &GAME0BLACKPOINTS, &GAME0DEPOSITAREAS, &GAME0WALLS,
+              &GAME0TRAPS, &GAME0SWAMPS);
+MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &GAME1DEPOSITAREAS, &GAME1WALLS,
+              &GAME1TRAPS, &GAME1SWAMPS);
 
 AStar PathfinderGame0(GAME0.Map);
 AStar PathfinderGame1(GAME1.Map);
@@ -474,7 +478,7 @@ pair<int, int> getNextPoint(MapData *mData) {
             bP = p;
         }
     }
-    return pair<int, int> {bP[0], bP[1]};
+    return pair<int, int>{bP[0], bP[1]};
 }
 
 int bounds(int lastAction) {
@@ -544,9 +548,7 @@ void Game1() {
             DEBUG_MESSAGE("finding Path from: " + to_string(start->x) + " | " + to_string(start->y) + " to " +
                           to_string(goal->x) + " | " + to_string(goal->y) + " ...", 2);
 
-            PathfinderGame1.findPath(start, goal, LoadedObjects > 0);
-
-            if (!PathfinderGame1.path.empty()) {
+            if (PathfinderGame1.findPath(start, goal, ROBOT_SIZE, ROBOT_SIZE, LoadedObjects > 0)) {
                 waypoint.first = PathfinderGame1.path.back().x;
                 waypoint.second = PathfinderGame1.path.back().y;
                 PathfinderGame1.path.pop_back();
@@ -567,7 +569,7 @@ void Game1() {
             */
 
         } else {
-            DEBUG_MESSAGE("FIXYOURMAP.exe\n", 2);
+            DEBUG_MESSAGE("Path contains nodes\n", 2);
         }
 
         DEBUG_MESSAGE("\tfinished\n", 2);

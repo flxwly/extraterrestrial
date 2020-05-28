@@ -1,6 +1,6 @@
-import sys
 import xml.etree.ElementTree as ET
 from os import path
+
 import cv2
 
 FieldA = cv2.imread("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Background.bmp")
@@ -122,7 +122,7 @@ def convert_background(f, imgarr, width, height, worldnr):
                 y = int(y / count)
                 depositareas.append([x, y])
 
-    if  path.exists("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Obstacle.bmp"):
+    if path.exists("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Obstacle.bmp"):
         wall_img = cv2.imread("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Obstacle.bmp")
         for j in range(height):
             for i in range(width):
