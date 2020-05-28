@@ -9,6 +9,7 @@ FieldB = cv2.resize(FieldB, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
 FieldFD = ET.parse("../../../../../store/media/Rescue/Map/Sec/Design/Field.FD")
 FieldFD = FieldFD.getroot()
 
+
 class Point:
     def __init__(self, t, x, y, world):
         self.t = t
