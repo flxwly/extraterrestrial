@@ -31,6 +31,8 @@ public:
     // TODO: Fix Weird Bug, where sometimes diagonals are chosen although a straight part is faster
     void findPath(node *start, node *end, bool watchForTraps);
 
+    void findPath(node *start, node *end);
+
 private:
     struct PRIORITY;
     void traversePath(node *end);

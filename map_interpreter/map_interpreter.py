@@ -1,8 +1,6 @@
-import cv2
 import xml.etree.ElementTree as ET
-import sys
-
-sys.setrecursionlimit(3000)
+from os import path
+import cv2
 
 FieldA = cv2.imread("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Background.bmp")
 FieldA = cv2.resize(FieldA, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
@@ -65,6 +63,8 @@ def get_obj_type(pixel):
 
     if r == 221 and g == 186 and b == 151:
         return "wall"
+    if r == 0 and g == 0 and b == 0:
+        return "black"
     if r == 166 and g == 166 and b == 166:
         return "swamp"
     if r == 255 and g == 255 and b == 0:
@@ -121,6 +121,14 @@ def convert_background(f, imgarr, width, height, worldnr):
                 y = int(y / count)
                 depositareas.append([x, y])
 
+    if  path.exists("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Obstacle.bmp"):
+        wall_img = cv2.imread("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Obstacle.bmp")
+        for j in range(height):
+            for i in range(width):
+                pixel = wall_img[j][i]
+                if get_obj_type(pixel) == "black":
+                    walls += "{" + str(i) + ", " + str(j) + "}, "
+
     depositareastr += str(depositareas).replace("[", "{").replace("]", "}") + ";"
     walls = (walls + "}").replace(", }", "};")
     traps = (traps + "}").replace(", }", "};")
@@ -154,6 +162,7 @@ def write_points_to_file(f, points, worldnr):
 
 
 def main():
+    print("setting up...")
     world_1_points = []
     world_2_points = []
     for child in FieldFD:
@@ -163,6 +172,8 @@ def main():
             world_2_points = find_color_points(child, 1)
     filename = "../code/MapData.cpp"
 
+    print("writing to file... (this might take some time)")
+
     f = open(filename, "w+")
     b = open("mapDataCPP", "r")
     f.write(b.read() + "\n\n")
@@ -171,12 +182,11 @@ def main():
     write_points_to_file(f, world_1_points, 0)
     convert_background(f, FieldB, 360, 270, 1)
     write_points_to_file(f, world_2_points, 1)
-    f.write("MapData GAME0(240, 180, &GAME0REDPOINTS, &GAME0GREENPOINTS, "
-            "&GAME0BLACKPOINTS, &GAME0DEPOSITAREAS, &GAME0WALLS,&GAME0TRAPS, &GAME0SWAMPS);\n"
-            "MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, "
-            "&GAME1BLACKPOINTS, &GAME1DEPOSITAREAS, &GAME1WALLS, &GAME1TRAPS, &GAME1SWAMPS);\n")
     f.close()
+    print("finished")
 
 
 if __name__ == '__main__':
     main()
+    print("press any key to close the window:")
+    input()

@@ -135,3 +135,7 @@ void steerToPoint(int x, int y) { // control wheels depending on obstacles and c
     }
     DEBUG_MESSAGE("Moving with: " + to_string(WheelLeft) + " | " + to_string(WheelRight) + "\n", 0);
 }
+
+void steerToPoint(pair<int, int> p) {
+    steerToPoint(p.first, p.second);
+} 
