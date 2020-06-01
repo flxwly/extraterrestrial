@@ -40,10 +40,10 @@ private:
     int minDelay;
     int lastPrint;
 
-    int posH;
+    int posH, posW;
     std::vector<std::string> robotLabels;
     std::vector<std::pair<int, int>> robotPositions;
-    int pathH;
+    int pathH, pathW;
     std::vector<std::string> pathLabels;
     std::vector<std::vector<std::pair<int, int>>> paths;
     int mapW, mapH;
@@ -53,13 +53,12 @@ private:
     bool changedMap;
     bool changedPos;
     bool changedPaths;
-    bool changesRobotPos;
+    bool changedRobotPos;
     bool changedMarkers;
-
 
     std::vector<std::vector<CHAR_INFO>> buffer;
 
-    void print(int time);
+    void print();
 };
 
 

@@ -112,7 +112,8 @@ void Setup() {
     DEBUG_MESSAGE("\tGame1...", 0);
 
     Debug.addMap(GAME1.Map);
-    Debug.redraw(5);
+    //Debug.addRobotPos("Blue", PositionX, PositionY);
+    Debug.redraw(2);
 
     DEBUG_MESSAGE("\t finished\n", 0);
 
