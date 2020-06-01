@@ -29,6 +29,7 @@ using namespace std;
 #include "ColorRecognition.hpp"
 #include "Pathfinding.hpp"
 #include "MapData.hpp"
+#include "DebugTools.hpp"
 
 #endif
 
@@ -96,6 +97,8 @@ MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &
 AStar PathfinderGame0(GAME0.Map);
 AStar PathfinderGame1(GAME1.Map);
 
+DebugTool Debug(0, 0, 0, 0);
+
 void Setup() {
     system("cls");
 
@@ -107,6 +110,10 @@ void Setup() {
     DEBUG_MESSAGE("\t finished\n", 0);
 
     DEBUG_MESSAGE("\tGame1...", 0);
+
+    Debug.addMap(GAME1.Map);
+    Debug.redraw(5);
+
     DEBUG_MESSAGE("\t finished\n", 0);
 
     DEBUG_MESSAGE("finished initialization\n", 0);
@@ -687,4 +694,6 @@ void Game1() {
 
     prevPosX = PositionX;
     prevPosY = PositionY;
+
+
 }

@@ -3,7 +3,7 @@
 
 // 0 std; 1 Movement; 2 Pathfinding; 3 Sensor Values;
 
-#define DEBUGLEVEL 2
+#define DEBUGLEVEL -99
 
 #define _USE_MATH_DEFINES
 

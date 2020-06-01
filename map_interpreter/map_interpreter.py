@@ -3,10 +3,8 @@ from os import path
 
 import cv2
 
-FieldA = cv2.imread("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Background.bmp")
-FieldA = cv2.resize(FieldA, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
-FieldB = cv2.imread("../../../../../store/media/Rescue/Map/Sec/Design/FieldB/Background.bmp")
-FieldB = cv2.resize(FieldB, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
+FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
+FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
 FieldFD = ET.parse("../../../../../store/media/Rescue/Map/Sec/Design/Field.FD")
 FieldFD = FieldFD.getroot()
 
@@ -90,7 +88,7 @@ def set_area_point_to_zero(i, j, imgarr, zerod):
                     set_area_point_to_zero(m, n, imgarr, zerod)
 
 
-def convert_background(f, imgarr, width, height, worldnr):
+def convert_background(_dir, width, height, worldnr):
     walls = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "WALLS = {"
     traps = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "TRAPS = {"
     swamps = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "SWAMPS = {"
@@ -98,6 +96,9 @@ def convert_background(f, imgarr, width, height, worldnr):
 
     zerod = []
     depositareas = []
+
+    imgarr = cv2.imread(_dir + "/Background.bmp")
+    imgarr = cv2.resize(imgarr, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
 
     for j in range(height):
         for i in range(width):
@@ -122,8 +123,9 @@ def convert_background(f, imgarr, width, height, worldnr):
                 y = int(y / count)
                 depositareas.append([x, y])
 
-    if path.exists("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Obstacle.bmp"):
-        wall_img = cv2.imread("../../../../../store/media/Rescue/Map/Sec/Design/FieldA/Obstacle.bmp")
+    if path.exists(_dir + "/Obstacle.bmp"):
+        wall_img = cv2.imread(_dir + "/Obstacle.bmp")
+        wall_img = cv2.resize(wall_img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
         for j in range(height):
             for i in range(width):
                 pixel = wall_img[j][i]
@@ -138,10 +140,10 @@ def convert_background(f, imgarr, width, height, worldnr):
 
     filecontent = "/*walls*/ " + walls + "\n/*traps*/ " + traps + "\n/*swamps*/ " + swamps + "\n/*deposit*/ " + \
                   depositareastr + "\n\n"
-    f.write(filecontent)
+    return filecontent
 
 
-def write_points_to_file(f, points, worldnr):
+def write_points_to_file(points, worldnr):
     redpoints = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "REDPOINTS = {"
     greenpoints = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "GREENPOINTS = {"
     blackpoints = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "BLACKPOINTS = {"
@@ -159,7 +161,7 @@ def write_points_to_file(f, points, worldnr):
     blackpoints = (blackpoints + "}").replace(", }", "};")
 
     filecontent = redpoints + "\n" + greenpoints + "\n" + blackpoints + "\n\n\n"
-    f.write(filecontent)
+    return filecontent
 
 
 def main():
@@ -175,15 +177,18 @@ def main():
 
     print("writing to file... (this might take some time)")
 
-    f = open(filename, "w+")
-    b = open("mapDataCPP", "r")
-    f.write(b.read() + "\n\n")
-    b.close()
-    convert_background(f, FieldA, 240, 180, 0)
-    write_points_to_file(f, world_1_points, 0)
-    convert_background(f, FieldB, 360, 270, 1)
-    write_points_to_file(f, world_2_points, 1)
+    f = open("mapDataCPP", "r")
+    cpp_data = f.read() + "\n\n"
     f.close()
+
+    f = open(filename, "w+")
+    field_a = convert_background(FieldA, 240, 180, 0)
+    field_a_points = write_points_to_file(world_1_points, 0)
+    field_b = convert_background(FieldB, 360, 270, 1)
+    field_b_points = write_points_to_file(world_2_points, 1)
+    f.write(cpp_data + field_a + field_a_points + field_b + field_b_points)
+    f.close()
+
     print("finished")
 
 
