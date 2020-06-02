@@ -33,6 +33,8 @@ public:
 
     bool findPath(node *start, node *end);
 
+    std::vector<std::pair<int, int>> pathToPair();
+
 private:
     struct PRIORITY;
 

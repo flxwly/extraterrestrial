@@ -251,4 +251,12 @@ void AStar::cleanUpPath(std::vector<node> temppath) {
     }
 }
 
+std::vector<std::pair<int, int>> AStar::pathToPair() {
+    std::vector<std::pair<int, int>> pPath;
+    for (const node &n: AStar::path) {
+        pPath.emplace_back(n.x, n.y);
+    }
+    return pPath;
+}
+
 

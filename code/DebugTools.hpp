@@ -58,6 +58,8 @@ private:
 
     std::vector<std::vector<CHAR_INFO>> buffer;
 
+    void print(int beginX, int beginY, int endX, int endY);
+
     void print();
 };
 

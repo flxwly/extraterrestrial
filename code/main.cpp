@@ -97,7 +97,7 @@ MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &
 AStar PathfinderGame0(GAME0.Map);
 AStar PathfinderGame1(GAME1.Map);
 
-DebugTool Debug(0, 0, 0, 0);
+DebugTool Debug(0, 0, 0, 10);
 
 void Setup() {
     system("cls");
@@ -112,8 +112,7 @@ void Setup() {
     DEBUG_MESSAGE("\tGame1...", 0);
 
     Debug.addMap(GAME1.Map);
-    //Debug.addRobotPos("Blue", PositionX, PositionY);
-    Debug.redraw(2);
+    Debug.addMarker(10, 10, 10);
 
     DEBUG_MESSAGE("\t finished\n", 0);
 
@@ -516,6 +515,7 @@ int bounds(int lastAction) {
 
 void Game1() {
 
+    Debug.redraw(cycles);
     updateHSL();
 
     //----------- Postion lost? -----------
@@ -557,6 +557,7 @@ void Game1() {
                           to_string(goal->x) + " | " + to_string(goal->y) + " ...", 2);
 
             if (PathfinderGame1.findPath(start, goal, ROBOT_SIZE, ROBOT_SIZE, LoadedObjects > 0)) {
+                //Debug.addPath("Path", PathfinderGame1.pathToPair());
                 waypoint.first = PathfinderGame1.path.back().x;
                 waypoint.second = PathfinderGame1.path.back().y;
                 PathfinderGame1.path.pop_back();
@@ -693,8 +694,9 @@ void Game1() {
 
     }
 
+    Debug.addRobotPos("last Blue", prevPosX, prevPosY);
     prevPosX = PositionX;
     prevPosY = PositionY;
-
+    Debug.addRobotPos("cur Blue", PositionX, PositionY);
 
 }
