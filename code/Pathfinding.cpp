@@ -23,13 +23,18 @@ AStar::AStar(const std::vector<std::vector<int>> &MAP) {
         this->map.push_back(_v);
         for (unsigned int j = 0; j < MAP[i].size(); j++) {
             node _n;
-            _n.x = static_cast<int>(i), _n.y = static_cast<int>(j);
-            _n.f = 0, _n.g = 0;
-            _n.previous = nullptr;
-            // Set Traps
-            _n.isClosed = false, _n.isOpen = false, _n.isTrap = MAP[i][j] == 2;
             this->map[i].push_back(_n);
+            this->map[i][j].x = static_cast<int>(i), this->map[i][j].y = static_cast<int>(j);
+            this->map[i][j].f = 0, this->map[i][j].g = 0;
+            this->map[i][j].previous = nullptr;
+            // Set Traps
+            this->map[i][j].isOpen = false, this->map[i][j].isClosed = false;
+            this->map[i][j].isTrap = MAP[i][j] == 2, this->map[i][j].isWall = MAP[i][j] == 1;
             // get neighbours
+        }
+    }
+    for (unsigned int i = 0; i < MAP.size(); i++) {
+        for (unsigned int j = 0; j < MAP[i].size(); j++) {
             for (int x = static_cast<int>(i) - 1; x <= static_cast<int>(i) + 1; x++) {
                 for (int y = static_cast<int>(j) - 1; y <= static_cast<int>(j) + 1; y++) {
                     // out of bounds check
@@ -53,8 +58,25 @@ struct AStar::PRIORITY {
     }
 };
 
+bool AStar::isPassable(node *_n, int width, int height, bool traps) {
+
+    width = static_cast<int>(round(static_cast<double>(width) / 2));
+    height = static_cast<int>(round(static_cast<double>(height) / 2));
+
+    for (int i = _n->x - width; i < _n->x + width; ++i) {
+        for (int j = _n->y - height; j < _n->y + height; ++j) {
+            if (i >= 0 && i < static_cast<int>(this->map.size()) && j >= 0 &&
+                j < static_cast<int>(this->map[0].size())) {
+                if (this->map[i][j].isWall || (traps && this->map[i][j].isTrap))
+                    return false;
+            }
+        }
+    }
+    return true;
+}
+
 // TODO: Fix Weird Bug, where sometimes diagonals are chosen although a straight part is faster
-void AStar::findPath(node *start, node *end, bool watchForTraps) {
+bool AStar::findPath(node *start, node *end, int width, int height, bool watchForTraps) {
 
     int nodesChecked = 0;
 
@@ -62,7 +84,7 @@ void AStar::findPath(node *start, node *end, bool watchForTraps) {
         DEBUG_MESSAGE("Start Node is End Node\n", 2.1);
         path.clear();
         path.push_back(*start);
-        return;
+        return true;
     }
     // init open- & closedList
     std::priority_queue<node *, std::vector<node *>, AStar::PRIORITY> openList;
@@ -77,14 +99,13 @@ void AStar::findPath(node *start, node *end, bool watchForTraps) {
     // loop until soultion is found or no solution possible
     DEBUG_MESSAGE("Searching Path... ", 2.1);
     while (!openList.empty()) {
-
         // choose node with lowest f
         node *cur = openList.top();
         DEBUG_MESSAGE("\tchecking Node: " + std::to_string(cur->x) + " | " + std::to_string(cur->y) + "\n", 2.1);
 
         // if cur and end are the same, the path is found
         if (cur == end) {
-            DEBUG_MESSAGE("found Path" + std::to_string(nodesChecked) + "\n", 2);
+            DEBUG_MESSAGE("found Path " + std::to_string(nodesChecked) + "\n", -3);
             AStar::traversePath(end);
             for (node *element : closedList) {
                 element->isClosed = false;
@@ -93,14 +114,14 @@ void AStar::findPath(node *start, node *end, bool watchForTraps) {
                 openList.top()->isOpen = false;
                 openList.pop();
             }
-            return;
+            return true;
         } else {
             // remove cur from openList & add cur to closedList
             openList.pop();
             cur->isOpen = false;
             // for every neighbour from cur:
             for (node *neighbour : cur->neighbours) {
-                if (neighbour->isClosed || (watchForTraps && neighbour->isTrap)) {
+                if (neighbour->isClosed || !isPassable(neighbour, width, height, watchForTraps)) {
                     continue;
                 }
                 // temp_g = g cost over cur
@@ -142,10 +163,11 @@ void AStar::findPath(node *start, node *end, bool watchForTraps) {
 
     path.clear();
     DEBUG_MESSAGE("no path found: " + std::to_string(nodesChecked) + "\n", 2);
+    return false;
 }
 
-void AStar::findPath(node *start, node *end) {
-    AStar::findPath(start, end, false);
+bool AStar::findPath(node *start, node *end) {
+    return AStar::findPath(start, end, 8, 8, false);
 }
 
 void AStar::traversePath(node *end) {
@@ -201,8 +223,6 @@ void AStar::cleanUpPath(std::vector<node> temppath) {
         curFirst = &temppath[curStart];
         // new added Node (Node until to check to)
         curLast = &temppath[curEnd];
-        // get line (y = m*x+b)
-
 
         // loop trough every point between cur and last
         for (unsigned int i = curStart + 1; i < curEnd - 1; ++i) {
@@ -230,3 +250,13 @@ void AStar::cleanUpPath(std::vector<node> temppath) {
         curEnd++;
     }
 }
+
+std::vector<std::pair<int, int>> AStar::pathToPair() {
+    std::vector<std::pair<int, int>> pPath;
+    for (const node &n: AStar::path) {
+        pPath.emplace_back(n.x, n.y);
+    }
+    return pPath;
+}
+
+
