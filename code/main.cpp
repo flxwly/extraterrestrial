@@ -15,7 +15,7 @@
 
 #define ROBOT_SIZE 10
 
-#define ENABLE_PATHFINDING true
+#define ENABLE_PATHFINDING false
 
 #include <iostream>
 #include <windows.h>
@@ -28,8 +28,10 @@ using namespace std;
 #include "Navigation.hpp"
 #include "ColorRecognition.hpp"
 #include "Pathfinding.hpp"
+
 #include "MapData.hpp"
 #include "DebugTools.hpp"
+#include "Robot.hpp"
 
 #endif
 
@@ -98,6 +100,11 @@ AStar PathfinderGame0(GAME0.Map);
 AStar PathfinderGame1(GAME1.Map);
 
 DebugTool Debug(0, 0, 10);
+
+Robot Bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
+          &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
+          &US_Left, &US_Front, &US_Right,
+          &WheelLeft, &WheelRight, &LED_1);
 
 void Setup() {
     system("cls");
@@ -174,151 +181,6 @@ void Game0() {
             to_string(collectedItems[2])
             + " | Total: " + to_string(LoadedObjects) + "\n", 0);
     updateHSL();
-    /*if (deposited && Time > 180 && unableToInteractUpto < Time) {
-        readyToTP = true;
-    }
-
-    int targetX = -1, targetY = -1;
-    // From 1 to 5;
-    int speed = 1;
-    CurAction = 7;
-    if (shouldCollect()) {
-        CurAction = COLLECTING;
-    } else if (areaLeave) {
-        CurAction = OUTOFAREA;
-    } else if (isYellowLeft()) {
-        CurAction = TURN_RIGHT;
-        speed = 1;
-    } else if (isYellowRight()) {
-        CurAction = TURN_LEFT;
-        speed = 1;
-    } else if ((isOrange() && collectedItems[0] > 0 && collectedItems[1] > 0 && collectedItems[2] > 0) ||
-               (isOrange() && Time > 120 && LoadedObjects > 0)) {
-        CurAction = DEPOSITING;
-        deposited = false;
-    } else if (targetX != -1 && targetY != -1) {
-        CurAction = PATHFINDING_ANFUEHRUNGSZEICHEN;
-    } else {
-
-        switch (checkSensors(8, 12, 8)) {
-            // no obstacle
-            case 0:
-                CurAction = NORMALSPEED;
-                speed = 3;
-//                printf("\nno obstacle");
-                break;
-            case 1: // obstacle left
-                CurAction = TURN_RIGHT;
-                speed = 2;
-                //printf("\nobstacle left");
-                break;
-            case 2: // obstacle front
-                CurAction = TURN_RIGHT;
-                speed = 2;
-                //printf("\nobstacle right");
-                break;
-            case 3: // obstacles left & front
-                CurAction = TURN_RIGHT;
-                speed = 3;
-                //printf("\nobstacles left & front\n");
-                break;
-            case 4: // obstacle right
-                CurAction = TURN_LEFT;
-                speed = 2;
-                //printf("obstacle right\n");
-                break;
-            case 5: // obstacles left & right
-                CurAction = NORMALSPEED;
-                speed = 1;
-                //printf("obstacles left & right\n");
-                break;
-            case 6: // obstacles front & right
-                CurAction = TURN_LEFT;
-                speed = 2;
-                //printf("obstacles front & right\n");
-                break;
-            default: // obstacles everywhere
-                CurAction = GOBACKWARDS;
-                speed = 2;
-                //printf("obstacles everywhere\n");
-                break;
-
-        }
-    }
-
-    if (unableToInteractUpto < Time) {
-        switch (CurAction) {
-            case DEPOSITING:
-                DEBUG_MESSAGE("DEPOSITING", 0);
-                unableToInteractUpto = Time + 4;
-                WheelLeft = 0;
-                WheelRight = 0;
-                collectedItems[0] = 0, collectedItems[1] = 0, collectedItems[2] = 0;
-                LED_1 = 2;
-                LoadedObjects = 0;
-                if (Time > 10) {
-                    areaLeave = true;
-                }
-
-                break;
-            case COLLECTING:
-                if (isRed()) {
-                    collectedItems[0]++;
-                } else if (isCyan()) {
-                    collectedItems[1]++;
-                } else if (isBlack()) {
-                    collectedItems[2]++;
-                }
-                LoadedObjects++;
-
-                WheelLeft = 0;
-                WheelRight = 0;
-                LED_1 = 1;
-                unableToInteractUpto = Time + 4;
-
-                break;
-            case TURN_RIGHT:
-
-                WheelRight = -1 * speed;
-                WheelLeft = 1 * speed;
-                LED_1 = 0;
-
-                break;
-            case TURN_LEFT:
-
-                WheelRight = 1 * speed;
-                WheelLeft = -1 * speed;
-                LED_1 = 0;
-
-                break;
-            case PATHFINDING_ANFUEHRUNGSZEICHEN:
-                //driveToAngle(dvector2Angle(PositionX - targetX, PositionY - targetY));
-                LED_1 = 0;
-
-                break;
-            case NORMALSPEED:
-
-                WheelRight = 1 * speed;
-                WheelLeft = 1 * speed;
-                LED_1 = 0;
-
-                break;
-            case GOBACKWARDS:
-                WheelLeft = -1 * speed;
-                WheelRight = -1 * speed;
-                break;
-            case OUTOFAREA:
-                WheelLeft = -1;
-                WheelRight = -3;
-                unableToInteractUpto = Time + 1;
-                DEBUG_MESSAGE("LeavingArea", 0);
-                deposited = true;
-                areaLeave = false;
-                break;
-            default:
-                break;
-        }
-    }*/
 
     PositionX = tPosX;
     PositionY = tPosY;
@@ -326,66 +188,8 @@ void Game0() {
     tPosX = PositionX;
     tPosY = PositionY;
 
-    if (shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
-        if (isOrange()) {
-            deposit();
-        } else if (isOrangeRight()) {
-            wheels(3, 0);
-        } else {
-            wheels(0, 3);
-        }
+    Bot.loop();
 
-    } else if (shouldCollect()) {
-        collect();
-
-    } else {
-        DEBUG_MESSAGE("Using active Object avoidens System\n", 0);
-        wheels(3, 3);
-        if ((isYellowRight() && LoadedObjects > 0)) {
-            DEBUG_MESSAGE("\tAvoid Trap: TURN LEFT\n", 0);
-            wheels(-3, 3);
-        } else if ((isYellowLeft() && LoadedObjects > 0)) {
-            DEBUG_MESSAGE("\tAvoid Trap: TURN RIGHT\n", 0);
-            wheels(3, -3);
-        } else {
-            switch (checkSensors(8, 12, 8)) {
-                // no obstacle
-                case 0:
-                    wheels(3, 3);
-                    break;
-                case 1: // obstacle left
-                    DEBUG_MESSAGE("\tTurn A LITTLE BIT RIGHT (object on the left) Case: 1\n", 0);
-                    wheels(3, 0);
-                    break;
-                case 2: // obstacle front
-                    DEBUG_MESSAGE("\tTurn EITHER RIGHT OR LEFT (object on the front) Case: 2\n", 0);
-                    wheels(-4, -5);
-                    break;
-                case 3: // obstacles left & front
-                    DEBUG_MESSAGE("\tTurn NORMAL RIGHT (object on the front & left) Case: 3\n", 0);
-                    wheels(3, -3);
-                    break;
-                case 4: // obstacle right
-                    DEBUG_MESSAGE("\tTurn NORMAL LEFT (object the right) Case: 4\n", 0);
-                    wheels(0, 3);
-                    break;
-                case 5: // obstacles left & right
-                    DEBUG_MESSAGE("\tMaybe dont turn (object on the left & right) Case: 5\n", 0);
-                    wheels(3, 3);
-                    break;
-                case 6: // obstacles front & right
-                    DEBUG_MESSAGE("\tTurn NORMAL LEFT (object on the front & right) Case: 6\n", 0);
-                    wheels(-3, 3);
-                    break;
-                default: // obstacles everywhere
-                    DEBUG_MESSAGE("\tNO WAY (object on the left & front & right) Case: 7\n", 0);
-                    wheels(-5, 5);
-                    break;
-            }
-            LED_1 = 0;
-        }
-    }
-    updatePos(0.654);
     DEBUG_MESSAGE("\tMoving with: " + to_string(WheelLeft) + " | " + to_string(WheelRight) + "\n", 0);
 }
 
@@ -693,6 +497,7 @@ void Game1() {
         }
 
     }
+
 
     Debug.addRobotPos("last Blue", prevPosX, prevPosY);
     prevPosX = PositionX;
