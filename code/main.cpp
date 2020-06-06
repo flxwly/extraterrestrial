@@ -97,7 +97,7 @@ MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &
 AStar PathfinderGame0(GAME0.Map);
 AStar PathfinderGame1(GAME1.Map);
 
-DebugTool Debug(0, 0, 0, 10);
+DebugTool Debug(0, 0, 10);
 
 void Setup() {
     system("cls");

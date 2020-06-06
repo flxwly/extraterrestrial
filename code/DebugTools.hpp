@@ -18,9 +18,9 @@
 
 class DebugTool {
 public:
-    DebugTool(int initX, int initY, int delay, int time);
+    DebugTool(int initX, int initY, int delay);
 
-    void redraw(int time); // Check if something has changed -> call own print method
+    void redraw(int _time); // Check if something has changed -> call own print method
 
     void move(int x, int y); // move buffer
     void addMap(const std::vector<std::vector<int>> &_map);
@@ -38,18 +38,24 @@ public:
 private:
     int x, y;
     int minDelay;
-    int lastPrint;
+    int lastRefresh;
 
-    int posH, posW;
     std::vector<std::string> robotLabels;
     std::vector<std::pair<int, int>> robotPositions;
-    int pathH, pathW;
+
     std::vector<std::string> pathLabels;
     std::vector<std::vector<std::pair<int, int>>> paths;
-    int mapW, mapH;
+
     std::vector<std::vector<int>> map;
+
     std::vector<std::array<int, 3>> markers;
 
+    // buffer size variables
+    int mapBeginX, mapEndX, mapBeginY, mapEndY;
+    int posBeginX, posEndX, posBeginY, posEndY;
+    int pathBeginX, pathEndX, pathBeginY, pathEndY;
+
+    // booleans to know which part of the buffer needs to be updated
     bool changedMap;
     bool changedPos;
     bool changedPaths;
@@ -58,7 +64,7 @@ private:
 
     std::vector<std::vector<CHAR_INFO>> buffer;
 
-    void print(int beginX, int beginY, int endX, int endY);
+    void print(SHORT beginX, SHORT beginY, SHORT endX, SHORT endY);
 
     void print();
 };
