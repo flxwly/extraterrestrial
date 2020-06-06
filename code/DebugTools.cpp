@@ -45,8 +45,7 @@ void DebugTool::addRobotPos(const std::string &name, int _x, int _y) {
         if (label == name) {
             if (DebugTool::robotPositions[i].first != _x || DebugTool::robotPositions[i].second != _y) {
 
-                DebugTool::robotPositions[i].first = _x;
-                DebugTool::robotPositions[i].second = _y;
+                DebugTool::robotPositions[i] = {_x, _y};
 
                 DebugTool::changedRobotPos = true;
             }
@@ -203,38 +202,20 @@ void DebugTool::redraw(int _time) {
             DebugTool::changedMap = true;
         }
 
-        // a path has been added, removed or changed -> resize the buffer based on that.
-        // if the map has been updated the path was overwritten by the map chars
-        if (DebugTool::changedPaths || DebugTool::changedMap) {
-            // only write paths to map; The map was refreshed
-            if (DebugTool::changedMap && !DebugTool::changedPaths) {
-                int i = 0;
-                for (const auto &path : DebugTool::paths) {
-                    for (auto point : path) {
-                        DebugTool::buffer[point.first][point.second].Attributes = 3 + i;
-                    }
-                    i++;
-                }
-            }
-                // write to map and refresh paths hud; The paths have been updated;
-            else {
-                // TODO: paths hud
-            }
-        }
-
         // refresh the markers on the map
         if (DebugTool::changedMarkers || DebugTool::changedMap) {
             for (auto marker : DebugTool::markers) {
                 if (marker[0] >= 0 && marker[0] < DebugTool::buffer.size() && marker[1] >= 0 &&
-                    marker[1] < DebugTool::buffer[marker[0]].size())
+                    marker[1] < DebugTool::buffer[marker[0]].size()) {
                     DebugTool::buffer[marker[0]][marker[1]].Attributes = marker[2];
+                }
             }
         }
 
         // refresh the robots Position on the map
         if (DebugTool::changedRobotPos || DebugTool::changedMap) {
-            // allocate space in the buffer
 
+            // allocate space in the buffer
             //      update X size:
             std::vector<CHAR_INFO> v;
             int maxX = 0;
@@ -242,6 +223,7 @@ void DebugTool::redraw(int _time) {
                 std::string l = DebugTool::robotLabels[i] + ":";
                 std::string p = "   " + std::to_string(DebugTool::robotPositions[i].first) + " | " +
                                 std::to_string(DebugTool::robotPositions[i].second);
+
                 maxX = std::max(std::max(l.length(), p.length()), static_cast<unsigned int>(maxX));
             }
             while (maxX > DebugTool::buffer.size()) {
@@ -262,17 +244,16 @@ void DebugTool::redraw(int _time) {
                                 std::to_string(DebugTool::robotPositions[i].second);
 
 
-                for (i = 0; i < l.size(); ++i) {
-                    DebugTool::buffer[i][DebugTool::posBeginY + i * 2].Char.UnicodeChar = l[i];
-                    DebugTool::buffer[i][DebugTool::posBeginY + i * 2].Attributes = 7;
+                for (int j = 0; j < l.size(); ++j) {
+                    DebugTool::buffer[j][DebugTool::posBeginY + i * 2].Char.UnicodeChar = l[j];
+                    DebugTool::buffer[j][DebugTool::posBeginY + i * 2].Attributes = 7;
                 }
-                for (i = 0; i < p.size(); ++i) {
-                    //std::cout << pos[i];
-                    DebugTool::buffer[i][DebugTool::posBeginY + i * 2 + 1].Char.UnicodeChar = p[i];
-                    DebugTool::buffer[i][DebugTool::posBeginY + i * 2 + 1].Attributes = 7;
+                for (int j = 0; j < p.size(); ++j) {
+                    DebugTool::buffer[j][DebugTool::posBeginY + i * 2 + 1].Char.UnicodeChar = p[j];
+                    DebugTool::buffer[j][DebugTool::posBeginY + i * 2 + 1].Attributes = 7;
                 }
             }
-            DebugTool::posEndY = DebugTool::posBeginY +  maxY;
+            DebugTool::posEndY = DebugTool::posBeginY + maxY;
             DebugTool::posEndX = maxX;
 
             for (auto rPos : DebugTool::robotPositions) {
@@ -280,6 +261,74 @@ void DebugTool::redraw(int _time) {
             }
         }
 
+        // a path has been added, removed or changed -> resize the buffer based on that.
+        // if the map has been updated the path was overwritten by the map chars
+        if (DebugTool::changedPaths || DebugTool::changedMap) {
+            // only write paths to map; The map was refreshed
+            if (DebugTool::changedMap && !DebugTool::changedPaths) {
+                int i = 0;
+                for (const auto &path : DebugTool::paths) {
+                    for (auto point : path) {
+                        DebugTool::buffer[point.first][point.second].Attributes = 3 + i;
+                    }
+                    i++;
+                }
+            }
+                // write to map and refresh paths hud; The paths have been updated;
+            else {
+
+                /*// allocate space in the buffer
+                //      update X size:
+                std::vector<CHAR_INFO> v;
+                int maxX = 0;
+                for (auto &pathLabel : DebugTool::pathLabels) {
+                    std::string l = pathLabel + ":";
+                    std::string p = "   " + std::to_string(000000) + " | " +
+                                    std::to_string(000000);
+
+                    maxX = std::max(std::max(l.length(), p.length()), static_cast<unsigned int>(maxX));
+                }
+                while (maxX + DebugTool::posEndX > DebugTool::buffer.size()) {
+                    DebugTool::buffer.push_back(v);
+                }
+
+                //      update Y size:
+                CHAR_INFO c = {0, 0};
+                int maxY = DebugTool::pathLabels.size();
+                for (const auto &path : DebugTool::paths) {
+                    maxY += path.size();
+                }
+                for (auto &i : DebugTool::buffer) {
+                    while (i.size() < maxY) {
+                        i.push_back(c);
+                    }
+                }
+
+                // write to buffer
+                for (int i = 0; i < DebugTool::pathLabels.size(); i++) {
+                    std::string l = DebugTool::pathLabels[i] + ":";
+
+                    int coord_count = 0;
+                    if (i > 0)
+                        coord_count = DebugTool::paths[i - 1].size();
+
+                    for (int j = 0; j < l.size(); ++j) {
+                        DebugTool::buffer[j][DebugTool::posBeginY +
+                                             i * coord_count].Char.UnicodeChar = l[j];
+                        DebugTool::buffer[j][DebugTool::posBeginY +
+                                             i * coord_count].Attributes = 7;
+                    }
+                    for (auto point : DebugTool::paths[i]){
+                        std::string p = "   " + std::to_string(point.first) + " | " +
+                                        std::to_string(point.second);
+                        for (int j = 0; j < p.size(); ++j) {
+                            DebugTool::buffer[j][DebugTool::posBeginY + i * coord_count + 1].Char.UnicodeChar = p[j];
+                            DebugTool::buffer[j][DebugTool::posBeginY + i * coord_count + 1].Attributes = 7;
+                        }
+                    }
+                }*/
+            }
+        }
         DebugTool::lastRefresh = _time;
         DebugTool::print();
     }

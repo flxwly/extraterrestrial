@@ -16,7 +16,7 @@ double heuristic(const node &cur, const node &end) {
     return sqrt(pow(xDiff, 2) + pow(yDiff, 2));
 }
 
-AStar::AStar(const std::vector<std::vector<int>> &MAP) {
+AStar::AStar(const std::vector<std::vector<int>> &MAP, const int &r) {
     DEBUG_MESSAGE("Init new Pathfinder... ", 0);
     for (unsigned int i = 0; i < MAP.size(); i++) {
         const std::vector<node> _v;
@@ -33,8 +33,35 @@ AStar::AStar(const std::vector<std::vector<int>> &MAP) {
             // get neighbours
         }
     }
+    // expand walls by r
+    for (unsigned int i = 0; i < this->map.size(); i++) {
+        for (unsigned int j = 0; j < this->map.size(); j++) {
+            if (!this->map[i][j].isAtWall && this->map[i][j].isWall) {
+
+                // every field around i,j
+                for (int x = -r; x < r; ++x) {
+                    for (int y = -r; y < r; ++y) {
+
+                        // out of bounds check
+                        if (x >= 0 && x < static_cast<int>(map.size()) && y >= 0 &&
+                            y < static_cast<int>(map[i].size())) {
+
+                            // only convert walls that aren't walls
+                            if (!this->map[i][j].isWall) {
+                                this->map[x][y].isAtWall = true;
+                                this->map[x][y].isWall = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // add neighbours
     for (unsigned int i = 0; i < MAP.size(); i++) {
         for (unsigned int j = 0; j < MAP[i].size(); j++) {
+
             for (int x = static_cast<int>(i) - 1; x <= static_cast<int>(i) + 1; x++) {
                 for (int y = static_cast<int>(j) - 1; y <= static_cast<int>(j) + 1; y++) {
                     // out of bounds check
@@ -58,25 +85,12 @@ struct AStar::PRIORITY {
     }
 };
 
-bool AStar::isPassable(node *_n, int width, int height, bool traps) {
-
-    width = static_cast<int>(round(static_cast<double>(width) / 2));
-    height = static_cast<int>(round(static_cast<double>(height) / 2));
-
-    for (int i = _n->x - width; i < _n->x + width; ++i) {
-        for (int j = _n->y - height; j < _n->y + height; ++j) {
-            if (i >= 0 && i < static_cast<int>(this->map.size()) && j >= 0 &&
-                j < static_cast<int>(this->map[0].size())) {
-                if (this->map[i][j].isWall || (traps && this->map[i][j].isTrap))
-                    return false;
-            }
-        }
-    }
-    return true;
+bool AStar::isPassable(node *_n, bool traps) {
+    return !(traps && _n->isTrap);
 }
 
 // TODO: Fix Weird Bug, where sometimes diagonals are chosen although a straight part is faster
-bool AStar::findPath(node *start, node *end, int width, int height, bool watchForTraps) {
+bool AStar::findPath(node *start, node *end, bool watchForTraps) {
 
     int nodesChecked = 0;
 
@@ -121,7 +135,7 @@ bool AStar::findPath(node *start, node *end, int width, int height, bool watchFo
             cur->isOpen = false;
             // for every neighbour from cur:
             for (node *neighbour : cur->neighbours) {
-                if (neighbour->isClosed || !isPassable(neighbour, width, height, watchForTraps)) {
+                if (neighbour->isClosed || !isPassable(neighbour, watchForTraps)) {
                     continue;
                 }
                 // temp_g = g cost over cur
@@ -167,7 +181,16 @@ bool AStar::findPath(node *start, node *end, int width, int height, bool watchFo
 }
 
 bool AStar::findPath(node *start, node *end) {
-    return AStar::findPath(start, end, 8, 8, false);
+    return AStar::findPath(start, end, false);
+}
+
+bool AStar::findPath(std::pair<int, int> start, std::pair<int, int> end) {
+    return AStar::findPath(&AStar::map[start.first][start.second], &AStar::map[start.first][start.second]);
+}
+
+bool AStar::findPath(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps) {
+    return AStar::findPath(&AStar::map[start.first][start.second], &AStar::map[start.first][start.second],
+                           watch_for_traps);
 }
 
 void AStar::traversePath(node *end) {

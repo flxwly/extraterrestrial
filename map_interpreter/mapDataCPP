@@ -112,3 +112,19 @@ int MapData::availableColors() {
     }
     return sum;
 }
+
+std::vector<std::array<int, 3>> MapData::getAllPoints() {
+
+    std::vector<std::array<int, 3>> all_points;
+    for (auto point : MapData::RedPoints) {
+        all_points.push_back({point.first, point.second, 0});
+    }
+    for (auto point : MapData::GreenPoints) {
+        all_points.push_back({point.first, point.second, 0});
+    }
+    for (auto point : MapData::BlackPoints) {
+        all_points.push_back({point.first, point.second, 0});
+    }
+
+    return all_points;
+}

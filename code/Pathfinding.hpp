@@ -11,7 +11,7 @@
 
 class node {
 public:
-    bool isClosed, isOpen, isTrap, isWall;
+    bool isClosed, isOpen, isTrap, isWall, isAtWall;
     int x, y;
     double g, f;
     std::vector<node *> neighbours;
@@ -26,19 +26,23 @@ public:
     std::vector<node> path;
     std::vector<std::vector<node>> map;
 
-    explicit AStar(const std::vector<std::vector<int>> &MAP);
+    explicit AStar(const std::vector<std::vector<int>> &MAP, const int &r);
 
     // TODO: Fix Weird Bug, where sometimes diagonals are chosen although a straight part is faster
-    bool findPath(node *start, node *end, int width, int height, bool watchForTraps);
+    bool findPath(node *start, node *end, bool watchForTraps);
 
     bool findPath(node *start, node *end);
+
+    bool findPath(std::pair<int, int> start, std::pair<int, int> end);
+
+    bool findPath(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps);
 
     std::vector<std::pair<int, int>> pathToPair();
 
 private:
     struct PRIORITY;
 
-    bool isPassable(node *, int width, int height, bool traps);
+    bool isPassable(node *, bool traps);
 
     void traversePath(node *end);
 

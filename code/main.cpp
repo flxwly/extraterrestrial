@@ -2,20 +2,7 @@
 #define CsBot_AI_C  //DO NOT delete this line
 #ifndef CSBOT_REAL
 
-#define DEPOSITING 0
-#define COLLECTING 1
-#define TURN_RIGHT 2
-#define TURN_LEFT 3
-#define PATHFINDING_ANFUEHRUNGSZEICHEN 4
-#define PATHFINDING 4
-#define NORMALSPEED 5
-#define GOBACKWARDS 7
-#define OUTOFAREA 8
-#define CORNER 9
-
-#define ROBOT_SIZE 10
-
-#define ENABLE_PATHFINDING false
+#define ROBOT_RAD 10
 
 #include <iostream>
 #include <windows.h>
@@ -34,44 +21,6 @@ using namespace std;
 #include "Robot.hpp"
 
 #endif
-
-
-int depositTime = 0;
-bool isDepositting = false;
-
-//TODO more logic to should Deposit Function -> Time runs out etc...
-bool shouldDeposit() {
-    /*if (!isOrange())
-        return depositTime > Time;
-    */
-    int treshhold = 0;
-    // maxpoints: 6 blacks = 120 || (135) RGB + 3 points || full RGB: 270
-    treshhold += 10 * collectedItems[0] + 15 * collectedItems[1] + 20 * collectedItems[2];
-
-    if (collectedItems[0] > 0 && collectedItems[1] > 0 && collectedItems[2] > 0) {
-        treshhold += 90;
-    }
-    DEBUG_MESSAGE("Treshhold for Depositting is at: " + to_string(treshhold) + "\n", 0);
-    return treshhold >= 130 || depositTime > Time;
-}
-
-
-int collectTime = 0;
-bool isCollecting = false;
-
-//TODO more logic to should Collect Function -> Time runs out etc...
-bool shouldCollect() {
-    if (LoadedObjects >= 6)
-        return collectTime > Time;
-
-    return (isRed() && collectedItems[0] < 2)
-           || (isCyan() && collectedItems[1] < 2)
-           || (isBlack() && collectedItems[2] < 3)
-           || collectTime > Time;
-}
-
-int unableToInteractUpto = 0;
-bool lostPosition = false;
 
 void updateHSL() {
     DEBUG_MESSAGE("Updating HSL...\n", 3);
@@ -96,15 +45,16 @@ MapData GAME0(240, 180, &GAME0REDPOINTS, &GAME0GREENPOINTS, &GAME0BLACKPOINTS, &
 MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &GAME1DEPOSITAREAS, &GAME1WALLS,
               &GAME1TRAPS, &GAME1SWAMPS);
 
-AStar PathfinderGame0(GAME0.Map);
-AStar PathfinderGame1(GAME1.Map);
+AStar PathfinderGame0(GAME0.Map, ROBOT_RAD);
+AStar PathfinderGame1(GAME1.Map, ROBOT_RAD);
 
 DebugTool Debug(0, 0, 10);
 
 Robot Bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
           &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
           &US_Left, &US_Front, &US_Right,
-          &WheelLeft, &WheelRight, &LED_1);
+          &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time,
+          &GAME0, &GAME1, &PathfinderGame0, &PathfinderGame1);
 
 void Setup() {
     system("cls");
@@ -126,71 +76,16 @@ void Setup() {
     DEBUG_MESSAGE("finished initialization\n", 0);
 }
 
-bool areaLeave = false;
-
 /*
  * ///_________________________________GAME0________________________________________///
  *
  * ///__________________________________________________________________________________///
 */
 
-void collect() {
-    // CollectTime is until when we want to collect; Only needs to be set when it's lower than Time -> otherwise it's collecting
-    if (collectTime < Time) {
-        collectTime = Time + 5;
-        LoadedObjects += 1;
-        if (isRed()) {
-            collectedItems[0]++;
-        } else if (isCyan()) {
-            collectedItems[1]++;
-        } else if (isBlack()) {
-            collectedItems[2]++;
-        }
-
-    } else {
-        DEBUG_MESSAGE("Collecting... (" + to_string(collectTime - Time) + ") \n", 0);
-        // Robot vars to collect
-        DEBUG_MESSAGE("Collected: " + to_string(ObjPositionX) + " | " + to_string(ObjPositionX) + "\n", 10);
-        if (ObjState == 0 && dist(ObjPositionX, PositionX, ObjPositionY, PositionY) < 10) {
-            collectTime = Time;
-        }
-        wheels(0, 0);
-        LED_1 = 1;
-    }
-}
-
-void deposit() {
-    if (depositTime < Time) {
-        depositTime = Time + 6;
-        LoadedObjects = 0;
-        collectedItems[0] = 0, collectedItems[1] = 0, collectedItems[2] = 0;
-    } else {
-        wheels(0, 0);
-        LED_1 = 2;
-        DEBUG_MESSAGE("Depositting... (" + to_string(depositTime - Time) + ") \n", 0);
-    }
-}
-
-int tPosX = 0;
-int tPosY = 0;
-
 void Game0() {
-    DEBUG_MESSAGE("---------\nGame0 Loop Nr:" + to_string(cycles) + "\n", 0);
-    DEBUG_MESSAGE(
-            "Reds: " + to_string(collectedItems[0]) + " | Blues: " + to_string(collectedItems[1]) + " | Blacks: " +
-            to_string(collectedItems[2])
-            + " | Total: " + to_string(LoadedObjects) + "\n", 0);
     updateHSL();
 
-    PositionX = tPosX;
-    PositionY = tPosY;
-    updatePos(0.636);
-    tPosX = PositionX;
-    tPosY = PositionY;
-
-    Bot.loop();
-
-    DEBUG_MESSAGE("\tMoving with: " + to_string(WheelLeft) + " | " + to_string(WheelRight) + "\n", 0);
+    Bot.game_0_loop();
 }
 
 /*
@@ -205,10 +100,6 @@ void Game0() {
  * ///__________________________________________________________________________________///
 */
 
-int prevPosX = 0;
-int prevPosY = 0;
-pair<int, int> waypoint = {-1, -1};
-
 int neededColors() {
     // pointColor: 1 = red, 2 = cyan, 4 = black
 
@@ -222,7 +113,6 @@ int neededColors() {
 
     return sum;
 }
-
 pair<int, int> getNextPoint(MapData *mData) {
 
     const int GET_NEXT_POINT_VALUATE_POINTS_NUM = 2;
@@ -292,216 +182,23 @@ pair<int, int> getNextPoint(MapData *mData) {
     return pair<int, int>{bP[0], bP[1]};
 }
 
-int bounds(int lastAction) {
-    //Left END
-    if (PositionX >= 350 && Compass > 270 && Compass <= 360) {
-        return TURN_LEFT;
-    } else if (PositionX >= 350 && Compass > 180 && Compass <= 270) {
-        return TURN_RIGHT;
-        //Right END
-    } else if (PositionX <= 10 && Compass > 0 && Compass <= 90) {
-        return TURN_RIGHT;
-    } else if (PositionX <= 10 && Compass > 90 && Compass <= 180) {
-        return TURN_LEFT;
-        //TOP END
-    } else if (PositionY >= 260 && Compass > 270 && Compass <= 360) {
-        return TURN_RIGHT;
-    } else if (PositionY >= 260 && Compass >= 0 && Compass <= 90) {
-        return TURN_LEFT;
-        //BOTTOM END
-    } else if (PositionY <= 10 && Compass > 180 && Compass <= 270) {
-        return TURN_LEFT;
-    } else if (PositionY <= 10 && Compass < 180 && Compass >= 90) {
-        return TURN_RIGHT;
-    }
-    return lastAction;
-}
-
 void Game1() {
-
-    Debug.redraw(cycles);
     updateHSL();
 
-    //----------- Postion lost? -----------
-    DEBUG_MESSAGE("Game1 Loop Nr: " + to_string(cycles) + "\n", 0);
-    if (PositionX == 0 && PositionY == 0) {
-        PositionX = prevPosX;
-        PositionY = prevPosY;
-        updatePos(0.6);
+    Bot.game_1_loop();
 
-        //TODO update Position
-        lostPosition = true;
-    } else {
-        lostPosition = false;
+    // === Debug ===
+    // Pos
+    Debug.addRobotPos("Bot: ", PositionX, PositionY);
+    // Paths
+    /*int i = 0;
+    for (const auto& path : Bot.complete_path) {
+        Debug.addPath("Path: " + to_string(i), path);
+        i++;
     }
-    DEBUG_MESSAGE("Lost Position? :\t" + to_string(lostPosition) + "\n", 2);
+    for (int j = 7; j > i; j--) {
+        Debug.removePath("Path: " + to_string(j));
+    }*/
 
-    //#####################
-    // -- PATHFINDING --
-    //#####################
-
-    if (ENABLE_PATHFINDING) {
-        //----------- run pathfinding -----------
-        if (PathfinderGame1.path.empty()) {
-
-            DEBUG_MESSAGE("No Waypoints left\n", 2);
-
-            DEBUG_MESSAGE("Setting up start and goal for Pathfinding...\n", 2);
-            node *start = &PathfinderGame1.map[PositionX][PositionY];
-            DEBUG_MESSAGE("\tStartnode: " + to_string(start->x) + " | " + to_string(start->y) + " state: " +
-                          to_string(GAME1.Map[PositionX][PositionY]) + "\n", 2);
-
-            //TODO target choosing
-            pair<int, int> nextPoint = getNextPoint(&GAME1);
-            node *goal = &PathfinderGame1.map[nextPoint.first][nextPoint.second];
-
-            DEBUG_MESSAGE("\tEndnode: " + to_string(goal->x) + " | " + to_string(goal->y) + "\n", 2);
-            DEBUG_MESSAGE("finished\n", 2);
-            DEBUG_MESSAGE("finding Path from: " + to_string(start->x) + " | " + to_string(start->y) + " to " +
-                          to_string(goal->x) + " | " + to_string(goal->y) + " ...", 2);
-
-            if (PathfinderGame1.findPath(start, goal, ROBOT_SIZE, ROBOT_SIZE, LoadedObjects > 0)) {
-                //Debug.addPath("Path", PathfinderGame1.pathToPair());
-                waypoint.first = PathfinderGame1.path.back().x;
-                waypoint.second = PathfinderGame1.path.back().y;
-                PathfinderGame1.path.pop_back();
-                DEBUG_MESSAGE(
-                        "\t Next Waypoint is: " + to_string(waypoint.first) + " | " + to_string(waypoint.second) +
-                        "\n",
-                        2);
-
-
-            } else {
-                DEBUG_MESSAGE("Goal is not reachable\n", 2);
-            }
-            /*
-            DEBUG_MESSAGE("Way: ", 0);
-            for (const node &point : PathfinderGame1.path) {
-                DEBUG_MESSAGE(to_string(point.x) + " | " + to_string(point.y) + "\n", 0);
-            }
-            */
-
-        } else {
-            DEBUG_MESSAGE("Path contains nodes\n", 2);
-        }
-
-        DEBUG_MESSAGE("\tfinished\n", 2);
-
-        //----------- next waypoint -----------
-        if (dist(waypoint.first, PositionX, waypoint.second, PositionY) < 7 ||
-            (dist(waypoint.first, PositionX, waypoint.second, PositionY) < 10 && lostPosition)) {
-            DEBUG_MESSAGE("Reached Waypoint... Getting next waypoint... ", 2);
-            if (!PathfinderGame1.path.empty()) {
-                node nextNode = PathfinderGame1.path.back();
-                PathfinderGame1.path.pop_back();
-                waypoint.first = nextNode.x, waypoint.second = nextNode.y;
-                DEBUG_MESSAGE(
-                        "\t Next Waypoint is: " + to_string(waypoint.first) + " | " + to_string(waypoint.second) + "\n",
-                        2);
-            }
-        } else {
-            DEBUG_MESSAGE("Distance to Waypoint: "
-                          + to_string(dist(waypoint.first, PositionX, waypoint.second, PositionY)) + "\n", 2);
-        }
-    }
-
-
-    CurAction = -1;
-    /*--------------------
-     * Priority Structure
-     * -------------------
-     * Deposit
-     * Collect
-     * dodge traps and out of bounds <- only for safety.
-     * Pathfind using active collision avoidense
-     *
-     * */
-
-
-    if (shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
-        if (isOrange()) {
-            deposit();
-        } else if (isOrangeRight()) {
-            wheels(3, 0);
-        } else {
-            wheels(0, 3);
-        }
-
-    } else if (shouldCollect()) {
-        //TODO collect item(To be tested)
-        collect();
-
-    } else {
-        DEBUG_MESSAGE("Using active Object avoidens System\n", 1);
-        wheels(3, 3);
-        if (ENABLE_PATHFINDING) {
-            steerToPoint(waypoint.first, waypoint.second);
-            LED_1 = 0;
-        }
-        //TODO  optimal Pathfinding -> Pathfind override should never occur
-        int Override = bounds(0);
-        if (Override == TURN_LEFT || (isYellowRight() && LoadedObjects > 0)) {
-            DEBUG_MESSAGE("Override Pathfinding for safety: TURN LEFT\n", 1);
-            wheels(5, 0);
-        } else if (Override == TURN_RIGHT || (isYellowLeft() && LoadedObjects > 0)) {
-            DEBUG_MESSAGE("Override Pathfinding for safety: TURN RIGHT\n", 1);
-            wheels(0, 5);
-        } else if (!ENABLE_PATHFINDING) {
-            DEBUG_MESSAGE("Should be Case: " + to_string(checkSensors(8, 12, 8)) + "\n", 1);
-            switch (checkSensors(8, 12, 8)) {
-                // no obstacle
-                case 0:
-
-                    wheels(3, 3);
-                    break;
-                case 1: // obstacle left
-                    cout << "\n" << US_Left << "\n";
-                    DEBUG_MESSAGE("Turn A LITTLE BIT RIGHT (object on the left) Case: 1\n", 1);
-                    wheels(-3, -5);
-                    break;
-                case 2: // obstacle front
-                    DEBUG_MESSAGE("Turn EITHER RIGHT OR LEFT (object on the front) Case: 2\n", 1);
-                    wheels(-5, -5);
-                    break;
-                case 3: // obstacles left & front
-                    DEBUG_MESSAGE("\tTurn NORMAL RIGHT (object on the front & left) Case: 3\n", 1);
-                    wheels(-3, -5);
-                    break;
-                case 4: // obstacle right
-                    DEBUG_MESSAGE("\tTurn NORMAL LEFT (object the right) Case: 4\n", 1);
-                    wheels(-5, -3);
-                    break;
-                case 5: // obstacles left & right
-                    DEBUG_MESSAGE("\tMaybe dont turn (object on the left & right) Case: 5\n", 1);
-                    wheels(3, 3);
-                    break;
-                case 6: // obstacles front & right
-                    DEBUG_MESSAGE("\tTurn NORMAL LEFT (object on the front & right) Case: 6\n", 1);
-                    wheels(-5, -3);
-                    break;
-                default: // obstacles everywhere
-                    DEBUG_MESSAGE("\tNO WAY (object on the left & front & right) Case: 7\n", 1);
-                    wheels(-5, 5);
-                    break;
-            }
-            LED_1 = 0;
-        }
-        //steerToPoint(20, GAME1MAXY - 20);
-        // TODO: Geht nicht wenn drehung durch geringere Motorstärke erzeugt wird (schlechte Erklärung)
-        if (isSwamp()) {
-            DEBUG_MESSAGE("Is in Swamp\n", 3);
-            if (abs(WheelLeft) == abs(WheelRight)) {
-                WheelRight *= 5;
-                WheelLeft *= 5;
-            }
-        }
-
-    }
-
-
-    Debug.addRobotPos("last Blue", prevPosX, prevPosY);
-    prevPosX = PositionX;
-    prevPosY = PositionY;
-    Debug.addRobotPos("cur Blue", PositionX, PositionY);
-
+    Debug.redraw(cycles);
 }

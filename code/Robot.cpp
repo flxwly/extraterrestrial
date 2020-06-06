@@ -10,35 +10,54 @@
 Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_sobj_y,
              int *_rc_r, int *_rc_g, int *_rc_b, int *_lc_r, int *_lc_g, int *_lc_b,
              int *_rus, int *_fus, int *_lus,
-             int *_whl_l, int *_whl_r, int *_led) {
+             int *_whl_l, int *_whl_r, int *_led, int *_tp, int *_g_time,
+             MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1) {
 
     Robot::x = _x, Robot::y = _y;                                       // robots position
     Robot::comp = _comp;                                                // compass
     Robot::sobj_num = _sobj_num;                                        // super_object_num
     Robot::sobj_x = _sobj_x, Robot::sobj_y = _sobj_y;                   // last super_object_coords
-    Robot::rc[0] = _rc_r, Robot::rc[1] = _rc_g, Robot::rc[2] = _rc_b;   // color sensors right
-    Robot::lc[0] = _lc_r, Robot::lc[1] = _lc_g, Robot::lc[2] = _lc_b;   // color sensors left
-    Robot::us[0] = _rus, Robot::us[1] = _fus, Robot::us[2] = _lus;      // ultrasonic sensors
+    Robot::rc = {_rc_r, _rc_g, _rc_b};                                  // color sensors right
+    Robot::lc = {_lc_r, _lc_g, _lc_b};                                  // color sensors left
+    Robot::us = {_rus, _fus, _lus};                                     // ultrasonic sensors
     Robot::whl_l = _whl_l, Robot::whl_r = _whl_r;                       // wheels
     Robot::led = _led;                                                  // led for collect and deposit
+    Robot::tp = _tp;                                                    // where to teleport
+    Robot::g_time = _g_time;                                            // game time
 
-    Robot::timer = time(NULL);
+    Robot::l_x = -1, Robot::l_y = -1;                                   // last xy coords
 
-    Robot::collecting_since = -10;                                      // time var for collect function
-    Robot::depoisiting_since = -10;                                     // time var for deposit function
+    Robot::map0 = _map0, Robot::map1 = _map1;
+    Robot::pathfinder0 = _pathfinder0, Robot::pathfinder1 = _pathfinder1;
+
+    Robot::n_target = {-1, -1};
+    Robot::n_target_is_last = false;
+
+    Robot::chasing_sobj_num = 0;                                        // represents how many super_objects are in current paths
+
+
+
+    Robot::loaded_objects = {0, 0, 0};
+    Robot::loaded_objects_num = 0;
+
+    Robot::collecting_since = Robot::timer::now();                       // time var for collect function
+    Robot::depositing_since = Robot::timer::now();                       // time var for deposit function
 }
 
 //====================================
 //          Private Functions
 //====================================
+
+// TODO: update_pos function
 void Robot::update_pos() {
-    Robot::x += 0, Robot::y += 0; // TODO:
+    Robot::x += 0, Robot::y += 0;
 }
 
+// collect functions
 bool Robot::should_collect() {
 
     // if the difference is less or equal to 3 seconds the robot is still collecting;
-    if (difftime(Robot::timer, Robot::collecting_since) <= 3)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - collecting_since).count() <= 3000)
         return true;
 
     // The robot is full; the robot cant collect items anyway
@@ -64,7 +83,7 @@ bool Robot::should_collect() {
 void Robot::collect() {
 
     // the robot is already collecting
-    if (difftime(Robot::timer, Robot::collecting_since) < 3) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Robot::timer::now() - collecting_since).count() <= 4000) {
         // This is to prevent the robot from moving
         Robot::wheels(0, 0);
         *Robot::led = 1;
@@ -73,7 +92,7 @@ void Robot::collect() {
         // the robot begins to collect
     else {
         // set collecting_since to now
-        Robot::collecting_since = Robot::timer;
+        Robot::collecting_since = Robot::timer::now();
 
         // update the loaded_objects vars
         if (isRed() || isSuperObj()) {
@@ -90,10 +109,11 @@ void Robot::collect() {
     }
 }
 
+// deposit functions
 bool Robot::should_deposit() {
 
     // while timer - depositing_since < 6the robot is still depositting
-    if (difftime(Robot::timer, Robot::depoisiting_since) < 6)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Robot::timer::now() - depositing_since).count() <= 4000)
         return true;
 
     // the robot uses a treshhold to determine if it has enough points so that it is worth it to deposit
@@ -119,7 +139,7 @@ bool Robot::should_deposit() {
 
 void Robot::deposit() {
     // the robot is already depositing
-    if (difftime(Robot::timer, Robot::depoisiting_since) < 6) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Robot::timer::now() - depositing_since).count() <= 5000) {
         // This is to prevent the robot from moving
         Robot::wheels(0, 0);
         *Robot::led = 2;
@@ -128,7 +148,7 @@ void Robot::deposit() {
         // the robot begins to deposit
     else {
         // set deposit_since to now
-        Robot::depoisiting_since = Robot::timer;
+        Robot::depositing_since = Robot::timer::now();
 
         // update the loaded_objects vars
         Robot::loaded_objects[0] = 0;
@@ -141,6 +161,111 @@ void Robot::deposit() {
     }
 }
 
+// teleport functions
+bool Robot::should_teleport() {
+
+    // while in deposit_area don't teleport
+    if (isOrange()) {
+        return false;
+    }
+
+    // earliest possible teleport after 3min (180sec)
+    //      only teleport if it has nothing to lose -> no objects loaded
+    if (*Robot::g_time > 180) {
+        if (loaded_objects_num == 0) {
+            return true;
+        }
+    }
+    // next possible teleport after 3min and 20sec (200sec)
+    //      only teleport if points are more valuable then 145 points
+    if (*Robot::g_time > 200) {
+        if (!should_deposit()) {
+            return true;
+        }
+    }
+
+    // last possible teleport after 4min (240sec)
+    //      teleport in any case
+    return *Robot::g_time > 240;
+}
+
+void Robot::teleport() {
+    Robot::loaded_objects_num = 0;
+    Robot::loaded_objects[0] = 0;
+    Robot::loaded_objects[1] = 0;
+    Robot::loaded_objects[2] = 0;
+
+    *Robot::tp = 1;
+}
+
+int Robot::avoid_void() {
+    if (*Robot::x >= 350 && *Robot::comp > 270 && *Robot::comp <= 360) {
+        return -1;
+    } else if (*Robot::x >= 350 && *Robot::comp > 180 && *Robot::comp <= 270) {
+        return 1;
+        //Right END
+    } else if (*Robot::x <= 10 && *Robot::comp > 0 && *Robot::comp <= 90) {
+        return 1;
+    } else if (*Robot::x <= 10 && *Robot::comp > 90 && *Robot::comp <= 180) {
+        return -1;
+        //TOP END
+    } else if (*Robot::y >= 260 && *Robot::comp > 270 && *Robot::comp <= 360) {
+        return 1;
+    } else if (*Robot::y >= 260 && *Robot::comp >= 0 && *Robot::comp <= 90) {
+        return -1;
+        //BOTTOM END
+    } else if (*Robot::y <= 10 && *Robot::comp > 180 && *Robot::comp <= 270) {
+        return -1;
+    } else if (*Robot::y <= 10 && *Robot::comp < 180 && *Robot::comp >= 90) {
+        return 1;
+    }
+    return 0;
+}
+
+std::vector<std::pair<int, int>> Robot::get_points(MapData &mapData) {
+
+    // point array which which will later be returned
+    std::vector<std::pair<int, int>> point_path;
+    point_path.emplace_back(*Robot::x, *Robot::y);
+
+    // point finding algorithm. (See Idea 1 on https://stackoverflow.com/questions/62179174)
+    //      This is definetly not the optimal solution
+
+    std::array<int, 3> c_points = {Robot::loaded_objects[0], Robot::loaded_objects[1], Robot::loaded_objects[2]};
+
+    std::pair<int, int> b_point;
+    double b_dist = -1;
+
+    // repeat upto 6 times
+    for (int i = Robot::loaded_objects_num; i < 6; ++i) {
+        // getAllPoints() returns a vector<array<int, 3>>:
+        for (auto point : mapData.getAllPoints()) {
+            if (c_points[point[2]] + 1 < 2) {
+                double t_dist = dist(point[0], point_path.end()->first, point[1], point_path.end()->second);
+                if (t_dist < b_dist || b_dist == -1) {
+                    b_dist = t_dist;
+                    b_point = {point[0], point[1]};
+                    c_points[point[2]]++;
+                }
+            }
+        }
+        point_path.push_back(b_point);
+    }
+    b_dist = -1;
+
+    // getDepositAreas returns all deposit_area middle_points
+    for (auto d_area : mapData.getDepositAreas()) {
+        double t_dist = dist(d_area.first, point_path.end()->first, d_area.second, point_path.end()->second);
+        if (t_dist < b_dist || b_dist == -1) {
+            b_dist = t_dist;
+            b_point = d_area;
+        }
+    }
+    point_path.push_back(b_point);
+
+    return point_path;
+}
+
 //====================================
 //          Public Functions
 //====================================
@@ -148,10 +273,10 @@ void Robot::wheels(int l, int r) {
     *Robot::whl_l = l, *Robot::whl_r = r;
 }
 
-int Robot::move_to(int _x, int _y) {
+int Robot::move_to(int _x, int _y, bool safety) {
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
-    int angle = vector2Angle(*Robot::x - _x, *Robot::y - _y);
+    int angle = vector2Angle(_x - *Robot::x, _y - *Robot::y);
 
     // Difference between compass
     angle -= *Robot::comp;
@@ -174,13 +299,13 @@ int Robot::move_to(int _x, int _y) {
                 // the angle is a bit bigger so the robot needs to make a small correction
             else if (abs(angle) < 30) {
                 if (angle < 0) {
-                    if (dist(*Robot::x, _x, *Robot::y, _y) < 15) {
+                    if (!safety || dist(*Robot::x, _x, *Robot::y, _y) < 15) {
                         wheels(2, 1);
                     } else {
                         wheels(5, 4);
                     }
                 } else {
-                    if (dist(*Robot::x, _x, *Robot::y, _y) < 15) {
+                    if (!safety || dist(*Robot::x, _x, *Robot::y, _y) < 15) {
                         wheels(1, 2);
                     } else {
                         wheels(4, 5);
@@ -190,13 +315,13 @@ int Robot::move_to(int _x, int _y) {
                 // the angle is quite big; now a bigger correction is needed
             else if (abs(angle) < 60) {
                 if (angle < 0) {
-                    if (dist(*Robot::x, _x, *Robot::y, _y) < 15) {
+                    if (!safety || dist(*Robot::x, _x, *Robot::y, _y) < 15) {
                         wheels(2, -1);
                     } else {
                         wheels(5, 2);
                     }
                 } else {
-                    if (dist(*Robot::x, _x, *Robot::y, _y) < 15) {
+                    if (!safety || dist(*Robot::x, _x, *Robot::y, _y) < 15) {
                         wheels(-1, 2);
                     } else {
                         wheels(2, 5);
@@ -240,8 +365,8 @@ int Robot::move_to(int _x, int _y) {
     }
 }
 
-int Robot::move_to(std::pair<int, int> p) {
-    return Robot::move_to(p.first, p.second);
+int Robot::move_to(std::pair<int, int> p, bool safety) {
+    return Robot::move_to(p.first, p.second, safety);
 }
 
 int Robot::check_us_sensors(int l, int f, int r) {
@@ -255,8 +380,7 @@ int Robot::check_us_sensors(int l, int f, int r) {
     return sum;
 }
 
-void Robot::loop() {
-    timer = time(NULL);
+void Robot::game_0_loop() {
     if (Robot::should_deposit() && (isOrangeLeft() || isOrangeRight())) {
         if (isOrange()) {
             Robot::deposit();
@@ -271,36 +395,35 @@ void Robot::loop() {
     } else {
         // avoid trap on the right if objects are loaded
         if (isYellowRight() && Robot::loaded_objects_num > 0) {
-            wheels(5, 0);
-        }
-        // avoid trap on the left
-        else if (isYellowLeft() && Robot::loaded_objects_num > 0) {
             wheels(0, 5);
         }
-        else {
+            // avoid trap on the left
+        else if (isYellowLeft() && Robot::loaded_objects_num > 0) {
+            wheels(5, 0);
+        } else {
             switch (Robot::check_us_sensors(8, 12, 8)) {
                 // no obstacle
                 case 0:
-                    // 3 | 3 is standard movement speed in w1
-                    wheels(3, 3);
+                    // 4 | 4 is standard movement speed in w1
+                    wheels(4, 4);
                     break;
                 case 1: // obstacle left
-                    wheels(-2, -5);
+                    wheels(4, 0);
                     break;
                 case 2: // obstacle front
-                    wheels(-5, -5);
+                    wheels(-3, -5);
                     break;
                 case 3: // obstacles left & front
-                    wheels(-2, -5);
+                    wheels(-1, -5);
                     break;
                 case 4: // obstacle right
-                    wheels(-5, -2);
+                    wheels(0, 4);
                     break;
                 case 5: // obstacles left & right; turning would be fatal; just drive forward
                     wheels(3, 3);
                     break;
                 case 6: // obstacles front & right
-                    wheels(-5, -2);
+                    wheels(-5, -1);
                     break;
                 case 7: // all sensors see an obstacle -> dead end; Just spinn
                     wheels(-5, 5);
@@ -309,6 +432,109 @@ void Robot::loop() {
                     break;
             }
             *Robot::led = 0;
+        }
+    }
+}
+
+void Robot::game_1_loop() {
+    // check if robot is in signal lost zone
+    if (*Robot::x == 0 && *Robot::y == 0) {
+
+        // set normal coords to last coords and update with function
+        *Robot::x = Robot::l_x, *Robot::y = Robot::l_y;
+        Robot::update_pos();
+    }
+
+    // set last coords to normal coords (last coords wont get overwritten by the sim)
+    Robot::l_x = *Robot::x, Robot::l_y = *Robot::y;
+
+    //#####################
+    // -- PATHFINDING --
+    //#####################
+
+    // There's no path to follow
+    if (Robot::complete_path.empty()) {
+        // get a path of points
+        std::vector<std::pair<int, int>> point_path = Robot::get_points(*Robot::map1);
+        std::pair<int, int> start = {-1, -1};
+
+        // calculate a path from one point to the next
+        for (auto end : point_path) {
+            if (start.first != -1 && start.second != -1) {
+                if (Robot::pathfinder1->findPath(start, end, Robot::loaded_objects_num > 0)) {
+
+                    // add the path to the complete path
+                    Robot::complete_path.push_back(Robot::pathfinder1->pathToPair());
+                }
+            }
+            start = end;
+        }
+    }
+
+
+    // get the next target
+    if (!Robot::complete_path.empty()) {
+
+        if (Robot::n_target.first == -1 && Robot::n_target.second == -1) {
+
+            // set n_target to the last element of the first path in complete_path
+            //      the paths in complete_path are reversed; The end of the path is the first element
+
+            Robot::n_target_is_last = Robot::complete_path.front().size() == 1;
+            Robot::n_target = Robot::complete_path.front().back();
+
+            // if it's the last element remove the path entirely
+            if (Robot::n_target_is_last) {
+                Robot::complete_path.erase(Robot::complete_path.begin());
+            }
+                // Otherwise just remove it
+            else {
+                Robot::complete_path.front().pop_back();
+            }
+        }
+    }
+
+
+    /*--------------------
+     * Priority Structure
+     * -------------------
+     * Deposit
+     * Collect
+     * dodge traps and out of bounds <- only for safety.
+     * Pathfind using active collision avoidance
+     *
+     * */
+
+
+    if (Robot::should_deposit() && (isOrangeLeft() || isOrangeRight())) {
+        if (isOrange()) {
+            Robot::deposit();
+        } else if (isOrangeRight()) {
+            Robot::wheels(3, 0);
+        } else {
+            Robot::wheels(0, 3);
+        }
+
+    } else if (Robot::should_collect()) {
+        Robot::collect();
+    } else {
+
+        Robot::move_to(Robot::n_target, Robot::n_target_is_last);
+        //std::cout << "Is at: " << *Robot::x << " | " << *Robot::y << "\tmoving to: " << n_target.first << " | " << n_target.second << std::endl;
+
+        // if the distance is very small the target has been reached
+        if (dist(n_target.first, *Robot::x, n_target.second, *Robot::y) < 5) {
+            std::cout << "reached Object" << std::endl;
+            n_target = {-1, -1};
+        }
+
+        // avoid the void by driving left || avoid trap on the right if objects are loaded
+        if (Robot::avoid_void() == -1 || (isYellowRight() && Robot::loaded_objects_num > 0)) {
+            wheels(0, 5);
+        }
+            // avoid the void by driving right || avoid trap on the left
+        else if (Robot::avoid_void() == 1 || (isYellowLeft() && Robot::loaded_objects_num > 0)) {
+            wheels(5, 0);
         }
     }
 }
