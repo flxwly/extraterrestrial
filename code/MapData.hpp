@@ -22,6 +22,8 @@ public:
 
     int findPoint(std::pair<int, int> p, int pColor);
 
+    // TODO: int findApproxPoint(std::pair<int, int> p, int pColor);
+
     int erasePoint(std::pair<int, int> p, int pColor);
 
     int erasePoint(int index, int pColor);

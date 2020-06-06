@@ -51,7 +51,7 @@ int oppositeAngle(int angle) {
 void steerToPoint(int x, int y) { // control wheels depending on obstacles and compass
     if(dist(PositionX, x, PositionY, y) < 5)
         return;
-    int angle = dvector2Angle(x - PositionX , y - PositionY);
+    int angle = vector2Angle(x - PositionX , y - PositionY);
     DEBUG_MESSAGE("Drive from: " + to_string(PositionX) + " | " + to_string(PositionY) + "\t to: "
     + to_string(x) + " | " + to_string(y) + " with angle: " + to_string(angle) + "\n", 0);
 

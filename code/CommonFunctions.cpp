@@ -24,6 +24,11 @@ double toRadians(int n) {
 int toDegrees(double n) {
     return dround(n * 180 / M_PI);
 }
+int reverseAngle(int angle) {
+    angle += (angle > 0) ? -360 : 360;
+    return angle % 360;
+}
+
 
 bool isInRange(double value, double min, double max) {
     return value >= min && value <= max;
@@ -54,20 +59,38 @@ double dist(double x1, double x2, double y1, double y2) {
 
 int vector2Angle(int x, int y) {
 
-    int n = 180;
-    if (y > 0) {
-        n = 0;
-    }
-    if (y == 0) {
-        return (x > 0) ? 90 : 270;
-    }
-    int angle = dround(toDegrees(atan(static_cast<double> (x) / abs(y))) + n);
+    if (x == 0)
+        return (y >= 0)? 0 : 180;
+    else if (y == 0)
+        return (x > 0)? 90 : 270;
 
-    return (angle + 360) % 360;
+    int angle = toDegrees(atan(static_cast<double>(y)/x));
 
+    // bottom left (90 - 180)
+    if (x < 0 && y < 0)
+        // angle is positive (180 location)
+        angle = 0 + 90;
+        // top left (0 - 90)
+    else if (x < 0)
+        // angle is negative (90 positive) + (0 location)
+        angle += 90 + 0;
+        // bottom right (180 - 270)
+    else if (y < 0)
+        // angle is negative (90 positive) + (180 location)
+        angle += 90 + 180 ;
+        // top right (270 - 360)
+    else {
+        angle += 270;
+        // angle is positive
+    }
+    return angle;
 }
 
-int dvector2Angle(double x, double y) {
+int vector2Angle(std::pair<int, int> p) {
+    return vector2Angle(p.first, p.second);
+}
+
+int vector2Angle(double x, double y) {
 
     if (x == 0)
         return (y >= 0)? 0 : 180;
@@ -94,6 +117,10 @@ int dvector2Angle(double x, double y) {
         // angle is positive
     }
     return angle;
+}
+
+int vector2Angle(std::pair<double, double> p) {
+    return vector2Angle(p.first, p.second);
 }
 
 double map(double Mmin, double Mmax, double Imin, double Imax, double input) {
