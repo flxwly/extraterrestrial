@@ -11,11 +11,12 @@ from watchdog.observers import Observer
 is_strip = False
 more_warnings = True
 
+auto_update = False
+
 optimisation_level = 3
 
 
 def compile_code():
-
     code_path = "./code/"
     out_path = "./"
 
@@ -28,10 +29,10 @@ def compile_code():
                    "--param max-inline-insns-single=1000 "
     if more_warnings:
         command += "-Wall -Wextra -pedantic -Wcast-align -Wcast-qual -Wconversion -Wdisabled-optimization " \
-                            "-Wendif-labels -Winit-self -Winline -Wlogical-op -Wmissing-include-dirs " \
-                            "-Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wpacked -Wpointer-arith " \
-                            "-Wredundant-decls -Wshadow -Wsign-promo -Wswitch-default -Wswitch-enum " \
-                            "-Wunsafe-loop-optimizations -Wvariadic-macros -Wwrite-strings"
+                   "-Wendif-labels -Winit-self -Winline -Wlogical-op -Wmissing-include-dirs " \
+                   "-Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wpacked -Wpointer-arith " \
+                   "-Wredundant-decls -Wshadow -Wsign-promo -Wswitch-default -Wswitch-enum " \
+                   "-Wunsafe-loop-optimizations -Wvariadic-macros -Wwrite-strings"
 
     # -Wfloat-equal
     for file_path in file_list:
@@ -67,15 +68,16 @@ if __name__ == "__main__":
                         datefmt='%Y-%m-%d %H:%M:%S')
     path = sys.argv[1] if len(sys.argv) > 1 else '.'
     event_handler = Event(patterns=["*.cpp", "*.hpp"])
-    observer = Observer()
-    observer.schedule(event_handler, path, recursive=True)
-    observer.start()
-
     compile_code()
 
-    try:
-        while True:
-            time.sleep(1000)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
+    if auto_update:
+        observer = Observer()
+        observer.schedule(event_handler, path, recursive=True)
+        observer.start()
+
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            observer.stop()
+        observer.join()
