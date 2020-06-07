@@ -228,40 +228,64 @@ std::vector<std::pair<int, int>> Robot::get_points(MapData &mapData) {
     std::vector<std::pair<int, int>> point_path;
     point_path.emplace_back(*Robot::x, *Robot::y);
 
-    // point finding algorithm. (See Idea 1 on https://stackoverflow.com/questions/62179174)
-    //      This is definetly not the optimal solution
+    // point finding algorithm. (See Idea 4 on https://stackoverflow.com/questions/62179174)
+    //      This might be an almost optimal solution
 
-    std::array<int, 3> c_points = {Robot::loaded_objects[0], Robot::loaded_objects[1], Robot::loaded_objects[2]};
+    double b_overall_dist = 0;
 
-    std::pair<int, int> b_point;
-    double b_dist = -1;
+    for (auto deposit_area : mapData.getDepositAreas()) {
+        // temporary array to be able to compare
+        std::vector<std::pair<int, int>> cur_path;
+        cur_path.emplace_back(*Robot::x, *Robot::y);
 
-    // repeat upto 6 times
-    for (int i = Robot::loaded_objects_num; i < 6; ++i) {
-        // getAllPoints() returns a vector<array<int, 3>>:
-        for (auto point : mapData.getAllPoints()) {
-            if (c_points[point[2]] + 1 < 2) {
-                double t_dist = dist(point[0], point_path.end()->first, point[1], point_path.end()->second);
-                if (t_dist < b_dist || b_dist == -1) {
-                    b_dist = t_dist;
-                    b_point = {point[0], point[1]};
-                    c_points[point[2]]++;
+        // c_points keeps track of which object_types are needed/free to find
+        std::array<int, 3> c_points = {Robot::loaded_objects[0], Robot::loaded_objects[1], Robot::loaded_objects[2]};
+
+        // p_dist is used to decide which route to which deposit_area to pick
+        double p_dist = 0;
+
+        // add upto 6 points to cur_path;
+        for (int i = Robot::loaded_objects_num; i < 6; ++i) {
+
+            std::pair<int, int> b_point;
+            double b_dist = -1;
+
+            // getAllPoints() returns a vector<array<int, 3>>:
+            //      get the point with the lowest f
+            for (auto point : mapData.getAllPoints()) {
+
+                // check if the object_type is chosen less or equal to 2 times
+                if (c_points[point[2]] + 1 <= 2) {
+
+                    // g_dist is the dist from the last chosen point to the current point
+                    double g_dist = dist(point[0], cur_path.end()->first, point[1], cur_path.end()->second);
+                    // h_dist is the distance to the deposit area
+                    double h_dist = dist(point[0], deposit_area.first, point[1], deposit_area.second);
+
+                    // if f_cost is lower set f_cost to cur_cost
+                    if (g_dist + h_dist < b_dist || b_dist == -1) {
+                        b_dist = g_dist + h_dist;
+                        b_point = {point[0], point[1]};
+                        c_points[point[2]]++;
+                    }
                 }
             }
+            // The best point is added to the cur_path alongside with it's distance
+            p_dist += dist(b_point.first, cur_path.end()->first, b_point.second, cur_path.end()->second);
+            cur_path.push_back(b_point);
         }
-        point_path.push_back(b_point);
-    }
-    b_dist = -1;
+        // add the dist from the last point to the deposit_area
+        p_dist += dist(deposit_area.first, cur_path.end()->first, deposit_area.second, cur_path.end()->second);
 
-    // getDepositAreas returns all deposit_area middle_points
-    for (auto d_area : mapData.getDepositAreas()) {
-        double t_dist = dist(d_area.first, point_path.end()->first, d_area.second, point_path.end()->second);
-        if (t_dist < b_dist || b_dist == -1) {
-            b_dist = t_dist;
-            b_point = d_area;
+        // if the overall path length is shorter then before -> set best to cur
+        if (p_dist < b_overall_dist || b_overall_dist == -1) {
+            b_overall_dist = p_dist;
+
+            // this wont overfill because point_path gets set to cur_path and therefore forgets it's earlier content
+            point_path = cur_path;
+            point_path.push_back(deposit_area);
         }
     }
-    point_path.push_back(b_point);
 
     return point_path;
 }
@@ -464,6 +488,7 @@ void Robot::game_1_loop() {
                 if (Robot::pathfinder1->findPath(start, end, Robot::loaded_objects_num > 0)) {
 
                     // add the path to the complete path
+                    // the first path is at the front of the vector
                     Robot::complete_path.push_back(Robot::pathfinder1->pathToPair());
                 }
             }
@@ -483,13 +508,15 @@ void Robot::game_1_loop() {
             Robot::n_target_is_last = Robot::complete_path.front().size() == 1;
             Robot::n_target = Robot::complete_path.front().back();
 
+            std::cout << "new target: " << Robot::n_target.first << " | " << Robot::n_target.second << std::endl;
+
             // if it's the last element remove the path entirely
             if (Robot::n_target_is_last) {
                 Robot::complete_path.erase(Robot::complete_path.begin());
             }
                 // Otherwise just remove it
             else {
-                Robot::complete_path.front().pop_back();
+                Robot::complete_path.front().pop_back();//erase(Robot::complete_path.front().begin());
             }
         }
     }
@@ -520,12 +547,12 @@ void Robot::game_1_loop() {
     } else {
 
         Robot::move_to(Robot::n_target, Robot::n_target_is_last);
-        //std::cout << "Is at: " << *Robot::x << " | " << *Robot::y << "\tmoving to: " << n_target.first << " | " << n_target.second << std::endl;
+        std::cout << "Is at: " << *Robot::x << " | " << *Robot::y << "\tmoving to: " << Robot::n_target.first << " | " << Robot::n_target.second << std::endl;
 
         // if the distance is very small the target has been reached
-        if (dist(n_target.first, *Robot::x, n_target.second, *Robot::y) < 5) {
+        if (dist(Robot::n_target.first, *Robot::x, Robot::n_target.second, *Robot::y) < 5) {
             std::cout << "reached Object" << std::endl;
-            n_target = {-1, -1};
+            Robot::n_target = {-1, -1};
         }
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded
