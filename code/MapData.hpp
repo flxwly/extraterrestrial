@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <array>
 
 class MapData {
 public:
@@ -21,6 +22,8 @@ public:
     int getPointCount(int pColor);
 
     int findPoint(std::pair<int, int> p, int pColor);
+
+    std::vector<std::array<int, 3>> getAllPoints();
 
     // TODO: int findApproxPoint(std::pair<int, int> p, int pColor);
 
