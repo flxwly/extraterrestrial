@@ -25,7 +25,7 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
     Robot::timer = time(NULL);
 
     Robot::collecting_since = -10;                                      // time var for collect function
-    Robot::depoisiting_since = -10;                                     // time var for deposit function
+    Robot::depositing_since = -10;                                     // time var for deposit function
 }
 
 //====================================
@@ -66,6 +66,7 @@ void Robot::collect() {
     // the robot is already collecting
     if (difftime(Robot::timer, Robot::collecting_since) < 3) {
         // This is to prevent the robot from moving
+        std::cout << "Collecting since: " << Robot::collecting_since << std::endl;
         Robot::wheels(0, 0);
         *Robot::led = 1;
 
@@ -93,7 +94,7 @@ void Robot::collect() {
 bool Robot::should_deposit() {
 
     // while timer - depositing_since < 6the robot is still depositting
-    if (difftime(Robot::timer, Robot::depoisiting_since) < 6)
+    if (difftime(Robot::timer, Robot::depositing_since) < 6)
         return true;
 
     // the robot uses a treshhold to determine if it has enough points so that it is worth it to deposit
@@ -119,7 +120,10 @@ bool Robot::should_deposit() {
 
 void Robot::deposit() {
     // the robot is already depositing
-    if (difftime(Robot::timer, Robot::depoisiting_since) < 6) {
+    if (difftime(Robot::timer, Robot::depositing_since) < 6) {
+
+        std::cout << "Depositing since: " << Robot::collecting_since << std::endl;
+
         // This is to prevent the robot from moving
         Robot::wheels(0, 0);
         *Robot::led = 2;
@@ -128,7 +132,7 @@ void Robot::deposit() {
         // the robot begins to deposit
     else {
         // set deposit_since to now
-        Robot::depoisiting_since = Robot::timer;
+        Robot::depositing_since = Robot::timer;
 
         // update the loaded_objects vars
         Robot::loaded_objects[0] = 0;
@@ -245,6 +249,9 @@ int Robot::move_to(std::pair<int, int> p) {
 }
 
 int Robot::check_us_sensors(int l, int f, int r) {
+
+
+    // returns a "binary"(000) value saying which sensors are below a threshold
     int sum = 0;
     if (*Robot::us[0] < l)
         sum += 1;
@@ -255,7 +262,7 @@ int Robot::check_us_sensors(int l, int f, int r) {
     return sum;
 }
 
-void Robot::loop() {
+void Robot::loop0() {
     timer = time(NULL);
     if (Robot::should_deposit() && (isOrangeLeft() || isOrangeRight())) {
         if (isOrange()) {

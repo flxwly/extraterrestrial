@@ -22,7 +22,7 @@ public:
     int move_to(int x, int y);
     int check_us_sensors(int l, int f, int r);
 
-    void loop();
+    void loop0();
 
 private:
     // === Variable pointers to vars updated by the sim ===
@@ -43,13 +43,13 @@ private:
 
     int chasing_sobj_num; // the super_objects_num that the robot chases in it's current path
 
-    void update_pos();
+    void update_pos();      // whenever the position is lost, use this method to update the position based on math
 
-    time_t collecting_since;
+    time_t collecting_since;// collecting vars and functions
     bool should_collect();
     void collect();
 
-    time_t depoisiting_since;
+    time_t depositing_since;// depositing vars and functions
     bool should_deposit();
     void deposit();
 };
