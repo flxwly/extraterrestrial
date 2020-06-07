@@ -11,7 +11,7 @@ from watchdog.observers import Observer
 is_strip = False
 more_warnings = True
 
-auto_update = False
+auto_update = True
 
 optimisation_level = 3
 

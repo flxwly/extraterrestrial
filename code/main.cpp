@@ -2,7 +2,7 @@
 #define CsBot_AI_C  //DO NOT delete this line
 #ifndef CSBOT_REAL
 
-#define ROBOT_RAD 10
+#define ROBOT_RAD 6
 
 #include <iostream>
 #include <windows.h>
@@ -19,6 +19,7 @@ using namespace std;
 #include "MapData.hpp"
 #include "DebugTools.hpp"
 #include "Robot.hpp"
+#include "Speedometer.hpp"
 
 #endif
 
@@ -50,11 +51,13 @@ AStar PathfinderGame1(GAME1.Map, ROBOT_RAD);
 
 DebugTool Debug(0, 0, 10);
 
+Speedometer SpeedOMeter;
+
 Robot Bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
           &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
           &US_Left, &US_Front, &US_Right,
           &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time,
-          &GAME0, &GAME1, &PathfinderGame0, &PathfinderGame1);
+          &GAME0, &GAME1, &PathfinderGame0, &PathfinderGame1, &SpeedOMeter);
 
 void Setup() {
     system("cls");
@@ -68,8 +71,25 @@ void Setup() {
 
     DEBUG_MESSAGE("\tGame1...", 0);
 
-    Debug.addMap(GAME1.Map);
-    Debug.addMarker(10, 10, 10);
+    std::vector<std::vector<int>> pMap;
+    for (int i = 0; i < PathfinderGame1.map.size(); i++) {
+        std::vector<int> _v;
+        pMap.push_back(_v);
+        for (int j = 0; j < PathfinderGame1.map[i].size(); j++) {
+            auto node = PathfinderGame1.map[i][j];
+            if (node.isWall) {
+                pMap[i].push_back(1);
+            } else if (node.isTrap) {
+                pMap[i].push_back(2);
+            } else if (node.isSwamp) {
+                pMap[i].push_back(3);
+            } else {
+                pMap[i].push_back(0);
+            }
+        }
+    }
+
+    Debug.addMap(pMap);
 
     DEBUG_MESSAGE("\t finished\n", 0);
 
@@ -84,7 +104,6 @@ void Setup() {
 
 void Game0() {
     updateHSL();
-
     Bot.game_0_loop();
 }
 
@@ -102,6 +121,7 @@ void Game0() {
 
 void Game1() {
     updateHSL();
+
 
     Bot.game_1_loop();
 

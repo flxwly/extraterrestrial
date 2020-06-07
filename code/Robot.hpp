@@ -13,6 +13,7 @@
 #include "ColorRecognition.hpp"
 #include "MapData.hpp"
 #include "Pathfinding.hpp"
+#include "Speedometer.hpp"
 
 class Robot {
 public:
@@ -21,7 +22,7 @@ public:
           int *_rc_r, int *_rc_g, int *_rc_b, int *_lc_r, int *_lc_g, int *_lc_b,
           int *_rus, int *_fus, int *_lus,
           int *_whl_l, int *_whl_r, int *_led, int *_tp, int *_g_time,
-          MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1);
+          MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1, Speedometer *_speedometer);
 
 
     std::vector<std::vector<std::pair<int, int>>> complete_path;
@@ -61,15 +62,18 @@ private:
 
     MapData *map0, *map1;
     AStar *pathfinder0, *pathfinder1;
+    Speedometer *speedometer;
 
     int loaded_objects_num;                     // number of objects loaded
-    std::array<int, 3> loaded_objects;        // complete inventory of robot
+    std::array<int, 3> loaded_objects{};        // complete inventory of robot
 
 
     std::pair<int, int> n_target;               // pathfinder waypoint chasing
     bool n_target_is_last;                      // is n_target the last element of a path
 
     int chasing_sobj_num;                       // the super_objects_num that the robot chases in it's current path
+
+    std::chrono::time_point<std::chrono::steady_clock> last_knonw_pos_time;
 
     //               ___________
     //______________/ functions \_____________

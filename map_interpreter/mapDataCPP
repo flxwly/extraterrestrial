@@ -120,10 +120,10 @@ std::vector<std::array<int, 3>> MapData::getAllPoints() {
         all_points.push_back({point.first, point.second, 0});
     }
     for (auto point : MapData::GreenPoints) {
-        all_points.push_back({point.first, point.second, 0});
+        all_points.push_back({point.first, point.second, 1});
     }
     for (auto point : MapData::BlackPoints) {
-        all_points.push_back({point.first, point.second, 0});
+        all_points.push_back({point.first, point.second, 2});
     }
 
     return all_points;

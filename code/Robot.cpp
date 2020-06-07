@@ -11,7 +11,7 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
              int *_rc_r, int *_rc_g, int *_rc_b, int *_lc_r, int *_lc_g, int *_lc_b,
              int *_rus, int *_fus, int *_lus,
              int *_whl_l, int *_whl_r, int *_led, int *_tp, int *_g_time,
-             MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1) {
+             MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1, Speedometer *_speedometer) {
 
     Robot::x = _x, Robot::y = _y;                                       // robots position
     Robot::comp = _comp;                                                // compass
@@ -29,6 +29,7 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
 
     Robot::map0 = _map0, Robot::map1 = _map1;
     Robot::pathfinder0 = _pathfinder0, Robot::pathfinder1 = _pathfinder1;
+    Robot::speedometer = _speedometer;
 
     Robot::n_target = {-1, -1};
     Robot::n_target_is_last = false;
@@ -40,6 +41,7 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
     Robot::loaded_objects = {0, 0, 0};
     Robot::loaded_objects_num = 0;
 
+
     Robot::collecting_since = Robot::timer::now();                       // time var for collect function
     Robot::depositing_since = Robot::timer::now();                       // time var for deposit function
 }
@@ -50,7 +52,17 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
 
 // TODO: update_pos function
 void Robot::update_pos() {
-    Robot::x += 0, Robot::y += 0;
+    // time difference between last known position and now
+    double speed = Robot::speedometer->avg_speed(100);
+    double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
+            Robot::timer::now() - depositing_since).count();
+
+    std::pair<double, double> u_vector = angle2Vector(*Robot::comp);
+    u_vector.first *= speed * time_dif, u_vector.second *= speed * time_dif;
+
+    std::cout << "speed: " << str(u_vector) << "\n";
+
+    *Robot::x += u_vector.first, *Robot::y += u_vector.second;
 }
 
 // collect functions
@@ -231,7 +243,7 @@ std::vector<std::pair<int, int>> Robot::get_points(MapData &mapData) {
     // point finding algorithm. (See Idea 4 on https://stackoverflow.com/questions/62179174)
     //      This might be an almost optimal solution
 
-    double b_overall_dist = 0;
+    double b_overall_dist = -1;
 
     for (auto deposit_area : mapData.getDepositAreas()) {
         // temporary array to be able to compare
@@ -247,7 +259,7 @@ std::vector<std::pair<int, int>> Robot::get_points(MapData &mapData) {
         // add upto 6 points to cur_path;
         for (int i = Robot::loaded_objects_num; i < 6; ++i) {
 
-            std::pair<int, int> b_point;
+            std::array<int, 3> b_point{0, 0, 0};
             double b_dist = -1;
 
             // getAllPoints() returns a vector<array<int, 3>>:
@@ -265,14 +277,14 @@ std::vector<std::pair<int, int>> Robot::get_points(MapData &mapData) {
                     // if f_cost is lower set f_cost to cur_cost
                     if (g_dist + h_dist < b_dist || b_dist == -1) {
                         b_dist = g_dist + h_dist;
-                        b_point = {point[0], point[1]};
-                        c_points[point[2]]++;
+                        b_point = {point[0], point[1], point[2]};
                     }
                 }
             }
+            c_points[b_point[2]]++;
             // The best point is added to the cur_path alongside with it's distance
-            p_dist += dist(b_point.first, cur_path.end()->first, b_point.second, cur_path.end()->second);
-            cur_path.push_back(b_point);
+            p_dist += dist(b_point[0], cur_path.end()->first, b_point[1], cur_path.end()->second);
+            cur_path.emplace_back(b_point[0], b_point[1]);
         }
         // add the dist from the last point to the deposit_area
         p_dist += dist(deposit_area.first, cur_path.end()->first, deposit_area.second, cur_path.end()->second);
@@ -388,7 +400,6 @@ int Robot::move_to(int _x, int _y, bool safety) {
             return -1;
     }
 }
-
 int Robot::move_to(std::pair<int, int> p, bool safety) {
     return Robot::move_to(p.first, p.second, safety);
 }
@@ -458,6 +469,10 @@ void Robot::game_0_loop() {
             *Robot::led = 0;
         }
     }
+    // Teleport
+    if (Robot::should_teleport()) {
+        Robot::teleport();
+    }
 }
 
 void Robot::game_1_loop() {
@@ -469,6 +484,9 @@ void Robot::game_1_loop() {
         Robot::update_pos();
     }
 
+    Robot::speedometer->log_speed(dist(*Robot::x, Robot::l_x, *Robot::y, Robot::l_y),
+                                  (*Robot::whl_l + *Robot::whl_r) / 2);
+    std::cout << Robot::speedometer->avg_speed(10) << "\n";
     // set last coords to normal coords (last coords wont get overwritten by the sim)
     Robot::l_x = *Robot::x, Robot::l_y = *Robot::y;
 
@@ -490,9 +508,19 @@ void Robot::game_1_loop() {
                     // add the path to the complete path
                     // the first path is at the front of the vector
                     Robot::complete_path.push_back(Robot::pathfinder1->pathToPair());
+                    std::cout << "added Path\n";
                 }
             }
+            std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
             start = end;
+        }
+        int i = 0;
+        for (const auto &path : Robot::complete_path) {
+            std::cout << "Path No. " << std::to_string(i) << std::endl;
+            for (auto point : path) {
+                std::cout << "\t" << str(point) << std::endl;
+            }
+            i++;
         }
     }
 
@@ -508,7 +536,7 @@ void Robot::game_1_loop() {
             Robot::n_target_is_last = Robot::complete_path.front().size() == 1;
             Robot::n_target = Robot::complete_path.front().back();
 
-            std::cout << "new target: " << Robot::n_target.first << " | " << Robot::n_target.second << std::endl;
+            std::cout << "new target: " << str(Robot::n_target) << std::endl;
 
             // if it's the last element remove the path entirely
             if (Robot::n_target_is_last) {
@@ -547,7 +575,7 @@ void Robot::game_1_loop() {
     } else {
 
         Robot::move_to(Robot::n_target, Robot::n_target_is_last);
-        std::cout << "Is at: " << *Robot::x << " | " << *Robot::y << "\tmoving to: " << Robot::n_target.first << " | " << Robot::n_target.second << std::endl;
+        std::cout << "Is at: " << str(*Robot::x, *Robot::y) << "\tmoving to: " << str(Robot::n_target) << std::endl;
 
         // if the distance is very small the target has been reached
         if (dist(Robot::n_target.first, *Robot::x, Robot::n_target.second, *Robot::y) < 5) {

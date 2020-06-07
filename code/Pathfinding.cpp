@@ -3,53 +3,58 @@
 #include <utility>
 #include "CommonFunctions.hpp"
 
-// Distanz zweier nodes
+// Distance between two nodes
 double heuristic(const node &cur, const node &end) {
     int xDiff = abs(cur.x - end.x);
     int yDiff = abs(cur.y - end.y);
-    /*if (xDiff > yDiff) {
-        return yDiff + sqrt(2) * (xDiff - yDiff);
-    } else {
-        return xDiff + sqrt(2) * (yDiff - xDiff);
-    }*/
-    //cout << H << "\n";
+
     return sqrt(pow(xDiff, 2) + pow(yDiff, 2));
 }
 
 AStar::AStar(const std::vector<std::vector<int>> &MAP, const int &r) {
     DEBUG_MESSAGE("Init new Pathfinder... ", 0);
     for (unsigned int i = 0; i < MAP.size(); i++) {
+        // insert node array
         const std::vector<node> _v;
-        this->map.push_back(_v);
+        AStar::map.push_back(_v);
         for (unsigned int j = 0; j < MAP[i].size(); j++) {
+            // insert node
             node _n;
-            this->map[i].push_back(_n);
-            this->map[i][j].x = static_cast<int>(i), this->map[i][j].y = static_cast<int>(j);
-            this->map[i][j].f = 0, this->map[i][j].g = 0;
-            this->map[i][j].previous = nullptr;
-            // Set Traps
-            this->map[i][j].isOpen = false, this->map[i][j].isClosed = false;
-            this->map[i][j].isTrap = MAP[i][j] == 2, this->map[i][j].isWall = MAP[i][j] == 1;
+            AStar::map[i].push_back(_n);
+            // location vars
+            AStar::map[i][j].x = static_cast<int>(i), AStar::map[i][j].y = static_cast<int>(j);
+            // cost vars
+            AStar::map[i][j].f = 0, AStar::map[i][j].g = 0;
+            // set AStar array vars
+            AStar::map[i][j].isOpen = false, AStar::map[i][j].isClosed = false;
+            AStar::map[i][j].previous = nullptr;
+            // Set walls, traps, swamps
+            AStar::map[i][j].isWall = MAP[i][j] == 1;
+            AStar::map[i][j].isTrap = MAP[i][j] == 2;
+            AStar::map[i][j].isSwamp = MAP[i][j] == 3;
+
+            AStar::map[i][j].isAtWall = false;
             // get neighbours
         }
     }
     // expand walls by r
-    for (unsigned int i = 0; i < this->map.size(); i++) {
-        for (unsigned int j = 0; j < this->map.size(); j++) {
-            if (!this->map[i][j].isAtWall && this->map[i][j].isWall) {
+    for (unsigned int i = 0; i < AStar::map.size(); i++) {
+        for (unsigned int j = 0; j < AStar::map[i].size(); j++) {
+            if (!AStar::map[i][j].isAtWall && AStar::map[i][j].isWall) {
 
                 // every field around i,j
-                for (int x = -r; x < r; ++x) {
-                    for (int y = -r; y < r; ++y) {
+                for (int x = static_cast<int>(i) - r; x < static_cast<int>(i) + r; ++x) {
+                    for (int y = static_cast<int>(j) - r; y < static_cast<int>(j) + r; ++y) {
 
                         // out of bounds check
-                        if (x >= 0 && x < static_cast<int>(map.size()) && y >= 0 &&
-                            y < static_cast<int>(map[i].size())) {
-
+                        if (x >= 0 && x < static_cast<int>(AStar::map.size()) &&
+                            y >= 0 && y < static_cast<int>(AStar::map[i].size())) {
                             // only convert walls that aren't walls
-                            if (!this->map[i][j].isWall) {
-                                this->map[x][y].isAtWall = true;
-                                this->map[x][y].isWall = true;
+                            if (!AStar::map[x][y].isWall) {
+                                // AtWall stands for artificial wall
+
+                                AStar::map[x][y].isAtWall = true;
+                                AStar::map[x][y].isWall = true;
                             }
                         }
                     }
@@ -59,23 +64,23 @@ AStar::AStar(const std::vector<std::vector<int>> &MAP, const int &r) {
     }
 
     // add neighbours
-    for (unsigned int i = 0; i < MAP.size(); i++) {
-        for (unsigned int j = 0; j < MAP[i].size(); j++) {
+    for (unsigned int i = 0; i < AStar::map.size(); i++) {
+        for (unsigned int j = 0; j < AStar::map[i].size(); j++) {
 
             for (int x = static_cast<int>(i) - 1; x <= static_cast<int>(i) + 1; x++) {
                 for (int y = static_cast<int>(j) - 1; y <= static_cast<int>(j) + 1; y++) {
                     // out of bounds check
                     if (x >= 0 && x < static_cast<int>(map.size()) && y >= 0 && y < static_cast<int>(map[i].size())) {
 
-                        if (MAP[x][y] != 1 && (static_cast<int>(i) != x || static_cast<int>(j) != y)) {
-                            map[i][j].neighbours.push_back(&map[x][y]);
+                        if (!AStar::map[x][y].isWall && (static_cast<int>(i) != x || static_cast<int>(j) != y)) {
+                            AStar::map[i][j].neighbours.push_back(&AStar::map[x][y]);
                         }
                     }
                 }
             }
         }
     }
-    std::cout << this->map.size() << " | " << this->map[0].size() << std::endl;
+    std::cout << AStar::map.size() << " | " << AStar::map[0].size() << std::endl;
     DEBUG_MESSAGE("\t finished\n", 0);
 }
 
@@ -92,6 +97,7 @@ bool AStar::isPassable(node *_n, bool traps) {
 // TODO: Fix Weird Bug, where sometimes diagonals are chosen although a straight part is faster
 bool AStar::findPath(node *start, node *end, bool watchForTraps) {
 
+    std::cout << "finding path...";
     int nodesChecked = 0;
 
     if (start == end) {
@@ -139,7 +145,9 @@ bool AStar::findPath(node *start, node *end, bool watchForTraps) {
                     continue;
                 }
                 // temp_g = g cost over cur
-                temp_g = cur->g + heuristic(*cur, *neighbour);
+                // cost is multiplied if neighbour isSwamp
+                temp_g =
+                        cur->g + ((neighbour->isSwamp) ? 2 * heuristic(*cur, *neighbour) : heuristic(*cur, *neighbour));
                 // if neighbour is in openList just update | otherwise add and update
                 if (neighbour->isOpen) {
                     // only if path over cur is better
@@ -189,7 +197,7 @@ bool AStar::findPath(std::pair<int, int> start, std::pair<int, int> end) {
 }
 
 bool AStar::findPath(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps) {
-    return AStar::findPath(&AStar::map[start.first][start.second], &AStar::map[start.first][start.second],
+    return AStar::findPath(&AStar::map[start.first][start.second], &AStar::map[end.first][end.second],
                            watch_for_traps);
 }
 

@@ -53,18 +53,53 @@ double min(double n, double m) {
 double dist(int x1, int x2, int y1, int y2) {
     return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
+
 double dist(double x1, double x2, double y1, double y2) {
     return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
+double map(double Mmin, double Mmax, double Imin, double Imax, double input) {
+    if (Mmin > Mmax) {
+        double temp = Mmin;
+        Mmin = Mmax;
+        Mmax = temp;
+    }
+    if (Imin > Imax) {
+        double temp = Imin;
+        Imin = Imax;
+        Imax = temp;
+    }
+    double output = Mmin + ((Mmax - Mmin) / (Imax - Imin)) * (input - Imin);
+    return output;
+}
+
+
+// Anything to String
+std::string str(int x, int y) {
+    return std::to_string(x) + " | " + std::to_string(y);
+}
+
+std::string str(std::pair<int, int> p) {
+    return str(p.first, p.second);
+}
+
+std::string str(double x, double y) {
+    return std::to_string(x) + " | " + std::to_string(y);
+}
+
+std::string str(std::pair<double, double> p) {
+    return str(p.first, p.second);
+}
+
+// vector2angle
 int vector2Angle(int x, int y) {
 
     if (x == 0)
-        return (y >= 0)? 0 : 180;
+        return (y >= 0) ? 0 : 180;
     else if (y == 0)
-        return (x > 0)? 90 : 270;
+        return (x > 0) ? 90 : 270;
 
-    int angle = toDegrees(atan(static_cast<double>(y)/x));
+    int angle = toDegrees(atan(static_cast<double>(y) / x));
 
     // bottom left (90 - 180)
     if (x < 0 && y < 0)
@@ -85,11 +120,9 @@ int vector2Angle(int x, int y) {
     }
     return angle;
 }
-
 int vector2Angle(std::pair<int, int> p) {
     return vector2Angle(p.first, p.second);
 }
-
 int vector2Angle(double x, double y) {
 
     if (x == 0)
@@ -118,22 +151,12 @@ int vector2Angle(double x, double y) {
     }
     return angle;
 }
-
 int vector2Angle(std::pair<double, double> p) {
     return vector2Angle(p.first, p.second);
 }
 
-double map(double Mmin, double Mmax, double Imin, double Imax, double input) {
-    if (Mmin > Mmax) {
-        double temp = Mmin;
-        Mmin = Mmax;
-        Mmax = temp;
-    }
-    if (Imin > Imax) {
-        double temp = Imin;
-        Imin = Imax;
-        Imax = temp;
-    }
-    double output = Mmin + ((Mmax - Mmin) / (Imax - Imin)) * (input - Imin);
-    return output;
+// angle2Vector
+
+std::pair<double, double> angle2Vector(int angle) {
+    return {cos(angle), sin(angle)};
 }

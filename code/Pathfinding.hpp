@@ -11,7 +11,7 @@
 
 class node {
 public:
-    bool isClosed, isOpen, isTrap, isWall, isAtWall;
+    bool isClosed, isOpen, isTrap, isWall, isAtWall, isSwamp;
     int x, y;
     double g, f;
     std::vector<node *> neighbours;
