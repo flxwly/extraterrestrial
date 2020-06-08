@@ -1,4 +1,4 @@
-#include "Pathfinding.hpp"
+#include "AStar.hpp"
 
 #include <utility>
 #include "CommonFunctions.hpp"

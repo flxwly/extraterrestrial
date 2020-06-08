@@ -12,8 +12,9 @@
 #include "CommonFunctions.hpp"
 #include "ColorRecognition.hpp"
 #include "MapData.hpp"
-#include "Pathfinding.hpp"
-#include "Speedometer.hpp"
+#include "AStar.hpp"
+
+#define ROBOT_SPEED 0.03333333               // in milliseconds for wheelspeed = 1
 
 class Robot {
 public:
@@ -22,7 +23,7 @@ public:
           int *_rc_r, int *_rc_g, int *_rc_b, int *_lc_r, int *_lc_g, int *_lc_b,
           int *_rus, int *_fus, int *_lus,
           int *_whl_l, int *_whl_r, int *_led, int *_tp, int *_g_time,
-          MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1, Speedometer *_speedometer);
+          MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1);
 
 
     std::vector<std::vector<std::pair<int, int>>> complete_path;
@@ -58,50 +59,48 @@ private:
 
     // === Robot vars ===
 
-    int l_x, l_y;                               // last coordinates of the robot (for signal loss)
-
     MapData *map0, *map1;
     AStar *pathfinder0, *pathfinder1;
-    Speedometer *speedometer;
 
     int loaded_objects_num;                     // number of objects loaded
     std::array<int, 3> loaded_objects{};        // complete inventory of robot
 
-
     std::pair<int, int> n_target;               // pathfinder waypoint chasing
     bool n_target_is_last;                      // is n_target the last element of a path
-
     int chasing_sobj_num;                       // the super_objects_num that the robot chases in it's current path
-
-    std::chrono::time_point<std::chrono::steady_clock> last_knonw_pos_time;
 
     //               ___________
     //______________/ functions \_____________
 
     // function to update the position based on speed and time
+    int l_x, l_y;                               // last coordinates of the robot (for signal loss)
+    std::chrono::time_point<std::chrono::steady_clock> latest_position_update;
+
     void update_pos();
 
     // typedef for time (basically a macro)
     typedef std::chrono::steady_clock timer;
 
+    // functions to collect
     std::chrono::time_point<std::chrono::steady_clock> collecting_since;
 
     bool should_collect();
 
     void collect();
 
+    // functions to deposit
     std::chrono::time_point<std::chrono::steady_clock> depositing_since;
-
     bool should_deposit();
-
     void deposit();
 
+    // functions to teleport
     bool should_teleport();
-
     void teleport();
 
+    // a helper function to not drive off map
     int avoid_void();
 
+    // function to determine which points to collect
     std::vector<std::pair<int, int>> get_points(MapData &mapData);
 };
 

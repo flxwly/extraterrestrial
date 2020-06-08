@@ -1,6 +1,3 @@
-//
-// Created by flxwl on 05.06.2020.
-//
 
 #include "Robot.hpp"
 
@@ -11,7 +8,7 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
              int *_rc_r, int *_rc_g, int *_rc_b, int *_lc_r, int *_lc_g, int *_lc_b,
              int *_rus, int *_fus, int *_lus,
              int *_whl_l, int *_whl_r, int *_led, int *_tp, int *_g_time,
-             MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1, Speedometer *_speedometer) {
+             MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1) {
 
     Robot::x = _x, Robot::y = _y;                                       // robots position
     Robot::comp = _comp;                                                // compass
@@ -26,21 +23,17 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
     Robot::g_time = _g_time;                                            // game time
 
     Robot::l_x = -1, Robot::l_y = -1;                                   // last xy coords
+    Robot::latest_position_update = Robot::timer::now();                // to determine how far the robot went
 
     Robot::map0 = _map0, Robot::map1 = _map1;
     Robot::pathfinder0 = _pathfinder0, Robot::pathfinder1 = _pathfinder1;
-    Robot::speedometer = _speedometer;
 
     Robot::n_target = {-1, -1};
     Robot::n_target_is_last = false;
-
     Robot::chasing_sobj_num = 0;                                        // represents how many super_objects are in current paths
-
-
 
     Robot::loaded_objects = {0, 0, 0};
     Robot::loaded_objects_num = 0;
-
 
     Robot::collecting_since = Robot::timer::now();                       // time var for collect function
     Robot::depositing_since = Robot::timer::now();                       // time var for deposit function
@@ -52,17 +45,30 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
 
 // TODO: update_pos function
 void Robot::update_pos() {
+
+    // This method only works for equal speed on both wheels
+    if (*Robot::whl_r + *Robot::whl_l == 0 || *Robot::whl_r != *Robot::whl_l) {
+        return;
+    }
+
+    // Since whl_r and whl_l are equal we can set the wheel speed to one of them (This might have to change to include turning and stuff)
+    int wheel_speed = *Robot::whl_l;
+
     // time difference between last known position and now
-    double speed = Robot::speedometer->avg_speed(100);
     double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
-            Robot::timer::now() - depositing_since).count();
+            Robot::timer::now() - Robot::latest_position_update).count();
 
-    std::pair<double, double> u_vector = angle2Vector(*Robot::comp);
-    u_vector.first *= speed * time_dif, u_vector.second *= speed * time_dif;
+    // total distance
+    double distance = ROBOT_SPEED * time_dif * wheel_speed;
 
-    std::cout << "speed: " << str(u_vector) << "\n";
+    // multiply a direction_vector with distance to get x and y change;
+    std::pair<double, double> dir_vector = angle2Vector(*Robot::comp);
+    dir_vector = {dir_vector.first * distance, dir_vector.second * distance};
 
-    *Robot::x += u_vector.first, *Robot::y += u_vector.second;
+    std::cout << "speed: " << str(dir_vector) << "\n";
+
+    // add vector to position
+    *Robot::x += dir_vector.first, *Robot::y += dir_vector.second;
 }
 
 // collect functions
@@ -91,7 +97,6 @@ bool Robot::should_collect() {
     // if there's no object beneath the robot, don't try to collect anything
     return false;
 }
-
 void Robot::collect() {
 
     // the robot is already collecting
@@ -148,7 +153,6 @@ bool Robot::should_deposit() {
     // 145 = 2 red + 1 cyan + 1 black | 20 + 15 + 20 + 90
     return treshhold >= 145;
 }
-
 void Robot::deposit() {
     // the robot is already depositing
     if (std::chrono::duration_cast<std::chrono::milliseconds>(Robot::timer::now() - depositing_since).count() <= 5000) {
@@ -200,7 +204,6 @@ bool Robot::should_teleport() {
     //      teleport in any case
     return *Robot::g_time > 240;
 }
-
 void Robot::teleport() {
     Robot::loaded_objects_num = 0;
     Robot::loaded_objects[0] = 0;
@@ -209,6 +212,7 @@ void Robot::teleport() {
 
     *Robot::tp = 1;
 }
+
 
 int Robot::avoid_void() {
     if (*Robot::x >= 350 && *Robot::comp > 270 && *Robot::comp <= 360) {
@@ -403,7 +407,6 @@ int Robot::move_to(int _x, int _y, bool safety) {
 int Robot::move_to(std::pair<int, int> p, bool safety) {
     return Robot::move_to(p.first, p.second, safety);
 }
-
 int Robot::check_us_sensors(int l, int f, int r) {
     int sum = 0;
     if (*Robot::us[0] < l)
@@ -414,6 +417,7 @@ int Robot::check_us_sensors(int l, int f, int r) {
         sum += 4;
     return sum;
 }
+
 
 void Robot::game_0_loop() {
     if (Robot::should_deposit() && (isOrangeLeft() || isOrangeRight())) {
@@ -474,8 +478,22 @@ void Robot::game_0_loop() {
         Robot::teleport();
     }
 }
-
 void Robot::game_1_loop() {
+
+    // ====== Just for speed measure ====== //     (leave it in for later)
+    if (false && *Robot::whl_l == *Robot::whl_r && *Robot::whl_l != 0) {
+
+        double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
+                Robot::timer::now() - Robot::latest_position_update).count();
+
+        double distance = dist(*Robot::x, Robot::l_x, *Robot::y, Robot::l_y);
+
+        std::cout << distance / time_dif << std::endl;
+
+    }
+
+
+
     // check if robot is in signal lost zone
     if (*Robot::x == 0 && *Robot::y == 0) {
 
@@ -484,11 +502,9 @@ void Robot::game_1_loop() {
         Robot::update_pos();
     }
 
-    Robot::speedometer->log_speed(dist(*Robot::x, Robot::l_x, *Robot::y, Robot::l_y),
-                                  (*Robot::whl_l + *Robot::whl_r) / 2);
-    std::cout << Robot::speedometer->avg_speed(10) << "\n";
     // set last coords to normal coords (last coords wont get overwritten by the sim)
     Robot::l_x = *Robot::x, Robot::l_y = *Robot::y;
+    Robot::latest_position_update = Robot::timer::now();
 
     //#####################
     // -- PATHFINDING --
@@ -508,20 +524,20 @@ void Robot::game_1_loop() {
                     // add the path to the complete path
                     // the first path is at the front of the vector
                     Robot::complete_path.push_back(Robot::pathfinder1->pathToPair());
-                    std::cout << "added Path\n";
+                    //std::cout << "added Path\n";
                 }
             }
-            std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
+            //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
             start = end;
         }
         int i = 0;
-        for (const auto &path : Robot::complete_path) {
+        /*for (const auto &path : Robot::complete_path) {
             std::cout << "Path No. " << std::to_string(i) << std::endl;
             for (auto point : path) {
                 std::cout << "\t" << str(point) << std::endl;
             }
             i++;
-        }
+        }*/
     }
 
 
@@ -536,7 +552,7 @@ void Robot::game_1_loop() {
             Robot::n_target_is_last = Robot::complete_path.front().size() == 1;
             Robot::n_target = Robot::complete_path.front().back();
 
-            std::cout << "new target: " << str(Robot::n_target) << std::endl;
+            //std::cout << "new target: " << str(Robot::n_target) << std::endl;
 
             // if it's the last element remove the path entirely
             if (Robot::n_target_is_last) {
@@ -575,11 +591,11 @@ void Robot::game_1_loop() {
     } else {
 
         Robot::move_to(Robot::n_target, Robot::n_target_is_last);
-        std::cout << "Is at: " << str(*Robot::x, *Robot::y) << "\tmoving to: " << str(Robot::n_target) << std::endl;
+        //std::cout << "Is at: " << str(*Robot::x, *Robot::y) << "\tmoving to: " << str(Robot::n_target) << std::endl;
 
         // if the distance is very small the target has been reached
         if (dist(Robot::n_target.first, *Robot::x, Robot::n_target.second, *Robot::y) < 5) {
-            std::cout << "reached Object" << std::endl;
+            //std::cout << "reached Object" << std::endl;
             Robot::n_target = {-1, -1};
         }
 
@@ -592,4 +608,5 @@ void Robot::game_1_loop() {
             wheels(5, 0);
         }
     }
+
 }

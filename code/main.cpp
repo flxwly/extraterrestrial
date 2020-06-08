@@ -12,14 +12,13 @@ using namespace std;
 
 #include "CoSpaceFunctions.hpp"
 #include "CommonFunctions.hpp"
-#include "Navigation.hpp"
 #include "ColorRecognition.hpp"
-#include "Pathfinding.hpp"
 
+// Classes
+#include "AStar.hpp"
 #include "MapData.hpp"
 #include "DebugTools.hpp"
 #include "Robot.hpp"
-#include "Speedometer.hpp"
 
 #endif
 
@@ -51,13 +50,11 @@ AStar PathfinderGame1(GAME1.Map, ROBOT_RAD);
 
 DebugTool Debug(0, 0, 10);
 
-Speedometer SpeedOMeter;
-
 Robot Bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
           &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
           &US_Left, &US_Front, &US_Right,
           &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time,
-          &GAME0, &GAME1, &PathfinderGame0, &PathfinderGame1, &SpeedOMeter);
+          &GAME0, &GAME1, &PathfinderGame0, &PathfinderGame1);
 
 void Setup() {
     system("cls");
