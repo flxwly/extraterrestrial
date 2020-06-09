@@ -1,4 +1,3 @@
-
 #include "Robot.hpp"
 
 //====================================
@@ -519,11 +518,13 @@ void Robot::game_1_loop() {
         // calculate a path from one point to the next
         for (auto end : point_path) {
             if (start.first != -1 && start.second != -1) {
-                if (Robot::pathfinder1->findPath(start, end, Robot::loaded_objects_num > 0)) {
+                std::vector<std::pair<int, int>> p = Robot::pathfinder1->findPath(start, end,
+                                                                                  Robot::loaded_objects_num > 0);
+                if (!p.empty()) {
 
                     // add the path to the complete path
                     // the first path is at the front of the vector
-                    Robot::complete_path.push_back(Robot::pathfinder1->pathToPair());
+                    Robot::complete_path.push_back(p);
                     //std::cout << "added Path\n";
                 }
             }
