@@ -5,6 +5,8 @@ from numpy import asarray
 
 import cv2
 
+#C:\Users\Asus\Microsoft Robotics Dev Studio 4\store\media\CS.C\RSC\Map\Design
+
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
 FieldFD = ET.parse("../../../../../store/media/Rescue/Map/Sec/Design/Field.FD")
