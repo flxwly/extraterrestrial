@@ -1,6 +1,7 @@
 cmake-build-debug
 .idea
 map_interpreter/.idea
+.vscode
 .floo
 .flooignore
 CMakeLists.txt
