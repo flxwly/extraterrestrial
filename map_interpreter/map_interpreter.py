@@ -1,7 +1,5 @@
 import xml.etree.ElementTree as ET
 from os import path
-from PIL import Image
-from numpy import asarray
 
 import cv2
 
@@ -33,7 +31,6 @@ def average_point(point_arr, h):
         x += n[0]
         y += h - n[1]
         count += 1
-    deposit_area_points = []
     return [int(x / count), int(y / count)]
 
 
@@ -125,9 +122,8 @@ def get_nodes(img_arr, wall_arr, w, h):
         for step in wall_steps:
             x = wall[0] + step[0]
             y = wall[1] + step[1]
-            print(x)
             if 0 <= x < w and 0 <= y < h:
-                if get_obj_type(img_arr[y, x]) in [1, 1.1]:
+                if get_obj_type(img_arr[y, x]) in [1, 1.1, 2]:
                     surrounding_walls.append([x, y])
             else:
                 pass
@@ -136,8 +132,6 @@ def get_nodes(img_arr, wall_arr, w, h):
             # only if not a straight line
             if surrounding_walls[0][0] - surrounding_walls[1][0] != 0 \
                     and surrounding_walls[0][1] - surrounding_walls[1][1] != 0:
-                x_step = wall[0] - surrounding_walls[0][0]
-                y_step = wall[1] - surrounding_walls[1][1]
                 # x step of surrounding_walls[0] is 0
                 if wall[0] - surrounding_walls[0][0] == 0:
                     temp = surrounding_walls[0]
@@ -155,13 +149,13 @@ def convert_background(_dir, width, height, worldnr):
     print("converting Background: " + str(worldnr))
 
     wall_coords = []
-    wall_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "WALLS = {"
+    wall_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "WALLS = "
     node_coords = []
-    node_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "NODES = {"
+    node_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "NODES = "
     trap_coords = []
-    trap_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "TRAPS = {"
+    trap_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "TRAPS = "
     swamp_coords = []
-    swamp_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "SWAMPS = {"
+    swamp_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "SWAMPS = "
     deposit_area_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "DEPOSITAREAS = "
 
     deposit_area_points = []
@@ -184,7 +178,7 @@ def convert_background(_dir, width, height, worldnr):
                 swamp_coords.append([i, j])
             elif get_obj_type(pixel) == 4:
                 set_area_point_to_zero(i, j, img_arr, deposit_area_points)
-                deposit_areas.append(average_point)
+                deposit_areas.append(average_point(deposit_area_points, height))
 
     print("\tanother walls file exists")
 
@@ -204,10 +198,10 @@ def convert_background(_dir, width, height, worldnr):
 
     print("convert to str")
     deposit_area_str += str(deposit_areas).replace("[", "{").replace("]", "}") + ";"
-    wall_str = str(wall_coords).replace("[", "{").replace("]", "}") + ";"
-    trap_str = str(trap_coords).replace("[", "{").replace("]", "}") + ";"
-    swamp_str = str(swamp_coords).replace("[", "{").replace("]", "}") + ";"
-    node_str = str(node_coords).replace("[", "{").replace("]", "}") + ";"
+    wall_str += str(wall_coords).replace("[", "{").replace("]", "}") + ";"
+    trap_str += str(trap_coords).replace("[", "{").replace("]", "}") + ";"
+    swamp_str += str(swamp_coords).replace("[", "{").replace("]", "}") + ";"
+    node_str += str(node_coords).replace("[", "{").replace("]", "}") + ";"
 
     filecontent = "/*walls*/ " + wall_str + "\n/*traps*/ " + trap_str + "\n/*swamps*/ " + swamp_str + "\n/*deposit*/ " + \
                   deposit_area_str + "\n/*nodes*/ " + node_str + "\n\n"
@@ -247,18 +241,18 @@ def main():
             world_2_points = find_color_points(child, 1)
     filename = "../code/MapData.cpp"
 
-    print("getting objects...")
+    print("getting objects... (this might take some time)")
 
     f = open("mapDataCPP", "r")
     cpp_data = f.read() + "\n\n"
     f.close()
 
-    f = open(filename, "w+")
     field_a = convert_background(FieldA, 240, 180, 0)
     field_a_points = write_points_to_file(world_1_points, 0)
     field_b = convert_background(FieldB, 360, 270, 1)
     field_b_points = write_points_to_file(world_2_points, 1)
-    print("writing to file... (this might take some time)")
+    print("writing to file...")
+    f = open(filename, "w+")
     f.write(cpp_data + field_a + field_a_points + field_b + field_b_points)
     f.close()
 

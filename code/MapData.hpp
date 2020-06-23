@@ -19,27 +19,30 @@ public:
             std::vector<std::pair<int, int>> *traps,
             std::vector<std::pair<int, int>> *swamps);
 
-    int getPointCount(int pColor);
-
     int findPoint(std::pair<int, int> p, int pColor);
-
-    std::vector<std::array<int, 3>> getAllPoints();
-
-    // TODO: int findApproxPoint(std::pair<int, int> p, int pColor);
 
     int erasePoint(std::pair<int, int> p, int pColor);
 
     int erasePoint(int index, int pColor);
 
+    // TODO: int findApproxPoint(std::pair<int, int> p, int pColor);
+    int getPointCount(int pColor);
+
+    std::vector<std::array<int, 3>> getAllPoints();
+
     std::pair<int, int> getPoint(int index, int pColor);
 
     std::vector<std::pair<int, int>> getDepositAreas();
+
+    std::vector<std::pair<int, int>> getNodes();
+
 
     int availableColors();
 
 private:
     std::vector<std::pair<int, int>> *getPtrToArr(int pColor);
 
+    std::vector<std::pair<int, int>> Nodes;
     std::vector<std::pair<int, int>> DepositAreas;
     std::vector<std::pair<int, int>> RedPoints;
     std::vector<std::pair<int, int>> GreenPoints;

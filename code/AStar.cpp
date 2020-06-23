@@ -40,7 +40,13 @@ double heuristic(const node &cur, const node &end) {
 }
 
 
-AStar::AStar(const std::vector<std::vector<int>> &MAP, const int &r) {
+AStar::AStar(const std::vector<std::vector<int>> &MAP, const std::vector<std::pair<int, int>> &NODES) {
+    // copy nodes to AStar object
+    for (const auto &_node : NODES) {
+        AStar::nodes.emplace_back(_node.first, _node.second);
+    }
+
+    // copy map to AStar object
     for (unsigned int i = 0; i < MAP.size(); i++) {
         // insert node array
         const std::vector<node> _v;
@@ -51,31 +57,6 @@ AStar::AStar(const std::vector<std::vector<int>> &MAP, const int &r) {
             AStar::map[i].push_back(
                     node(static_cast<int>(i), static_cast<int>(j), MAP[i][j] == 1, MAP[i][j] == 2, MAP[i][j] == 3));
 
-        }
-    }
-    // expand walls by r
-    for (unsigned int i = 0; i < AStar::map.size(); i++) {
-        for (unsigned int j = 0; j < AStar::map[i].size(); j++) {
-            if (!AStar::map[i][j].isAtWall && AStar::map[i][j].isWall) {
-
-                // every field around i,j
-                for (int x = static_cast<int>(i) - r; x < static_cast<int>(i) + r; ++x) {
-                    for (int y = static_cast<int>(j) - r; y < static_cast<int>(j) + r; ++y) {
-
-                        // out of bounds check
-                        if (x >= 0 && x < static_cast<int>(AStar::map.size()) &&
-                            y >= 0 && y < static_cast<int>(AStar::map[i].size())) {
-                            // only convert walls that aren't walls
-                            if (!AStar::map[x][y].isWall) {
-                                // AtWall stands for artificial wall
-
-                                AStar::map[x][y].isAtWall = true;
-                                AStar::map[x][y].isWall = true;
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -299,5 +280,7 @@ std::vector<std::pair<int, int>> AStar::to_pair(const std::vector<node> &p) {
     }
     return p_path;
 }
+
+
 
 

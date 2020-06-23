@@ -30,16 +30,19 @@ double heuristic(const node &cur, const node &end);
 
 class AStar {
 public:
-    explicit AStar(const std::vector<std::vector<int>> &MAP, const int &r);
+    explicit AStar(const std::vector<std::vector<int>> &MAP, const std::vector<std::pair<int, int>> &NODES);
 
     // the map the pathfinding works on
     //      TODO: don't use 2d array. instead use more prepared 1d array
     std::vector<std::vector<node>> map;
+    std::vector<node> nodes;
 
     // pathfinding algorithm
     std::vector<std::pair<int, int>> findPath(node *start, node *end, bool watchForTraps);
 
     std::vector<std::pair<int, int>> findPath(node *start, node *end);
+
+    std::vector<std::pair<int, int>> _findPath(node *start, node *end);
 
     std::vector<std::pair<int, int>> findPath(std::pair<int, int> start, std::pair<int, int> end);
 

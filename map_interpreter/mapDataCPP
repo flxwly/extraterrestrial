@@ -128,3 +128,7 @@ std::vector<std::array<int, 3>> MapData::getAllPoints() {
 
     return all_points;
 }
+
+std::vector<std::pair<int, int>> MapData::getNodes() {
+    return MapData::Nodes;
+}
