@@ -19,6 +19,7 @@ using namespace std;
 #include "MapData.hpp"
 #include "DebugTools.hpp"
 #include "Robot.hpp"
+#include "Point.hpp"
 
 #endif
 
@@ -47,6 +48,9 @@ MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &
 
 AStar PathfinderGame0(GAME0.Map, ROBOT_RAD);
 AStar PathfinderGame1(GAME1.Map, ROBOT_RAD);
+
+std::vector<Point> game0_points;
+std::vector<Point> game1_points;
 
 DebugTool Debug(0, 0, 10);
 
@@ -85,6 +89,36 @@ void Setup() {
             }
         }
     }
+
+    DEBUG_MESSAGE("init points", 0);
+
+    for(auto i : GAME0REDPOINTS){
+        game0_points.push_back(Point(i.first, i.second, GAME0DEPOSITAREAS, 1));
+    }
+
+    for(auto i : GAME0GREENPOINTS){
+        game0_points.push_back(Point(i.first, i.second, GAME0DEPOSITAREAS, 2));
+    }
+
+    for(auto i : GAME0BLACKPOINTS){
+        game0_points.push_back(Point(i.first, i.second, GAME0DEPOSITAREAS, 3));
+    }
+
+    
+
+    for(auto i : GAME1REDPOINTS){
+        game1_points.push_back(Point(i.first, i.second, GAME0DEPOSITAREAS, 1));
+    }
+
+    for(auto i : GAME1GREENPOINTS){
+        game1_points.push_back(Point(i.first, i.second, GAME0DEPOSITAREAS, 2));
+    }
+
+    for(auto i : GAME1BLACKPOINTS){
+        game1_points.push_back(Point(i.first, i.second, GAME0DEPOSITAREAS, 3));
+    }
+
+    DEBUG_MESSAGE("\t finished\n", 0);   
 
     Debug.addMap(pMap);
 
