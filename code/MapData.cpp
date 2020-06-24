@@ -9,40 +9,40 @@ MapData::MapData(int mapX, int mapY,
                  std::vector<std::pair<int, int>> *traps,
                  std::vector<std::pair<int, int>> *swamps) {
     // Map Init
-    this->MapX = mapX;
-    this->MapY = mapY;
+    MapData::MapX = mapX;
+    MapData::MapY = mapY;
     for (int i = 0; i < MapX; i++) {
             const std::vector<int> _v;
-            this->Map.push_back(_v);
+            MapData::Map.push_back(_v);
             for (int j = 0; j < MapY; j++) {
-                this->Map[i].push_back(0);
+                MapData::Map[i].push_back(0);
             }
         }
     for (std::pair<int, int> wall : *walls) {
-        this->Map[wall.first][wall.second] = 1;
+        MapData::Map[wall.first][wall.second] = 1;
     }
     for (std::pair<int, int> trap : *traps) {
-        this->Map[trap.first][trap.second] = 2;
+        MapData::Map[trap.first][trap.second] = 2;
     }
     for (std::pair<int, int> swamp : *swamps) {
-        this->Map[swamp.first][swamp.second] = 3;
+        MapData::Map[swamp.first][swamp.second] = 3;
     }
     // Point Init
     for (std::pair<int, int> redPoint : *redPoints) {
-        this->RedPoints.push_back(redPoint);
+        MapData::RedPoints.push_back(redPoint);
     }
     for (std::pair<int, int> greenPoint : *greenPoints) {
-        this->GreenPoints.push_back(greenPoint);
+        MapData::GreenPoints.push_back(greenPoint);
     }
     for (std::pair<int, int> blackPoint : *blackPoints) {
-        this->BlackPoints.push_back(blackPoint);
+        MapData::BlackPoints.push_back(blackPoint);
     }
     for (std::pair<int, int> deposit : *deposits) {
-        this->DepositAreas.push_back(deposit);
+        MapData::DepositAreas.push_back(deposit);
     }
 }
 int MapData::getPointCount(int pColor) {
-    return this->getPtrToArr(pColor)->size();
+    return MapData::getPtrToArr(pColor)->size();
 }
 int MapData::findPoint(const std::pair<int, int> p, const int pColor) {
     std::vector<std::pair<int, int>> *ptr = MapData::getPtrToArr(pColor);
@@ -64,7 +64,7 @@ int MapData::erasePoint(const std::pair<int, int> p, const int pColor) {
     return 0;
 }
 int MapData::erasePoint(const int index, const int pColor) {
-    std::vector<std::pair<int, int>> *ptr = this->getPtrToArr(pColor);
+    std::vector<std::pair<int, int>> *ptr = MapData::getPtrToArr(pColor);
     if (index >= 0 && index < static_cast<int>(ptr->size())) {
         ptr->erase(ptr->begin() + index);
         return 1;
@@ -84,14 +84,14 @@ std::pair<int, int> MapData::getPoint(const int index, const int pColor) {
 std::vector<std::pair<int, int>> *MapData::getPtrToArr(const int pColor) {
     switch (pColor) {
         case 0:
-            return &this->RedPoints;
+            return &MapData::RedPoints;
         case 1:
-            return &this->GreenPoints;
+            return &MapData::GreenPoints;
         case 2:
-            return &this->BlackPoints;
+            return &MapData::BlackPoints;
         default:
             // TODO: Throw exeption;
-            return &this->RedPoints;
+            return &MapData::RedPoints;
     }
 }
 
@@ -101,13 +101,13 @@ std::vector<std::pair<int, int>> MapData::getDepositAreas() {
 
 int MapData::availableColors() {
     int sum = 0;
-    if (this->getPointCount(0) > 0) {
+    if (MapData::getPointCount(0) > 0) {
         sum += 1;
     }
-    if (this->getPointCount(1) > 0) {
+    if (MapData::getPointCount(1) > 0) {
         sum += 2;
     }
-    if (this->getPointCount(2) > 0) {
+    if (MapData::getPointCount(2) > 0) {
         sum += 4;
     }
     return sum;
