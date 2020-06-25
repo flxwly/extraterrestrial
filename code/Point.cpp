@@ -1,6 +1,7 @@
 #include "Point.hpp"
 
 
+
 Point::Point(int _x, int _y, std::vector<std::pair<int, int>> *_dp_areas, int _color) {
 
     Point::x = _x;
@@ -40,5 +41,37 @@ void Point::calculate_closest_points(std::vector<Point *> *_points) {
     }
 }
 
+double Point::calculate_dist_to_point(const int &x1, const int &y1){
+    return dist(this->x, x1, this->y, y1);
+}
 
+
+void init_points_game_1(){
+    for(auto i : GAME1REDPOINTS){
+        game_1_points.push_back(Point(i.first, i.second, GAME1DEPOSITAREAS, 1));
+    }
+
+    for(auto i : GAME1GREENPOINTS){
+        game_1_points.push_back(Point(i.first, i.second, GAME1DEPOSITAREAS, 2));
+    }
+
+    for(auto i : GAME1BLACKPOINTS){
+        game_1_points.push_back(Point(i.first, i.second, GAME1DEPOSITAREAS, 3));
+    }
+}
+
+
+void init_points_game_0(){
+    for(auto i : GAME0REDPOINTS){
+        game_0_points.push_back(Point(i.first, i.second, GAME0DEPOSITAREAS, 1));
+    }
+
+    for(auto i : GAME0GREENPOINTS){
+        game_0_points.push_back(Point(i.first, i.second, GAME0DEPOSITAREAS, 2));
+    }
+
+    for(auto i : GAME0BLACKPOINTS){
+        game_0_points.push_back(Point(i.first, i.second, GAME0DEPOSITAREAS, 3));
+    }
+}
 
