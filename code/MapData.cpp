@@ -125,13 +125,9 @@ int MapData::availableColors() {
     return sum;
 }
 
-std::vector<std::array<int, 3>> MapData::getAllPoints() {
+std::vector<Point*> MapData::getAllPoints() {
 
-    std::vector<std::array<int, 3>> all_points;
-    for (auto point : MapData::AllPoints) {
-        all_points.push_back({point->pos().first, point->pos().second, point->color()});
-    }
-    return all_points;
+    return MapData::AllPoints;
 }
 
 std::vector<std::pair<int, int>> MapData::getNodes() {

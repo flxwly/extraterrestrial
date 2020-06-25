@@ -29,7 +29,7 @@ public:
     // TODO: int findApproxPoint(std::pair<int, int> p, int pColor);
     int getPointCount(int pColor);
 
-    std::vector<std::array<int, 3>> getAllPoints();
+    std::vector<Point*> getAllPoints();
 
     std::pair<int, int> getPoint(int index, int pColor);
 
