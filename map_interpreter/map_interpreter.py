@@ -3,15 +3,19 @@ from os import path
 
 import cv2
 
-# for CoSpace 2.7
-# FieldA = "../../../../../store/media/CS.C/RSC/Map/Design/FieldA"
-# FieldB = "../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
-# FieldFD = ET.parse("../../../../../store/media/CS.C/RSC/Map/Design/Field.FD")
-
 # for new CoSpace Versions
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
 FieldFD = ET.parse("../../../../../store/media/Rescue/Map/Sec/Design/Field.FD")
+
+cospace_version = "2.6.2"
+
+# for CoSpace 2.6.2
+if cospace_version == "2.6.2":
+    FieldA = "../../../../../store/media/CS.C/RSC/Map/Design/FieldA"
+    FieldB = "../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
+    FieldFD = ET.parse("../../../../../store/media/CS.C/RSC/Map/Design/Field.FD")
+
 
 FieldFD = FieldFD.getroot()
 
@@ -205,10 +209,10 @@ def convert_background(_dir, width, height, worldnr):
 
     print("convert to str")
     deposit_area_str += str(deposit_areas).replace("[", "{").replace("]", "}") + ";"
-    wall_str += str(wall_coords).replace("[", "{").replace("]", "}") + ";"
-    trap_str += str(trap_coords).replace("[", "{").replace("]", "}") + ";"
-    swamp_str += str(swamp_coords).replace("[", "{").replace("]", "}") + ";"
-    node_str += str(node_coords).replace("[", "{").replace("]", "}") + ";"
+    wall_str += str(wall_coords).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+    trap_str += str(trap_coords).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+    swamp_str += str(swamp_coords).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+    node_str += str(node_coords).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
 
     filecontent = "/*walls*/ " + wall_str + "\n/*traps*/ " + trap_str + "\n/*swamps*/ " + swamp_str + "\n/*deposit*/ " + \
                   deposit_area_str + "\n/*nodes*/ " + node_str + "\n\n"
