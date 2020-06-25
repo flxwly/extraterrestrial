@@ -49,7 +49,11 @@ public:
     std::vector<std::pair<int, int>> findPath(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps);
 
 private:
-    struct PRIORITY;
+    struct PRIORITY {
+        bool operator()(node *child, node *parent) const {
+            return parent->f < child->f;
+        }
+    };
 
     static bool isPassable(node *, bool traps);
 

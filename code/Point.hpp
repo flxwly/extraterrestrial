@@ -36,7 +36,5 @@ private:
     std::priority_queue<std::pair<double, Point *>, std::vector<std::pair<double, Point *>>, Point::dist_PRIORITY> r_points;
     std::priority_queue<std::pair<double, Point *>, std::vector<std::pair<double, Point *>>, Point::dist_PRIORITY> c_points;
     std::priority_queue<std::pair<double, Point *>, std::vector<std::pair<double, Point *>>, Point::dist_PRIORITY> b_points;
-
-
 };
 

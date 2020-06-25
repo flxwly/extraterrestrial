@@ -69,7 +69,7 @@ AStar::AStar(const std::vector<std::vector<int>> &MAP, const std::vector<std::pa
                     // out of bounds check
                     if (x >= 0 && x < static_cast<int>(map.size()) && y >= 0 && y < static_cast<int>(map[i].size())) {
 
-                        if (!AStar::map[x][y].isWall && (static_cast<int>(i) != x || static_cast<int>(j) != y)) {
+                        if ((static_cast<int>(i) != x || static_cast<int>(j) != y)) {
                             AStar::map[i][j].neighbours.push_back(&AStar::map[x][y]);
                         }
                     }
@@ -77,14 +77,22 @@ AStar::AStar(const std::vector<std::vector<int>> &MAP, const std::vector<std::pa
             }
         }
     }
+
+    std::vector<node *> other_nodes;
+    for (auto _node : AStar::nodes) {
+        other_nodes.push_back(&_node);
+    }
+
+    for(auto cur_node : AStar::nodes) {
+        for (auto other_node : other_nodes) {
+
+            
+            other_nodes.pop_back();
+        }
+    }
+
     std::cout << "created Map: " << AStar::map.size() << " | " << AStar::map[0].size() << std::endl;
 }
-
-struct AStar::PRIORITY {
-    bool operator()(node *child, node *parent) const {
-        return parent->f < child->f;
-    }
-};
 
 bool AStar::isPassable(node *_n, bool traps) {
     return !(traps && _n->isTrap);
