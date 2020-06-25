@@ -1,5 +1,5 @@
 //only for second map
-#include"MapData.hpp"
+#include "MapData.hpp"
 #include "CommonFunctions.hpp"
 
 #include<iostream>
@@ -12,12 +12,19 @@
 //TODO: init Points as objects
 //TODO: mayebe nearest points in relate of dp area
 
+std::vector<Point> game_0_points;
+std::vector<Point> game_1_points;
+
+void init_points_game_1();
+void init_points_game_0();
+
 
 class Point {
 public:
     Point(int _x, int _y, std::vector<std::pair<int, int>> *_dp_areas, int _color);
 
     void calculate_closest_points(std::vector<Point *> *_points);
+    double calculate_dist_to_point(const int &x1, const int &y1);
 
 private:
     int x, y;
