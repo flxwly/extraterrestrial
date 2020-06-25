@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <array>
+#include "Point.hpp"
 
 class MapData {
 public:
@@ -40,13 +41,14 @@ public:
     int availableColors();
 
 private:
-    std::vector<std::pair<int, int>> *getPtrToArr(int pColor);
+    std::vector<Point> *getPtrToArr(int pColor);
 
     std::vector<std::pair<int, int>> Nodes;
     std::vector<std::pair<int, int>> DepositAreas;
-    std::vector<std::pair<int, int>> RedPoints;
-    std::vector<std::pair<int, int>> GreenPoints;
-    std::vector<std::pair<int, int>> BlackPoints;
+    std::vector<Point> RedPoints;
+    std::vector<Point> GreenPoints;
+    std::vector<Point> BlackPoints;
+    std::vector<Point *> AllPoints;
 };
 
 /*walls*/ extern std::vector<std::pair<int, int>> GAME0WALLS;

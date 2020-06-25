@@ -7,7 +7,7 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
              int *_rc_r, int *_rc_g, int *_rc_b, int *_lc_r, int *_lc_g, int *_lc_b,
              int *_rus, int *_fus, int *_lus,
              int *_whl_l, int *_whl_r, int *_led, int *_tp, int *_g_time,
-             MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1) {
+             MapData *_map0, MapData *_map1, Pathfinder *_pathfinder0, Pathfinder *_pathfinder1) {
 
     Robot::x = _x, Robot::y = _y;                                       // robots position
     Robot::comp = _comp;                                                // compass

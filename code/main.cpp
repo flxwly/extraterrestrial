@@ -15,7 +15,7 @@ using namespace std;
 #include "ColorRecognition.hpp"
 
 // Classes
-#include "AStar.hpp"
+#include "Pathfinder.hpp"
 #include "MapData.hpp"
 #include "DebugTools.hpp"
 #include "Robot.hpp"
@@ -46,11 +46,8 @@ MapData GAME0(240, 180, &GAME0REDPOINTS, &GAME0GREENPOINTS, &GAME0BLACKPOINTS, &
 MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &GAME1DEPOSITAREAS, &GAME1WALLS,
               &GAME1TRAPS, &GAME1SWAMPS);
 
-AStar PathfinderGame0(GAME0.Map, ROBOT_RAD);
-AStar PathfinderGame1(GAME1.Map, ROBOT_RAD);
-
-std::vector<Point> game_0_points;
-std::vector<Point> game_1_points;
+Pathfinder PathfinderGame0(GAME0.Map, GAME0.getNodes());
+Pathfinder PathfinderGame1(GAME1.Map, GAME1.getNodes());
 
 DebugTool Debug(0, 0, 10);
 
@@ -89,13 +86,6 @@ void Setup() {
             }
         }
     }
-
-    DEBUG_MESSAGE("init points", 0);
-
-    init_points_game_0();
-    init_points_game_1();
-
-    DEBUG_MESSAGE("\t finished\n", 0);   
 
     Debug.addMap(pMap);
 

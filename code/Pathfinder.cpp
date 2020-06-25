@@ -1,4 +1,4 @@
-#include "AStar.hpp"
+#include "Pathfinder.hpp"
 
 node::node(int _x, int _y) {
     // for pathfinding lists
@@ -40,29 +40,29 @@ double heuristic(const node &cur, const node &end) {
 }
 
 
-AStar::AStar(const std::vector<std::vector<int>> &MAP, const std::vector<std::pair<int, int>> &NODES) {
-    // copy nodes to AStar object
+Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP, const std::vector<std::pair<int, int>> &NODES) {
+    // copy nodes to Pathfinder object
     for (const auto &_node : NODES) {
-        AStar::nodes.emplace_back(_node.first, _node.second);
+        Pathfinder::nodes.emplace_back(_node.first, _node.second);
     }
 
-    // copy map to AStar object
+    // copy map to Pathfinder object
     for (unsigned int i = 0; i < MAP.size(); i++) {
         // insert node array
         const std::vector<node> _v;
-        AStar::map.push_back(_v);
+        Pathfinder::map.push_back(_v);
         for (unsigned int j = 0; j < MAP[i].size(); j++) {
             // insert node
 
-            AStar::map[i].push_back(
+            Pathfinder::map[i].push_back(
                     node(static_cast<int>(i), static_cast<int>(j), MAP[i][j] == 1, MAP[i][j] == 2, MAP[i][j] == 3));
 
         }
     }
 
     // add neighbours
-    for (unsigned int i = 0; i < AStar::map.size(); i++) {
-        for (unsigned int j = 0; j < AStar::map[i].size(); j++) {
+    for (unsigned int i = 0; i < Pathfinder::map.size(); i++) {
+        for (unsigned int j = 0; j < Pathfinder::map[i].size(); j++) {
 
             for (int x = static_cast<int>(i) - 1; x <= static_cast<int>(i) + 1; x++) {
                 for (int y = static_cast<int>(j) - 1; y <= static_cast<int>(j) + 1; y++) {
@@ -70,7 +70,7 @@ AStar::AStar(const std::vector<std::vector<int>> &MAP, const std::vector<std::pa
                     if (x >= 0 && x < static_cast<int>(map.size()) && y >= 0 && y < static_cast<int>(map[i].size())) {
 
                         if ((static_cast<int>(i) != x || static_cast<int>(j) != y)) {
-                            AStar::map[i][j].neighbours.push_back(&AStar::map[x][y]);
+                            Pathfinder::map[i][j].neighbours.push_back(&Pathfinder::map[x][y]);
                         }
                     }
                 }
@@ -79,11 +79,11 @@ AStar::AStar(const std::vector<std::vector<int>> &MAP, const std::vector<std::pa
     }
 
     std::vector<node *> other_nodes;
-    for (auto _node : AStar::nodes) {
+    for (auto _node : Pathfinder::nodes) {
         other_nodes.push_back(&_node);
     }
 
-    for(auto cur_node : AStar::nodes) {
+    for(auto cur_node : Pathfinder::nodes) {
         for (auto other_node : other_nodes) {
 
             
@@ -91,15 +91,15 @@ AStar::AStar(const std::vector<std::vector<int>> &MAP, const std::vector<std::pa
         }
     }
 
-    std::cout << "created Map: " << AStar::map.size() << " | " << AStar::map[0].size() << std::endl;
+    std::cout << "created Map: " << Pathfinder::map.size() << " | " << Pathfinder::map[0].size() << std::endl;
 }
 
-bool AStar::isPassable(node *_n, bool traps) {
+bool Pathfinder::isPassable(node *_n, bool traps) {
     return !(traps && _n->isTrap);
 }
 
 
-std::vector<std::pair<int, int>> AStar::findPath(node *start, node *end, bool watchForTraps) {
+std::vector<std::pair<int, int>> Pathfinder::findPath(node *start, node *end, bool watchForTraps) {
 
     // start = end ==> no real path
     if (start == end) {
@@ -107,7 +107,7 @@ std::vector<std::pair<int, int>> AStar::findPath(node *start, node *end, bool wa
     }
 
     // init open- & closedList
-    std::priority_queue<node *, std::vector<node *>, AStar::PRIORITY> openList;
+    std::priority_queue<node *, std::vector<node *>, Pathfinder::PRIORITY> openList;
     std::vector<node *> closedList;
 
     // add start to openList
@@ -127,7 +127,7 @@ std::vector<std::pair<int, int>> AStar::findPath(node *start, node *end, bool wa
         // if cur and end are the same, the path is found
         if (cur == end) {
 
-            std::vector<std::pair<int, int>> p_path = AStar::to_pair(AStar::traverse(end));
+            std::vector<std::pair<int, int>> p_path = Pathfinder::to_pair(Pathfinder::traverse(end));
 
             for (node *element : closedList) {
                 element->isClosed = false;
@@ -191,21 +191,21 @@ std::vector<std::pair<int, int>> AStar::findPath(node *start, node *end, bool wa
     return {};
 }
 
-std::vector<std::pair<int, int>> AStar::findPath(node *start, node *end) {
-    return AStar::findPath(start, end, false);
+std::vector<std::pair<int, int>> Pathfinder::findPath(node *start, node *end) {
+    return Pathfinder::findPath(start, end, false);
 }
 
-std::vector<std::pair<int, int>> AStar::findPath(std::pair<int, int> start, std::pair<int, int> end) {
-    return AStar::findPath(&AStar::map[start.first][start.second], &AStar::map[end.first][end.second]);
+std::vector<std::pair<int, int>> Pathfinder::findPath(std::pair<int, int> start, std::pair<int, int> end) {
+    return Pathfinder::findPath(&Pathfinder::map[start.first][start.second], &Pathfinder::map[end.first][end.second]);
 }
 
 std::vector<std::pair<int, int>>
-AStar::findPath(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps) {
-    return AStar::findPath(&AStar::map[start.first][start.second], &AStar::map[end.first][end.second],
-                           watch_for_traps);
+Pathfinder::findPath(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps) {
+    return Pathfinder::findPath(&Pathfinder::map[start.first][start.second], &Pathfinder::map[end.first][end.second],
+                                watch_for_traps);
 }
 
-std::vector<node> AStar::traverse(node *end) {
+std::vector<node> Pathfinder::traverse(node *end) {
     // clear
     std::vector<node> t_path;
     node *t_ptr;
@@ -225,10 +225,10 @@ std::vector<node> AStar::traverse(node *end) {
         //cout << endl << end.x << " | " << end.y;
     }
 
-    return AStar::shorten(t_path);
+    return Pathfinder::shorten(t_path);
 }
 
-std::vector<node> AStar::shorten(std::vector<node> t_path) {
+std::vector<node> Pathfinder::shorten(std::vector<node> t_path) {
 
     std::vector<node> f_path;
 
@@ -280,7 +280,7 @@ std::vector<node> AStar::shorten(std::vector<node> t_path) {
     return f_path;
 }
 
-std::vector<std::pair<int, int>> AStar::to_pair(const std::vector<node> &p) {
+std::vector<std::pair<int, int>> Pathfinder::to_pair(const std::vector<node> &p) {
     std::vector<std::pair<int, int>> p_path;
     p_path.reserve(p.size());
     for (const node &n: p) {

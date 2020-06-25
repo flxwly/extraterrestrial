@@ -12,7 +12,7 @@
 #include "CommonFunctions.hpp"
 #include "ColorRecognition.hpp"
 #include "MapData.hpp"
-#include "AStar.hpp"
+#include "Pathfinder.hpp"
 
 #define ROBOT_SPEED 0.03333333               // in milliseconds for wheelspeed = 1
 
@@ -23,7 +23,7 @@ public:
           int *_rc_r, int *_rc_g, int *_rc_b, int *_lc_r, int *_lc_g, int *_lc_b,
           int *_rus, int *_fus, int *_lus,
           int *_whl_l, int *_whl_r, int *_led, int *_tp, int *_g_time,
-          MapData *_map0, MapData *_map1, AStar *_pathfinder0, AStar *_pathfinder1);
+          MapData *_map0, MapData *_map1, Pathfinder *_pathfinder0, Pathfinder *_pathfinder1);
 
 
     std::vector<std::vector<std::pair<int, int>>> complete_path;
@@ -60,7 +60,7 @@ private:
     // === Robot vars ===
 
     MapData *map0, *map1;
-    AStar *pathfinder0, *pathfinder1;
+    Pathfinder *pathfinder0, *pathfinder1;
 
     int loaded_objects_num;                     // number of objects loaded
     std::array<int, 3> loaded_objects{};        // complete inventory of robot

@@ -28,9 +28,9 @@ public:
 double heuristic(const node &cur, const node &end);
 
 
-class AStar {
+class Pathfinder {
 public:
-    explicit AStar(const std::vector<std::vector<int>> &MAP, const std::vector<std::pair<int, int>> &NODES);
+    explicit Pathfinder(const std::vector<std::vector<int>> &MAP, const std::vector<std::pair<int, int>> &NODES);
 
     // the map the pathfinding works on
     //      TODO: don't use 2d array. instead use more prepared 1d array
