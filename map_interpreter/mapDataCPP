@@ -12,12 +12,12 @@ MapData::MapData(int mapX, int mapY,
     MapData::MapX = mapX;
     MapData::MapY = mapY;
     for (int i = 0; i < MapX; i++) {
-            const std::vector<int> _v;
-            MapData::Map.push_back(_v);
-            for (int j = 0; j < MapY; j++) {
-                MapData::Map[i].push_back(0);
-            }
+        const std::vector<int> _v;
+        MapData::Map.push_back(_v);
+        for (int j = 0; j < MapY; j++) {
+            MapData::Map[i].push_back(0);
         }
+    }
     for (std::pair<int, int> wall : *walls) {
         MapData::Map[wall.first][wall.second] = 1;
     }
@@ -35,13 +35,13 @@ MapData::MapData(int mapX, int mapY,
 
     // Point Init
     for (auto p : *redPoints) {
-        MapData::RedPoints.emplace_back(p.first, p.second, deposits, 1);
+        MapData::RedPoints.emplace_back(p.first, p.second, deposits, 0);
     }
     for (auto p : *greenPoints) {
-        MapData::GreenPoints.emplace_back(p.first, p.second, deposits, 2);
+        MapData::GreenPoints.emplace_back(p.first, p.second, deposits, 1);
     }
     for (auto p : *blackPoints) {
-        MapData::BlackPoints.emplace_back(p.first, p.second, deposits, 3);
+        MapData::BlackPoints.emplace_back(p.first, p.second, deposits, 2);
     }
 
     for (auto p : MapData::RedPoints, MapData::GreenPoints, MapData::BlackPoints) {
@@ -53,9 +53,11 @@ MapData::MapData(int mapX, int mapY,
         p->calculate_closest_points(&this->AllPoints);
     }
 }
+
 int MapData::getPointCount(int pColor) {
     return MapData::getPtrToArr(pColor)->size();
 }
+
 int MapData::findPoint(std::pair<int, int> p, const int pColor) {
     std::vector<Point> *ptr = MapData::getPtrToArr(pColor);
 
@@ -66,6 +68,7 @@ int MapData::findPoint(std::pair<int, int> p, const int pColor) {
     }
     return -1;
 }
+
 int MapData::erasePoint(const std::pair<int, int> p, const int pColor) {
     std::vector<Point> *ptr = MapData::getPtrToArr(pColor);
     int i = findPoint(p, pColor);
@@ -75,6 +78,7 @@ int MapData::erasePoint(const std::pair<int, int> p, const int pColor) {
     }
     return 0;
 }
+
 int MapData::erasePoint(const int index, const int pColor) {
     std::vector<Point> *ptr = MapData::getPtrToArr(pColor);
     if (index >= 0 && index < static_cast<int>(ptr->size())) {
@@ -83,6 +87,7 @@ int MapData::erasePoint(const int index, const int pColor) {
     }
     return 0;
 }
+
 std::pair<int, int> MapData::getPoint(const int index, const int pColor) {
     std::vector<Point> *ptr = MapData::getPtrToArr(pColor);
 
@@ -93,6 +98,7 @@ std::pair<int, int> MapData::getPoint(const int index, const int pColor) {
         return ptr->at(0).pos();
     }
 }
+
 std::vector<Point> *MapData::getPtrToArr(const int pColor) {
     switch (pColor) {
         case 0:
@@ -125,16 +131,95 @@ int MapData::availableColors() {
     return sum;
 }
 
-std::vector<std::array<int, 3>> MapData::getAllPoints() {
+std::vector<Point *> MapData::getAllPoints() {
 
-    std::vector<std::array<int, 3>> all_points;
-    for (auto point : MapData::AllPoints) {
-        all_points.push_back({point->pos().first, point->pos().second, point->color()});
-    }
-    return all_points;
+    return MapData::AllPoints;
 }
 
 std::vector<std::pair<int, int>> MapData::getNodes() {
     return MapData::Nodes;
 }
 
+std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std::pair<int, int> pos) {
+    // point array which which will later be returned
+    std::vector<Point *> point_path;
+
+    // point finding algorithm. (See Idea 4 on https://stackoverflow.com/questions/62179174)
+    //      This isn't an optimal solution
+
+    double b_overall_dist = -1;
+    std::pair<int, int> t_deposit_area;
+
+    for (auto deposit_area : MapData::getDepositAreas()) {
+        t_deposit_area = deposit_area;
+        // temporary array to be able to compare
+        std::vector<Point *> cur_path;
+        cur_path.emplace_back(MapData::getClosestPoint(pos));
+
+        // p_dist is used to decide which route to which deposit_area to pick
+        double cur_path_dist = 0;
+
+        // add upto 6 points to cur_path;
+        for (int i = loaded_objects_num; i < 6; ++i) {
+
+            Point *b_point = nullptr;
+            double b_f_cost = -1;
+
+            // getAllPoints() returns a vector<array<int, 3>>:
+            //      get the point with the lowest f
+            for (const auto &point : MapData::getAllPoints()) {
+
+                // check if the object_type is chosen less or equal to 2 times
+                if (loaded_objects[point->color()] <= 2) {
+
+                    // g_dist is the dist from the last chosen point to the current point
+                    double g_dist = dist(point->pos().first, cur_path.back()->pos().first, point->pos().second,
+                                         cur_path.back()->pos().second);
+                    // h_dist is the distance to the deposit area
+                    double h_dist = dist(point->pos().first, deposit_area.first, point->pos().second,
+                                         deposit_area.second);
+
+                    // if f_cost is lower set f_cost to cur_cost
+                    if (g_dist + h_dist < b_f_cost || b_point == nullptr) {
+                        // check if point is already in path
+                        if (std::find(cur_path.begin(), cur_path.end(), point) != cur_path.end()) {
+                            b_f_cost = g_dist + h_dist;
+                            b_point = point;
+                        }
+                    }
+                }
+            }
+
+            loaded_objects[b_point->color()]++;
+            // The best point is added to the cur_path alongside with it's distance
+            cur_path_dist += dist(b_point->pos().first, cur_path.back()->pos().first, b_point->pos().second, cur_path.back()->pos().first);
+            cur_path.emplace_back(b_point);
+        }
+        // add the dist from the last point to the deposit_area
+        cur_path_dist += dist(deposit_area.first, cur_path.back()->pos().first, deposit_area.second, cur_path.back()->pos().first);
+
+        // if the overall path length is shorter then before -> set best to cur
+        if (cur_path_dist < b_overall_dist || b_overall_dist == -1) {
+            b_overall_dist = cur_path_dist;
+
+            // this wont overfill because point_path gets set to cur_path and therefore forgets it's earlier content
+            point_path = cur_path;
+
+        }
+    }
+
+    return {point_path, t_deposit_area};
+
+}
+
+Point *MapData::getClosestPoint(std::pair<int, int> pos) {
+    double b_dist = 0;
+    Point *b_point = nullptr;
+    for (const auto &p : MapData::getAllPoints()) {
+        if (dist(p->pos().first, pos.first, p->pos().second, pos.second) < b_dist || b_point == nullptr) {
+            b_dist = dist(p->pos().first, pos.first, p->pos().second, pos.second);
+            b_point = p;
+        }
+    }
+    return b_point;
+}

@@ -1,3 +1,6 @@
+#ifdef ddddd
+
+
 #include"Point.hpp"
 #include"MapData.hpp"
 #include "Robot.hpp"
@@ -43,3 +46,5 @@ std::vector<Point> predefine_path(const int &posx, const int &posy){
 
     return _path;
 }
+
+#endif
