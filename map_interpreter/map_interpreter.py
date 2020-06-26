@@ -16,7 +16,6 @@ if cospace_version == "2.6.2":
     FieldB = "../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
     FieldFD = ET.parse("../../../../../store/media/CS.C/RSC/Map/Design/Field.FD")
 
-
 FieldFD = FieldFD.getroot()
 
 
@@ -215,7 +214,7 @@ def convert_background(_dir, width, height, worldnr):
     node_str += str(node_coords).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
 
     filecontent = "/*walls*/ " + wall_str + "\n/*traps*/ " + trap_str + "\n/*swamps*/ " + swamp_str + "\n/*deposit*/ " + \
-                  deposit_area_str + "\n/*nodes*/ " + node_str + "\n\n"
+                  deposit_area_str + "\n\n"  # + "\n/*nodes*/ " + node_str + "\n\n"
 
     return filecontent
 

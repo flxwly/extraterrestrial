@@ -43,7 +43,7 @@ public:
 
     std::array<int, 3> get_loaded_objects();
 
-    int get_loaded_objects_num();
+    int get_loaded_objects_num() const;
 
 private:
     //               ______
@@ -103,9 +103,6 @@ private:
 
     // a helper function to not drive off map
     int avoid_void();
-
-    // function to determine which points to collect
-    std::vector<std::pair<int, int>> get_points(MapData &mapData);
 };
 
 

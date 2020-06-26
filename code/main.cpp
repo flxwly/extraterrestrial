@@ -46,8 +46,8 @@ MapData GAME0(240, 180, &GAME0REDPOINTS, &GAME0GREENPOINTS, &GAME0BLACKPOINTS, &
 MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &GAME1DEPOSITAREAS, &GAME1WALLS,
               &GAME1TRAPS, &GAME1SWAMPS);
 
-Pathfinder PathfinderGame0(GAME0.Map, GAME0.getNodes());
-Pathfinder PathfinderGame1(GAME1.Map, GAME1.getNodes());
+Pathfinder PathfinderGame0(GAME0.Map);
+Pathfinder PathfinderGame1(GAME1.Map);
 
 DebugTool Debug(0, 0, 10);
 

@@ -96,6 +96,7 @@ bool Robot::should_collect() {
     // if there's no object beneath the robot, don't try to collect anything
     return false;
 }
+
 void Robot::collect() {
 
     // the robot is already collecting
@@ -152,6 +153,7 @@ bool Robot::should_deposit() {
     // 145 = 2 red + 1 cyan + 1 black | 20 + 15 + 20 + 90
     return treshhold >= 145;
 }
+
 void Robot::deposit() {
     // the robot is already depositing
     if (std::chrono::duration_cast<std::chrono::milliseconds>(Robot::timer::now() - depositing_since).count() <= 5000) {
@@ -203,6 +205,7 @@ bool Robot::should_teleport() {
     //      teleport in any case
     return *Robot::g_time > 240;
 }
+
 void Robot::teleport() {
     Robot::loaded_objects_num = 0;
     Robot::loaded_objects[0] = 0;
@@ -245,11 +248,11 @@ void Robot::wheels(int l, int r) {
     *Robot::whl_l = l, *Robot::whl_r = r;
 }
 
-std::array<int, 3> Robot::get_loaded_objects(){
+std::array<int, 3> Robot::get_loaded_objects() {
     return Robot::loaded_objects;
 }
 
-int Robot::get_loaded_objects_num(){
+int Robot::get_loaded_objects_num() const {
     return Robot::loaded_objects_num;
 }
 
@@ -344,9 +347,11 @@ int Robot::move_to(int _x, int _y, bool safety) {
             return -1;
     }
 }
+
 int Robot::move_to(std::pair<int, int> p, bool safety) {
     return Robot::move_to(p.first, p.second, safety);
 }
+
 int Robot::check_us_sensors(int l, int f, int r) {
     int sum = 0;
     if (*Robot::us[0] < l)
@@ -418,6 +423,7 @@ void Robot::game_0_loop() {
         Robot::teleport();
     }
 }
+
 void Robot::game_1_loop() {
 
     // ====== Just for speed measure ====== //     (leave it in for later)
@@ -453,7 +459,8 @@ void Robot::game_1_loop() {
     // There's no path to follow
     if (Robot::complete_path.empty()) {
         // get a path of points
-        std::pair<std::vector<Point *>, std::pair<int, int>> point_path = Robot::map1->get_path(Robot::get_loaded_objects(), Robot::get_loaded_objects_num(), {*Robot::x, *Robot::y});
+        std::pair<std::vector<Point *>, std::pair<int, int>> point_path = Robot::map1->get_path(
+                Robot::get_loaded_objects(), Robot::get_loaded_objects_num(), {*Robot::x, *Robot::y});
         std::pair<int, int> start = {-1, -1};
 
         // calculate a path from one point to the next

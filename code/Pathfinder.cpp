@@ -40,12 +40,7 @@ double heuristic(const node &cur, const node &end) {
 }
 
 
-Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP, const std::vector<std::pair<int, int>> &NODES) {
-    // copy nodes to Pathfinder object
-    for (const auto &_node : NODES) {
-        Pathfinder::nodes.emplace_back(_node.first, _node.second);
-    }
-
+Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP) {
     // copy map to Pathfinder object
     for (unsigned int i = 0; i < MAP.size(); i++) {
         // insert node array
@@ -274,6 +269,10 @@ std::vector<std::pair<int, int>> Pathfinder::to_pair(const std::vector<node> &p)
         p_path.emplace_back(n.x, n.y);
     }
     return p_path;
+}
+
+std::vector<std::pair<int, int>> Pathfinder::_findPath(node *start, node *end) {
+    return std::vector<std::pair<int, int>>();
 }
 
 
