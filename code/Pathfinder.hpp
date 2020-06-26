@@ -16,7 +16,7 @@ public:
     node(int _x, int _y, bool _is_w, bool _is_t, bool _is_s);
 
     bool isClosed, isOpen;
-    bool isTrap, isWall, isAtWall, isSwamp;
+    bool isTrap, isWall, isSwamp;
     int x, y;
     double g, f;
     std::vector<node *> neighbours;
@@ -40,8 +40,6 @@ public:
     std::vector<std::pair<int, int>> findPath(node *start, node *end, bool watchForTraps);
 
     std::vector<std::pair<int, int>> findPath(node *start, node *end);
-
-    std::vector<std::pair<int, int>> _findPath(node *start, node *end);
 
     std::vector<std::pair<int, int>> findPath(std::pair<int, int> start, std::pair<int, int> end);
 

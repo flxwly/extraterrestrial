@@ -58,6 +58,7 @@ def compile_code():
     print("compiling...")
     subprocess.call(command, shell=True)
     print("finished")
+    print("Output: " + str(out_path) + "extraterrestrial.dll")
     sys.stdout.flush()
 
 

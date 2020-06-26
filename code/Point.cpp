@@ -2,11 +2,11 @@
 
 
 
-Point::Point(int _x, int _y, std::vector<std::pair<int, int>> *_dp_areas, int _color) {
+Point::Point(int _x, int _y, std::vector<std::pair<int, int>> *_dp_areas, int _c) {
 
     Point::x = _x;
     Point::y = _y;
-    Point::_color = static_cast<short int>(_color);
+    Point::_color = static_cast<short int>(_c);
 
     // -1 = undefined; 0 = nicht da; 1 = gesehen; TODO: Points can reapear after some time
     Point::state = -1;

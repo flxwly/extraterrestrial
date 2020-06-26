@@ -6,7 +6,7 @@ node::node(int _x, int _y) {
             // for nodes that may influence the path
     node::isTrap = false, node::isSwamp = false;
     // for nodes that cant be passed
-    node::isWall = false, node::isAtWall = false;
+    node::isWall = false;
 
     // position
     node::x = _x, node::y = _y;
@@ -21,7 +21,7 @@ node::node(int _x, int _y, bool _is_w, bool _is_t, bool _is_s) {
             // for nodes that may influence the path
     node::isTrap = _is_t, node::isSwamp = _is_s;
     // for nodes that cant be passed
-    node::isWall = _is_w, node::isAtWall = false;
+    node::isWall = _is_w;
 
     // position
     node::x = _x, node::y = _y;
@@ -64,7 +64,7 @@ Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP) {
                     // out of bounds check
                     if (x >= 0 && x < static_cast<int>(map.size()) && y >= 0 && y < static_cast<int>(map[i].size())) {
 
-                        if ((static_cast<int>(i) != x || static_cast<int>(j) != y)) {
+                        if (!Pathfinder::map[x][y].isWall && (static_cast<int>(i) != x || static_cast<int>(j) != y)) {
                             Pathfinder::map[i][j].neighbours.push_back(&Pathfinder::map[x][y]);
                         }
                     }
@@ -269,10 +269,6 @@ std::vector<std::pair<int, int>> Pathfinder::to_pair(const std::vector<node> &p)
         p_path.emplace_back(n.x, n.y);
     }
     return p_path;
-}
-
-std::vector<std::pair<int, int>> Pathfinder::_findPath(node *start, node *end) {
-    return std::vector<std::pair<int, int>>();
 }
 
 

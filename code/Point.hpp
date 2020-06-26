@@ -16,7 +16,7 @@
 
 class Point {
 public:
-    Point(int _x, int _y, std::vector<std::pair<int, int>> *_dp_areas, int _color);
+    Point(int _x, int _y, std::vector<std::pair<int, int>> *_dp_areas, int _c);
 
     void calculate_closest_points(std::vector<Point *> *_points);
     double calculate_dist_to_point(const int &x1, const int &y1);

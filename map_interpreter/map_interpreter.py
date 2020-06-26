@@ -81,7 +81,7 @@ def get_obj_type(pixel):
     else:
         return -1
 
-    if r == 221 and g == 186 and b == 151 or r == 0 and g == 0 and b == 0:
+    if (r == 221 and g == 186 and b == 151) or (r == 0 and g == 0 and b == 0):
         return 1
     if r == 255 and g == 0 and b == 0:
         return 1.1
@@ -89,7 +89,7 @@ def get_obj_type(pixel):
         return 2
     if r == 166 and g == 166 and b == 166:
         return 3
-    if r == 255 and g == 153 and b == 0:
+    if (r == 255 and g == 153 and b == 0) or (r == 255 and g == 102 and b == 0):
         return 4
     return -1
 

@@ -44,9 +44,15 @@ MapData::MapData(int mapX, int mapY,
         MapData::BlackPoints.emplace_back(p.first, p.second, deposits, 2);
     }
 
-    for (auto p : MapData::RedPoints, MapData::GreenPoints, MapData::BlackPoints) {
-        MapData::AllPoints.push_back(&p);
-    }
+    for (auto p : MapData::RedPoints) {
+            MapData::AllPoints.push_back(&p);
+        }
+        for (auto p : MapData::GreenPoints) {
+            MapData::AllPoints.push_back(&p);
+        }
+        for (auto p : MapData::BlackPoints) {
+            MapData::AllPoints.push_back(&p);
+        }
 
     // calculate distances
     for (auto p : MapData::AllPoints) {

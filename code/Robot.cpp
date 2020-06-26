@@ -36,6 +36,7 @@ Robot::Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_s
 
     Robot::collecting_since = Robot::timer::now();                       // time var for collect function
     Robot::depositing_since = Robot::timer::now();                       // time var for deposit function
+    std::cout << "constructed Bot-Object" << std::endl;
 }
 
 //====================================
