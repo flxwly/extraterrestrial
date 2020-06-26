@@ -59,14 +59,16 @@ int Point::color() const {
 Point* Point::get_closest_point(int color){
     switch (color)
     {
-    case 1:
+    case 0:
         return Point::r_points.top().second;
-    case 2:
+    case 1:
         return Point::c_points.top().second;
-    case 3:
+    case 2:
         return Point::b_points.top().second;
 
     default:
+        return nullptr;
         break;
     }
+
 }

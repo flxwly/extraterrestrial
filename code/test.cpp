@@ -18,6 +18,8 @@ std::vector<Point> predefine_path(const int &posx, const int &posy){
     int i = 0;
     std::vector<Point*> points = GAME1.getAllPoints();
     _path.push_back(*points.front());
+
+    // find closest point to x, y
     for(auto _point : points){
         if(i>0){
             if (_point->calculate_dist_to_point(posx, posy) < points.front()->calculate_dist_to_point(posx, posy)){
@@ -27,27 +29,15 @@ std::vector<Point> predefine_path(const int &posx, const int &posy){
         i++;
     }
     Point* temp;
-    std::array<int,3> obj;
-    obj = Robot::get_loaded_objects();
-    int num = Robot::get_inventory_number();
+    std::array<int,3> obj =  Robot::get_loaded_objects();
+    int num = Robot::get_loaded_objects_num();
     while(num < 6) {
-        if(obj[2] < 2){
-            temp = _path.back().get_closest_point(3);
-            _path.push_back(*temp);
-            obj[2]++;
-            num++;
-        }
-        if(obj[1] < 2){
-            temp = _path.back().get_closest_point(2);
-            _path.push_back(*temp);
-            obj[1]++;
-            num++;
-        }
-        if(obj[0] < 2){
-            temp = _path.back().get_closest_point(1);
-            _path.push_back(*temp);
-            obj[1]++;
-            num++;
+        for (int c = 0; c < 3; c++) {
+            if(obj[c] < 2){
+                _path.push_back(*_path.back().get_closest_point(c));
+                obj[c]++;
+                num++;
+            }
         }
     }
 

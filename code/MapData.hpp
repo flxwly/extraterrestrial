@@ -21,21 +21,18 @@ public:
             std::vector<std::pair<int, int>> *swamps);
 
     int findPoint(std::pair<int, int> p, int pColor);
-
     int erasePoint(std::pair<int, int> p, int pColor);
-
     int erasePoint(int index, int pColor);
 
     // TODO: int findApproxPoint(std::pair<int, int> p, int pColor);
     int getPointCount(int pColor);
-
     std::vector<Point*> getAllPoints();
-
+    Point *getClosestPoint(std::pair<int, int> pos);
     std::pair<int, int> getPoint(int index, int pColor);
-
     std::vector<std::pair<int, int>> getDepositAreas();
-
     std::vector<std::pair<int, int>> getNodes();
+
+    std::pair<std::vector<Point *>, std::pair<int, int>> get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std::pair<int, int> pos);
 
 
     int availableColors();

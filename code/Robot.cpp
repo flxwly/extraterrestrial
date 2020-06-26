@@ -237,74 +237,6 @@ int Robot::avoid_void() {
     return 0;
 }
 
-std::vector<std::pair<int, int>> Robot::get_points(MapData &mapData) {
-
-    // point array which which will later be returned
-    std::vector<std::pair<int, int>> point_path;
-    point_path.emplace_back(*Robot::x, *Robot::y);
-
-    // point finding algorithm. (See Idea 4 on https://stackoverflow.com/questions/62179174)
-    //      This might be an almost optimal solution
-
-    double b_overall_dist = -1;
-
-    for (auto deposit_area : mapData.getDepositAreas()) {
-        // temporary array to be able to compare
-        std::vector<std::pair<int, int>> cur_path;
-        cur_path.emplace_back(*Robot::x, *Robot::y);
-
-        // c_points keeps track of which object_types are needed/free to find
-        std::array<int, 3> c_points = {Robot::loaded_objects[0], Robot::loaded_objects[1], Robot::loaded_objects[2]};
-
-        // p_dist is used to decide which route to which deposit_area to pick
-        double p_dist = 0;
-
-        // add upto 6 points to cur_path;
-        for (int i = Robot::loaded_objects_num; i < 6; ++i) {
-
-            std::array<int, 3> b_point{0, 0, 0};
-            double b_dist = -1;
-
-            // getAllPoints() returns a vector<array<int, 3>>:
-            //      get the point with the lowest f
-            for (auto point : mapData.getAllPoints()) {
-
-                // check if the object_type is chosen less or equal to 2 times
-                if (c_points[point->color()] <= 2) {
-
-                    // g_dist is the dist from the last chosen point to the current point
-                    double g_dist = dist(point->pos().first, cur_path.end()->first, point->pos().second, cur_path.end()->second);
-                    // h_dist is the distance to the deposit area
-                    double h_dist = dist(point->pos().first, deposit_area.first, point->pos().second, deposit_area.second);
-
-                    // if f_cost is lower set f_cost to cur_cost
-                    if (g_dist + h_dist < b_dist || b_dist == -1) {
-                        b_dist = g_dist + h_dist;
-                        b_point = {point->pos().first, point->pos().second, point->color()};
-                    }
-                }
-            }
-            c_points[b_point[2]]++;
-            // The best point is added to the cur_path alongside with it's distance
-            p_dist += dist(b_point[0], cur_path.end()->first, b_point[1], cur_path.end()->second);
-            cur_path.emplace_back(b_point[0], b_point[1]);
-        }
-        // add the dist from the last point to the deposit_area
-        p_dist += dist(deposit_area.first, cur_path.end()->first, deposit_area.second, cur_path.end()->second);
-
-        // if the overall path length is shorter then before -> set best to cur
-        if (p_dist < b_overall_dist || b_overall_dist == -1) {
-            b_overall_dist = p_dist;
-
-            // this wont overfill because point_path gets set to cur_path and therefore forgets it's earlier content
-            point_path = cur_path;
-            point_path.push_back(deposit_area);
-        }
-    }
-
-    return point_path;
-}
-
 
 //====================================
 //          Public Functions
@@ -314,11 +246,11 @@ void Robot::wheels(int l, int r) {
 }
 
 std::array<int, 3> Robot::get_loaded_objects(){
-    return this->loaded_objects;
+    return Robot::loaded_objects;
 }
 
-int Robot::get_inventory_number(){
-    return this->loaded_objects_num;
+int Robot::get_loaded_objects_num(){
+    return Robot::loaded_objects_num;
 }
 
 int Robot::move_to(int _x, int _y, bool safety) {

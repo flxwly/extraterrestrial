@@ -43,7 +43,7 @@ public:
 
     std::array<int, 3> get_loaded_objects();
 
-    int get_inventory_number();
+    int get_loaded_objects_num();
 
 private:
     //               ______
