@@ -41,6 +41,10 @@ public:
 
     void game_1_loop();
 
+    std::array<int, 3> get_loaded_objects();
+
+    int get_inventory_number();
+
 private:
     //               ______
     //______________/ Vars \_____________
@@ -63,7 +67,7 @@ private:
     Pathfinder *pathfinder0, *pathfinder1;
 
     int loaded_objects_num;                     // number of objects loaded
-    std::array<int, 3> loaded_objects{};        // complete inventory of robot
+    std::array<int, 3> loaded_objects{};        // complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
 
     std::pair<int, int> n_target;               // pathfinder waypoint chasing
     bool n_target_is_last;                      // is n_target the last element of a path

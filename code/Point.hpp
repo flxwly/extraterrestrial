@@ -20,6 +20,7 @@ public:
 
     void calculate_closest_points(std::vector<Point *> *_points);
     double calculate_dist_to_point(const int &x1, const int &y1);
+    Point* get_closest_point(int color);
 
     std::pair<int, int> pos();
     int color() const;

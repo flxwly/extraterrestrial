@@ -313,6 +313,14 @@ void Robot::wheels(int l, int r) {
     *Robot::whl_l = l, *Robot::whl_r = r;
 }
 
+std::array<int, 3> Robot::get_loaded_objects(){
+    return this->loaded_objects;
+}
+
+int Robot::get_inventory_number(){
+    return this->loaded_objects_num;
+}
+
 int Robot::move_to(int _x, int _y, bool safety) {
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
