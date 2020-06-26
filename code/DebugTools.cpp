@@ -152,11 +152,11 @@ void DebugTool::redraw(int _time) {
             std::vector<CHAR_INFO> v;
 
             // resize bufferspace for map in X direction if necessary
-            while (DebugTool::mapEndX < DebugTool::map.size()) {
+            while (DebugTool::mapEndX < static_cast<int>(DebugTool::map.size())) {
                 DebugTool::buffer.insert(DebugTool::buffer.begin() + DebugTool::mapEndX, v);
                 DebugTool::mapEndX++;
             }
-            while (DebugTool::mapEndX > DebugTool::map.size()) {
+            while (DebugTool::mapEndX > static_cast<int>(DebugTool::map.size())) {
                 DebugTool::buffer.erase(DebugTool::buffer.begin() + DebugTool::mapEndX);
                 DebugTool::mapEndX--;
             }
@@ -164,25 +164,25 @@ void DebugTool::redraw(int _time) {
             CHAR_INFO c = {219, 0};
 
             // resize bufferspace for map in Y direction if necessary
-            while (DebugTool::mapEndY < DebugTool::map[0].size()) {
+            while (DebugTool::mapEndY < static_cast<int>(DebugTool::map[0].size())) {
                 // go through every row and add an element
-                for (int i = 0; i < DebugTool::map.size(); i++) {
+                for (int i = 0; i < static_cast<int>(DebugTool::map.size()); i++) {
                     DebugTool::buffer[i].insert(DebugTool::buffer[i].begin() + DebugTool::mapEndY, c);
                 }
                 DebugTool::mapEndY++;
             }
-            while (DebugTool::mapEndY > DebugTool::map[0].size()) {
+            while (DebugTool::mapEndY > static_cast<int>(DebugTool::map[0].size())) {
                 // go through every row and add an element
-                for (int i = 0; i < DebugTool::map.size(); i++) {
+                for (int i = 0; i < static_cast<int>(DebugTool::map.size()); i++) {
                     DebugTool::buffer[i].erase(DebugTool::buffer[i].begin() + DebugTool::mapEndY);
                 }
                 DebugTool::mapEndY--;
             }
 
             // put map into the buffer
-            for (int i = 0; i < DebugTool::map.size(); ++i) {
-                for (int j = 0; j < DebugTool::map[i].size(); ++j) {
-                    DebugTool::buffer[i][j].Attributes = DebugTool::map[i][j] + 16 * DebugTool::map[i][j];
+            for (int i = 0; i < static_cast<int>(DebugTool::map.size()); ++i) {
+                for (int j = 0; j < static_cast<int>(DebugTool::map[i].size()); ++j) {
+                    DebugTool::buffer[i][j].Attributes = static_cast<short unsigned int>(DebugTool::map[i][j] + 16 * DebugTool::map[i][j]);
                 }
             }
             // set other begin and end vars;
@@ -194,9 +194,9 @@ void DebugTool::redraw(int _time) {
         }
             // reset the map if something has been changed TODO: maybe there's a cleaner way to do this
         else if (DebugTool::changedPos || DebugTool::changedMarkers || DebugTool::changedPaths) {
-            for (int i = 0; i < DebugTool::map.size(); ++i) {
-                for (int j = 0; j < DebugTool::map[i].size(); ++j) {
-                    DebugTool::buffer[i][j].Attributes = DebugTool::map[i][j] + 16 * DebugTool::map[i][j];
+            for (int i = 0; i < static_cast<int>(DebugTool::map.size()); ++i) {
+                for (int j = 0; j < static_cast<int>(DebugTool::map[i].size()); ++j) {
+                    DebugTool::buffer[i][j].Attributes = static_cast<short unsigned int>(DebugTool::map[i][j] + 16 * DebugTool::map[i][j]);
                 }
             }
             DebugTool::changedMap = true;
@@ -205,9 +205,9 @@ void DebugTool::redraw(int _time) {
         // refresh the markers on the map
         if (DebugTool::changedMarkers || DebugTool::changedMap) {
             for (auto marker : DebugTool::markers) {
-                if (marker[0] >= 0 && marker[0] < DebugTool::buffer.size() && marker[1] >= 0 &&
-                    marker[1] < DebugTool::buffer[marker[0]].size()) {
-                    DebugTool::buffer[marker[0]][marker[1]].Attributes = marker[2];
+                if (marker[0] >= 0 && marker[0] < static_cast<int>(DebugTool::buffer.size()) && marker[1] >= 0 &&
+                    marker[1] < static_cast<int>(DebugTool::buffer[marker[0]].size())) {
+                    DebugTool::buffer[marker[0]][marker[1]].Attributes = static_cast<short unsigned int>(marker[2]);
                 }
             }
         }

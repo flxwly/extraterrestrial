@@ -78,19 +78,6 @@ Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP, const std::vect
         }
     }
 
-    std::vector<node *> other_nodes;
-    for (auto _node : Pathfinder::nodes) {
-        other_nodes.push_back(&_node);
-    }
-
-    for(auto cur_node : Pathfinder::nodes) {
-        for (auto other_node : other_nodes) {
-
-            
-            other_nodes.pop_back();
-        }
-    }
-
     std::cout << "created Map: " << Pathfinder::map.size() << " | " << Pathfinder::map[0].size() << std::endl;
 }
 

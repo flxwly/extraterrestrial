@@ -270,17 +270,17 @@ std::vector<std::pair<int, int>> Robot::get_points(MapData &mapData) {
             for (auto point : mapData.getAllPoints()) {
 
                 // check if the object_type is chosen less or equal to 2 times
-                if (c_points[point[2]] + 1 <= 2) {
+                if (c_points[point->color()] <= 2) {
 
                     // g_dist is the dist from the last chosen point to the current point
-                    double g_dist = dist(point[0], cur_path.end()->first, point[1], cur_path.end()->second);
+                    double g_dist = dist(point->pos().first, cur_path.end()->first, point->pos().second, cur_path.end()->second);
                     // h_dist is the distance to the deposit area
-                    double h_dist = dist(point[0], deposit_area.first, point[1], deposit_area.second);
+                    double h_dist = dist(point->pos().first, deposit_area.first, point->pos().second, deposit_area.second);
 
                     // if f_cost is lower set f_cost to cur_cost
                     if (g_dist + h_dist < b_dist || b_dist == -1) {
                         b_dist = g_dist + h_dist;
-                        b_point = {point[0], point[1], point[2]};
+                        b_point = {point->pos().first, point->pos().second, point->color()};
                     }
                 }
             }
@@ -304,6 +304,7 @@ std::vector<std::pair<int, int>> Robot::get_points(MapData &mapData) {
 
     return point_path;
 }
+
 
 //====================================
 //          Public Functions
@@ -531,14 +532,6 @@ void Robot::game_1_loop() {
             //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
             start = end;
         }
-        int i = 0;
-        /*for (const auto &path : Robot::complete_path) {
-            std::cout << "Path No. " << std::to_string(i) << std::endl;
-            for (auto point : path) {
-                std::cout << "\t" << str(point) << std::endl;
-            }
-            i++;
-        }*/
     }
 
 

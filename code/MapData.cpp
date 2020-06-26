@@ -35,13 +35,13 @@ MapData::MapData(int mapX, int mapY,
 
     // Point Init
     for (auto p : *redPoints) {
-        MapData::RedPoints.emplace_back(p.first, p.second, deposits, 1);
+        MapData::RedPoints.emplace_back(p.first, p.second, deposits, 0);
     }
     for (auto p : *greenPoints) {
-        MapData::GreenPoints.emplace_back(p.first, p.second, deposits, 2);
+        MapData::GreenPoints.emplace_back(p.first, p.second, deposits, 1);
     }
     for (auto p : *blackPoints) {
-        MapData::BlackPoints.emplace_back(p.first, p.second, deposits, 3);
+        MapData::BlackPoints.emplace_back(p.first, p.second, deposits, 2);
     }
 
     for (auto p : MapData::RedPoints, MapData::GreenPoints, MapData::BlackPoints) {

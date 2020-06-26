@@ -25,13 +25,13 @@ void Point::calculate_closest_points(std::vector<Point *> *_points) {
         if (_point->x != Point::x && _point->y != Point::y) {
             double t_dist = dist(Point::x, _point->x, Point::y, _point->y);
             switch (_point->_color) {
-                case 1:
+                case 0:
                     r_points.push({t_dist, _point});
                     break;
-                case 2:
+                case 1:
                     c_points.push({t_dist, _point});
                     break;
-                case 3:
+                case 2:
                     b_points.push({t_dist, _point});
                     break;
                 default:

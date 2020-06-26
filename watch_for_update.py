@@ -16,9 +16,20 @@ auto_update = True
 optimisation_level = 3
 
 
+# for new CoSpace Versions
+out_path = "./"
+
+
+cospace_version = "2.6.2"
+
+# for CoSpace 2.6.2
+if cospace_version == "2.6.2":
+    out_path = "../../../../CS.C/User/RSC/extraterrestrial/"
+
+
 def compile_code():
     code_path = "./code/"
-    out_path = "./"
+    global out_path
 
     file_list = glob.glob(code_path + "*.cpp", recursive=False)
 
