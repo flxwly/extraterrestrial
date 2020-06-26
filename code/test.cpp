@@ -13,7 +13,7 @@ std::vector<Point> predefine_path(const int &posx, const int &posy){
     std::vector<Point> _path;
     int i = 0;
     std::vector<Point*> points = MapData::getAllPoints;
-    _path.push_back(points.front());
+    _path.push_back(*points.front());
     for(auto _point : points){
         if(i>0){
             if (_point->calculate_dist_to_point(posx, posy) < points.front()->calculate_dist_to_point(posx, posy)){
@@ -29,15 +29,21 @@ std::vector<Point> predefine_path(const int &posx, const int &posy){
     while(num < 6){
         if(obj[2] < 2){
             temp = _path.back()->get_closest_point(3);
-            _path.push_back(temp);
+            _path.push_back(*temp);
+            obj[2]++;
+            num++;
         }
         if(obj[1] < 2){
-            temp = _path.back()->get_closest_point(3);
-            _path.push_back(temp);
+            temp = _path.back()->get_closest_point(2);
+            _path.push_back(*temp);
+            obj[1]++;
+            num++;
         }
         if(obj[0] < 2){
-            temp = _path.back()->get_closest_point(3);
-            _path.push_back(temp);
+            temp = _path.back()->get_closest_point(1);
+            _path.push_back(*temp);
+            obj[1]++;
+            num++;
         }
     }
 
