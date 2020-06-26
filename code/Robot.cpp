@@ -521,7 +521,7 @@ void Robot::game_1_loop() {
     // There's no path to follow
     if (Robot::complete_path.empty()) {
         // get a path of points
-        std::vector<std::pair<int, int>> point_path = Robot::get_points(*Robot::map1);
+        std::vector<std::pair<int, int>> point_path = Robot::map1.getPoints();
         std::pair<int, int> start = {-1, -1};
 
         // calculate a path from one point to the next
@@ -566,6 +566,8 @@ void Robot::game_1_loop() {
             }
         }
     }
+
+    Robot::map1->getAllPoints();
 
 
     /*--------------------

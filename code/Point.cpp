@@ -8,6 +8,9 @@ Point::Point(int _x, int _y, std::vector<std::pair<int, int>> *_dp_areas, int _c
     Point::y = _y;
     Point::_color = static_cast<short int>(_color);
 
+    // -1 = undefined; 0 = nicht da; 1 = gesehen; TODO: Points can reapear after some time
+    Point::state = -1;
+
     // determine nearest deposit area
     Point::closest_deposit_area = _dp_areas->front();
     double t_dist = dist(Point::closest_deposit_area.first, Point::x, Point::closest_deposit_area.second, Point::y);
@@ -26,13 +29,13 @@ void Point::calculate_closest_points(std::vector<Point *> *_points) {
             double t_dist = dist(Point::x, _point->x, Point::y, _point->y);
             switch (_point->_color) {
                 case 0:
-                    r_points.push({t_dist, _point});
+                    Point::r_points.push({t_dist, _point});
                     break;
                 case 1:
-                    c_points.push({t_dist, _point});
+                    Point::c_points.push({t_dist, _point});
                     break;
                 case 2:
-                    b_points.push({t_dist, _point});
+                    Point::b_points.push({t_dist, _point});
                     break;
                 default:
                     break;
@@ -57,14 +60,11 @@ Point* Point::get_closest_point(int color){
     switch (color)
     {
     case 1:
-        return r_points.top().second;
-        break;
+        return Point::r_points.top().second;
     case 2:
-        return c_points.top().second;
-        break;
+        return Point::c_points.top().second;
     case 3:
-        return b_points.top().second;
-        break;
+        return Point::b_points.top().second;
 
     default:
         break;

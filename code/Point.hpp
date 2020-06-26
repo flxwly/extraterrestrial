@@ -27,6 +27,7 @@ public:
 
 private:
     int x, y;
+    int state;
 
     //undef: -1, r: 1, c: 2, b: 3;
     int _color;
