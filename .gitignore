@@ -6,4 +6,4 @@ map_interpreter/.idea
 .flooignore
 CMakeLists.txt
 Kackprojekt
-.extraterrestrial.dll
+extraterrestrial.dll
