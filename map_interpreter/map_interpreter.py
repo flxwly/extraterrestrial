@@ -2,8 +2,10 @@ import xml.etree.ElementTree as ET
 from os import path
 
 import cv2
-
+import numpy as np
 # for new CoSpace Versions
+from PIL import Image
+
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
 FieldFD = ET.parse("../../../../../store/media/Rescue/Map/Sec/Design/Field.FD")
@@ -17,6 +19,9 @@ if cospace_version == "2.6.2":
     FieldFD = ET.parse("../../../../../store/media/CS.C/RSC/Map/Design/Field.FD")
 
 FieldFD = FieldFD.getroot()
+
+FieldA_Rebuild = np.zeros((180, 270, 3), dtype=np.uint8)
+FieldB_Rebuild = np.zeros((270, 360, 3), dtype=np.uint8)
 
 
 class Point:
@@ -215,6 +220,19 @@ def convert_background(_dir, width, height, worldnr):
 
     filecontent = "/*walls*/ " + wall_str + "\n/*traps*/ " + trap_str + "\n/*swamps*/ " + swamp_str + "\n/*deposit*/ " + \
                   deposit_area_str + "\n\n"  # + "\n/*nodes*/ " + node_str + "\n\n"
+
+    if worldnr == 1:
+        for wall in wall_coords:
+            FieldB_Rebuild[wall[1]][wall[0]] = [0, 0, 255]
+        for trap in trap_coords:
+            FieldB_Rebuild[trap[1]][trap[0]] = [255, 255, 0]
+        for swamp in swamp_coords:
+            FieldB_Rebuild[swamp[1]][swamp[0]] = [166, 166, 166]
+        for deposit_area in deposit_areas:
+            FieldB_Rebuild[deposit_area[0]][deposit_area[1]] = [0, 255, 255]
+
+        img = Image.fromarray(FieldB_Rebuild, 'RGB')
+        img.show()
 
     return filecontent
 

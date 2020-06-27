@@ -42,7 +42,7 @@ MapData::MapData(int mapX, int mapY,
     for (auto & greenPoint : *greenPoints) {
         MapData::GreenPoints.emplace_back(&greenPoint, 1);      // green_points/cyan_points
     }
-    for (auto & blackPoint : *greenPoints) {
+    for (auto & blackPoint : *blackPoints) {
         MapData::BlackPoints.emplace_back(&blackPoint, 2);      // green_points/cyan_points
     }
 
@@ -150,7 +150,7 @@ std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::arra
                     }
 
                     // if f_cost is lower set f_cost to cur_cost
-                    if (g_dist + h_dist < b_f_cost || b_point == nullptr) {
+                    if ((g_dist + h_dist < b_f_cost || b_point == nullptr) && point->state != 0) {
                         ERROR_MESSAGE("Found better Point");
                         // check if point is already in path
                         if (std::find(cur_path.begin(), cur_path.end(), point) == cur_path.end()) {

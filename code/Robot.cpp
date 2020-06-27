@@ -100,32 +100,36 @@ bool Robot::should_collect() {
     return false;
 }
 
-void Robot::collect() {
+int Robot::collect() {
 
     // the robot is already collecting
     if (std::chrono::duration_cast<std::chrono::milliseconds>(Robot::timer::now() - collecting_since).count() <= 4000) {
         // This is to prevent the robot from moving
         Robot::wheels(0, 0);
         *Robot::led = 1;
+        return 0;
 
     }
         // the robot begins to collect
     else {
         // set collecting_since to now
         Robot::collecting_since = Robot::timer::now();
-
-        // update the loaded_objects vars
-        if (isRed() || isSuperObj()) {
-            Robot::loaded_objects[0]++;
-        } else if (isCyan()) {
-            Robot::loaded_objects[1]++;
-        } else if (isBlack()) {
-            Robot::loaded_objects[2]++;
-        }
-        Robot::loaded_objects_num++;
-
         Robot::wheels(0, 0);
         *Robot::led = 1;
+
+        // update the loaded_objects vars
+        Robot::loaded_objects_num++;
+
+        if (isRed() || isSuperObj()) {
+            Robot::loaded_objects[0]++;
+            return 1;
+        } else if (isCyan()) {
+            Robot::loaded_objects[1]++;
+            return 2;
+        } else if (isBlack()) {
+            Robot::loaded_objects[2]++;
+            return 3;
+        }
     }
 }
 
@@ -473,7 +477,7 @@ void Robot::game_1_loop() {
         for (auto end : point_path.first) {
             if (start.first != -1 && start.second != -1) {
                 std::vector<std::pair<int, int>> p = Robot::pathfinder1->AStar(start, end->pos,
-                                                                                  Robot::loaded_objects_num > 0);
+                                                                               Robot::loaded_objects_num > 0);
                 if (!p.empty()) {
 
                     // add the path to the complete path
@@ -491,7 +495,7 @@ void Robot::game_1_loop() {
     }
 
 
-    // get the next target
+        // get the next target
     else {
 
         if (Robot::n_target.first == -1 && Robot::n_target.second == -1) {
@@ -506,6 +510,9 @@ void Robot::game_1_loop() {
 
             // if it's the last element remove the path entirely
             if (Robot::n_target_is_last) {
+                Point * closest_point = Robot::map1->getClosestPoint({*Robot::x, *Robot::y});
+                if (closest_point->dist({*Robot::x, *Robot::y}) < 7)
+                    closest_point->state = 0;
                 Robot::complete_path.erase(Robot::complete_path.begin());
             }
                 // Otherwise just remove it
@@ -536,7 +543,21 @@ void Robot::game_1_loop() {
         }
 
     } else if (Robot::should_collect()) {
-        Robot::collect();
+        Point* ptr = nullptr;
+        switch (Robot::collect()) {
+            case 1:
+                ptr = Robot::map1->find_point({*Robot::x, *Robot::y}, 0);
+                if (ptr != nullptr) ptr->state = 0;
+                break;
+            case 2:
+                ptr = Robot::map1->find_point({*Robot::x, *Robot::y}, 1);
+                if (ptr != nullptr) ptr->state = 0;
+                break;
+            case 3:
+                ptr = Robot::map1->find_point({*Robot::x, *Robot::y}, 2);
+                if (ptr != nullptr) ptr->state = 0;
+                break;
+        }
     } else {
         *Robot::led = 0;
         Robot::move_to(Robot::n_target, Robot::n_target_is_last);
