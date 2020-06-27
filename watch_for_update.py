@@ -4,6 +4,7 @@ import subprocess
 import sys
 import time
 from datetime import datetime, timedelta
+from os import system
 
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
@@ -28,6 +29,7 @@ if cospace_version == "2.6.2":
 
 
 def compile_code():
+    system('cls')
     code_path = "./code/"
     global out_path
 

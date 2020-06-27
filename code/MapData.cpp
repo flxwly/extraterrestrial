@@ -103,8 +103,9 @@ std::vector<Point *> MapData::getAllPoints() {
     return MapData::AllPoints;
 }
 
-std::pair<std::vector<Point *>, std::pair<int, int>>
-MapData::get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std::pair<int, int> pos) {
+std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::array<int, 3>
+                                                    loaded_objects, int loaded_objects_num,
+                                                    std::pair<int, int> pos) {
     // point array which which will later be returned
     std::vector<Point *> point_path;
 
@@ -115,8 +116,10 @@ MapData::get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std
     std::pair<int, int> t_deposit_area;
 
     for (auto deposit_area : MapData::getDepositAreas()) {
-        t_deposit_area = deposit_area;
 
+        ERROR_MESSAGE("Next Deposit_Area")
+        std::array<int, 3> t_loaded_objects = loaded_objects;
+        int t_loaded_objects_num = loaded_objects_num;
         // temporary array to be able to compare
         std::vector<Point *> cur_path;
 
@@ -124,7 +127,7 @@ MapData::get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std
         double cur_path_dist = 0;
 
         // add upto 6 points to cur_path;
-        for (int i = loaded_objects_num; i < 6; ++i) {
+        for (int i = t_loaded_objects_num; i < 6; ++i) {
 
             Point *b_point = nullptr;
             double b_f_cost = -1;
@@ -134,27 +137,38 @@ MapData::get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std
             for (const auto &point : MapData::getAllPoints()) {
 
                 // check if the object_type is chosen less or equal to 2 times
-                if (loaded_objects[point->color] <= 2) {
-
+                if (t_loaded_objects[point->color] < 2) {
                     // g_dist is the dist from the last chosen point to the current point
-                    double g_dist = point->dist(cur_path.back()->pos);
+                    double g_dist = 0;
                     // h_dist is the distance to the deposit area
-                    double h_dist = point->dist(deposit_area);
+                    double h_dist = h_dist = point->dist(deposit_area);
+
+                    if (!cur_path.empty()) {
+                        g_dist = point->dist(cur_path.back()->pos);
+                    } else {
+                        g_dist = point->dist(pos);
+                    }
 
                     // if f_cost is lower set f_cost to cur_cost
                     if (g_dist + h_dist < b_f_cost || b_point == nullptr) {
+                        ERROR_MESSAGE("Found better Point");
                         // check if point is already in path
                         if (std::find(cur_path.begin(), cur_path.end(), point) == cur_path.end()) {
+                            ERROR_MESSAGE("Set new best point");
                             b_f_cost = g_dist + h_dist;
                             b_point = point;
                         }
                     }
                 }
             }
-
-            loaded_objects[b_point->color]++;
+            ERROR_MESSAGE("Found b_Point #" + std::to_string(b_point->color));
+            t_loaded_objects[b_point->color]++;
             // The best point is added to the cur_path alongside with it's distance
-            cur_path_dist += b_point->dist(cur_path.back()->pos);
+            if (!cur_path.empty()) {
+                cur_path_dist += b_point->dist(cur_path.back()->pos);
+            } else {
+                cur_path_dist += b_point->dist(pos);
+            }
             cur_path.push_back(b_point);
         }
         // add the dist from the last point to the deposit_area
@@ -166,7 +180,7 @@ MapData::get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std
 
             // this wont overfill because point_path gets set to cur_path and therefore forgets it's earlier content
             point_path = cur_path;
-
+            t_deposit_area = deposit_area;
         }
     }
 

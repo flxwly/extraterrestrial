@@ -42,7 +42,7 @@ Point::Point(std::pair<int, int> *_pos, int _c) {
 }*/
 
 double Point::dist(std::pair<int, int> _pos) {
-    ERROR_MESSAGE("Dist from " + str(this->pos) + " to " + str(_pos) + " = " + std::to_string(::dist(Point::pos.first, _pos.first, Point::pos.second, _pos.second)))
+    //ERROR_MESSAGE("Dist from " + str(this->pos) + " to " + str(_pos) + " = " + std::to_string(::dist(Point::pos.first, _pos.first, Point::pos.second, _pos.second)))
     return ::dist(Point::pos.first, _pos.first, Point::pos.second, _pos.second);
 }
 

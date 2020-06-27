@@ -1,5 +1,7 @@
 #include "Robot.hpp"
 
+#define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+
 //====================================
 //          Constructor
 //====================================
@@ -246,7 +248,7 @@ int Robot::avoid_void() {
 //          Public Functions
 //====================================
 void Robot::wheels(int l, int r) {
-    *Robot::whl_l = l, *Robot::whl_r = r;
+    *Robot::whl_l = 20 * l, *Robot::whl_r = 20 * r;
 }
 
 std::array<int, 3> Robot::get_loaded_objects() {
@@ -440,19 +442,18 @@ void Robot::game_1_loop() {
     }
 
 
-
     // check if robot is in signal lost zone
     if (*Robot::x == 0 && *Robot::y == 0) {
 
         // set normal coords to last coords and update with function
         *Robot::x = Robot::l_x, *Robot::y = Robot::l_y;
         Robot::update_pos();
+        ERROR_MESSAGE("Position lost");
     }
 
     // set last coords to normal coords (last coords wont get overwritten by the sim)
     Robot::l_x = *Robot::x, Robot::l_y = *Robot::y;
     Robot::latest_position_update = Robot::timer::now();
-
     //#####################
     // -- PATHFINDING --
     //#####################
@@ -477,6 +478,7 @@ void Robot::game_1_loop() {
                     //std::cout << "added Path\n";
                 } else {
                     // TODO: Throw exception
+                    ERROR_MESSAGE("No Path found");
                 }
             }
             //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
@@ -486,7 +488,7 @@ void Robot::game_1_loop() {
 
 
     // get the next target
-    if (!Robot::complete_path.empty()) {
+    else {
 
         if (Robot::n_target.first == -1 && Robot::n_target.second == -1) {
 
@@ -508,9 +510,6 @@ void Robot::game_1_loop() {
             }
         }
     }
-
-    Robot::map1->getAllPoints();
-
 
     /*--------------------
      * Priority Structure
@@ -554,5 +553,4 @@ void Robot::game_1_loop() {
             wheels(5, 0);
         }
     }
-
 }
