@@ -38,7 +38,6 @@ extern int SuperObj_X;
 extern int SuperObj_Y;
 extern int Teleport;
 extern int LoadedObjects;
-extern int collectedItems[3];
 extern int US_Front;
 extern int US_Left;
 extern int US_Right;
@@ -61,7 +60,6 @@ extern int Compass;
 extern int Time;
 extern int WheelLeft;
 extern int WheelRight;
-void wheels(int leftWheel, int rightWheel);
 extern int LED_1;
 extern int MyState;
 extern int AI_SensorNum;
@@ -74,8 +72,6 @@ extern int ObjPositionX;//The X coordinate of the last state-changed object.
 extern int ObjPositionY;//The Y coordinate of the last state-changed object.
 extern int ObjDuration; //The duration(seconds) of the object maintains the current state;
 
-extern bool deposited;
-extern bool readyToTP;
 
 extern void Game0();
 extern void Game1();

@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <iostream>
+#include <array>
+#include "Point.hpp"
 
 class MapData {
 public:
@@ -18,27 +20,23 @@ public:
             std::vector<std::pair<int, int>> *traps,
             std::vector<std::pair<int, int>> *swamps);
 
-    int getPointCount(int pColor);
+    Point *find_point(std::pair<int, int> pos, int pColor);
 
-    int findPoint(std::pair<int, int> p, int pColor);
-
-    int erasePoint(std::pair<int, int> p, int pColor);
-
-    int erasePoint(int index, int pColor);
-
-    std::pair<int, int> getPoint(int index, int pColor);
+    std::vector<Point *> getAllPoints();
+    Point *getClosestPoint(std::pair<int, int> pos);
 
     std::vector<std::pair<int, int>> getDepositAreas();
 
-    int availableColors();
+    std::pair<std::vector<Point *>, std::pair<int, int>> get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std::pair<int, int> pos);
 
 private:
-    std::vector<std::pair<int, int>> *getPtrToArr(int pColor);
+    std::vector<Point> *get_ptr_to_arr(const int &_color);
 
     std::vector<std::pair<int, int>> DepositAreas;
-    std::vector<std::pair<int, int>> RedPoints;
-    std::vector<std::pair<int, int>> GreenPoints;
-    std::vector<std::pair<int, int>> BlackPoints;
+    std::vector<Point> RedPoints;
+    std::vector<Point> GreenPoints;
+    std::vector<Point> BlackPoints;
+    std::vector<Point *> AllPoints;
 };
 
 /*walls*/ extern std::vector<std::pair<int, int>> GAME0WALLS;

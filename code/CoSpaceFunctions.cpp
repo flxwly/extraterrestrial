@@ -12,7 +12,6 @@ int SuperObj_X = 0;
 int SuperObj_Y = 0;
 int Teleport = 0;
 int LoadedObjects = 0;
-int collectedItems[3] = {0, 0, 0};
 int US_Front = 0;
 int US_Left = 0;
 int US_Right = 0;
@@ -46,9 +45,6 @@ int ObjState;    //The state (0: Disappear; 1:Appear.) of the last state changed
 int ObjPositionX;//The X coordinate of the last state-changed object.
 int ObjPositionY;//The Y coordinate of the last state-changed object.
 int ObjDuration; //The duration(seconds) of the object maintains the current state;
-
-bool deposited = false;
-bool readyToTP = false;
 
 DLL_EXPORT void SetGameID(int GameID) {
     CurGame = GameID;
@@ -148,12 +144,6 @@ DLL_EXPORT void GetCommand(int *AI_OUT) {
     AI_OUT[3] = MyState;
 }
 
-
-void wheels(int leftWheel, int rightWheel) {
-    WheelLeft = leftWheel;
-    WheelRight = rightWheel;
-}
-
 int cycles = 0;
 DLL_EXPORT void OnTimer() {
 
@@ -161,18 +151,10 @@ DLL_EXPORT void OnTimer() {
         Setup();
     } else if (CurGame == 0) {
         Game0();
-        // TODO Teleport Logic
-        if ((((Time > 180 && LoadedObjects == 0) && readyToTP) || (Time > 240))) {
-            Teleport = 2;
-            CurAction = -1;
-            WheelLeft = 0;
-            WheelRight = 0;
-            LoadedObjects = 0;
-        }
-
     } else {
         Game1();
     }
-    //speedPerTime += (WheelRight + WheelLeft) / 2;
+
+
     cycles++;
 }
