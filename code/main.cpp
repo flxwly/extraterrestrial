@@ -14,6 +14,7 @@ using namespace std;
 #include "CommonFunctions.hpp"
 #include "ColorRecognition.hpp"
 
+
 // Classes
 #include "Pathfinder.hpp"
 #include "MapData.hpp"
@@ -69,7 +70,7 @@ void Setup() {
 
     DEBUG_MESSAGE("\tGame1...", 0);
 
-    std::vector<std::vector<int>> pMap;
+    /*std::vector<std::vector<int>> pMap;
     for (int i = 0; i < PathfinderGame1.map.size(); i++) {
         std::vector<int> _v;
         pMap.push_back(_v);
@@ -88,7 +89,7 @@ void Setup() {
     }
 
     Debug.addMap(pMap);
-
+    */
     DEBUG_MESSAGE("\t finished\n", 0);
 
     DEBUG_MESSAGE("finished initialization\n", 0);

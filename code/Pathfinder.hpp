@@ -11,8 +11,6 @@
 
 class node {
 public:
-    node(int _x, int _y);
-
     node(int _x, int _y, bool _is_w, bool _is_t, bool _is_s);
 
     bool isClosed, isOpen;
@@ -25,7 +23,7 @@ public:
 
 
 // distance between two nodes
-double heuristic(const node &cur, const node &end);
+
 
 
 class Pathfinder {
@@ -37,13 +35,8 @@ public:
     std::vector<std::vector<node>> map;
 
     // pathfinding algorithm
-    std::vector<std::pair<int, int>> findPath(node *start, node *end, bool watchForTraps);
-
-    std::vector<std::pair<int, int>> findPath(node *start, node *end);
-
-    std::vector<std::pair<int, int>> findPath(std::pair<int, int> start, std::pair<int, int> end);
-
-    std::vector<std::pair<int, int>> findPath(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps);
+    std::vector<std::pair<int, int>> AStar(node *start, node *end, bool watchForTraps);
+    std::vector<std::pair<int, int>> AStar(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps);
 
 private:
     struct PRIORITY {
@@ -52,6 +45,7 @@ private:
         }
     };
 
+    static double heuristic(const node &cur, const node &end);
     static bool isPassable(node *, bool traps);
 
     // convert previous pointers of nodes to path

@@ -467,7 +467,7 @@ void Robot::game_1_loop() {
         // calculate a path from one point to the next
         for (auto end : point_path.first) {
             if (start.first != -1 && start.second != -1) {
-                std::vector<std::pair<int, int>> p = Robot::pathfinder1->findPath(start, end->pos(),
+                std::vector<std::pair<int, int>> p = Robot::pathfinder1->AStar(start, end->pos,
                                                                                   Robot::loaded_objects_num > 0);
                 if (!p.empty()) {
 
@@ -478,7 +478,7 @@ void Robot::game_1_loop() {
                 }
             }
             //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
-            start = end->pos();
+            start = end->pos;
         }
     }
 

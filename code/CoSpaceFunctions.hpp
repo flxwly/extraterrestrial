@@ -38,7 +38,6 @@ extern int SuperObj_X;
 extern int SuperObj_Y;
 extern int Teleport;
 extern int LoadedObjects;
-extern int collectedItems[3];
 extern int US_Front;
 extern int US_Left;
 extern int US_Right;

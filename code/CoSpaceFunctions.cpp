@@ -12,7 +12,6 @@ int SuperObj_X = 0;
 int SuperObj_Y = 0;
 int Teleport = 0;
 int LoadedObjects = 0;
-int collectedItems[3] = {0, 0, 0};
 int US_Front = 0;
 int US_Left = 0;
 int US_Right = 0;

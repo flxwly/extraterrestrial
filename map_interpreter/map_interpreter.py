@@ -271,5 +271,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    print("press any key to close the window:")
-    input()

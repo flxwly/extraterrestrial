@@ -14,7 +14,7 @@
 #include "MapData.hpp"
 #include "Pathfinder.hpp"
 
-#define ROBOT_SPEED 0.03333333               // in milliseconds for wheelspeed = 1
+#define ROBOT_SPEED 0.03333333               // in milliseconds for wheel_speed = 1
 
 class Robot {
 public:
@@ -43,7 +43,7 @@ public:
 
     std::array<int, 3> get_loaded_objects();
 
-    int get_loaded_objects_num() const;
+    [[nodiscard]] int get_loaded_objects_num() const;
 
 private:
     //               ______
@@ -79,7 +79,6 @@ private:
     // function to update the position based on speed and time
     int l_x, l_y;                               // last coordinates of the robot (for signal loss)
     std::chrono::time_point<std::chrono::steady_clock> latest_position_update;
-
     void update_pos();
 
     // typedef for time (basically a macro)
@@ -87,9 +86,7 @@ private:
 
     // functions to collect
     std::chrono::time_point<std::chrono::steady_clock> collecting_since;
-
     bool should_collect();
-
     void collect();
 
     // functions to deposit

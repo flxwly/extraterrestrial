@@ -8,7 +8,8 @@ MapData::MapData(int mapX, int mapY,
                  std::vector<std::pair<int, int>> *walls,
                  std::vector<std::pair<int, int>> *traps,
                  std::vector<std::pair<int, int>> *swamps) {
-    // Map Init
+
+    // #########  map  ##########
     MapData::MapX = mapX;
     MapData::MapY = mapY;
     for (int i = 0; i < MapX; i++) {
@@ -18,61 +19,55 @@ MapData::MapData(int mapX, int mapY,
             MapData::Map[i].push_back(0);
         }
     }
-    for (std::pair<int, int> wall : *walls) {
+    for (const std::pair<int, int> &wall : *walls) {        // walls
         MapData::Map[wall.first][wall.second] = 1;
     }
-    for (std::pair<int, int> trap : *traps) {
+    for (const std::pair<int, int> &trap : *traps) {        // traps
         MapData::Map[trap.first][trap.second] = 2;
     }
-    for (std::pair<int, int> swamp : *swamps) {
+    for (const std::pair<int, int> &swamp : *swamps) {      // swamps
         MapData::Map[swamp.first][swamp.second] = 3;
     }
-
-    // Deposit Areas
-    for (std::pair<int, int> deposit : *deposits) {
+    for (const std::pair<int, int> &deposit : *deposits) {  // deposit_areas
         MapData::DepositAreas.push_back(deposit);
     }
 
-    // Point Init
-    for (auto p : *redPoints) {
-        MapData::RedPoints.emplace_back(p.first, p.second, deposits, 0);
+    // ########  points  ############
+    for (const auto &_pos : *redPoints) {                   // red_points
+        MapData::RedPoints.emplace_back(_pos, 0);
+        MapData::AllPoints.push_back(&MapData::RedPoints.back());
     }
-    for (auto p : *greenPoints) {
-        MapData::GreenPoints.emplace_back(p.first, p.second, deposits, 1);
+    for (const auto &_pos : *greenPoints) {
+        MapData::GreenPoints.emplace_back(_pos, 1);      // green_points/cyan_points
+        MapData::AllPoints.push_back(&MapData::GreenPoints.back());
     }
-    for (auto p : *blackPoints) {
-        MapData::BlackPoints.emplace_back(p.first, p.second, deposits, 2);
+    for (const auto &_pos : *blackPoints) {
+        MapData::BlackPoints.emplace_back(_pos, 2);      // black_points
+        MapData::AllPoints.push_back(&MapData::BlackPoints.back());
     }
 
-    for (auto p : MapData::RedPoints) {
-            MapData::AllPoints.push_back(&p);
-        }
-        for (auto p : MapData::GreenPoints) {
-            MapData::AllPoints.push_back(&p);
-        }
-        for (auto p : MapData::BlackPoints) {
-            MapData::AllPoints.push_back(&p);
-        }
-
-    // calculate distances
-    for (auto p : MapData::AllPoints) {
-        p->calculate_closest_points(&this->AllPoints);
+    // ########  calculate distances  #########
+    for (const auto &p : MapData::AllPoints) {
+        p->init(&this->AllPoints);
     }
 }
 
-Point *MapData::findPoint(std::pair<int, int> p, const int pColor) {
-    std::vector<Point> *ptr = MapData::getPtrToArr(pColor);
+Point *MapData::find_point(std::pair<int, int> p, const int _color) {
+    std::vector<Point> *ptr = MapData::get_ptr_to_arr(_color);
 
-    for (auto & i : *ptr) {
-        if (dist(i.pos().first, p.first, i.pos().second, p.second) < 5) {
+    for (auto &i : *ptr) {
+        if (i.dist(p) < 5) {
             return &i;
         }
     }
+
+    std::cerr << __FUNCTION__ << " P(" << std::to_string(p.first) << "" << std::to_string(p.second) << ") | c("
+              << std::to_string(_color) << ") is not existing";
     return nullptr;
 }
 
-std::vector<Point> *MapData::getPtrToArr(const int pColor) {
-    switch (pColor) {
+std::vector<Point> *MapData::get_ptr_to_arr(const int &_color) {
+    switch (_color) {
         case 0:
             return &this->RedPoints;
         case 1:
@@ -80,7 +75,7 @@ std::vector<Point> *MapData::getPtrToArr(const int pColor) {
         case 2:
             return &this->BlackPoints;
         default:
-            // TODO: Throw exeption;
+            std::cerr << __FUNCTION__ << " color: " << std::to_string(_color) << " is not valid";
             return &this->RedPoints;
     }
 }
@@ -93,7 +88,8 @@ std::vector<Point *> MapData::getAllPoints() {
     return MapData::AllPoints;
 }
 
-std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std::pair<int, int> pos) {
+std::pair<std::vector<Point *>, std::pair<int, int>>
+MapData::get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std::pair<int, int> pos) {
     // point array which which will later be returned
     std::vector<Point *> point_path;
 
@@ -105,11 +101,11 @@ std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::arra
 
     for (auto deposit_area : MapData::getDepositAreas()) {
         t_deposit_area = deposit_area;
+
         // temporary array to be able to compare
         std::vector<Point *> cur_path;
-        cur_path.emplace_back(MapData::getClosestPoint(pos));
 
-        // p_dist is used to decide which route to which deposit_area to pick
+        // cur_path_dist is used to decide which route to which deposit_area to pick
         double cur_path_dist = 0;
 
         // add upto 6 points to cur_path;
@@ -123,19 +119,17 @@ std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::arra
             for (const auto &point : MapData::getAllPoints()) {
 
                 // check if the object_type is chosen less or equal to 2 times
-                if (loaded_objects[point->color()] <= 2) {
+                if (loaded_objects[point->color] <= 2) {
 
                     // g_dist is the dist from the last chosen point to the current point
-                    double g_dist = dist(point->pos().first, cur_path.back()->pos().first, point->pos().second,
-                                         cur_path.back()->pos().second);
+                    double g_dist = point->dist(cur_path.back()->pos);
                     // h_dist is the distance to the deposit area
-                    double h_dist = dist(point->pos().first, deposit_area.first, point->pos().second,
-                                         deposit_area.second);
+                    double h_dist = point->dist(deposit_area);
 
                     // if f_cost is lower set f_cost to cur_cost
                     if (g_dist + h_dist < b_f_cost || b_point == nullptr) {
                         // check if point is already in path
-                        if (std::find(cur_path.begin(), cur_path.end(), point) != cur_path.end()) {
+                        if (std::find(cur_path.begin(), cur_path.end(), point) == cur_path.end()) {
                             b_f_cost = g_dist + h_dist;
                             b_point = point;
                         }
@@ -143,13 +137,13 @@ std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::arra
                 }
             }
 
-            loaded_objects[b_point->color()]++;
+            loaded_objects[b_point->color]++;
             // The best point is added to the cur_path alongside with it's distance
-            cur_path_dist += dist(b_point->pos().first, cur_path.back()->pos().first, b_point->pos().second, cur_path.back()->pos().first);
-            cur_path.emplace_back(b_point);
+            cur_path_dist += b_point->dist(cur_path.back()->pos);
+            cur_path.push_back(b_point);
         }
         // add the dist from the last point to the deposit_area
-        cur_path_dist += dist(deposit_area.first, cur_path.back()->pos().first, deposit_area.second, cur_path.back()->pos().first);
+        cur_path_dist += cur_path.back()->dist(deposit_area);
 
         // if the overall path length is shorter then before -> set best to cur
         if (cur_path_dist < b_overall_dist || b_overall_dist == -1) {
@@ -169,8 +163,8 @@ Point *MapData::getClosestPoint(std::pair<int, int> pos) {
     double b_dist = 0;
     Point *b_point = nullptr;
     for (const auto &p : MapData::getAllPoints()) {
-        if (dist(p->pos().first, pos.first, p->pos().second, pos.second) < b_dist || b_point == nullptr) {
-            b_dist = dist(p->pos().first, pos.first, p->pos().second, pos.second);
+        if (p->dist(pos) < b_dist || b_point == nullptr) {
+            b_dist = p->dist(pos);
             b_point = p;
         }
     }

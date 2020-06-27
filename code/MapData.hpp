@@ -20,7 +20,7 @@ public:
             std::vector<std::pair<int, int>> *traps,
             std::vector<std::pair<int, int>> *swamps);
 
-    Point *findPoint(std::pair<int, int> pos, int pColor);
+    Point *find_point(std::pair<int, int> pos, int pColor);
 
     std::vector<Point *> getAllPoints();
     Point *getClosestPoint(std::pair<int, int> pos);
@@ -30,7 +30,7 @@ public:
     std::pair<std::vector<Point *>, std::pair<int, int>> get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std::pair<int, int> pos);
 
 private:
-    std::vector<Point> *getPtrToArr(int pColor);
+    std::vector<Point> *get_ptr_to_arr(const int &_color);
 
     std::vector<std::pair<int, int>> DepositAreas;
     std::vector<Point> RedPoints;

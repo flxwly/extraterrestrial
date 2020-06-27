@@ -13,7 +13,7 @@ more_warnings = True
 
 auto_update = True
 
-optimisation_level = 3
+optimisation_level = 0
 
 
 # for new CoSpace Versions

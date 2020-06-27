@@ -7,6 +7,8 @@
 
 #define _USE_MATH_DEFINES
 
+#define ERROR_MESSAGE(MESSAGE, FUNCTION) {std::cerr << FUNCTION << " " << MESSAGE << std::endl;}
+
 void DEBUG_MESSAGE(const std::string &message, double level) {
     if (DEBUGLEVEL == level) {
         std::cout << message;
@@ -24,6 +26,7 @@ double toRadians(int n) {
 int toDegrees(double n) {
     return dround(n * 180 / M_PI);
 }
+
 int reverseAngle(int angle) {
     angle += (angle > 0) ? -360 : 360;
     return angle % 360;
@@ -112,7 +115,7 @@ int vector2Angle(int x, int y) {
         // bottom right (180 - 270)
     else if (y < 0)
         // angle is negative (90 positive) + (180 location)
-        angle += 90 + 180 ;
+        angle += 90 + 180;
         // top right (270 - 360)
     else {
         angle += 270;
@@ -120,37 +123,40 @@ int vector2Angle(int x, int y) {
     }
     return angle;
 }
+
 int vector2Angle(std::pair<int, int> p) {
     return vector2Angle(p.first, p.second);
 }
+
 int vector2Angle(double x, double y) {
 
     if (x == 0)
-        return (y >= 0)? 0 : 180;
+        return (y >= 0) ? 0 : 180;
     else if (y == 0)
-        return (x > 0)? 90 : 270;
+        return (x > 0) ? 90 : 270;
 
-    int angle = toDegrees(atan(y/x));
+    int angle = toDegrees(atan(y / x));
 
     // bottom left (90 - 180)
     if (x < 0 && y < 0)
         // angle is positive (180 location)
         angle = 0 + 90;
-    // top left (0 - 90)
+        // top left (0 - 90)
     else if (x < 0)
         // angle is negative (90 positive) + (0 location)
         angle += 90 + 0;
-    // bottom right (180 - 270)
+        // bottom right (180 - 270)
     else if (y < 0)
         // angle is negative (90 positive) + (180 location)
-        angle += 90 + 180 ;
-    // top right (270 - 360)
+        angle += 90 + 180;
+        // top right (270 - 360)
     else {
         angle += 270;
         // angle is positive
     }
     return angle;
 }
+
 int vector2Angle(std::pair<double, double> p) {
     return vector2Angle(p.first, p.second);
 }

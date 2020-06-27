@@ -1,74 +1,54 @@
 #include "Point.hpp"
 
-
-
-Point::Point(int _x, int _y, std::vector<std::pair<int, int>> *_dp_areas, int _c) {
-
-    Point::x = _x;
-    Point::y = _y;
-    Point::_color = static_cast<short int>(_c);
-
-    // -1 = undefined; 0 = nicht da; 1 = gesehen; TODO: Points can reapear after some time
-    Point::state = -1;
-
-    // determine nearest deposit area
-    Point::closest_deposit_area = _dp_areas->front();
-    double t_dist = dist(Point::closest_deposit_area.first, Point::x, Point::closest_deposit_area.second, Point::y);
-    for (auto dp_area : *_dp_areas) {
-        if (t_dist > dist(dp_area.first, Point::x, dp_area.second, Point::y)) {
-            t_dist = dist(dp_area.first, Point::x, dp_area.second, Point::y);
-            Point::closest_deposit_area = dp_area;
-        }
-    }
+Point::Point(std::pair<int, int> _pos, int _color) {
+    Point::pos = _pos;
+    Point::color = _color;                              // -1 = undefined; 0 = r; 1 = c; 2 = b;
+    Point::state = -1;                                  // -1 = undefined; 0 = nicht da; 1 = gesehen; TODO: Points can reapear after some time
 }
 
-void Point::calculate_closest_points(std::vector<Point *> *_points) {
-
-    for (auto _point : *_points) {
-        if (_point->x != Point::x && _point->y != Point::y) {
-            double t_dist = dist(Point::x, _point->x, Point::y, _point->y);
-            switch (_point->_color) {
+void Point::init(const std::vector<Point *>& points) {
+    // for each point
+    for (auto point : points) {
+        // if the point is not the same as this
+        if (point != this) {
+            switch (point->color) {
                 case 0:
-                    Point::r_points.push({t_dist, _point});
+                    Point::r_points.push(
+                            {Point::dist(point->pos), point});
                     break;
                 case 1:
-                    Point::c_points.push({t_dist, _point});
+                    Point::c_points.push(
+                            {Point::dist(point->pos), point});
                     break;
                 case 2:
-                    Point::b_points.push({t_dist, _point});
+                    Point::b_points.push(
+                            {Point::dist(point->pos), point});
                     break;
                 default:
+                    std::cerr << __FUNCTION__ << "\tPoint: " << str(point->pos) << " has no valid color ("
+                              << std::to_string(point->color) << ")" << std::endl;
                     break;
             }
+            Point::all_points.push(
+                    {Point::dist(point->pos), point});
         }
     }
 }
 
-double Point::calculate_dist_to_point(const int &x1, const int &y1){
-    return dist(this->x, x1, this->y, y1);
+double Point::dist(std::pair<int, int> _pos) {
+    return ::dist(Point::pos.first, _pos.first, Point::pos.second, _pos.second);
 }
 
-std::pair<int, int> Point::pos() {
-    return {Point::x, Point::y};
-}
-
-int Point::color() const {
-    return Point::_color;
-}
-
-Point* Point::get_closest_point(int color){
-    switch (color)
-    {
-    case 0:
-        return Point::r_points.top().second;
-    case 1:
-        return Point::c_points.top().second;
-    case 2:
-        return Point::b_points.top().second;
-
-    default:
-        return nullptr;
-        break;
+Point *Point::closest_point(int _color) {
+    switch (color) {
+        case 0:
+            return Point::r_points.top().second;
+        case 1:
+            return Point::c_points.top().second;
+        case 2:
+            return Point::b_points.top().second;
+        default:
+            std::cerr << __FUNCTION__ << "\tColor: " << std::to_string(_color) << "is not valid" << std::endl;
+            return nullptr;
     }
-
 }

@@ -1,21 +1,5 @@
 #include "Pathfinder.hpp"
 
-node::node(int _x, int _y) {
-    // for pathfinding lists
-    node::isClosed = false, node::isOpen = false,
-            // for nodes that may influence the path
-    node::isTrap = false, node::isSwamp = false;
-    // for nodes that cant be passed
-    node::isWall = false;
-
-    // position
-    node::x = _x, node::y = _y;
-    // cost and value
-    node::g = 0, node::f = 0;
-    // used to traverse the path
-    node::previous = nullptr;
-}
-
 node::node(int _x, int _y, bool _is_w, bool _is_t, bool _is_s) {
     node::isClosed = false, node::isOpen = false,
             // for nodes that may influence the path
@@ -30,16 +14,13 @@ node::node(int _x, int _y, bool _is_w, bool _is_t, bool _is_s) {
     // used to traverse the path
     node::previous = nullptr;
 }
-
 // Distance between two nodes
-double heuristic(const node &cur, const node &end) {
+double Pathfinder::heuristic(const node &cur, const node &end) {
     int xDiff = abs(cur.x - end.x);
     int yDiff = abs(cur.y - end.y);
 
     return sqrt(pow(xDiff, 2) + pow(yDiff, 2));
 }
-
-
 Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP) {
     // copy map to Pathfinder object
     for (unsigned int i = 0; i < MAP.size(); i++) {
@@ -75,13 +56,10 @@ Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP) {
 
     std::cout << "created Map: " << Pathfinder::map.size() << " | " << Pathfinder::map[0].size() << std::endl;
 }
-
 bool Pathfinder::isPassable(node *_n, bool traps) {
     return !(traps && _n->isTrap);
 }
-
-
-std::vector<std::pair<int, int>> Pathfinder::findPath(node *start, node *end, bool watchForTraps) {
+std::vector<std::pair<int, int>> Pathfinder::AStar(node *start, node *end, bool watchForTraps) {
 
     // start = end ==> no real path
     if (start == end) {
@@ -172,21 +150,10 @@ std::vector<std::pair<int, int>> Pathfinder::findPath(node *start, node *end, bo
 
     return {};
 }
-
-std::vector<std::pair<int, int>> Pathfinder::findPath(node *start, node *end) {
-    return Pathfinder::findPath(start, end, false);
-}
-
-std::vector<std::pair<int, int>> Pathfinder::findPath(std::pair<int, int> start, std::pair<int, int> end) {
-    return Pathfinder::findPath(&Pathfinder::map[start.first][start.second], &Pathfinder::map[end.first][end.second]);
-}
-
-std::vector<std::pair<int, int>>
-Pathfinder::findPath(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps) {
-    return Pathfinder::findPath(&Pathfinder::map[start.first][start.second], &Pathfinder::map[end.first][end.second],
+std::vector<std::pair<int, int>> Pathfinder::AStar(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps) {
+    return Pathfinder::AStar(&Pathfinder::map[start.first][start.second], &Pathfinder::map[end.first][end.second],
                                 watch_for_traps);
 }
-
 std::vector<node> Pathfinder::traverse(node *end) {
     // clear
     std::vector<node> t_path;
@@ -209,7 +176,6 @@ std::vector<node> Pathfinder::traverse(node *end) {
 
     return Pathfinder::shorten(t_path);
 }
-
 std::vector<node> Pathfinder::shorten(std::vector<node> t_path) {
 
     std::vector<node> f_path;
@@ -261,7 +227,6 @@ std::vector<node> Pathfinder::shorten(std::vector<node> t_path) {
 
     return f_path;
 }
-
 std::vector<std::pair<int, int>> Pathfinder::to_pair(const std::vector<node> &p) {
     std::vector<std::pair<int, int>> p_path;
     p_path.reserve(p.size());
