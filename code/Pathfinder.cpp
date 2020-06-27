@@ -21,6 +21,7 @@ double Pathfinder::heuristic(const node &cur, const node &end) {
 
     return sqrt(pow(xDiff, 2) + pow(yDiff, 2));
 }
+
 Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP) {
     // copy map to Pathfinder object
     for (unsigned int i = 0; i < MAP.size(); i++) {
@@ -56,9 +57,11 @@ Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP) {
 
     std::cout << "created Map: " << Pathfinder::map.size() << " | " << Pathfinder::map[0].size() << std::endl;
 }
+
 bool Pathfinder::isPassable(node *_n, bool traps) {
     return !(traps && _n->isTrap);
 }
+
 std::vector<std::pair<int, int>> Pathfinder::AStar(node *start, node *end, bool watchForTraps) {
 
     // start = end ==> no real path

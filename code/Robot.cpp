@@ -475,6 +475,8 @@ void Robot::game_1_loop() {
                     // the first path is at the front of the vector
                     Robot::complete_path.push_back(p);
                     //std::cout << "added Path\n";
+                } else {
+                    // TODO: Throw exception
                 }
             }
             //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;

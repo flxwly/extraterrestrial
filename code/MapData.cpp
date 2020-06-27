@@ -38,20 +38,28 @@ MapData::MapData(int mapX, int mapY,
     // ########  points  ############
     for (auto & redPoint : *redPoints) {                   // red_points
         MapData::RedPoints.emplace_back(&redPoint, 0);
-        MapData::AllPoints.push_back(&MapData::RedPoints.back());
     }
     for (auto & greenPoint : *greenPoints) {
         MapData::GreenPoints.emplace_back(&greenPoint, 1);      // green_points/cyan_points
-        MapData::AllPoints.push_back(&MapData::GreenPoints.back());
     }
     for (auto & blackPoint : *greenPoints) {
         MapData::BlackPoints.emplace_back(&blackPoint, 2);      // green_points/cyan_points
-        MapData::AllPoints.push_back(&MapData::BlackPoints.back());
+    }
+
+    // Push everything to all_points
+    for (auto & point : MapData::RedPoints) {
+        MapData::AllPoints.push_back(&point);
+    }
+    for (auto & point : MapData::GreenPoints) {
+        MapData::AllPoints.push_back(&point);
+    }
+    for (auto & point : MapData::BlackPoints) {
+        MapData::AllPoints.push_back(&point);
     }
 
     ERROR_MESSAGE("Printing Points out of getAllPoints()")
     for (auto a : MapData::getAllPoints()) {
-        ERROR_MESSAGE("Point: " + str(a->pos) + " #" + std::to_string(MapData::AllPoints.back()->color))
+        ERROR_MESSAGE("Point: " + str(a->pos) + " #" + std::to_string(a->color))
     }
     /*// ########  calculate distances  #########
     for (auto p : MapData::AllPoints) {
