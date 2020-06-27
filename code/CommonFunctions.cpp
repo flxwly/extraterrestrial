@@ -7,8 +7,6 @@
 
 #define _USE_MATH_DEFINES
 
-#define ERROR_MESSAGE(MESSAGE, FUNCTION) {std::cerr << FUNCTION << " " << MESSAGE << std::endl;}
-
 void DEBUG_MESSAGE(const std::string &message, double level) {
     if (DEBUGLEVEL == level) {
         std::cout << message;
