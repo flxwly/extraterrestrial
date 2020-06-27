@@ -126,16 +126,17 @@ DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN) {
     PositionY = AI_IN[10];
     packet[10] = PositionY;
     sum += PositionY;
-    TM_State = AI_IN[11];
-    packet[11] = TM_State;
-    sum += TM_State;
-    Compass = AI_IN[12];
-    packet[12] = Compass;
+    Compass = AI_IN[11];
+    packet[11] = Compass;
     sum += Compass;
-    Time = AI_IN[13];
-    packet[13] = Time;
+    Time = AI_IN[12];
+    packet[12] = Time;
     sum += Time;
+    TM_State = AI_IN[13];
+    packet[13] = TM_State;
+    sum += TM_State;
     packet[14] = sum;
+
 }
 DLL_EXPORT void GetCommand(int *AI_OUT) {
     AI_OUT[0] = WheelLeft;

@@ -82,15 +82,15 @@ def get_obj_type(pixel):
         return -1
 
     if (r == 221 and g == 186 and b == 151) or (r == 0 and g == 0 and b == 0):
-        return 1
+        return 1  # wall
     if r == 255 and g == 0 and b == 0:
-        return 1.1
+        return 1.1  # at_wall
     if r == 255 and g == 255 and b == 0:
-        return 2
+        return 2  # trap
     if r == 166 and g == 166 and b == 166:
-        return 3
+        return 3  # swamp
     if (r == 255 and g == 153 and b == 0) or (r == 255 and g == 102 and b == 0):
-        return 4
+        return 4  # deposit
     return -1
 
 

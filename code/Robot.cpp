@@ -263,15 +263,19 @@ int Robot::move_to(int _x, int _y, bool safety) {
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
     int angle = vector2Angle(_x - *Robot::x, _y - *Robot::y);
+    ERROR_MESSAGE("Angle: " + std::to_string(angle));
 
     // Difference between compass
+    ERROR_MESSAGE("Compass: " + std::to_string(*Robot::comp));
     angle -= *Robot::comp;
+    ERROR_MESSAGE("dif to Angle: " + std::to_string(angle));
 
     // If the angle is higher then 180 the point is on the other side
     if (abs(angle) > 180) {
         //          -> get the same angle but with another prefix
         angle = (angle + ((angle > 0) ? -360 : 360)) % 360;
     }
+    ERROR_MESSAGE("turning angle Angle: " + std::to_string(angle));
 
     switch (Robot::check_us_sensors(10, 8, 10)) {
         // case 0 means check_us_sensors has detected no near obstacles
@@ -534,8 +538,9 @@ void Robot::game_1_loop() {
     } else if (Robot::should_collect()) {
         Robot::collect();
     } else {
-
+        *Robot::led = 0;
         Robot::move_to(Robot::n_target, Robot::n_target_is_last);
+        ERROR_MESSAGE(str(Robot::n_target));
         //std::cout << "Is at: " << str(*Robot::x, *Robot::y) << "\tmoving to: " << str(Robot::n_target) << std::endl;
 
         // if the distance is very small the target has been reached
