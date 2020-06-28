@@ -3,8 +3,9 @@ from os import path
 
 import cv2
 import numpy as np
-# for new CoSpace Versions
 from PIL import Image
+
+# for new CoSpace Versions
 
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
@@ -158,7 +159,6 @@ def get_nodes(img_arr, wall_arr, w, h):
 
                 nodes.append([wall[0] + x_step, wall[1] + y_step])
     return nodes
-
 
 def convert_background(_dir, width, height, worldnr):
     print("converting Background: " + str(worldnr))

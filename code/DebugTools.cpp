@@ -224,7 +224,7 @@ void DebugTool::redraw(int _time) {
                 std::string p = "   " + std::to_string(DebugTool::robotPositions[i].first) + " | " +
                                 std::to_string(DebugTool::robotPositions[i].second);
 
-                maxX = std::max(std::max(l.length(), p.length()), static_cast<unsigned int>(maxX));
+                //maxX = std::max(std::max(l.length(), p.length()), static_cast<unsigned int>(maxX));
             }
             while (maxX > DebugTool::buffer.size()) {
                 DebugTool::buffer.push_back(v);

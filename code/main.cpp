@@ -7,6 +7,7 @@
 #include <iostream>
 #include <windows.h>
 #include <cstdlib>
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 
@@ -42,12 +43,16 @@ void updateHSL() {
     DEBUG_MESSAGE("finished updating HSL \n", 3);
 }
 
+// create the window
+sf::RenderWindow CC(sf::VideoMode(800, 600), "My window");
+
 MapData GAME0(240, 180, &GAME0REDPOINTS, &GAME0GREENPOINTS, &GAME0BLACKPOINTS, &GAME0DEPOSITAREAS, &GAME0WALLS,
               &GAME0TRAPS, &GAME0SWAMPS);
+
 MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &GAME1DEPOSITAREAS, &GAME1WALLS,
               &GAME1TRAPS, &GAME1SWAMPS);
-
 Pathfinder PathfinderGame0(GAME0.Map);
+
 Pathfinder PathfinderGame1(GAME1.Map);
 
 DebugTool Debug(0, 0, 10);
@@ -93,6 +98,10 @@ void Setup() {
     DEBUG_MESSAGE("\t finished\n", 0);
 
     DEBUG_MESSAGE("finished initialization\n", 0);
+
+
+    // run the program as long as the window is open
+
 }
 
 /*
