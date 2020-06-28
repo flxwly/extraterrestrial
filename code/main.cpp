@@ -43,9 +43,6 @@ void updateHSL() {
     DEBUG_MESSAGE("finished updating HSL \n", 3);
 }
 
-// create the window
-sf::RenderWindow CC(sf::VideoMode(800, 600), "My window");
-
 MapData GAME0(240, 180, &GAME0REDPOINTS, &GAME0GREENPOINTS, &GAME0BLACKPOINTS, &GAME0DEPOSITAREAS, &GAME0WALLS,
               &GAME0TRAPS, &GAME0SWAMPS);
 
@@ -55,7 +52,7 @@ Pathfinder PathfinderGame0(GAME0.Map);
 
 Pathfinder PathfinderGame1(GAME1.Map);
 
-DebugTool Debug(0, 0, 10);
+sf::RenderWindow *CC;
 
 Robot Bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
           &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
@@ -95,10 +92,14 @@ void Setup() {
 
     Debug.addMap(pMap);
     */
+    static sf::RenderWindow window(sf::VideoMode(600, 800), "window");
+    CC = &window;
+
+
+
     DEBUG_MESSAGE("\t finished\n", 0);
 
     DEBUG_MESSAGE("finished initialization\n", 0);
-
 
     // run the program as long as the window is open
 
@@ -130,7 +131,7 @@ void Game0() {
 void Game1() {
     updateHSL();
 
-
+    CC->display();
     Bot.game_1_loop();
 
     // === Debug ===

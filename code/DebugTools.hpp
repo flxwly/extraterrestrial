@@ -14,6 +14,7 @@
 #include <vector>
 #include <array>
 #include <string>
+#include <SFML/Graphics.hpp>
 
 
 class DebugTool {
@@ -36,6 +37,8 @@ public:
 
 
 private:
+    // create the window
+
     int x, y;
     int minDelay;
     int lastRefresh;

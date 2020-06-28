@@ -16,7 +16,7 @@ auto_update = True
 
 optimisation_level = 0
 
-# SFML = " -I\"C:/GCC_Compiler/SFML-2.5.1x32/include\" -L\"C:/GCC_Compiler/SFML-2.5.1x32/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
+# SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 
 
