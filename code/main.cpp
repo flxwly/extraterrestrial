@@ -92,10 +92,8 @@ void Setup() {
 
     Debug.addMap(pMap);
     */
-    static sf::RenderWindow window(sf::VideoMode(600, 800), "window");
+    static sf::RenderWindow window(sf::VideoMode(320, 480), "tetris");
     CC = &window;
-
-
 
     DEBUG_MESSAGE("\t finished\n", 0);
 
@@ -130,9 +128,10 @@ void Game0() {
 
 void Game1() {
     updateHSL();
+    Bot.game_1_loop();
 
     CC->display();
-    Bot.game_1_loop();
+
 
     // === Debug ===
     // Pos

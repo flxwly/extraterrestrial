@@ -183,15 +183,15 @@ def convert_background(_dir, width, height, worldnr):
 
     for j in range(height):
         for i in range(width):
-            pixel = img_arr[j][i]
+            color = get_obj_type(img_arr[j][i])
 
-            if get_obj_type(pixel) == 1:
+            if color == 1:
                 wall_coords.append([i, j])
-            elif get_obj_type(pixel) == 2:
+            elif color == 2:
                 trap_coords.append([i, j])
-            elif get_obj_type(pixel) == 3:
+            elif color == 3:
                 swamp_coords.append([i, j])
-            elif get_obj_type(pixel) == 4:
+            elif color == 4:
                 set_area_point_to_zero(i, j, img_arr, deposit_area_points)
                 deposit_areas.append(average_point(deposit_area_points, height))
 
