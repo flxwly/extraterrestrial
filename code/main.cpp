@@ -52,7 +52,8 @@ Pathfinder PathfinderGame0(GAME0.Map);
 
 Pathfinder PathfinderGame1(GAME1.Map);
 
-sf::RenderWindow *CC;
+sf::RenderWindow *CC = nullptr;
+sf::Font *unbutton = nullptr;
 
 Robot Bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
           &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
@@ -65,9 +66,28 @@ void Setup() {
 
     DEBUG_MESSAGE("Init... \n", 0);
 
-    updateHSL();
+    static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
+    CC = &window;
+    CC->setFramerateLimit(10);
+    static sf::Font font;
+    if (font.loadFromFile("../fonts/unbutton.ttf")) {
+        unbutton = &font;
+    } else if (font.loadFromFile("unbutton.ttf")) {
+        unbutton = &font;
+    } else if (font.loadFromFile(
+            "C:/Users/flxwly/Microsoft Robotics Dev Studio 4/CS.C/User/RSC/extraterrestrial/unbutton.ttf")) {
+        unbutton = &font;
+    }
 
+    if (unbutton != nullptr) {
+        std::cout << "loaded font" << std::endl;
+    }
+
+
+    updateHSL();
     DEBUG_MESSAGE("\tGame0...", 0);
+
+
     DEBUG_MESSAGE("\t finished\n", 0);
 
     DEBUG_MESSAGE("\tGame1...", 0);
@@ -92,8 +112,7 @@ void Setup() {
 
     Debug.addMap(pMap);
     */
-    static sf::RenderWindow window(sf::VideoMode(320, 480), "tetris");
-    CC = &window;
+
 
     DEBUG_MESSAGE("\t finished\n", 0);
 
@@ -126,16 +145,114 @@ void Game0() {
  * ///__________________________________________________________________________________///
 */
 
-void Game1() {
-    updateHSL();
-    Bot.game_1_loop();
+void Game1_Debug() {
+    sf::Event event;
+    while (CC->pollEvent(event)) {
+        // "close requested" event: we close the window
+        if (event.type == sf::Event::Closed)
+            CC->close();
+    }
+
+    CC->clear(sf::Color::Black);
+
+    if (unbutton == nullptr || CC == nullptr) {
+        std::cout << "something went wrong" << std::endl;
+        return;
+    }
+
+
+    float scaleX = static_cast<float> (CC->getSize().x) / static_cast<float> (GAME1.MapX);
+    float scaleY = static_cast<float> (CC->getSize().y) / static_cast<float>(GAME1.MapY);
+
+    sf::Text label("Map", *unbutton);
+    label.setPosition(10, 5);
+    label.setCharacterSize(30);
+    label.setStyle(sf::Text::Regular);
+    CC->draw(label);
+
+    // Map
+    sf::RectangleShape block(sf::Vector2f(scaleX, scaleY));
+    for (unsigned int i = 0; i < GAME1.MapX; i++) {
+        for (unsigned int j = 0; j < GAME1.MapY; j++) {
+
+            switch (GAME1.Map[i][j]) {
+                case 0:
+                    block.setFillColor(sf::Color::White);
+                    break;
+                case 1:
+                    block.setFillColor(sf::Color::Black);
+                    break;
+                case 2:
+                    block.setFillColor(sf::Color::Yellow);
+                    break;
+                case 3:
+                    block.setFillColor({166, 166, 166});
+                    break;
+                default:
+                    block.setFillColor(sf::Color::Red);
+                    break;
+            }
+            block.setPosition(static_cast<float> (i) * scaleX, static_cast<float> (GAME1.MapY - j) * scaleY);
+            CC->draw(block);
+        }
+    }
+
+    // Deposit Area
+    block.setSize(sf::Vector2f(scaleX * 10, scaleY * 10));
+    block.setFillColor({255, 153, 0});
+    for (auto deposit : GAME1.getDepositAreas()) {
+        block.setPosition(static_cast<float> (deposit.first) * scaleX, static_cast<float> (GAME1.MapY - deposit.second) * scaleY);
+        CC->draw(block);
+    }
+
+    // Path
+    block.setSize(sf::Vector2f(scaleX * 3, scaleY * 3));
+    block.setFillColor({155, 153, 255});
+    for (const auto& path : Bot.complete_path) {
+        for (auto point : path) {
+            block.setPosition(static_cast<float> (point.first) * scaleX, static_cast<float> (GAME1.MapY - point.second) * scaleY);
+            CC->draw(block);
+        }
+    }
+    block.setSize(sf::Vector2f(scaleX * 4, scaleY * 4));
+    block.setFillColor({155, 255, 255});
+    block.setPosition(static_cast<float> (PositionX) * scaleX, static_cast<float> (GAME1.MapY - PositionY) * scaleY);
+    CC->draw(block);
+
+    // Points
+    block.setSize(sf::Vector2f(scaleX * 5, scaleY * 5));
+    for (auto point : GAME1.getAllPoints()) {
+        if (point->state != 0) {
+            block.setPosition(static_cast<float> (point->pos.first) * scaleX,
+                              static_cast<float> (point->pos.second) * scaleY);
+            switch (point->color) {
+                case 0:
+                    block.setFillColor({255, 0, 0});
+                    break;
+                case 1:
+                    block.setFillColor({0, 255, 255});
+                    break;
+                case 2:
+                    block.setFillColor({50, 255, 0});
+                    break;
+                default:
+                    block.setFillColor({0, 0, 0});
+                    break;
+            }
+
+            CC->draw(block);
+        }
+    }
+
 
     CC->display();
+}
 
+void Game1() {
+    updateHSL();
+
+    Game1_Debug();
+    Bot.game_1_loop();
 
     // === Debug ===
-    // Pos
-    //Debug.addRobotPos("Bot: ", PositionX, PositionY);
-
-    //Debug.redraw(cycles);
 }

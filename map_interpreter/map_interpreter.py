@@ -24,11 +24,11 @@ class Point:
     def __init__(self, t, x, y, world):
         self.t = t
         if world == 0:
-            self.x = 100 * float(x) + 270 / 2
-            self.y = 100 * float(y) + 180 / 2
+            self.x = 270 / 2 - 100 * float(x)
+            self.y = float(y) + 180 / 2
         elif world == 1:
-            self.x = 100 * float(x) + 360 / 2
-            self.y = 100 * float(y) + 270 / 2
+            self.x = 360 / 2 - (100 * float(x))
+            self.y = (100 * float(y)) + 270 / 2
 
     def __str__(self):
         return str(self.t) + ": " + str(self.x) + " | " + str(self.y)
@@ -40,7 +40,7 @@ def average_point(point_arr, h):
     count = 1
     for n in point_arr:
         x += n[0]
-        y += h - n[1]
+        y += n[1]
         count += 1
     return [int(x / count), int(y / count)]
 
@@ -110,7 +110,7 @@ def set_area_point_to_zero(i, j, imgarr, deposit_area_points):
 
 
 def expand_walls(img_arr, wall_arr, w, h):
-    robot_r = 1
+    robot_r = 5
     new_walls = []
     for wall in wall_arr:
         for j in range(wall[1] - robot_r, wall[1] + robot_r):
@@ -154,6 +154,7 @@ def get_nodes(img_arr, wall_arr, w, h):
 
                 nodes.append([wall[0] + x_step, wall[1] + y_step])
     return nodes
+
 
 def convert_background(_dir, width, height, worldnr):
     print("converting Background: " + str(worldnr))

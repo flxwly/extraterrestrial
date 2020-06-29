@@ -131,6 +131,7 @@ int Robot::collect() {
             return 3;
         }
     }
+    return 0;
 }
 
 // deposit functions
@@ -187,7 +188,7 @@ void Robot::deposit() {
 
 // teleport functions
 bool Robot::should_teleport() {
-
+    return false; // for ICool Challange because there's only one world
     // while in deposit_area don't teleport
     if (isOrange()) {
         return false;
@@ -396,7 +397,7 @@ void Robot::game_0_loop() {
         else if (isYellowLeft() && Robot::loaded_objects_num > 0) {
             wheels(5, 0);
         } else {
-            switch (Robot::check_us_sensors(8, 12, 8)) {
+            /*switch (Robot::check_us_sensors(8, 12, 8)) {
                 // no obstacle
                 case 0:
                     // 4 | 4 is standard movement speed in w1
@@ -425,7 +426,7 @@ void Robot::game_0_loop() {
                     break;
                 default:
                     break;
-            }
+            }*/
             *Robot::led = 0;
         }
     }
