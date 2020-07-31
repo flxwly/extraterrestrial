@@ -140,7 +140,7 @@ class ImageArray:
 
     def flood_fill(self, i, j, old_val, new_val=-1, activate=False, flags=None, arr=None):
         if self.img_arr[j][i].val == old_val != 0:
-            #  print(self.img_arr[j][i].val)
+            print("filling: " + str(self.img_arr[j][i]))
             if arr is not None:
                 arr.append(self.img_arr[j][i])
             self.img_arr[j][i].val = new_val
@@ -380,6 +380,7 @@ def convert_background(field, worldnr):
     for j in range(field.height):
         for i in range(field.width):
             p = field.img_arr[j][i]
+            print("checking: " + str(p))
             if p.val == 0:
                 pass
             elif p.val == 1:
