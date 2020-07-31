@@ -146,6 +146,18 @@ void Game0() {
 */
 
 void Game1_Debug() {
+
+    //##########//
+    //  Setup   //
+    //##########//
+
+    // check nullptr to prevent crash.
+    if (unbutton == nullptr || CC == nullptr) {
+        std::cout << "something went wrong" << std::endl;
+        return;
+    }
+
+    // Event handling
     sf::Event event;
     while (CC->pollEvent(event)) {
         // "close requested" event: we close the window
@@ -153,100 +165,56 @@ void Game1_Debug() {
             CC->close();
     }
 
+    // clear screen
     CC->clear(sf::Color::Black);
 
-    if (unbutton == nullptr || CC == nullptr) {
-        std::cout << "something went wrong" << std::endl;
-        return;
-    }
+    // Vars for drawing on map
+    sf::Vector2u size = CC->getSize();
+    sf::Vector2f scale = {size.x / static_cast<float> (GAME1.MapX), size.y / static_cast<float> (GAME1.MapY)};
+    sf::RectangleShape block(sf::Vector2f(scale.x, scale.y));
 
+    //##########//
+    //  print   //
+    //##########//
 
-    float scaleX = static_cast<float> (CC->getSize().x) / static_cast<float> (GAME1.MapX);
-    float scaleY = static_cast<float> (CC->getSize().y) / static_cast<float>(GAME1.MapY);
-
+    // Map label
     sf::Text label("Map", *unbutton);
     label.setPosition(10, 5);
     label.setCharacterSize(30);
+    label.setFillColor(sf::Color::Black);
     label.setStyle(sf::Text::Regular);
     CC->draw(label);
 
-    // Map
-    sf::RectangleShape block(sf::Vector2f(scaleX, scaleY));
-    for (unsigned int i = 0; i < GAME1.MapX; i++) {
-        for (unsigned int j = 0; j < GAME1.MapY; j++) {
-
-            switch (GAME1.Map[i][j]) {
-                case 0:
-                    block.setFillColor(sf::Color::White);
-                    break;
-                case 1:
-                    block.setFillColor(sf::Color::Black);
-                    break;
-                case 2:
-                    block.setFillColor(sf::Color::Yellow);
-                    break;
-                case 3:
-                    block.setFillColor({166, 166, 166});
-                    break;
-                default:
-                    block.setFillColor(sf::Color::Red);
-                    break;
-            }
-            block.setPosition(static_cast<float> (i) * scaleX, static_cast<float> (GAME1.MapY - j) * scaleY);
-            CC->draw(block);
-        }
-    }
-
-    // Deposit Area
-    block.setSize(sf::Vector2f(scaleX * 10, scaleY * 10));
-    block.setFillColor({255, 153, 0});
-    for (auto deposit : GAME1.getDepositAreas()) {
-        block.setPosition(static_cast<float> (deposit.first) * scaleX, static_cast<float> (GAME1.MapY - deposit.second) * scaleY);
-        CC->draw(block);
-    }
+    // MapData
+    GAME1.print(CC);
 
     // Path
-    block.setSize(sf::Vector2f(scaleX * 3, scaleY * 3));
-    block.setFillColor({155, 153, 255});
-    for (const auto& path : Bot.complete_path) {
+    block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
+    block.setFillColor({80, 0, 255});        // purpleish
+    sf::VertexArray path_lines;
+    for (const auto &path : Bot.complete_path) {
         for (auto point : path) {
-            block.setPosition(static_cast<float> (point.first) * scaleX, static_cast<float> (GAME1.MapY - point.second) * scaleY);
+            path_lines.append({sf::Vector2f(static_cast<float> (point.first) * scale.x, static_cast<float> (GAME1.MapY - 1 - point.second) *scale.y), sf::Color::Red});
+            block.setPosition(static_cast<float> (point.first) * scale.x,
+                              static_cast<float> (GAME1.MapY - 1 - point.second) * scale.y);
             CC->draw(block);
         }
+        block.setFillColor({160, 0, 255});       // purple
     }
-    block.setSize(sf::Vector2f(scaleX * 4, scaleY * 4));
-    block.setFillColor({155, 255, 255});
-    block.setPosition(static_cast<float> (PositionX) * scaleX, static_cast<float> (GAME1.MapY - PositionY) * scaleY);
+
+    CC->draw(path_lines);
+
+    // Position
+    block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
+    block.setFillColor({140, 30, 0});             // dark red / brown
+    block.setPosition(static_cast<float> (PositionX) * scale.x,
+                      static_cast<float> (GAME1.MapY - 1 - PositionY) * scale.y);
     CC->draw(block);
-
-    // Points
-    block.setSize(sf::Vector2f(scaleX * 5, scaleY * 5));
-    for (auto point : GAME1.getAllPoints()) {
-        if (point->state != 0) {
-            block.setPosition(static_cast<float> (point->pos.first) * scaleX,
-                              static_cast<float> (point->pos.second) * scaleY);
-            switch (point->color) {
-                case 0:
-                    block.setFillColor({255, 0, 0});
-                    break;
-                case 1:
-                    block.setFillColor({0, 255, 255});
-                    break;
-                case 2:
-                    block.setFillColor({50, 255, 0});
-                    break;
-                default:
-                    block.setFillColor({0, 0, 0});
-                    break;
-            }
-
-            CC->draw(block);
-        }
-    }
 
 
     CC->display();
 }
+
 
 void Game1() {
     updateHSL();

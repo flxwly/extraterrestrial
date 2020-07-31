@@ -76,8 +76,8 @@ void Robot::update_pos() {
 // collect functions
 bool Robot::should_collect() {
 
-    // if the difference is less or equal to 3 seconds the robot is still collecting;
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - collecting_since).count() <= 3000)
+    // if the difference is less or equal to 3.5 seconds the robot is still collecting;
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - collecting_since).count() <= 3500)
         return true;
 
     // The robot is full; the robot cant collect items anyway
@@ -89,6 +89,9 @@ bool Robot::should_collect() {
         // Since super objects count as red objects.
         // Only collect red objects if there's space including the chasing super objects
         return Robot::chasing_sobj_num + Robot::loaded_objects[0] < 2;
+
+
+
     } else if (isCyan()) {
         // nothin' special here
         return Robot::loaded_objects[1] < 2;
@@ -289,10 +292,14 @@ int Robot::move_to(int _x, int _y, bool safety) {
             // the angle to x, y is small so there's no correction of it needed
             //      -> drive straight
             if (abs(angle) < 10) {
-                wheels(5, 5);
+                if (!safety || dist(*Robot::x, _x, *Robot::y, _y) < 15) {
+                    wheels(1, 1);
+                } else {
+                    wheels(4, 4);
+                }
             }
                 // the angle is a bit bigger so the robot needs to make a small correction
-            else if (abs(angle) < 30) {
+            else if (abs(angle) < 20) {
                 if (angle < 0) {
                     if (!safety || dist(*Robot::x, _x, *Robot::y, _y) < 15) {
                         wheels(2, 1);
@@ -438,6 +445,10 @@ void Robot::game_0_loop() {
 
 void Robot::game_1_loop() {
 
+    ERROR_MESSAGE("Time for one cycle: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
+                          Robot::timer::now() - Robot::last_cycle).count()));
+            Robot::last_cycle = Robot::timer::now();
+
     // ====== Just for speed measure ====== //     (leave it in for later)
     if (false && *Robot::whl_l == *Robot::whl_r && *Robot::whl_l != 0) {
 
@@ -511,7 +522,7 @@ void Robot::game_1_loop() {
 
             // if it's the last element remove the path entirely
             if (Robot::n_target_is_last) {
-                Point * closest_point = Robot::map1->getClosestPoint({*Robot::x, *Robot::y});
+                Point *closest_point = Robot::map1->getClosestPoint({*Robot::x, *Robot::y});
                 if (closest_point->dist({*Robot::x, *Robot::y}) < 7)
                     closest_point->state = 0;
                 Robot::complete_path.erase(Robot::complete_path.begin());
@@ -544,7 +555,7 @@ void Robot::game_1_loop() {
         }
 
     } else if (Robot::should_collect()) {
-        Point* ptr = nullptr;
+        Point *ptr = nullptr;
         switch (Robot::collect()) {
             case 1:
                 ptr = Robot::map1->find_point({*Robot::x, *Robot::y}, 0);

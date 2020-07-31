@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <array>
+#include <SFML/Graphics.hpp>
 #include "Point.hpp"
 
 class MapData {
@@ -24,10 +25,13 @@ public:
 
     std::vector<Point *> getAllPoints();
     Point *getClosestPoint(std::pair<int, int> pos);
-
     std::vector<std::pair<int, int>> getDepositAreas();
 
+    int markPoint(std::pair<int, int> pos, int state, int c);
+
     std::pair<std::vector<Point *>, std::pair<int, int>> get_path(std::array<int, 3> loaded_objects, int loaded_objects_num, std::pair<int, int> pos);
+
+    void print(sf::RenderWindow *window);
 
 private:
     std::vector<Point> *get_ptr_to_arr(const int &_color);

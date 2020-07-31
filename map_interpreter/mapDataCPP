@@ -36,35 +36,26 @@ MapData::MapData(int mapX, int mapY,
     }
 
     // ########  points  ############
-    for (auto & redPoint : *redPoints) {                   // red_points
+    for (auto &redPoint : *redPoints) {                   // red_points
         MapData::RedPoints.emplace_back(&redPoint, 0);
     }
-    for (auto & greenPoint : *greenPoints) {
+    for (auto &greenPoint : *greenPoints) {
         MapData::GreenPoints.emplace_back(&greenPoint, 1);      // green_points/cyan_points
     }
-    for (auto & blackPoint : *blackPoints) {
+    for (auto &blackPoint : *blackPoints) {
         MapData::BlackPoints.emplace_back(&blackPoint, 2);      // green_points/cyan_points
     }
 
     // Push everything to all_points
-    for (auto & point : MapData::RedPoints) {
+    for (auto &point : MapData::RedPoints) {
         MapData::AllPoints.push_back(&point);
     }
-    for (auto & point : MapData::GreenPoints) {
+    for (auto &point : MapData::GreenPoints) {
         MapData::AllPoints.push_back(&point);
     }
-    for (auto & point : MapData::BlackPoints) {
+    for (auto &point : MapData::BlackPoints) {
         MapData::AllPoints.push_back(&point);
     }
-
-    ERROR_MESSAGE("Printing Points out of getAllPoints()")
-    for (auto a : MapData::getAllPoints()) {
-        ERROR_MESSAGE("Point: " + str(a->pos) + " #" + std::to_string(a->color))
-    }
-    /*// ########  calculate distances  #########
-    for (auto p : MapData::AllPoints) {
-        p->init(MapData::getAllPoints());
-    }*/
 }
 
 Point *MapData::find_point(std::pair<int, int> p, const int _color) {
@@ -104,18 +95,18 @@ std::vector<Point *> MapData::getAllPoints() {
 }
 
 std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::array<int, 3>
-                                                    loaded_objects, int loaded_objects_num,
-                                                    std::pair<int, int> pos) {
+                                                                       loaded_objects, int loaded_objects_num,
+                                                                       std::pair<int, int> pos) {
     // point array which which will later be returned
     std::vector<Point *> point_path;
 
     // point finding algorithm. (See Idea 4 on https://stackoverflow.com/questions/62179174)
-    //      This isn't an optimal solution
+    //      This would be an optimal solution if there was no restriction for which points can be collected.
 
     double b_overall_dist = -1;
     std::pair<int, int> t_deposit_area;
 
-    for (auto deposit_area : MapData::getDepositAreas()) {
+    for (auto deposit_area : MapData::DepositAreas) {
 
         ERROR_MESSAGE("Next Deposit_Area")
         std::array<int, 3> t_loaded_objects = loaded_objects;
@@ -134,7 +125,7 @@ std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::arra
 
             // getAllPoints() returns a vector<array<int, 3>>:
             //      get the point with the lowest f
-            for (const auto &point : MapData::getAllPoints()) {
+            for (const auto &point : MapData::AllPoints) {
 
                 // check if the object_type is chosen less or equal to 2 times
                 if (t_loaded_objects[point->color] < 2) {
@@ -151,17 +142,17 @@ std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::arra
 
                     // if f_cost is lower set f_cost to cur_cost
                     if ((g_dist + h_dist < b_f_cost || b_point == nullptr) && point->state != 0) {
-                        ERROR_MESSAGE("Found better Point");
+                        // ERROR_MESSAGE("Found better Point");
                         // check if point is already in path
                         if (std::find(cur_path.begin(), cur_path.end(), point) == cur_path.end()) {
-                            ERROR_MESSAGE("Set new best point");
+                            // ERROR_MESSAGE("Set new best point");
                             b_f_cost = g_dist + h_dist;
                             b_point = point;
                         }
                     }
                 }
             }
-            ERROR_MESSAGE("Found b_Point #" + std::to_string(b_point->color));
+            // ERROR_MESSAGE("Found b_Point #" + std::to_string(b_point->color));
             t_loaded_objects[b_point->color]++;
             // The best point is added to the cur_path alongside with it's distance
             if (!cur_path.empty()) {
@@ -187,7 +178,6 @@ std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::arra
     return {point_path, t_deposit_area};
 
 }
-
 Point *MapData::getClosestPoint(std::pair<int, int> pos) {
     double b_dist = 0;
     Point *b_point = nullptr;
@@ -198,4 +188,85 @@ Point *MapData::getClosestPoint(std::pair<int, int> pos) {
         }
     }
     return b_point;
+}
+
+void MapData::print(sf::RenderWindow *window) {
+
+    sf::Vector2u size = window->getSize();
+    sf::Vector2f scale = {size.x / static_cast<float> (MapData::MapX), size.y / static_cast<float> (MapData::MapY)};
+
+
+    sf::RectangleShape grid_node(sf::Vector2f(scale.x, scale.y));
+    for (unsigned int i = 0; i < MapData::MapX; i++) {
+        for (unsigned int j = 0; j < MapData::MapY; j++) {
+
+            switch (MapData::Map[i][j]) {
+                case 0:
+                    grid_node.setFillColor(sf::Color::White);
+                    break;
+                case 1:
+                    grid_node.setFillColor(sf::Color::Black);
+                    break;
+                case 2:
+                    grid_node.setFillColor(sf::Color::Yellow);
+                    break;
+                case 3:
+                    grid_node.setFillColor({166, 166, 166});    // gray
+                    break;
+                default:
+                    grid_node.setFillColor(sf::Color::Red);
+                    break;
+            }
+            grid_node.setPosition(static_cast<float> (i) * scale.x, static_cast<float> (MapData::MapY - 1 - j) * scale.y);
+            window->draw(grid_node);
+        }
+    }
+
+    // Deposit Areas
+    grid_node.setSize(sf::Vector2f(scale.x * 10, scale.y * 10));
+    grid_node.setFillColor({255, 153, 0});
+    for (auto deposit : MapData::getDepositAreas()) {
+        grid_node.setPosition(static_cast<float> (deposit.first) * scale.x,
+                              static_cast<float> (MapData::MapY - 1 - deposit.second) * scale.y);
+        window->draw(grid_node);
+    }
+
+    // Points
+    grid_node.setSize(sf::Vector2f(scale.x * 5, scale.y * 5));
+    for (auto point : MapData::AllPoints) {
+        if (point->state != 0) {
+            grid_node.setPosition(static_cast<float> (point->pos.first) * scale.x,
+                                  static_cast<float> (MapData::MapY - 1 - point->pos.second) * scale.y);
+            switch (point->color) {
+                case 0:
+                    grid_node.setFillColor(sf::Color::Red);
+                    break;
+                case 1:
+                    grid_node.setFillColor(sf::Color::Cyan);
+                    break;
+                case 2:
+                    grid_node.setFillColor({50, 50, 50});            // dark gray
+                    break;
+                default:
+                    grid_node.setFillColor(sf::Color::White);
+                    break;
+            }
+
+            window->draw(grid_node);
+        }
+    }
+}
+
+int MapData::markPoint(std::pair<int, int> pos, int state, int c) {
+    Point *p = getClosestPoint(pos);
+    if (p->color == c) {
+        if (p->state == state) {
+            return 0;
+        } else {
+            p->state = state;
+            return 1;
+        }
+    } else {
+        return -1;
+    }
 }
