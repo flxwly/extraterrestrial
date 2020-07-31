@@ -1,23 +1,20 @@
 import math
+from sys import setrecursionlimit
 import xml.etree.ElementTree as ET
-
 
 import cv2
 import numpy as np
 import numpy.linalg as la
 from PIL import Image, ImageDraw
+setrecursionlimit(10000)
 
 
 # for new CoSpace Versions
-
-
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
 FieldFD = ET.parse("../../../../../store/media/Rescue/Map/Sec/Design/Field.FD")
 
-
 cospace_version = "2.6.2"
-
 
 # for CoSpace 2.6.2
 if cospace_version == "2.6.2":
@@ -25,24 +22,7 @@ if cospace_version == "2.6.2":
     FieldB = "../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
     FieldFD = ET.parse("../../../../../store/media/CS.C/RSC/Map/Design/Field.FD")
 
-
 FieldFD = FieldFD.getroot()
-
-
-class Point:
-    def __init__(self, t, x, y, world):
-        super().__init__(x, y, val=t)
-
-        # real coordinates in the simulator. Not the coordinates used by the robot
-        self.real_x = x
-        self.real_y = y
-
-        #  world 1 is 90 cm bigger in both directions (x, y)
-        self.x = (270 + 90 * world) / 2 - 100 * float(x)
-        self.y = 100 * float(y) + (180 + 90 * world) / 2
-
-    def __str__(self):
-        return str(self.t) + ": " + str(self.x) + " | " + str(self.y)
 
 
 def find_color_points(world, worldnr):
@@ -69,7 +49,7 @@ def find_color_points(world, worldnr):
                             cx = attribute.text
                         if attribute.tag == "CY":
                             cy = attribute.text
-                    arr.append(Point(t, cx, cy, worldnr))
+                    arr.append(Collectible(t, cx, cy, worldnr))
 
     return arr
 
@@ -159,7 +139,8 @@ class ImageArray:
         return s
 
     def flood_fill(self, i, j, old_val, new_val=-1, activate=False, flags=None, arr=None):
-        if self.img_arr[j][i].val == old_val:
+        if self.img_arr[j][i].val == old_val != 0:
+            #  print(self.img_arr[j][i].val)
             if arr is not None:
                 arr.append(self.img_arr[j][i])
             self.img_arr[j][i].val = new_val
@@ -212,16 +193,15 @@ class ImageArray:
             for j in range(-1, 1):
                 if i is not 0 and j is not 0:
                     x = pixel.x + i
-                    y = pixel.y +j
+                    y = pixel.y + j
                     if self.width > x >= 0 and self.height > y >= 0:
                         squares.append((pixel, self.img_arr[j][i], self.img_arr[0][i], self.img_arr[j][0]))
 
         for square in squares:
-            vals = (int(p.val) for p in square)
+            vals = (int(p.is_wall) for p in square)
             if vals in patterns:
                 return square
         return []
-
 
     def avg(self, i, j, val):
         pixels = []
@@ -240,7 +220,6 @@ class ImageArray:
     def show(self, scale):
         im = Image.new('RGB', (self.width * scale, self.height * scale))
 
-
         draw = ImageDraw.Draw(im)
         for row in self.img_arr:
             for p in row:
@@ -249,7 +228,6 @@ class ImageArray:
                         p.x * scale - scale / 2, p.y * scale - scale / 2, p.x * scale + scale / 2,
                         p.y * scale + scale / 2)
                     draw.rectangle(coord, width=scale, fill=(255, 255, 255))
-
 
         i = 0
         for node_struct in self.nodes:
@@ -272,52 +250,49 @@ class ImageArray:
         return im
 
 
-
-
-class Pixel:
-    def __init__(self, arr, x, y, color):
-        self.arr = arr
+class Point:
+    def __init__(self, x, y):
         self.x = x
         self.y = y
+
+
+class Pixel(Point):
+    def __init__(self, arr, x, y, color):
+        super().__init__(x, y)
+
+        self.arr = arr
         self.val = color_switch(tuple([color[0], color[1], color[2]]))
+        self.is_wall = self.val == 1
         #  possible flags: marked, ignored
         self.flags = {"active": False,
                       "marked": False,
                       "ignored": False}
 
-
     def __repr__(self):
         return "[%s,%s]" % (self.x, self.arr.height - self.y)
-
 
     def __str__(self):
         return "[%s | %s]: %s" % (self.x, self.arr.height - self.y, self.val)
 
 
-
-
-class Node:
+class Node(Point):
     def __init__(self, field, x, y, direction):
+        super().__init__(x, y)
+
         self.field = field
-        self.x = x
-        self.y = y
         self.direction = direction
         self.adjacend_wall = field.img_arr[self.y + self.direction[1]][self.x + direction[0]]
         self.visibles = []
         self.wall_connections = []  # max 2
 
-
     def __iter__(self):
         return [self.x, self.y]
-
 
     def __repr__(self):
         return "[%s,%s]" % (self.x, self.field.height - self.y)
 
-
     def __str__(self):
         return "[%s | %s]: %s" % (self.x, self.field.height - self.y, self.visibles)
-
 
     def can_see(self, node):
         if self is node:
@@ -332,18 +307,15 @@ class Node:
                         break
         return visible
 
-
     def find_visibles(self, nodes):
         for node in nodes:
             if self.can_see(node):
                 node.visibles.append(self)
                 self.visibles.append(node)
 
-
     def find_wall_connections(self, visible_nodes):
         clockwise_closest = [None, 0, math.inf]
         c_clockwise_closest = [None, 360, math.inf]
-
 
         for node in visible_nodes:
             v_1 = [self.x - node.x, self.y - node.y]
@@ -358,116 +330,41 @@ class Node:
                     if dist < c_clockwise_closest[2]:
                         c_clockwise_closest = [node, angle, dist]
 
-
         #  print(clockwise_closest)
         self.wall_connections = [clockwise_closest[0], c_clockwise_closest[0]]
 
 
+class Collectible(Point):
+    def __init__(self, t, x, y, world):
+        # x and y are real coordinates in the simulator. Not the coordinates used by the robot
+        super().__init__(x, y)
+
+        #  Virtual coordinates are the ones used by the robot
+        #  world 1 is 90 cm bigger in both directions (x, y)
+        self.virtual_x = (270 + 90 * world) / 2 - 100 * float(x)
+        self.virtual_y = 100 * float(y) + (180 + 90 * world) / 2
+
+        #  The color (red = 0; cyan/green = 1; black = 2)
+        self.t = t
+
+    def __str__(self):
+        return str(self.t) + ": " + str(self.virtual_x) + " | " + str(self.virtual_y)
 
 
 def get_nodes(field, walls):
-    wall_steps = [[-1, 0], [0, -1], [0, 1], [1, 0]]
     nodes = []
-    valenz_walls = []
-
 
     for wall in walls:
-        surrounding_walls = []
-        for step in wall_steps:
-            x = wall.x + step[0]
-            y = wall.y + step[1]
-            if 0 <= x < field.width and 0 <= y < field.height:
-                if field.img_arr[y][x].val in [1, 2, -1, -2]:
-                    surrounding_walls.append(field.img_arr[y][x])
-                else:
-                    if field.img_arr[y][x].val != -1.1:
-                        field.img_arr[y][x].val = -1.1
-                        valenz_walls.append(field.img_arr[y][x])
-            else:
-                pass
-                # surrounding_walls.append([x, y])
-        if len(surrounding_walls) == 2:
-            # only if not a straight line
-            if surrounding_walls[0].x - surrounding_walls[1].x != 0 \
-                    and surrounding_walls[0].y - surrounding_walls[1].y != 0:
-                # x step of surrounding_walls[0] is 0
-                if wall.x - surrounding_walls[0].x == 0:
-                    temp = surrounding_walls[0]
-                    surrounding_walls[0] = surrounding_walls[1]
-                    surrounding_walls[1] = temp
-
-
-                x_step = wall.x - surrounding_walls[0].x
-                y_step = wall.y - surrounding_walls[1].y
-
-
-                nodes.append(Node(field, wall.x + x_step, wall.y + y_step, [-x_step, -y_step]))
-
-
-    for wall in valenz_walls:
-        surrounding_walls = []
-        for step in wall_steps:
-            x = wall.x + step[0]
-            y = wall.y + step[1]
-            if 0 <= x < field.width and 0 <= y < field.height:
-                if field.img_arr[y][x].val in [1, 2, -1, -2, -1.1]:
-                    surrounding_walls.append(field.img_arr[y][x])
-                else:
-                    if field.img_arr[y][x] not in valenz_walls:
-                        valenz_walls.append(field.img_arr[y][x])
-            else:
-                pass
-                # surrounding_walls.append([x, y])
-        if len(surrounding_walls) == 2:
-            # only if not a straight line
-            if surrounding_walls[0].x - surrounding_walls[1].x != 0 \
-                    and surrounding_walls[0].y - surrounding_walls[1].y != 0:
-                # x step of surrounding_walls[0] is 0
-                if wall.x - surrounding_walls[0].x == 0:
-                    temp = surrounding_walls[0]
-                    surrounding_walls[0] = surrounding_walls[1]
-                    surrounding_walls[1] = temp
-
-
-                x_step = wall.x - surrounding_walls[0].x
-                y_step = wall.y - surrounding_walls[1].y
-
-
-                nodes.append(Node(field, wall.x, wall.y, [x_step, y_step]))
-
-
-    nodes_to_delete = []
-    checking_neighbour_steps = [[1, 1], [-1, 1]]
-    for node in nodes:
-        for step in checking_neighbour_steps:
-            neighbour_count = 0
-            for c_node in nodes:
-                if c_node.x == node.x + step[0] and c_node.y == node.y + step[1]:
-                    neighbour_count += 1
-                elif c_node.x == node.x - step[0] and c_node.y == node.y - step[1]:
-                    neighbour_count += 1
-
-
-                if neighbour_count >= 2:
-                    nodes_to_delete.append(node)
-
+        matches = field.check_pattern(wall)
+        for match in matches:
+            nodes.append(Node(field, match[1].x, match[1].y, [match[0].x - match[1].x, match[0].x - match[1].y]))
 
     print(nodes)
-
-
-    for node in nodes_to_delete:
-        if node in nodes:
-            nodes.remove(node)
-
-
     return nodes
-
-
 
 
 def convert_background(field, worldnr):
     print("converting Background: " + str(worldnr))
-
 
     walls = []
     wall_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "WALLS = "
@@ -478,9 +375,7 @@ def convert_background(field, worldnr):
     deposit_areas = []
     deposit_area_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "DEPOSITAREAS = "
 
-
     print("\tconvert")
-
 
     for j in range(field.height):
         for i in range(field.width):
@@ -498,25 +393,20 @@ def convert_background(field, worldnr):
             elif p.val == 4:
                 deposit_areas.append(field.avg(i, j, -4))
 
-
     for wall_piece in walls:
         field.nodes.append(get_nodes(field, wall_piece))
-
 
     all_nodes = []
     for node_struct in field.nodes:
         for node in node_struct:
             all_nodes.append(node)
 
-
     for node_struct in field.nodes:
         for node in node_struct:
             node.find_visibles(all_nodes)
             node.find_wall_connections(node_struct)
 
-
     print(field.nodes)
-
 
     print("convert to str")
     wall_str += str(walls).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
@@ -524,21 +414,16 @@ def convert_background(field, worldnr):
     swamp_str += str(swamps).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
     deposit_area_str += str(deposit_areas).replace("[", "{").replace("]", "}") + ";"
 
-
     filecontent = "/*walls*/ " + wall_str + "\n/*traps*/ " + trap_str + "\n/*swamps*/ " + swamp_str + "\n/*deposit*/ " + \
                   deposit_area_str + "\n\n"  # + "\n/*nodes*/ " + node_str + "\n\n"
 
-
     return filecontent
-
-
 
 
 def write_points_to_file(points, worldnr):
     redpoints = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "REDPOINTS = {"
     greenpoints = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "GREENPOINTS = {"
     blackpoints = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "BLACKPOINTS = {"
-
 
     for point in points:
         if point.t == "Object_Red":
@@ -548,16 +433,12 @@ def write_points_to_file(points, worldnr):
         if point.t == "Object_Black":
             blackpoints += "{" + str(int(point.x)) + ", " + str(int(point.y)) + "}, "
 
-
     redpoints = (redpoints + "}").replace(", }", "};")
     greenpoints = (greenpoints + "}").replace(", }", "};")
     blackpoints = (blackpoints + "}").replace(", }", "};")
 
-
     filecontent = redpoints + "\n" + greenpoints + "\n" + blackpoints + "\n\n\n"
     return filecontent
-
-
 
 
 def main():
@@ -571,20 +452,16 @@ def main():
             world_2_points = find_color_points(child, 1)
     filename = "../code/MapData.cpp"
 
-
     print("getting objects... (this might take some time)")
-
 
     f = open("mapDataCPP", "r")
     cpp_data = f.read() + "\n\n"
     f.close()
 
-
     field_a = ImageArray(FieldA)
     field_a.expand_all(1, 5)  # expand all walls by 5
     field_b = ImageArray(FieldB)
     field_b.expand_all(1, 5)  # expand all walls by 5
-
 
     field_a_str = convert_background(field_a, 0)
     field_a_points = write_points_to_file(world_1_points, 0)
@@ -599,8 +476,6 @@ def main():
     field_b.show(10).save("field_b.png")
 
     print("finished")
-
-
 
 
 if __name__ == '__main__':
