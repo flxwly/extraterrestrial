@@ -6,8 +6,8 @@ import cv2
 import numpy as np
 import numpy.linalg as la
 from PIL import Image, ImageDraw
-setrecursionlimit(10000)
 
+setrecursionlimit(10000)
 
 # for new CoSpace Versions
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
@@ -124,7 +124,8 @@ def color_switch(pixel):
 
 class ImageArray:
     def __init__(self, _dir):
-        t_img = cv2.resize(cv2.imread(_dir + "/Background.bmp"), None, fx=0.5, fy=0.5, interpolation=cv2.INTER_NEAREST)
+        t_img = cv2.resize(cv2.imread(_dir + "/Background.bmp"), None, fx=0.25, fy=0.25,
+                           interpolation=cv2.INTER_NEAREST)
 
         self.img_arr = [[Pixel(self, i, j, t_img[j][i]) for i in range(len(t_img[j]))] for j in
                         range(len(t_img))]  # TODO: Add support for more specific files
@@ -140,10 +141,9 @@ class ImageArray:
 
     def flood_fill(self, i, j, old_val, new_val=-1, activate=False, flags=None, arr=None):
         if self.img_arr[j][i].val == old_val != 0:
-            print("filling: " + str(self.img_arr[j][i]))
             if arr is not None:
                 arr.append(self.img_arr[j][i])
-            self.img_arr[j][i].val = new_val
+            self.img_arr[j][i].set_val(new_val)
             for n in range(j - 1, j + 2):
                 for m in range(i - 1, i + 2):
                     if 0 <= m < self.width and 0 <= n < self.height:  # boundary check
@@ -167,7 +167,7 @@ class ImageArray:
                 for m in range(p.x - r, p.x + r):
                     if 0 <= m < self.width and 0 <= n < self.height:
                         if self.img_arr[n][m].val != -1:
-                            self.img_arr[n][m].val = old_val
+                            self.img_arr[n][m].set_val(old_val)
         self.flood_fill(i, j, -1, new_val=old_val)
 
     def expand_all(self, val, r):
@@ -177,7 +177,7 @@ class ImageArray:
             for j in range(p.y - r, p.y + r):
                 for i in range(p.x - r, p.x + r):
                     if 0 <= i < self.width and 0 <= j < self.height:
-                        self.img_arr[j][i].val = val
+                        self.img_arr[j][i].set_val(val)
 
     def collect_pixels(self, val):
         pixels = []
@@ -187,21 +187,46 @@ class ImageArray:
                     pixels.append(self.img_arr[j][i])
         return pixels
 
-    def check_pattern(self, pixel, patterns=((1, 0, 1, 1), (1, 0, 0, 0))):
+    def check_pattern(self, pixel, patterns=None):
+        if patterns is None:
+            patterns = [[1, 0, 1, 1], [1, 0, 0, 0]]
         squares = []
-        for i in range(-1, 1):
-            for j in range(-1, 1):
+        for i in range(-1, 2):
+            for j in range(-1, 2):
                 if i is not 0 and j is not 0:
                     x = pixel.x + i
                     y = pixel.y + j
+                    #  if everything is inside the boundarys everything is good
                     if self.width > x >= 0 and self.height > y >= 0:
-                        squares.append((pixel, self.img_arr[j][i], self.img_arr[0][i], self.img_arr[j][0]))
+                        squares.append((pixel, self.img_arr[y][x], self.img_arr[pixel.y][x], self.img_arr[y][pixel.x]))
 
+                    #  if x is outside and y is inside pixels that would be out of bounds are generated
+                    elif (self.width <= x or x < 0) and self.height > y >= 0:
+                        print("out of bounds")
+                        squares.append(
+                            (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, x, pixel.y, [255, 255, 255]),
+                             self.img_arr[y][pixel.x]))
+
+                    #  if y is outside and x is inside pixels that would be out of bounds are generated
+                    elif self.width > x >= 0 and (self.height <= y or y < 0):
+                        print("out of bounds")
+                        squares.append(
+                            (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, pixel.x, y, [255, 255, 255]),
+                             self.img_arr[pixel.y][x]))
+
+                    #  if x and y are outside pixels that would be out of bounds are generated
+                    else:
+
+                        print("out of bounds")
+                        squares.append(
+                            (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, pixel.x, y, [255, 255, 255]),
+                             Pixel(None, x, pixel.y, [255, 255, 255])))
+        matches = []
         for square in squares:
-            vals = (int(p.is_wall) for p in square)
+            vals = [int(p.is_wall) for p in square]
             if vals in patterns:
-                return square
-        return []
+                matches.append(square)
+        return matches
 
     def avg(self, i, j, val):
         pixels = []
@@ -218,30 +243,40 @@ class ImageArray:
         return 0
 
     def show(self, scale):
-        im = Image.new('RGB', (self.width * scale, self.height * scale))
+        im = Image.new('HSV', ((self.width + 2) * scale, (self.height + 2) * scale))
+
+        x_off = scale
+        y_off = scale
 
         draw = ImageDraw.Draw(im)
         for row in self.img_arr:
             for p in row:
-                if p.val == 1 or p.val == -1:
+                if p.is_wall:
                     coord = (
-                        p.x * scale - scale / 2, p.y * scale - scale / 2, p.x * scale + scale / 2,
-                        p.y * scale + scale / 2)
-                    draw.rectangle(coord, width=scale, fill=(255, 255, 255))
+                        p.x * scale - scale / 2 + x_off, p.y * scale - scale / 2 + y_off,
+                        p.x * scale + scale / 2 + x_off, p.y * scale + scale / 2 + y_off)
+                    draw.rectangle(coord, width=scale, fill=(255, 0, 255))
 
         i = 0
         for node_struct in self.nodes:
             for n in node_struct:
                 coord = (
-                    n.x * scale - scale / 2, n.y * scale - scale / 2, n.x * scale + scale / 2, n.y * scale + scale / 2)
-                draw.rectangle(coord, width=scale, fill=(0, 255, 255))
-                draw.line((n.x * scale, n.y * scale, (n.x + n.direction[0]) * scale, (n.y + n.direction[1]) * scale),
-                          fill=(0, 255, 0))
+                    n.x * scale - scale / 2 + x_off, n.y * scale - scale / 2 + y_off,
+                    n.x * scale + scale / 2 + x_off, n.y * scale + scale / 2 + y_off)
+                draw.rectangle(coord, width=scale,
+                               fill=(90 * int(not n.reachable), 255, 255))
+                coord = (
+                    n.x * scale + x_off, n.y * scale + + y_off,
+                    (n.x + n.direction[0]) * scale + x_off, (n.y + n.direction[1]) * scale + y_off)
+                draw.line(coord, fill=(60, 255, 255))
+
 
                 for visible in n.visibles:
                     if visible is not None:
-                        draw.line((n.x * scale, n.y * scale, visible.x * scale, visible.y * scale),
-                                  fill=(i * 2 % 255, int(math.sin(i) * 255), int(math.cos(i) * 255), 50))
+                        coord = (
+                            n.x * scale + x_off, n.y * scale + + y_off,
+                            visible.x * scale + x_off, visible.y * scale + + y_off)
+                        draw.line(coord, fill=(i * 40, 255, 255, 50))
                     else:
                         print("Error")
             i += 1
@@ -268,6 +303,10 @@ class Pixel(Point):
                       "marked": False,
                       "ignored": False}
 
+    def set_val(self, val):
+        self.val = val
+        self.is_wall = abs(val) == 1
+
     def __repr__(self):
         return "[%s,%s]" % (self.x, self.arr.height - self.y)
 
@@ -276,9 +315,10 @@ class Pixel(Point):
 
 
 class Node(Point):
-    def __init__(self, field, x, y, direction):
+    def __init__(self, field, x, y, direction, reachable=True):
         super().__init__(x, y)
 
+        self.reachable = reachable
         self.field = field
         self.direction = direction
         self.adjacend_wall = field.img_arr[self.y + self.direction[1]][self.x + direction[0]]
@@ -292,10 +332,10 @@ class Node(Point):
         return "[%s,%s]" % (self.x, self.field.height - self.y)
 
     def __str__(self):
-        return "[%s | %s]: %s" % (self.x, self.field.height - self.y, self.visibles)
+        return "[%s | %s]: %s" % (self.x, self.field.height - self.y, self.field)
 
     def can_see(self, node):
-        if self is node:
+        if self is node or not self.reachable:
             return False
         visible = True
         if node not in self.visibles:
@@ -323,12 +363,17 @@ class Node(Point):
             angle = py_ang(v_1, v_2)
             dist = math.sqrt(v_1[0] ** 2 + v_1[1] ** 2)
             if self.can_see(node):
-                if angle > clockwise_closest[1]:
-                    if dist < clockwise_closest[2]:
+                if math.radians(315.1) >= angle >= clockwise_closest[1]:
+                    if dist < clockwise_closest[2] and angle == clockwise_closest[1]:
                         clockwise_closest = [node, angle, dist]
-                if angle < c_clockwise_closest[1]:
-                    if dist < c_clockwise_closest[2]:
+                    elif angle != clockwise_closest[1]:
+                        clockwise_closest = [node, angle, dist]
+                if math.radians(44.9) <= angle < c_clockwise_closest[1]:
+                    if dist < c_clockwise_closest[2] and angle == c_clockwise_closest[1]:
                         c_clockwise_closest = [node, angle, dist]
+                    elif angle != c_clockwise_closest[1]:
+                        c_clockwise_closest = [node, angle, dist]
+
 
         #  print(clockwise_closest)
         self.wall_connections = [clockwise_closest[0], c_clockwise_closest[0]]
@@ -337,7 +382,7 @@ class Node(Point):
 class Collectible(Point):
     def __init__(self, t, x, y, world):
         # x and y are real coordinates in the simulator. Not the coordinates used by the robot
-        super().__init__(x, y)
+        super().__init__(float(x), float(y))
 
         #  Virtual coordinates are the ones used by the robot
         #  world 1 is 90 cm bigger in both directions (x, y)
@@ -357,8 +402,26 @@ def get_nodes(field, walls):
     for wall in walls:
         matches = field.check_pattern(wall)
         for match in matches:
-            nodes.append(Node(field, match[1].x, match[1].y, [match[0].x - match[1].x, match[0].x - match[1].y]))
+            nodes.append(Node(field, match[1].x, match[1].y, [match[0].x - match[1].x, match[0].y - match[1].y], reachable=match[1].arr is not None))
 
+    nodes_to_delete = []
+    checking_neighbour_steps = [[1, 1], [-1, 1]]
+    for node in nodes:
+        for step in checking_neighbour_steps:
+            neighbour_count = 0
+            for c_node in nodes:
+                if c_node.x == node.x + step[0] and c_node.y == node.y + step[1]:
+                    neighbour_count += 1
+                elif c_node.x == node.x - step[0] and c_node.y == node.y - step[1]:
+                    neighbour_count += 1
+
+                if neighbour_count >= 2:
+                    nodes_to_delete.append(node)
+
+    for node in nodes_to_delete:
+        if node in nodes:
+            nodes.remove(node)
+    print("------" + str(len(nodes)) + "-------")
     print(nodes)
     return nodes
 
@@ -380,7 +443,6 @@ def convert_background(field, worldnr):
     for j in range(field.height):
         for i in range(field.width):
             p = field.img_arr[j][i]
-            print("checking: " + str(p))
             if p.val == 0:
                 pass
             elif p.val == 1:
@@ -407,8 +469,6 @@ def convert_background(field, worldnr):
             node.find_visibles(all_nodes)
             node.find_wall_connections(node_struct)
 
-    print(field.nodes)
-
     print("convert to str")
     wall_str += str(walls).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
     trap_str += str(traps).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
@@ -428,11 +488,11 @@ def write_points_to_file(points, worldnr):
 
     for point in points:
         if point.t == "Object_Red":
-            redpoints += "{" + str(int(point.x)) + ", " + str(int(point.y)) + "}, "
+            redpoints += "{" + str(int(point.virtual_x)) + ", " + str(int(point.virtual_y)) + "}, "
         if point.t == "Object_Green":
-            greenpoints += "{" + str(int(point.x)) + ", " + str(int(point.y)) + "}, "
+            greenpoints += "{" + str(int(point.virtual_x)) + ", " + str(int(point.virtual_y)) + "}, "
         if point.t == "Object_Black":
-            blackpoints += "{" + str(int(point.x)) + ", " + str(int(point.y)) + "}, "
+            blackpoints += "{" + str(int(point.virtual_x)) + ", " + str(int(point.virtual_y)) + "}, "
 
     redpoints = (redpoints + "}").replace(", }", "};")
     greenpoints = (greenpoints + "}").replace(", }", "};")
