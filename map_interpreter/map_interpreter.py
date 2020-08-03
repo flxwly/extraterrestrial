@@ -1,6 +1,5 @@
-import math
-from sys import setrecursionlimit
 import xml.etree.ElementTree as ET
+from sys import setrecursionlimit
 
 import cv2
 import numpy as np
@@ -129,7 +128,6 @@ class ImageArray:
 
         self.img_arr = [[Pixel(self, i, j, t_img[j][i]) for i in range(len(t_img[j]))] for j in
                         range(len(t_img))]  # TODO: Add support for more specific files
-        self.nodes = []
         self.width = len(self.img_arr[0])
         self.height = len(self.img_arr)
 
@@ -160,7 +158,7 @@ class ImageArray:
     def expand(self, i, j, r):
         pixels = []
         old_val = self.img_arr[j][i].val
-        self.flood_fill(i, j, old_val, new_val=-1, arr=pixels)
+        self.flood_fill(i, j, old_val, new_val=-21, arr=pixels)
 
         for p in pixels:
             for n in range(p.y - r, p.y + r):
@@ -168,7 +166,7 @@ class ImageArray:
                     if 0 <= m < self.width and 0 <= n < self.height:
                         if self.img_arr[n][m].val != -1:
                             self.img_arr[n][m].set_val(old_val)
-        self.flood_fill(i, j, -1, new_val=old_val)
+        self.flood_fill(i, j, -21, new_val=old_val)
 
     def expand_all(self, val, r):
         pixels = self.collect_pixels(val)
@@ -202,22 +200,18 @@ class ImageArray:
 
                     #  if x is outside and y is inside pixels that would be out of bounds are generated
                     elif (self.width <= x or x < 0) and self.height > y >= 0:
-                        print("out of bounds")
                         squares.append(
                             (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, x, pixel.y, [255, 255, 255]),
                              self.img_arr[y][pixel.x]))
 
                     #  if y is outside and x is inside pixels that would be out of bounds are generated
                     elif self.width > x >= 0 and (self.height <= y or y < 0):
-                        print("out of bounds")
                         squares.append(
                             (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, pixel.x, y, [255, 255, 255]),
                              self.img_arr[pixel.y][x]))
 
                     #  if x and y are outside pixels that would be out of bounds are generated
                     else:
-
-                        print("out of bounds")
                         squares.append(
                             (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, pixel.x, y, [255, 255, 255]),
                              Pixel(None, x, pixel.y, [255, 255, 255])))
@@ -239,50 +233,210 @@ class ImageArray:
                 x += n.x
                 y += n.y
             #  self.flood_fill(i, j, -1, new_val=old_val)
-            return self.img_arr[int(x / len(pixels))][int(y / len(pixels))]
-        return 0
+            return self.img_arr[int(y / len(pixels))][int(x / len(pixels))]
+        return None
+
+
+def get_nodes(field, wall_piece):
+    walls = wall_piece
+    corner_walls = []
+    nodes = []
+
+    #  collect all possible nodes by pattern recognition
+    for wall in walls:
+        matches = field.check_pattern(wall)
+        for match in matches:
+            nodes.append(Node(field, match[1].x, match[1].y, [match[0].x - match[1].x, match[0].y - match[1].y],
+                              reachable=match[1].arr is not None))
+
+    #  collect all nodes that are unescessary
+    nodes_to_delete = []
+    checking_neighbour_steps = [[1, 1], [-1, 1]]
+    for node in nodes:
+        for step in checking_neighbour_steps:
+            neighbour_count = 0
+            for c_node in nodes:
+                if c_node.x == node.x + step[0] and c_node.y == node.y + step[1]:
+                    neighbour_count += 1
+                elif c_node.x == node.x - step[0] and c_node.y == node.y - step[1]:
+                    neighbour_count += 1
+
+                if neighbour_count >= 2:
+                    nodes_to_delete.append(node)
+
+    #  delete them
+    for node in nodes_to_delete:
+        if node in nodes:
+            nodes.remove(node)
+
+    #  get the wall connections for each node
+    for node in nodes:
+        node.find_wall_connections(nodes)
+
+    return nodes
+
+
+class MapData:
+    def __init__(self, img_dirs, fd_dirs):
+        print("Creating MapData-Object...")
+
+        self.walls = []
+        self.nodes = []
+        self.traps = []
+        self.swamps = []
+        self.deposit_areas = []
+
+        self.img_arrs = []
+        for _dir in img_dirs:
+            print("Creating ImageArray-Object for %s" % _dir)
+            self.img_arrs.append(ImageArray(_dir))
+            img_arr = self.img_arrs[len(self.img_arrs) - 1]
+
+            walls = []
+            nodes = []
+            traps = []
+            swamps = []
+            deposit_areas = []
+
+            print("\tConverting ImageArray")
+            for j in range(img_arr.height):
+                for i in range(img_arr.width):
+                    p = img_arr.img_arr[j][i]
+                    if p.val == 0:
+                        pass
+                    elif p.val == 1:
+                        walls.append([])
+                        img_arr.expand(i, j, 4)
+                        img_arr.flood_fill(i, j, 1, -1, arr=walls[len(walls) - 1])
+                        print("\t\tAdded wall-struct")
+                    elif p.val == 3:
+                        swamps.append([])
+                        img_arr.flood_fill(i, j, 3, -3, arr=swamps[len(swamps) - 1])
+                        print("\t\tAdded swamp-struct")
+                    elif p.val == 2:
+                        print("\t\tAdded traps-struct")
+                        traps.append([])
+                        img_arr.flood_fill(i, j, 2, -2, arr=traps[len(traps) - 1])
+                    elif p.val == 4:
+                        print("\t\tAdded deposit_area")
+                        deposit_areas.append(img_arr.avg(i, j, -4))
+
+            print("\n\tCollecting nodes...")
+            for wall_piece in walls:
+                nodes.append(get_nodes(img_arr, wall_piece))
+
+            walls = []
+            ordered_nodes = []
+
+            for node_struct in nodes:
+                ordered_nodes.append([])
+                open_nodes = node_struct
+                node = open_nodes[0]
+                open_nodes.pop(0)
+                while len(open_nodes) > 0:
+                    ordered_nodes[len(ordered_nodes) - 1].append(node)
+                    for i in range(0, len(node.wall_connections)):
+                        if node.wall_connections[i] in open_nodes:
+                            node = node.wall_connections[i]
+                            open_nodes.remove(node)
+                            break
+
+            for node_struct in ordered_nodes:
+                walls.append([])
+                for node in node_struct:
+                    walls[len(walls) - 1].append(node.adjacend_wall)
+
+            nodes = ordered_nodes
+
+            all_nodes = []
+            for node_struct in nodes:
+                for node in node_struct:
+                    all_nodes.append(node)
+
+            for node in all_nodes:
+                node.find_visibles(all_nodes)
+
+            self.walls.append(walls)
+            self.nodes.append(nodes)
+            self.traps.append(traps)
+            self.swamps.append(swamps)
+            self.deposit_areas.append(deposit_areas)
 
     def show(self, scale):
-        im = Image.new('HSV', ((self.width + 2) * scale, (self.height + 2) * scale))
 
         x_off = scale
         y_off = scale
 
-        draw = ImageDraw.Draw(im)
-        for row in self.img_arr:
-            for p in row:
-                if p.is_wall:
-                    coord = (
-                        p.x * scale - scale / 2 + x_off, p.y * scale - scale / 2 + y_off,
-                        p.x * scale + scale / 2 + x_off, p.y * scale + scale / 2 + y_off)
-                    draw.rectangle(coord, width=scale, fill=(255, 0, 255))
-
         i = 0
-        for node_struct in self.nodes:
-            for n in node_struct:
-                coord = (
-                    n.x * scale - scale / 2 + x_off, n.y * scale - scale / 2 + y_off,
-                    n.x * scale + scale / 2 + x_off, n.y * scale + scale / 2 + y_off)
-                draw.rectangle(coord, width=scale,
-                               fill=(90 * int(not n.reachable), 255, 255))
-                coord = (
-                    n.x * scale + x_off, n.y * scale + + y_off,
-                    (n.x + n.direction[0]) * scale + x_off, (n.y + n.direction[1]) * scale + y_off)
-                draw.line(coord, fill=(60, 255, 255))
+        for img_arr in self.img_arrs:
+            im = Image.new('HSV', ((img_arr.width + 2) * scale, (img_arr.height + 2) * scale))
+            draw = ImageDraw.Draw(im)
 
-
-                for visible in n.visibles:
-                    if visible is not None:
+            for row in img_arr.img_arr:
+                for p in row:
+                    if p.is_wall:
                         coord = (
-                            n.x * scale + x_off, n.y * scale + + y_off,
-                            visible.x * scale + x_off, visible.y * scale + + y_off)
-                        draw.line(coord, fill=(i * 40, 255, 255, 50))
-                    else:
-                        print("Error")
+                            p.x * scale - scale / 2 + x_off, p.y * scale - scale / 2 + y_off,
+                            p.x * scale + scale / 2 + x_off, p.y * scale + scale / 2 + y_off)
+                        draw.rectangle(coord, width=scale, fill=(255, 0, 255))
+
+            j = 0
+            for node_struct in self.nodes[i]:
+                for n in node_struct:
+                    #  the node itself
+                    coord = (
+                        n.x * scale - scale / 2 + x_off, n.y * scale - scale / 2 + y_off,
+                        n.x * scale + scale / 2 + x_off, n.y * scale + scale / 2 + y_off)
+                    draw.rectangle(coord, width=scale,
+                                   fill=(90 * int(not n.reachable), 255, 255))
+
+                    #  line to adjacent wall
+                    coord = (
+                        n.x * scale + x_off, n.y * scale + + y_off,
+                        (n.x + n.direction[0]) * scale + x_off, (n.y + n.direction[1]) * scale + y_off)
+                    draw.line(coord, fill=(60, 255, 255))
+
+                    #  line to visibles
+                    for visible in n.wall_connections:
+                        if visible is not None:
+                            coord = (
+                                n.x * scale + x_off, n.y * scale + + y_off,
+                                visible.x * scale + x_off, visible.y * scale + + y_off)
+                            draw.line(coord, fill=(j * 40, 255, 255, 50))
+                        else:
+                            print("Error")
+                j += 1
+                # points.append((n.x, n.y))
+            im.show("Map%s" % i)
             i += 1
-            # points.append((n.x, n.y))
-        im.show()
-        return im
+
+    def __str__(self):
+        file_content = ""
+        i = 0
+        for img_arr in self.img_arrs:
+            wall_str = "std::vector<Obstacle> GAME %s WALLS = " % i  # {{x1, y1}, {x2, y2}...} (Wall Polygon)
+            trap_str = "std::vector<Trap> GAME %s TRAPS = " % i  # {{x1, y1}, {x2, y2}...} (Trap Polygon)
+            swamp_str = "std::vector<std::pair<int, int>> GAME %s SWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
+            deposit_area_str = "std::vector<std::pair<int, int>> GAME %s DEPOSITAREAS = " % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
+            node_str = "std::vector<Node> GAME %s Nodes = " % i  # {{x1, y1}, {x2, y2}...} (Node Objects)
+
+            wall_str += str(self.walls[i])
+            trap_str += str(self.traps[i])
+            swamp_str += str(self.swamps[i])
+            deposit_area_str += str(self.deposit_areas[i])
+            node_str += str(self.nodes[i])
+
+            file_content += "//------------- Game%s_Objects --------------//\n\n" % i
+
+            file_content += "/*walls*/ " + wall_str + \
+                            "\n/*traps*/ " + trap_str + \
+                            "\n/*swamps*/ " + swamp_str + \
+                            "\n\n/*deposit*/ " + deposit_area_str + \
+                            "\n\n/*nodes*/ " + node_str + "\n\n"
+
+            i += 1
+
+        return file_content
 
 
 class Point:
@@ -332,7 +486,7 @@ class Node(Point):
         return "[%s,%s]" % (self.x, self.field.height - self.y)
 
     def __str__(self):
-        return "[%s | %s]: %s" % (self.x, self.field.height - self.y, self.field)
+        return "Node at [%s | %s]: %s" % (self.x, self.field.height - self.y, len(self.visibles))
 
     def can_see(self, node):
         if self is node or not self.reachable:
@@ -353,30 +507,72 @@ class Node(Point):
                 node.visibles.append(self)
                 self.visibles.append(node)
 
-    def find_wall_connections(self, visible_nodes):
-        clockwise_closest = [None, 0, math.inf]
-        c_clockwise_closest = [None, 360, math.inf]
+    def find_wall_connections(self, node_struct):
 
-        for node in visible_nodes:
-            v_1 = [self.x - node.x, self.y - node.y]
-            v_2 = self.direction
-            angle = py_ang(v_1, v_2)
-            dist = math.sqrt(v_1[0] ** 2 + v_1[1] ** 2)
-            if self.can_see(node):
-                if math.radians(315.1) >= angle >= clockwise_closest[1]:
-                    if dist < clockwise_closest[2] and angle == clockwise_closest[1]:
-                        clockwise_closest = [node, angle, dist]
-                    elif angle != clockwise_closest[1]:
-                        clockwise_closest = [node, angle, dist]
-                if math.radians(44.9) <= angle < c_clockwise_closest[1]:
-                    if dist < c_clockwise_closest[2] and angle == c_clockwise_closest[1]:
-                        c_clockwise_closest = [node, angle, dist]
-                    elif angle != c_clockwise_closest[1]:
-                        c_clockwise_closest = [node, angle, dist]
+        #  print("finding wall_connections of: %s" % self)
 
+        q = [self.adjacend_wall]
+        removed = []
 
-        #  print(clockwise_closest)
-        self.wall_connections = [clockwise_closest[0], c_clockwise_closest[0]]
+        while len(q) > 0:
+            #  for each direct neighbor
+            steps = ((q[0].x + 1, q[0].y), (q[0].x - 1, q[0].y), (q[0].x, q[0].y + 1), (q[0].x, q[0].y - 1))
+            for step in steps:
+
+                #  Out of bounds check
+                if 0 <= step[0] < self.field.width and 0 <= step[1] < self.field.height:
+
+                    #  n is the pixel that might be added
+                    n = self.field.img_arr[step[1]][step[0]]
+                    #  print("Checking if %s is valid" % n)
+
+                    #  check if n is in q to prevent double checks
+                    already_seen = False
+                    if n in q or n in removed:
+                        already_seen = True
+
+                    if already_seen:
+                        #  print("\t invalid (already look at it)")
+                        continue
+
+                    if not n.is_wall:
+                        #  print("\t invalid (is no wall)")
+                        continue
+
+                    #  check if neighbor has a non wall neighbor
+                    has_only_wall_neighbor = True
+                    for i in range(n.x - 1, n.x + 2):
+                        for j in range(n.y - 1, n.y + 2):
+                            if 0 <= i < self.field.width and 0 <= j < self.field.height:
+                                if not self.field.img_arr[j][i].is_wall:
+                                    has_only_wall_neighbor = False
+                                    break
+                            else:
+                                has_only_wall_neighbor = False
+                                break
+
+                    #  Further investigation can be skipped
+                    if has_only_wall_neighbor:
+                        #  print("\t invalid (has only wall neighbors)")
+                        continue
+
+                    #  check if wall is a valid connection to a node
+                    is_node_connection = False
+                    for node in node_struct:
+                        if n is node.adjacend_wall:
+                            self.wall_connections.append(node)
+                            is_node_connection = True
+
+                    if is_node_connection:
+                        #  print("\t invalid (is node connection)")
+                        continue
+
+                    #  print("\t...added")
+                    q.append(n)
+
+            removed.append(q[0])
+            q.pop(0)
+            #  print(q)
 
 
 class Collectible(Point):
@@ -396,37 +592,7 @@ class Collectible(Point):
         return str(self.t) + ": " + str(self.virtual_x) + " | " + str(self.virtual_y)
 
 
-def get_nodes(field, walls):
-    nodes = []
-
-    for wall in walls:
-        matches = field.check_pattern(wall)
-        for match in matches:
-            nodes.append(Node(field, match[1].x, match[1].y, [match[0].x - match[1].x, match[0].y - match[1].y], reachable=match[1].arr is not None))
-
-    nodes_to_delete = []
-    checking_neighbour_steps = [[1, 1], [-1, 1]]
-    for node in nodes:
-        for step in checking_neighbour_steps:
-            neighbour_count = 0
-            for c_node in nodes:
-                if c_node.x == node.x + step[0] and c_node.y == node.y + step[1]:
-                    neighbour_count += 1
-                elif c_node.x == node.x - step[0] and c_node.y == node.y - step[1]:
-                    neighbour_count += 1
-
-                if neighbour_count >= 2:
-                    nodes_to_delete.append(node)
-
-    for node in nodes_to_delete:
-        if node in nodes:
-            nodes.remove(node)
-    print("------" + str(len(nodes)) + "-------")
-    print(nodes)
-    return nodes
-
-
-def convert_background(field, worldnr):
+def convert_background(field, worldnr):  # TODO: Add to field.__init__ class
     print("converting Background: " + str(worldnr))
 
     walls = []
@@ -504,6 +670,15 @@ def write_points_to_file(points, worldnr):
 
 def main():
     print("setting up...")
+
+    mapData = MapData(img_dirs=(FieldA, FieldB), fd_dirs=FieldFD)
+
+    mapData.show(10)
+
+    print(mapData)
+
+
+def has_to_be_reworked():
     world_1_points = []
     world_2_points = []
     for child in FieldFD:
@@ -532,9 +707,6 @@ def main():
     #  f = open(filename, "w+")
     #  f.write(cpp_data + field_a_str + field_a_points + field_b_str + field_b_points)
     #  f.close()
-
-    field_a.show(10).save("field_a.png")
-    field_b.show(10).save("field_b.png")
 
     print("finished")
 
