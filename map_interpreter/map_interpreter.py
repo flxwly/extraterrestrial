@@ -1,10 +1,12 @@
+import os.path
 import xml.etree.ElementTree as ET
-from sys import setrecursionlimit
+
+import numpy.linalg as la
+from numpy import arctan2, dot, cross
 
 import cv2
-import numpy as np
-import numpy.linalg as la
 from PIL import Image, ImageDraw
+from sys import setrecursionlimit
 
 setrecursionlimit(10000)
 
@@ -90,20 +92,9 @@ def get_line(x1, y1, x2, y2):
 
 def py_ang(v1, v2):
     """ Returns the angle in radians between vectors 'v1' and 'v2'    """
-    cosang = np.dot(v1, v2)
-    sinang = la.norm(np.cross(v1, v2))
-    return np.arctan2(sinang, cosang)
-
-
-def add_to_arr_switch(field, p, walls, traps, swamps, deposits):
-    switcher = {
-        1: walls.append(p),
-        2: traps.append(p),
-        3: swamps.append(p),
-        4: deposits.append(field.avg(p.x, p.y)),
-        5: print(p)
-    }
-    switcher.get(p.val, -1)
+    cosang = dot(v1, v2)
+    sinang = la.norm(cross(v1, v2))
+    return arctan2(sinang, cosang)
 
 
 def color_switch(pixel):
@@ -123,13 +114,22 @@ def color_switch(pixel):
 
 class ImageArray:
     def __init__(self, _dir):
-        t_img = cv2.resize(cv2.imread(_dir + "/Background.bmp"), None, fx=0.25, fy=0.25,
-                           interpolation=cv2.INTER_NEAREST)
+        self.img_arr = []
 
-        self.img_arr = [[Pixel(self, i, j, t_img[j][i]) for i in range(len(t_img[j]))] for j in
-                        range(len(t_img))]  # TODO: Add support for more specific files
-        self.width = len(self.img_arr[0])
-        self.height = len(self.img_arr)
+        self.width = 0
+        self.height = 0
+
+        if os.path.isdir(_dir):
+
+            t_img = cv2.resize(cv2.imread(_dir + "/Background.bmp"), None, fx=0.25, fy=0.25,
+                               interpolation=cv2.INTER_NEAREST)
+
+            self.img_arr = [[Pixel(self, i, j, t_img[j][i]) for i in range(len(t_img[j]))] for j in
+                            range(len(t_img))]  # TODO: Add support for more specific files
+            self.width = len(self.img_arr[0])
+            self.height = len(self.img_arr)
+        else:
+            print("Path does not exist")
 
     def __str__(self):
         s = ""
@@ -141,7 +141,7 @@ class ImageArray:
         if self.img_arr[j][i].val == old_val != 0:
             if arr is not None:
                 arr.append(self.img_arr[j][i])
-            self.img_arr[j][i].set_val(new_val)
+            self.img_arr[j][i].val = new_val
             for n in range(j - 1, j + 2):
                 for m in range(i - 1, i + 2):
                     if 0 <= m < self.width and 0 <= n < self.height:  # boundary check
@@ -157,15 +157,16 @@ class ImageArray:
 
     def expand(self, i, j, r):
         pixels = []
-        old_val = self.img_arr[j][i].val
+        old_val = self.img_arr[j][i].initial_val
         self.flood_fill(i, j, old_val, new_val=-21, arr=pixels)
 
         for p in pixels:
             for n in range(p.y - r, p.y + r):
                 for m in range(p.x - r, p.x + r):
                     if 0 <= m < self.width and 0 <= n < self.height:
-                        if self.img_arr[n][m].val != -1:
-                            self.img_arr[n][m].set_val(old_val)
+                        if self.img_arr[n][m].val != -21:
+                            self.img_arr[n][m].initial_val = old_val
+                            self.img_arr[n][m].val = old_val
         self.flood_fill(i, j, -21, new_val=old_val)
 
     def expand_all(self, val, r):
@@ -175,7 +176,7 @@ class ImageArray:
             for j in range(p.y - r, p.y + r):
                 for i in range(p.x - r, p.x + r):
                     if 0 <= i < self.width and 0 <= j < self.height:
-                        self.img_arr[j][i].set_val(val)
+                        self.img_arr[j][i].val = val
 
     def collect_pixels(self, val):
         pixels = []
@@ -185,10 +186,11 @@ class ImageArray:
                     pixels.append(self.img_arr[j][i])
         return pixels
 
-    def check_pattern(self, pixel, patterns=None):
+    def check_pattern(self, pixel, patterns=None, val=1):
         if patterns is None:
             patterns = [[1, 0, 1, 1], [1, 0, 0, 0]]
         squares = []
+
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if i is not 0 and j is not 0:
@@ -215,11 +217,13 @@ class ImageArray:
                         squares.append(
                             (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, pixel.x, y, [255, 255, 255]),
                              Pixel(None, x, pixel.y, [255, 255, 255])))
+
         matches = []
         for square in squares:
-            vals = [int(p.is_wall) for p in square]
+            vals = [int(abs(p.initial_val) == val) for p in square]
             if vals in patterns:
                 matches.append(square)
+
         return matches
 
     def avg(self, i, j, val):
@@ -237,17 +241,16 @@ class ImageArray:
         return None
 
 
-def get_nodes(field, wall_piece):
-    walls = wall_piece
-    corner_walls = []
+def get_nodes(field, struct):
     nodes = []
 
     #  collect all possible nodes by pattern recognition
-    for wall in walls:
-        matches = field.check_pattern(wall)
+    for obj in struct:
+        matches = field.check_pattern(obj, val=obj.initial_val)
         for match in matches:
             nodes.append(Node(field, match[1].x, match[1].y, [match[0].x - match[1].x, match[0].y - match[1].y],
-                              reachable=match[1].arr is not None))
+                              reachable=match[1].field is not None))
+            print(nodes[len(nodes) - 1])
 
     #  collect all nodes that are unescessary
     nodes_to_delete = []
@@ -270,28 +273,75 @@ def get_nodes(field, wall_piece):
             nodes.remove(node)
 
     #  get the wall connections for each node
+
     for node in nodes:
-        node.find_wall_connections(nodes)
+        node.find_connections(nodes)
+        print(node.boundary_connections)
+
+    print(nodes)
 
     return nodes
 
 
+def order_nodes(nodes):
+    """Returns an array of nodes in order, so that "neighboring" nodes in the array represent a wall connection"""
+    ordered = []
+
+    #  nodes are already ordered by structs
+    for node_struct in nodes:
+
+        #  open_nodes are all unsorted nodes
+        open_nodes = node_struct
+        print("1.1")
+
+        #  nodes should be ordered into structs afterwards too
+        ordered.append([])
+
+        #  n is the node that is currently checked
+        n = open_nodes[0]
+        open_nodes.pop(0)
+
+        #  as long as there are nodes to be sorted
+        while len(open_nodes) > 0:
+            print("1.0.1")
+            #  loop over the wall_connections and get the connection that is not already ordered
+            for connection in n.boundary_connections:
+                if connection in open_nodes:
+                    n = connection
+                    open_nodes.remove(n)
+
+                    #  add last collected node to ordered
+                    ordered[len(ordered) - 1].append(n)
+
+                    #  break the loop to only add one node at a time
+                    break
+                print("1.0.2")
+
+    return ordered
+
+
 class MapData:
     def __init__(self, img_dirs, fd_dirs):
+        """A Object to collect all other map objects and also convert them to string or to a picture"""
         print("Creating MapData-Object...")
 
-        self.walls = []
-        self.nodes = []
-        self.traps = []
-        self.swamps = []
-        self.deposit_areas = []
+        self.nodes = []  # "waypoints" for pathfinding/pathplanning
+        self.walls = []  # wall_structs <- defined by points as polygon
+        self.traps = []  # trap_structs <- defined by points as polygon
+        self.swamps = []  # swamp_structs <- defined by points as polygon
+        self.deposit_areas = []  # deposit areas defined as points
 
-        self.img_arrs = []
+        self.img_arrs = []  # collection of ImageArray objects
+
+        #  for every dear a new ImageArray has to be created
         for _dir in img_dirs:
             print("Creating ImageArray-Object for %s" % _dir)
+
             self.img_arrs.append(ImageArray(_dir))
             img_arr = self.img_arrs[len(self.img_arrs) - 1]
 
+            #  objects that will be collected from the ImageArray and later put
+            #  as on entry into their respective array
             walls = []
             nodes = []
             traps = []
@@ -309,44 +359,48 @@ class MapData:
                         img_arr.expand(i, j, 4)
                         img_arr.flood_fill(i, j, 1, -1, arr=walls[len(walls) - 1])
                         print("\t\tAdded wall-struct")
+                    elif p.val == 2:
+                        traps.append([])
+                        img_arr.flood_fill(i, j, 2, -2, arr=traps[len(traps) - 1])
+                        print("\t\tAdded traps-struct")
                     elif p.val == 3:
                         swamps.append([])
                         img_arr.flood_fill(i, j, 3, -3, arr=swamps[len(swamps) - 1])
                         print("\t\tAdded swamp-struct")
-                    elif p.val == 2:
-                        print("\t\tAdded traps-struct")
-                        traps.append([])
-                        img_arr.flood_fill(i, j, 2, -2, arr=traps[len(traps) - 1])
                     elif p.val == 4:
-                        print("\t\tAdded deposit_area")
                         deposit_areas.append(img_arr.avg(i, j, -4))
+                        print("\t\tAdded deposit_area")
 
-            print("\n\tCollecting nodes...")
+            print("\n\tCollecting Nodes...")
+
+
+            print("\t\tWall/normal Nodes...")
+            wall_nodes = []
             for wall_piece in walls:
-                nodes.append(get_nodes(img_arr, wall_piece))
+                wall_nodes.append(get_nodes(img_arr, wall_piece))
+            print("1")
+            wall_nodes = order_nodes(wall_nodes)
+            nodes = wall_nodes
+            print("2")
+            for struct in wall_nodes:
+                print("3")
+                walls.append([node.adjacend_wall for node in struct])
 
-            walls = []
-            ordered_nodes = []
+            print("\t\t Trap Nodes")
+            trap_nodes = []
+            for trap_piece in traps:
+                trap_nodes.append(get_nodes(img_arr, trap_piece))
+            trap_nodes = order_nodes(trap_nodes)
+            for struct in trap_nodes:
+                traps.append([node.adjacend_wall for node in struct])
 
-            for node_struct in nodes:
-                ordered_nodes.append([])
-                open_nodes = node_struct
-                node = open_nodes[0]
-                open_nodes.pop(0)
-                while len(open_nodes) > 0:
-                    ordered_nodes[len(ordered_nodes) - 1].append(node)
-                    for i in range(0, len(node.wall_connections)):
-                        if node.wall_connections[i] in open_nodes:
-                            node = node.wall_connections[i]
-                            open_nodes.remove(node)
-                            break
-
-            for node_struct in ordered_nodes:
-                walls.append([])
-                for node in node_struct:
-                    walls[len(walls) - 1].append(node.adjacend_wall)
-
-            nodes = ordered_nodes
+            print("\t\t Swamp Nodes")
+            swamp_nodes = []
+            for swamp_piece in swamps:
+                swamp_nodes.append(get_nodes(img_arr, swamp_piece))
+            swamp_nodes = order_nodes(swamp_nodes)
+            for struct in swamp_nodes:
+                swamps.append([node.adjacend_wall for node in struct])
 
             all_nodes = []
             for node_struct in nodes:
@@ -374,7 +428,7 @@ class MapData:
 
             for row in img_arr.img_arr:
                 for p in row:
-                    if p.is_wall:
+                    if p.initial_val == 1:
                         coord = (
                             p.x * scale - scale / 2 + x_off, p.y * scale - scale / 2 + y_off,
                             p.x * scale + scale / 2 + x_off, p.y * scale + scale / 2 + y_off)
@@ -440,78 +494,102 @@ class MapData:
 
 
 class Point:
-    def __init__(self, x, y):
+    def __init__(self, x, y, field):
+        """A simple Point in a 2D grid"""
         self.x = x
         self.y = y
 
-
-class Pixel(Point):
-    def __init__(self, arr, x, y, color):
-        super().__init__(x, y)
-
-        self.arr = arr
-        self.val = color_switch(tuple([color[0], color[1], color[2]]))
-        self.is_wall = self.val == 1
-        #  possible flags: marked, ignored
-        self.flags = {"active": False,
-                      "marked": False,
-                      "ignored": False}
-
-    def set_val(self, val):
-        self.val = val
-        self.is_wall = abs(val) == 1
+        #  The array the Point is saved in
+        self.field = field
 
     def __repr__(self):
-        return "[%s,%s]" % (self.x, self.arr.height - self.y)
+        """Returns Point as typical C++ pair coord"""
+        return "{%s,%s}" % (self.x, self.field.height - self.y)
+
+
+class Pixel(Point):
+    def __init__(self, field, x, y, color):
+        super().__init__(x, y, field)
+        """A type of point used to represent the actual image"""
+
+        #  value of the Pixel that never changes
+        self.initial_val = color_switch(tuple([color[0], color[1], color[2]]))
+
+        #  value that can be modified (for marking)
+        self.val = self.initial_val
 
     def __str__(self):
-        return "[%s | %s]: %s" % (self.x, self.arr.height - self.y, self.val)
+        """Returns Pixel as coord including it's val. For Debugging"""
+        return "Pixel at [%s | %s] has value %s" % (self.x, self.field.height - self.y, self.val)
 
 
 class Node(Point):
     def __init__(self, field, x, y, direction, reachable=True):
-        super().__init__(x, y)
+        super().__init__(x, y, field)
+        """A type of Point to represent Nodes. Each Node is bound to a wall boundary and vise versa"""
 
-        self.reachable = reachable
+        #  The array a node is stored in
         self.field = field
+
+        #  If the node is inside the arrays dimension (reachable == false -> field = None)
+        self.reachable = reachable
+
+        #  The direction from the node to it's boundary
         self.direction = direction
-        self.adjacend_wall = field.img_arr[self.y + self.direction[1]][self.x + direction[0]]
-        self.visibles = []
-        self.wall_connections = []  # max 2
 
-    def __iter__(self):
-        return [self.x, self.y]
+        #  The boundary a node is bound to
+        self.boundary = field.img_arr[self.y + self.direction[1]][self.x + direction[0]]
 
-    def __repr__(self):
-        return "[%s,%s]" % (self.x, self.field.height - self.y)
+        #  An array of Nodes that create a connection around a certain object
+        self.boundary_connections = []  # max 2
 
-    def __str__(self):
-        return "Node at [%s | %s]: %s" % (self.x, self.field.height - self.y, len(self.visibles))
+        #  All other Nodes this Node can see (only for debugging)
+        self.visible_nodes = []
 
-    def can_see(self, node):
-        if self is node or not self.reachable:
+    def can_see(self, point, excluded_init_vals=1):
+        """Returns a boolean weather this Node can see a point. Works best if point is a Node"""
+
+        #  A Node can't see itself or anything if it's out of bounds
+        if self is point or not self.reachable:
             return False
-        visible = True
-        if node not in self.visibles:
-            points = get_line(self.x, self.y, node.x, node.y)
-            for p in points:
-                if 0 <= p[0] < self.field.width and 0 <= p[1] < self.field.height:
-                    if self.field.img_arr[p[1]][p[0]].val == 1 or self.field.img_arr[p[1]][p[0]].val == -1:
-                        visible = False
-                        break
-        return visible
 
-    def find_visibles(self, nodes):
+        #  This only increases efficiency if point is a node
+        if point not in self.visible_nodes:
+
+            # Get the points on the line between the Node and a point
+            points_on_line = get_line(self.x, self.y, point.x, point.y)
+            for p in points_on_line:
+
+                #  Check if any of the points "blocks" the vision
+                if self.field.img_arr[p[1]][p[0]].initial_val in excluded_init_vals:
+                    return False
+
+        return True
+
+    def find_visibles(self, nodes, excluded_init_vals=1):
+        """Collects all visible Nodes"""
         for node in nodes:
-            if self.can_see(node):
-                node.visibles.append(self)
-                self.visibles.append(node)
 
-    def find_wall_connections(self, node_struct):
+            #  Use inbuild function to determine visibility
+            if self.can_see(node, excluded_init_vals=excluded_init_vals):
+                #  Add as visible to both Nodes
+                node.visible_nodes.append(self)
+                self.visible_nodes.append(node)
 
-        #  print("finding wall_connections of: %s" % self)
+        #  idk why
+        return self.visible_nodes
 
-        q = [self.adjacend_wall]
+    def find_connections(self, node_struct):
+        """Gets the two connection_nodes for a certain Node"""
+
+        #  boundary value
+        b_v = self.boundary.initial_val
+        print(b_v)
+
+        #  q (short for queue) used for a non recursiv flood fill
+        q = [self.boundary]
+
+        #  To not go back (could've also used node.val but it needs to be reversed afterwards)
         removed = []
 
         while len(q) > 0:
@@ -523,63 +601,68 @@ class Node(Point):
                 if 0 <= step[0] < self.field.width and 0 <= step[1] < self.field.height:
 
                     #  n is the pixel that might be added
-                    n = self.field.img_arr[step[1]][step[0]]
+                    p = self.field.img_arr[step[1]][step[0]]
                     #  print("Checking if %s is valid" % n)
 
-                    #  check if n is in q to prevent double checks
+                    #  check if n is or was in q to prevent double checks
                     already_seen = False
-                    if n in q or n in removed:
-                        already_seen = True
-
-                    if already_seen:
-                        #  print("\t invalid (already look at it)")
+                    if p in q or p in removed:
+                        #print("\t invalid (already look at it)")
                         continue
 
-                    if not n.is_wall:
-                        #  print("\t invalid (is no wall)")
+                    #  check if the values match
+                    if p.initial_val != b_v:
+                        #print("\t invalid (value doesn't match)")
                         continue
 
-                    #  check if neighbor has a non wall neighbor
-                    has_only_wall_neighbor = True
-                    for i in range(n.x - 1, n.x + 2):
-                        for j in range(n.y - 1, n.y + 2):
+                    #  check if neighbor has a neighbor that has a different initial value
+                    has_different_neighbor = False
+                    for i in range(p.x - 1, p.x + 2):
+                        for j in range(p.y - 1, p.y + 2):
+
+                            #  a field outside of bounds is counted as a neighbor of other type
                             if 0 <= i < self.field.width and 0 <= j < self.field.height:
-                                if not self.field.img_arr[j][i].is_wall:
-                                    has_only_wall_neighbor = False
+                                if self.field.img_arr[j][i].initial_val != b_v:
+                                    has_different_neighbor = True
                                     break
                             else:
-                                has_only_wall_neighbor = False
+                                has_different_neighbor = True
                                 break
 
-                    #  Further investigation can be skipped
-                    if has_only_wall_neighbor:
-                        #  print("\t invalid (has only wall neighbors)")
+                    if has_different_neighbor:
+                        #print("\t invalid (has only wall neighbors)")
                         continue
 
                     #  check if wall is a valid connection to a node
                     is_node_connection = False
                     for node in node_struct:
-                        if n is node.adjacend_wall:
-                            self.wall_connections.append(node)
+                        if p is node.boundary:
+                            self.boundary_connections.append(node)
+                            print("found boundary: %s" % node)
                             is_node_connection = True
 
                     if is_node_connection:
-                        #  print("\t invalid (is node connection)")
+                        #print("\t invalid (is node connection)")
                         continue
 
-                    #  print("\t...added")
-                    q.append(n)
+                    #  this pixel can be added to the queue
+                    q.append(p)
 
             removed.append(q[0])
             q.pop(0)
             #  print(q)
 
+    def __str__(self):
+        """Returns Node as coord including how many other nodes this node can see. For Debugging"""
+        return "Node at [%s | %s] has %s visible Nodes" % (self.x, self.field.height - self.y, len(self.visible_nodes))
+
 
 class Collectible(Point):
     def __init__(self, t, x, y, world):
-        # x and y are real coordinates in the simulator. Not the coordinates used by the robot
-        super().__init__(float(x), float(y))
+        super().__init__(float(x), float(y), None)
+        """A type of Point to represent Collectible points"""
 
+        # x and y are real coordinates in the simulator. Not the coordinates used by the robot
         #  Virtual coordinates are the ones used by the robot
         #  world 1 is 90 cm bigger in both directions (x, y)
         self.virtual_x = (270 + 90 * world) / 2 - 100 * float(x)
@@ -589,7 +672,8 @@ class Collectible(Point):
         self.t = t
 
     def __str__(self):
-        return str(self.t) + ": " + str(self.virtual_x) + " | " + str(self.virtual_y)
+        """Returns Collectible as coord including it's color. For Debugging"""
+        return "Collectible at [%s | %s] with color %s" % (self.x, self.y, self.t)
 
 
 def convert_background(field, worldnr):  # TODO: Add to field.__init__ class
