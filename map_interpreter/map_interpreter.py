@@ -2,6 +2,7 @@ import os.path
 import xml.etree.ElementTree as ET
 
 import numpy.linalg as la
+import numpy as np
 from numpy import arctan2, dot, cross
 
 import cv2
@@ -104,6 +105,7 @@ def color_switch(pixel):
         tuple([151, 186, 221]): 1,
         tuple([131, 177, 244]): 1,
         tuple([0, 255, 255]): 2,  # trap
+        tuple([151, 85, 47]): 2,
         tuple([166, 166, 166]): 3,  # swamp
         tuple([0, 153, 255]): 4,  # deposit
         tuple([0, 102, 255]): 4,
@@ -113,23 +115,236 @@ def color_switch(pixel):
 
 
 class ImageArray:
+    """Completely reworked and commented"""
     def __init__(self, _dir):
+        """A class to collect one single map as Pixels by converting _dir/Background.bmp"""
+
+        # The array all pixels are stored in
         self.img_arr = []
 
+        # The dimensions of the map
         self.width = 0
         self.height = 0
 
+        # if _dir doesn't exist the user has to change the input files
         if os.path.isdir(_dir):
 
+            # resize the image for less detail but less ram usage and duration
             t_img = cv2.resize(cv2.imread(_dir + "/Background.bmp"), None, fx=0.25, fy=0.25,
                                interpolation=cv2.INTER_NEAREST)
 
+            # convert the Image into pixels
             self.img_arr = [[Pixel(self, i, j, t_img[j][i]) for i in range(len(t_img[j]))] for j in
                             range(len(t_img))]  # TODO: Add support for more specific files
+
+            # set the dimensions
             self.width = len(self.img_arr[0])
             self.height = len(self.img_arr)
         else:
-            print("Path does not exist")
+            # Error
+            exit("Path does not exist")
+
+    def flood_fill(self, i, j, old_val, new_val, store=False):
+        """This method is used to fill a region of Pixels with same value.
+            It can also be used to just store them in an array by setting an arr"""
+
+        #  Normal recursive 8-way floodfill
+        if not store:
+            #  Check if pixel.val equals the starting val
+            if self.img_arr[j][i].val == old_val:
+
+                #  Replace the value
+                self.img_arr[j][i].val = new_val
+
+                #  invoke on all neighboring pixels with same parameters but different coords
+                for n in range(j - 1 if j - 1 >= 0 else 0, j + 2 if j + 1 < self.height else self.height):
+                    for m in range(i - 1 if i - 1 >= 0 else 0, i + 2 if i + 1 < self.width else self.width):
+
+                        #  store=False is standard and therefore doesn't have to be set
+                        self.flood_fill(m, n, old_val, new_val)
+
+        #  non recursive 8-way flood-fill
+        else:
+
+            #  q (short for queue) used for a non recursiv flood fill
+            q = [self.img_arr[j][i]]
+
+            #  To avoid setting values go back
+            stored = []
+
+            while len(q) > 0:
+
+                #  for each neighbor (8x8)
+                for n in range(q[0].y - 1 if q[0].y - 1 >= 0 else 0, q[0].y + 2 if q[0].y + 1 < self.height else self.height):
+                    for m in range(q[0].x - 1 if q[0].x - 1 >= 0 else 0, q[0].x + 2 if q[0].x + 1 < self.width else self.width):
+
+                        #  p is the pixel that might be added
+                        p = self.img_arr[n][m]
+                        #  print("Checking if %s is valid" % n)
+
+                        #  check if n is or was in q to prevent double checks
+                        if p in q or p in stored:
+                            # print("\t invalid (already look at it)")
+                            continue
+
+                        #  check if the values match
+                        if p.val != old_val:
+                            # print("\t invalid (value doesn't match)")
+                            continue
+
+                        #  The pixels value is updated
+                        p.val = new_val
+
+                        #  this pixel can be added to the queue
+                        q.append(p)
+
+                #  append to store array and remove from queue
+
+                stored.append(q[0])
+                q.pop(0)
+
+            return stored
+        return None
+
+    def get_adjacent(self, i, j):
+        """Function to get all adjacent Pixels of the same type"""
+
+        #  Use the flood_fill function with store=true to
+        old_val = self.img_arr[j][i].val
+        return self.flood_fill(i, j, old_val, old_val, store=True)
+
+    def expand(self, i, j, r):
+        """Function to expand the type of every pixel of the same type around i, j by r"""
+
+        # Collect all adjacent pixels
+        pixels = self.get_adjacent(i, j)
+
+        # Array for storing all new added Pixels
+        changed_pixels = []
+
+        # Expand for every collected pixel
+        for p in pixels:
+
+            # set val in radius r
+            for n in range(p.y - r if p.y - r >= 0 else 0, p.y + r + 1 if p.y + r < self.height else self.height):
+                for m in range(p.x - r if p.x - r >= 0 else 0, p.x + r + 1 if p.x + r < self.width else self.width):
+
+                    # disable expanding over walls
+                    if abs(self.img_arr[n][m].val) != 1:
+                        self.img_arr[n][m].val = p.val
+                        changed_pixels.append(self.img_arr[n][m])
+
+        return changed_pixels
+
+    def expand_all(self, val, r, pixels=None):
+        """This function expands every pixel of a certain type by r"""
+        if pixels is None:
+            pixels = self.collect_pixels(val)
+
+        # Array for storing all new added Pixels
+        changed_pixels = []
+
+        # expand for every struct in pixels
+        for struct in pixels:
+            changed_pixels.append(self.expand(struct[0].x, struct[0].y, r))
+
+        return changed_pixels
+
+    def collect_pixels(self, val):
+        """This function returns every pixel of type val in self.img_arr in form of structs"""
+        pixels = []
+
+        disabled_val = -val
+
+        # loop through the complete array
+        for j in range(self.height):
+            for i in range(self.width):
+                if self.img_arr[j][i].val == val:
+
+                    # get all adjacent pixels to put them into a struct
+                    pixels.append(self.get_adjacent(i, j))
+
+                    # disable all pixels for further inspections
+                    for p in pixels[len(pixels) - 1]:
+                        p.val = disabled_val
+
+        # activate disabled pixels again
+        for struct in pixels:
+            for p in struct:
+                p.val = val
+
+        return pixels
+
+    def check_pattern(self, pixel, patterns=None, val=1):
+        """Function to check if the pattern matches.
+            There are default patterns and the default value the pattern is referring to is 1"""
+
+        #  Use default pattern if no extra pattern is provided
+        if patterns is None:
+            patterns = [[1, 0, 1, 1], [1, 0, 0, 0]]
+
+        #  used to store a 2x2 square of pixels that later is compared to the pattern
+        squares = []
+
+        # check the diganoal neighbors if there outside. If theyre outside add a Pixel with no val
+        steps = ((1, 1), (1, -1), (-1, 1), (-1, -1))
+        for step in steps:
+            x = pixel.x + step[0]
+            y = pixel.y + step[1]
+
+            #  if everything is inside the boundarys everything is good
+            if self.width > x >= 0 and self.height > y >= 0:
+                squares.append((pixel, self.img_arr[y][x], self.img_arr[pixel.y][x], self.img_arr[y][pixel.x]))
+
+            #  if x is outside and y is inside pixels that would be out of bounds are generated
+            elif (self.width <= x or x < 0) and self.height > y >= 0:
+                squares.append(
+                    (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, x, pixel.y, [255, 255, 255]),
+                     self.img_arr[y][pixel.x]))
+
+            #  if y is outside and x is inside pixels that would be out of bounds are generated
+            elif self.width > x >= 0 and (self.height <= y or y < 0):
+                squares.append(
+                    (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, pixel.x, y, [255, 255, 255]),
+                     self.img_arr[pixel.y][x]))
+
+            #  if x and y are outside pixels that would be out of bounds are generated
+            else:
+                squares.append(
+                    (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, pixel.x, y, [255, 255, 255]),
+                     Pixel(None, x, pixel.y, [255, 255, 255])))
+
+        #  check for matches
+        matches = []
+        for square in squares:
+
+            # Since the patterns is a int(bool) array use val to compare
+            vals = [int(abs(p.val) == abs(val)) for p in square]
+
+            # Compare the patterns
+            if vals in patterns:
+                matches.append(square)
+
+        return matches
+
+    def avg(self, i, j):
+        """This function calculates the average point of all adjacent Pixels to the Pixel at i, j"""
+
+        # Get adjacent pixels
+        pixels = self.get_adjacent(i, j)
+
+        # Calculate the average
+        if len(pixels) > 0:
+            x = 0
+            y = 0
+            for n in pixels:
+                x += n.x
+                y += n.y
+
+            # also return the pixels if they need to be deactivated
+            return [int(x / len(pixels)), int(y / len(pixels)), pixels]
+
+        return None
 
     def __str__(self):
         s = ""
@@ -137,120 +352,18 @@ class ImageArray:
             s += str(row) + "\n"
         return s
 
-    def flood_fill(self, i, j, old_val, new_val=-1, activate=False, flags=None, arr=None):
-        if self.img_arr[j][i].val == old_val != 0:
-            if arr is not None:
-                arr.append(self.img_arr[j][i])
-            self.img_arr[j][i].val = new_val
-            for n in range(j - 1, j + 2):
-                for m in range(i - 1, i + 2):
-                    if 0 <= m < self.width and 0 <= n < self.height:  # boundary check
-                        self.flood_fill(m, n, old_val, new_val, arr=arr)
-
-    def get_adjacent(self, i, j):
-        pixels = []
-        old_val = self.img_arr[j][i].val
-        self.flood_fill(i, j, old_val, arr=pixels)
-        self.flood_fill(i, j, -1, old_val)
-
-        return pixels
-
-    def expand(self, i, j, r):
-        pixels = []
-        old_val = self.img_arr[j][i].initial_val
-        self.flood_fill(i, j, old_val, new_val=-21, arr=pixels)
-
-        for p in pixels:
-            for n in range(p.y - r, p.y + r):
-                for m in range(p.x - r, p.x + r):
-                    if 0 <= m < self.width and 0 <= n < self.height:
-                        if self.img_arr[n][m].val != -21:
-                            self.img_arr[n][m].initial_val = old_val
-                            self.img_arr[n][m].val = old_val
-        self.flood_fill(i, j, -21, new_val=old_val)
-
-    def expand_all(self, val, r):
-        pixels = self.collect_pixels(val)
-
-        for p in pixels:
-            for j in range(p.y - r, p.y + r):
-                for i in range(p.x - r, p.x + r):
-                    if 0 <= i < self.width and 0 <= j < self.height:
-                        self.img_arr[j][i].val = val
-
-    def collect_pixels(self, val):
-        pixels = []
-        for j in range(self.height):
-            for i in range(self.width):
-                if self.img_arr[j][i].val == val:
-                    pixels.append(self.img_arr[j][i])
-        return pixels
-
-    def check_pattern(self, pixel, patterns=None, val=1):
-        if patterns is None:
-            patterns = [[1, 0, 1, 1], [1, 0, 0, 0]]
-        squares = []
-
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                if i is not 0 and j is not 0:
-                    x = pixel.x + i
-                    y = pixel.y + j
-                    #  if everything is inside the boundarys everything is good
-                    if self.width > x >= 0 and self.height > y >= 0:
-                        squares.append((pixel, self.img_arr[y][x], self.img_arr[pixel.y][x], self.img_arr[y][pixel.x]))
-
-                    #  if x is outside and y is inside pixels that would be out of bounds are generated
-                    elif (self.width <= x or x < 0) and self.height > y >= 0:
-                        squares.append(
-                            (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, x, pixel.y, [255, 255, 255]),
-                             self.img_arr[y][pixel.x]))
-
-                    #  if y is outside and x is inside pixels that would be out of bounds are generated
-                    elif self.width > x >= 0 and (self.height <= y or y < 0):
-                        squares.append(
-                            (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, pixel.x, y, [255, 255, 255]),
-                             self.img_arr[pixel.y][x]))
-
-                    #  if x and y are outside pixels that would be out of bounds are generated
-                    else:
-                        squares.append(
-                            (pixel, Pixel(None, x, y, [255, 255, 255]), Pixel(None, pixel.x, y, [255, 255, 255]),
-                             Pixel(None, x, pixel.y, [255, 255, 255])))
-
-        matches = []
-        for square in squares:
-            vals = [int(abs(p.initial_val) == val) for p in square]
-            if vals in patterns:
-                matches.append(square)
-
-        return matches
-
-    def avg(self, i, j, val):
-        pixels = []
-        old_val = self.img_arr[j][i].val
-        self.flood_fill(i, j, old_val, new_val=val, arr=pixels)
-        if len(pixels) > 0:
-            x = 0
-            y = 0
-            for n in pixels:
-                x += n.x
-                y += n.y
-            #  self.flood_fill(i, j, -1, new_val=old_val)
-            return self.img_arr[int(y / len(pixels))][int(x / len(pixels))]
-        return None
-
 
 def get_nodes(field, struct):
     nodes = []
 
     #  collect all possible nodes by pattern recognition
     for obj in struct:
-        matches = field.check_pattern(obj, val=obj.initial_val)
+        matches = field.check_pattern(obj, val=obj.val)
         for match in matches:
             nodes.append(Node(field, match[1].x, match[1].y, [match[0].x - match[1].x, match[0].y - match[1].y],
                               reachable=match[1].field is not None))
-            print(nodes[len(nodes) - 1])
+            # print("nodes after adding %s: %s" % (match[1], nodes))
+
 
     #  collect all nodes that are unescessary
     nodes_to_delete = []
@@ -276,9 +389,6 @@ def get_nodes(field, struct):
 
     for node in nodes:
         node.find_connections(nodes)
-        print(node.boundary_connections)
-
-    print(nodes)
 
     return nodes
 
@@ -287,36 +397,41 @@ def order_nodes(nodes):
     """Returns an array of nodes in order, so that "neighboring" nodes in the array represent a wall connection"""
     ordered = []
 
+    print(nodes)
+
     #  nodes are already ordered by structs
     for node_struct in nodes:
+        print(node_struct)
 
         #  open_nodes are all unsorted nodes
         open_nodes = node_struct
-        print("1.1")
 
         #  nodes should be ordered into structs afterwards too
         ordered.append([])
 
         #  n is the node that is currently checked
         n = open_nodes[0]
+        end = n
         open_nodes.pop(0)
 
         #  as long as there are nodes to be sorted
         while len(open_nodes) > 0:
-            print("1.0.1")
+            print("At Node: %s" % n)
             #  loop over the wall_connections and get the connection that is not already ordered
-            for connection in n.boundary_connections:
-                if connection in open_nodes:
-                    n = connection
-                    open_nodes.remove(n)
+            for i in range(len(n.boundary_connections)):
+                print(len(n.boundary_connections))
+                if n.boundary_connections[i] in open_nodes:
+                    open_nodes.remove(n.boundary_connections[i])
+                    n = n.boundary_connections[i]
 
                     #  add last collected node to ordered
                     ordered[len(ordered) - 1].append(n)
 
                     #  break the loop to only add one node at a time
                     break
-                print("1.0.2")
-
+                if i > 0:
+                    print("endless loop")
+        ordered[len(ordered) - 1].append(end)
     return ordered
 
 
@@ -333,7 +448,7 @@ class MapData:
 
         self.img_arrs = []  # collection of ImageArray objects
 
-        #  for every dear a new ImageArray has to be created
+        """ In this loop the img_arrays are created and converted """
         for _dir in img_dirs:
             print("Creating ImageArray-Object for %s" % _dir)
 
@@ -355,52 +470,72 @@ class MapData:
                     if p.val == 0:
                         pass
                     elif p.val == 1:
-                        walls.append([])
-                        img_arr.expand(i, j, 4)
-                        img_arr.flood_fill(i, j, 1, -1, arr=walls[len(walls) - 1])
+                        print(img_arr.expand(i, j, 3))
+                        walls.append(img_arr.flood_fill(i, j, 1, -1, store=True))
                         print("\t\tAdded wall-struct")
                     elif p.val == 2:
-                        traps.append([])
-                        img_arr.flood_fill(i, j, 2, -2, arr=traps[len(traps) - 1])
+                        print(img_arr.expand(i, j, 2))
+                        traps.append(img_arr.flood_fill(i, j, 2, -2, store=True))
                         print("\t\tAdded traps-struct")
                     elif p.val == 3:
-                        swamps.append([])
-                        img_arr.flood_fill(i, j, 3, -3, arr=swamps[len(swamps) - 1])
+                        print(img_arr.expand(i, j, 2))
+                        swamps.append(img_arr.flood_fill(i, j, 3, -3, store=True))
                         print("\t\tAdded swamp-struct")
                     elif p.val == 4:
-                        deposit_areas.append(img_arr.avg(i, j, -4))
+                        avg = img_arr.avg(i, j)
+
+                        # deactivate pixels
+                        for p in avg[2]:
+                            p.val = -4
+
+                        deposit_areas.append(img_arr.img_arr[avg[1]][avg[0]])
                         print("\t\tAdded deposit_area")
 
-            print("\n\tCollecting Nodes...")
+            data = np.zeros((img_arr.height, img_arr.width, 3), dtype=np.uint8)
+            for j in range(0, img_arr.height):
+                for i in range(0, img_arr.width):
+                    p = img_arr.img_arr[j][i]
+                    if abs(p.val) == 1:
+                        data[j][i] = [255, 0, 0]
+                    if abs(p.val) == 2:
+                        data[j][i] = [255, 255, 0]
 
+            Image.fromarray(data).save("img1.png")
+
+            for wall_piece in walls:
+                for wall in wall_piece:
+                    data[wall.y][wall.x] = [0, 255, 255]
+
+            Image.fromarray(data).save("img2.png")
+
+            print("\n\tCollecting Nodes...")
 
             print("\t\tWall/normal Nodes...")
             wall_nodes = []
             for wall_piece in walls:
                 wall_nodes.append(get_nodes(img_arr, wall_piece))
-            print("1")
             wall_nodes = order_nodes(wall_nodes)
             nodes = wall_nodes
-            print("2")
+            walls = []
             for struct in wall_nodes:
-                print("3")
-                walls.append([node.adjacend_wall for node in struct])
+                walls.append([node.boundary for node in struct])
+                print(len(walls[len(walls)-1]))
 
             print("\t\t Trap Nodes")
             trap_nodes = []
             for trap_piece in traps:
                 trap_nodes.append(get_nodes(img_arr, trap_piece))
-            trap_nodes = order_nodes(trap_nodes)
+            #  trap_nodes = order_nodes(trap_nodes)
             for struct in trap_nodes:
-                traps.append([node.adjacend_wall for node in struct])
+                traps.append([node.boundary for node in struct])
 
             print("\t\t Swamp Nodes")
             swamp_nodes = []
             for swamp_piece in swamps:
                 swamp_nodes.append(get_nodes(img_arr, swamp_piece))
-            swamp_nodes = order_nodes(swamp_nodes)
+            # swamp_nodes = order_nodes(swamp_nodes)
             for struct in swamp_nodes:
-                swamps.append([node.adjacend_wall for node in struct])
+                swamps.append([node.boundary for node in struct])
 
             all_nodes = []
             for node_struct in nodes:
@@ -428,13 +563,15 @@ class MapData:
 
             for row in img_arr.img_arr:
                 for p in row:
-                    if p.initial_val == 1:
+                    if abs(p.val) == 1:
                         coord = (
                             p.x * scale - scale / 2 + x_off, p.y * scale - scale / 2 + y_off,
                             p.x * scale + scale / 2 + x_off, p.y * scale + scale / 2 + y_off)
                         draw.rectangle(coord, width=scale, fill=(255, 0, 255))
 
             j = 0
+
+            #  show nodes
             for node_struct in self.nodes[i]:
                 for n in node_struct:
                     #  the node itself
@@ -451,7 +588,7 @@ class MapData:
                     draw.line(coord, fill=(60, 255, 255))
 
                     #  line to visibles
-                    for visible in n.wall_connections:
+                    for visible in n.visible_nodes:
                         if visible is not None:
                             coord = (
                                 n.x * scale + x_off, n.y * scale + + y_off,
@@ -459,8 +596,22 @@ class MapData:
                             draw.line(coord, fill=(j * 40, 255, 255, 50))
                         else:
                             print("Error")
-                j += 1
                 # points.append((n.x, n.y))
+                j += 1
+
+            # the walls
+            j = 0
+            for wall_struct in self.walls[i]:
+                for k in range(0, len(wall_struct)):
+                    w1 = wall_struct[k]
+                    w2 = wall_struct[(k + 1) % (len(wall_struct) - 1)]
+                    coord = (
+                        w1.x * scale + x_off, w1.y * scale + + y_off,
+                        w2.x * scale + x_off, w2.y * scale + + y_off)
+                    draw.line(coord, fill=(255, j * 40, 255, 100))
+
+                j += 1
+
             im.show("Map%s" % i)
             i += 1
 
@@ -468,17 +619,17 @@ class MapData:
         file_content = ""
         i = 0
         for img_arr in self.img_arrs:
-            wall_str = "std::vector<Obstacle> GAME %s WALLS = " % i  # {{x1, y1}, {x2, y2}...} (Wall Polygon)
-            trap_str = "std::vector<Trap> GAME %s TRAPS = " % i  # {{x1, y1}, {x2, y2}...} (Trap Polygon)
-            swamp_str = "std::vector<std::pair<int, int>> GAME %s SWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
-            deposit_area_str = "std::vector<std::pair<int, int>> GAME %s DEPOSITAREAS = " % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
-            node_str = "std::vector<Node> GAME %s Nodes = " % i  # {{x1, y1}, {x2, y2}...} (Node Objects)
+            wall_str = "std::vector<Obstacle> GAME%sWALLS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Wall Polygon)
+            trap_str = "std::vector<Trap> GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
+            swamp_str = "std::vector<std::pair<int, int>> GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
+            deposit_area_str = "std::vector<std::pair<int, int>> GAME%sDEPOSITAREAS = " % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
+            node_str = "std::vector<Node> GAME%sNodes = " % i  # {{x1, y1}, {x2, y2}...} (Node Objects)
 
-            wall_str += str(self.walls[i])
-            trap_str += str(self.traps[i])
-            swamp_str += str(self.swamps[i])
-            deposit_area_str += str(self.deposit_areas[i])
-            node_str += str(self.nodes[i])
+            wall_str += str(self.walls[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            trap_str += str(self.traps[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            swamp_str += str(self.swamps[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            deposit_area_str += str(self.deposit_areas[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            node_str += str(self.nodes[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
 
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
@@ -512,7 +663,7 @@ class Pixel(Point):
         super().__init__(x, y, field)
         """A type of point used to represent the actual image"""
 
-        #  value of the Pixel that never changes
+        #  value of the Pixel that is never changed
         self.initial_val = color_switch(tuple([color[0], color[1], color[2]]))
 
         #  value that can be modified (for marking)
@@ -546,7 +697,7 @@ class Node(Point):
         #  All other Nodes this Node can see (only for debugging)
         self.visible_nodes = []
 
-    def can_see(self, point, excluded_init_vals=1):
+    def can_see(self, point, excluded_vals=[1]):
         """Returns a boolean weather this Node can see a point. Works best if point is a Node"""
 
         #  A Node can't see itself or anything if it's out of bounds
@@ -559,19 +710,19 @@ class Node(Point):
             # Get the points on the line between the Node and a point
             points_on_line = get_line(self.x, self.y, point.x, point.y)
             for p in points_on_line:
-
-                #  Check if any of the points "blocks" the vision
-                if self.field.img_arr[p[1]][p[0]].initial_val in excluded_init_vals:
-                    return False
+                if 0 <= p[0] < self.field.width and 0 <= p[1] < self.field.height:
+                    # Check if any of the points "blocks" the vision
+                    if abs(self.field.img_arr[p[1]][p[0]].val) in excluded_vals:
+                        return False
 
         return True
 
-    def find_visibles(self, nodes, excluded_init_vals=1):
+    def find_visibles(self, nodes, excluded_vals=[1]):
         """Collects all visible Nodes"""
         for node in nodes:
 
             #  Use inbuild function to determine visibility
-            if self.can_see(node, excluded_init_vals=excluded_init_vals):
+            if self.can_see(node, excluded_vals=excluded_vals):
                 #  Add as visible to both Nodes
                 node.visible_nodes.append(self)
                 self.visible_nodes.append(node)
@@ -583,8 +734,7 @@ class Node(Point):
         """Gets the two connection_nodes for a certain Node"""
 
         #  boundary value
-        b_v = self.boundary.initial_val
-        print(b_v)
+        b_v = self.boundary.val
 
         #  q (short for queue) used for a non recursiv flood fill
         q = [self.boundary]
@@ -607,12 +757,12 @@ class Node(Point):
                     #  check if n is or was in q to prevent double checks
                     already_seen = False
                     if p in q or p in removed:
-                        #print("\t invalid (already look at it)")
+                        # print("\t invalid (already look at it)")
                         continue
 
                     #  check if the values match
-                    if p.initial_val != b_v:
-                        #print("\t invalid (value doesn't match)")
+                    if p.val != b_v:
+                        # print("\t invalid (value doesn't match)")
                         continue
 
                     #  check if neighbor has a neighbor that has a different initial value
@@ -622,27 +772,28 @@ class Node(Point):
 
                             #  a field outside of bounds is counted as a neighbor of other type
                             if 0 <= i < self.field.width and 0 <= j < self.field.height:
-                                if self.field.img_arr[j][i].initial_val != b_v:
+                                if self.field.img_arr[j][i].val != b_v:
                                     has_different_neighbor = True
                                     break
                             else:
                                 has_different_neighbor = True
                                 break
 
-                    if has_different_neighbor:
-                        #print("\t invalid (has only wall neighbors)")
+                    if not has_different_neighbor:
+                        # print("\t invalid (has only wall neighbors)")
                         continue
 
                     #  check if wall is a valid connection to a node
                     is_node_connection = False
                     for node in node_struct:
                         if p is node.boundary:
-                            self.boundary_connections.append(node)
-                            print("found boundary: %s" % node)
-                            is_node_connection = True
+                            if self.can_see(node, excluded_vals=[self.boundary.val]) or not node.reachable or not self.reachable:
+                                self.boundary_connections.append(node)
+                                is_node_connection = True
+                            break
 
                     if is_node_connection:
-                        #print("\t invalid (is node connection)")
+                        # print("\t invalid (is node connection)")
                         continue
 
                     #  this pixel can be added to the queue
@@ -651,6 +802,8 @@ class Node(Point):
             removed.append(q[0])
             q.pop(0)
             #  print(q)
+        if len(self.boundary_connections) > 2:
+            pass#  print(self.boundary_connections)
 
     def __str__(self):
         """Returns Node as coord including how many other nodes this node can see. For Debugging"""
@@ -658,15 +811,15 @@ class Node(Point):
 
 
 class Collectible(Point):
-    def __init__(self, t, x, y, world):
-        super().__init__(float(x), float(y), None)
+    def __init__(self, t, x, y, field):
+        super().__init__(float(x), float(y), field)
         """A type of Point to represent Collectible points"""
 
         # x and y are real coordinates in the simulator. Not the coordinates used by the robot
         #  Virtual coordinates are the ones used by the robot
         #  world 1 is 90 cm bigger in both directions (x, y)
-        self.virtual_x = (270 + 90 * world) / 2 - 100 * float(x)
-        self.virtual_y = 100 * float(y) + (180 + 90 * world) / 2
+        self.virtual_x = -100 * float(x) + self.field.width / 2
+        self.virtual_y = 100 * float(y) + self.field.height / 2
 
         #  The color (red = 0; cyan/green = 1; black = 2)
         self.t = t
@@ -674,6 +827,10 @@ class Collectible(Point):
     def __str__(self):
         """Returns Collectible as coord including it's color. For Debugging"""
         return "Collectible at [%s | %s] with color %s" % (self.x, self.y, self.t)
+
+    def __repr__(self):
+        """Returns Collectible as typical C++ pair coord"""
+        return "{%s,%s}" % (self.virtual_x, self.virtual_y)
 
 
 def convert_background(field, worldnr):  # TODO: Add to field.__init__ class
