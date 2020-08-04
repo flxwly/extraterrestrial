@@ -11,6 +11,9 @@ from sys import setrecursionlimit
 
 setrecursionlimit(10000)
 
+# 1 is max detail
+detail = 0.5
+
 # for new CoSpace Versions
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
@@ -56,48 +59,6 @@ def find_color_points(world, worldnr):
     return arr
 
 
-def get_line(x1, y1, x2, y2):
-    points = []
-    issteep = abs(y2 - y1) > abs(x2 - x1)
-    if issteep:
-        x1, y1 = y1, x1
-        x2, y2 = y2, x2
-    rev = False
-    if x1 > x2:
-        x1, x2 = x2, x1
-        y1, y2 = y2, y1
-        rev = True
-    deltax = x2 - x1
-    deltay = abs(y2 - y1)
-    error = int(deltax / 2)
-    y = y1
-    ystep = None
-    if y1 < y2:
-        ystep = 1
-    else:
-        ystep = -1
-    for x in range(x1, x2 + 1):
-        if issteep:
-            points.append((y, x))
-        else:
-            points.append((x, y))
-        error -= deltay
-        if error < 0:
-            y += ystep
-            error += deltax
-    # Reverse the list if the coordinates were reversed
-    if rev:
-        points.reverse()
-    return points
-
-
-def py_ang(v1, v2):
-    """ Returns the angle in radians between vectors 'v1' and 'v2'    """
-    cosang = dot(v1, v2)
-    sinang = la.norm(cross(v1, v2))
-    return arctan2(sinang, cosang)
-
-
 def color_switch(pixel):
     # format: b, g, r
     switcher = {
@@ -116,6 +77,7 @@ def color_switch(pixel):
 
 class ImageArray:
     """Completely reworked and commented"""
+
     def __init__(self, _dir):
         """A class to collect one single map as Pixels by converting _dir/Background.bmp"""
 
@@ -130,7 +92,7 @@ class ImageArray:
         if os.path.isdir(_dir):
 
             # resize the image for less detail but less ram usage and duration
-            t_img = cv2.resize(cv2.imread(_dir + "/Background.bmp"), None, fx=0.25, fy=0.25,
+            t_img = cv2.resize(cv2.imread(_dir + "/Background.bmp"), None, fx=detail, fy=detail,
                                interpolation=cv2.INTER_NEAREST)
 
             # convert the Image into pixels
@@ -159,7 +121,6 @@ class ImageArray:
                 #  invoke on all neighboring pixels with same parameters but different coords
                 for n in range(j - 1 if j - 1 >= 0 else 0, j + 2 if j + 1 < self.height else self.height):
                     for m in range(i - 1 if i - 1 >= 0 else 0, i + 2 if i + 1 < self.width else self.width):
-
                         #  store=False is standard and therefore doesn't have to be set
                         self.flood_fill(m, n, old_val, new_val)
 
@@ -175,8 +136,10 @@ class ImageArray:
             while len(q) > 0:
 
                 #  for each neighbor (8x8)
-                for n in range(q[0].y - 1 if q[0].y - 1 >= 0 else 0, q[0].y + 2 if q[0].y + 1 < self.height else self.height):
-                    for m in range(q[0].x - 1 if q[0].x - 1 >= 0 else 0, q[0].x + 2 if q[0].x + 1 < self.width else self.width):
+                for n in range(q[0].y - 1 if q[0].y - 1 >= 0 else 0,
+                               q[0].y + 2 if q[0].y + 1 < self.height else self.height):
+                    for m in range(q[0].x - 1 if q[0].x - 1 >= 0 else 0,
+                                   q[0].x + 2 if q[0].x + 1 < self.width else self.width):
 
                         #  p is the pixel that might be added
                         p = self.img_arr[n][m]
@@ -364,7 +327,6 @@ def get_nodes(field, struct):
                               reachable=match[1].field is not None))
             # print("nodes after adding %s: %s" % (match[1], nodes))
 
-
     #  collect all nodes that are unescessary
     nodes_to_delete = []
     checking_neighbour_steps = [[1, 1], [-1, 1]]
@@ -393,15 +355,15 @@ def get_nodes(field, struct):
     return nodes
 
 
+# TODO: Find bug in this function that creates an endless loop when trying to order trap-nodes
+#  This is needed to give the pathfinder of the robot the possibility to also watch for traps
 def order_nodes(nodes):
     """Returns an array of nodes in order, so that "neighboring" nodes in the array represent a wall connection"""
-    ordered = []
 
-    print(nodes)
+    ordered = []
 
     #  nodes are already ordered by structs
     for node_struct in nodes:
-        print(node_struct)
 
         #  open_nodes are all unsorted nodes
         open_nodes = node_struct
@@ -416,10 +378,8 @@ def order_nodes(nodes):
 
         #  as long as there are nodes to be sorted
         while len(open_nodes) > 0:
-            print("At Node: %s" % n)
             #  loop over the wall_connections and get the connection that is not already ordered
             for i in range(len(n.boundary_connections)):
-                print(len(n.boundary_connections))
                 if n.boundary_connections[i] in open_nodes:
                     open_nodes.remove(n.boundary_connections[i])
                     n = n.boundary_connections[i]
@@ -470,15 +430,15 @@ class MapData:
                     if p.val == 0:
                         pass
                     elif p.val == 1:
-                        print(img_arr.expand(i, j, 3))
+                        img_arr.expand(i, j, 3)
                         walls.append(img_arr.flood_fill(i, j, 1, -1, store=True))
                         print("\t\tAdded wall-struct")
                     elif p.val == 2:
-                        print(img_arr.expand(i, j, 2))
+                        img_arr.expand(i, j, 2)
                         traps.append(img_arr.flood_fill(i, j, 2, -2, store=True))
                         print("\t\tAdded traps-struct")
                     elif p.val == 3:
-                        print(img_arr.expand(i, j, 2))
+                        img_arr.expand(i, j, 2)
                         swamps.append(img_arr.flood_fill(i, j, 3, -3, store=True))
                         print("\t\tAdded swamp-struct")
                     elif p.val == 4:
@@ -491,23 +451,6 @@ class MapData:
                         deposit_areas.append(img_arr.img_arr[avg[1]][avg[0]])
                         print("\t\tAdded deposit_area")
 
-            data = np.zeros((img_arr.height, img_arr.width, 3), dtype=np.uint8)
-            for j in range(0, img_arr.height):
-                for i in range(0, img_arr.width):
-                    p = img_arr.img_arr[j][i]
-                    if abs(p.val) == 1:
-                        data[j][i] = [255, 0, 0]
-                    if abs(p.val) == 2:
-                        data[j][i] = [255, 255, 0]
-
-            Image.fromarray(data).save("img1.png")
-
-            for wall_piece in walls:
-                for wall in wall_piece:
-                    data[wall.y][wall.x] = [0, 255, 255]
-
-            Image.fromarray(data).save("img2.png")
-
             print("\n\tCollecting Nodes...")
 
             print("\t\tWall/normal Nodes...")
@@ -519,7 +462,6 @@ class MapData:
             walls = []
             for struct in wall_nodes:
                 walls.append([node.boundary for node in struct])
-                print(len(walls[len(walls)-1]))
 
             print("\t\t Trap Nodes")
             trap_nodes = []
@@ -561,17 +503,8 @@ class MapData:
             im = Image.new('HSV', ((img_arr.width + 2) * scale, (img_arr.height + 2) * scale))
             draw = ImageDraw.Draw(im)
 
-            for row in img_arr.img_arr:
-                for p in row:
-                    if abs(p.val) == 1:
-                        coord = (
-                            p.x * scale - scale / 2 + x_off, p.y * scale - scale / 2 + y_off,
-                            p.x * scale + scale / 2 + x_off, p.y * scale + scale / 2 + y_off)
-                        draw.rectangle(coord, width=scale, fill=(255, 0, 255))
-
+            # show the nodes
             j = 0
-
-            #  show nodes
             for node_struct in self.nodes[i]:
                 for n in node_struct:
                     #  the node itself
@@ -599,17 +532,17 @@ class MapData:
                 # points.append((n.x, n.y))
                 j += 1
 
-            # the walls
+            # show the walls
             j = 0
             for wall_struct in self.walls[i]:
                 for k in range(0, len(wall_struct)):
                     w1 = wall_struct[k]
-                    w2 = wall_struct[(k + 1) % (len(wall_struct) - 1)]
-                    coord = (
-                        w1.x * scale + x_off, w1.y * scale + + y_off,
-                        w2.x * scale + x_off, w2.y * scale + + y_off)
-                    draw.line(coord, fill=(255, j * 40, 255, 100))
-
+                    w2 = wall_struct[(k + 1) % (len(wall_struct))]
+                    for p in get_line(w1.x, w1.y, w2.x, w2.y):
+                        coord = (
+                            p[0] * scale - scale / 2 + x_off, p[1] * scale - scale / 2 + y_off,
+                            p[0] * scale + scale / 2 + x_off, p[1] * scale + scale / 2 + y_off)
+                        draw.rectangle(coord, width=scale, fill=(255, 0, 255))
                 j += 1
 
             im.show("Map%s" % i)
@@ -659,9 +592,10 @@ class Point:
 
 
 class Pixel(Point):
+    """A type of point used to represent the actual image"""
+
     def __init__(self, field, x, y, color):
         super().__init__(x, y, field)
-        """A type of point used to represent the actual image"""
 
         #  value of the Pixel that is never changed
         self.initial_val = color_switch(tuple([color[0], color[1], color[2]]))
@@ -671,13 +605,53 @@ class Pixel(Point):
 
     def __str__(self):
         """Returns Pixel as coord including it's val. For Debugging"""
+
         return "Pixel at [%s | %s] has value %s" % (self.x, self.field.height - self.y, self.val)
 
 
+def get_line(x1, y1, x2, y2):
+    """Returns all Points on a line from (x1, y1) to (x2, y2)"""
+
+    points = []
+    issteep = abs(y2 - y1) > abs(x2 - x1)
+    if issteep:
+        x1, y1 = y1, x1
+        x2, y2 = y2, x2
+    rev = False
+    if x1 > x2:
+        x1, x2 = x2, x1
+        y1, y2 = y2, y1
+        rev = True
+    deltax = x2 - x1
+    deltay = abs(y2 - y1)
+    error = int(deltax / 2)
+    y = y1
+    ystep = None
+    if y1 < y2:
+        ystep = 1
+    else:
+        ystep = -1
+    for x in range(x1, x2 + 1):
+        if issteep:
+            points.append((y, x))
+        else:
+            points.append((x, y))
+        error -= deltay
+        if error < 0:
+            y += ystep
+            error += deltax
+    # Reverse the list if the coordinates were reversed
+    if rev:
+        points.reverse()
+    return points
+
+
 class Node(Point):
+    """A type of Point to represent Nodes. Each Node is bound to a wall boundary and vise versa"""
+
     def __init__(self, field, x, y, direction, reachable=True):
         super().__init__(x, y, field)
-        """A type of Point to represent Nodes. Each Node is bound to a wall boundary and vise versa"""
+        """Init"""
 
         #  The array a node is stored in
         self.field = field
@@ -704,6 +678,10 @@ class Node(Point):
         if self is point or not self.reachable:
             return False
 
+        if point is Node:
+            if not point.reachable:
+                return False
+
         #  This only increases efficiency if point is a node
         if point not in self.visible_nodes:
 
@@ -719,6 +697,7 @@ class Node(Point):
 
     def find_visibles(self, nodes, excluded_vals=[1]):
         """Collects all visible Nodes"""
+
         for node in nodes:
 
             #  Use inbuild function to determine visibility
@@ -787,7 +766,8 @@ class Node(Point):
                     is_node_connection = False
                     for node in node_struct:
                         if p is node.boundary:
-                            if self.can_see(node, excluded_vals=[self.boundary.val]) or not node.reachable or not self.reachable:
+                            if self.can_see(node, excluded_vals=[
+                                self.boundary.val]) or not node.reachable or not self.reachable:
                                 self.boundary_connections.append(node)
                                 is_node_connection = True
                             break
@@ -803,10 +783,11 @@ class Node(Point):
             q.pop(0)
             #  print(q)
         if len(self.boundary_connections) > 2:
-            pass#  print(self.boundary_connections)
+            pass  # print(self.boundary_connections)
 
     def __str__(self):
         """Returns Node as coord including how many other nodes this node can see. For Debugging"""
+
         return "Node at [%s | %s] has %s visible Nodes" % (self.x, self.field.height - self.y, len(self.visible_nodes))
 
 
@@ -833,82 +814,6 @@ class Collectible(Point):
         return "{%s,%s}" % (self.virtual_x, self.virtual_y)
 
 
-def convert_background(field, worldnr):  # TODO: Add to field.__init__ class
-    print("converting Background: " + str(worldnr))
-
-    walls = []
-    wall_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "WALLS = "
-    traps = []
-    trap_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "TRAPS = "
-    swamps = []
-    swamp_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "SWAMPS = "
-    deposit_areas = []
-    deposit_area_str = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "DEPOSITAREAS = "
-
-    print("\tconvert")
-
-    for j in range(field.height):
-        for i in range(field.width):
-            p = field.img_arr[j][i]
-            if p.val == 0:
-                pass
-            elif p.val == 1:
-                walls.append([])
-                field.flood_fill(i, j, 1, -1, arr=walls[len(walls) - 1])
-                print("Added wall struct")
-            elif p.val == 3:
-                swamps.append(p)
-            elif p.val == 2:
-                traps.append(p)
-            elif p.val == 4:
-                deposit_areas.append(field.avg(i, j, -4))
-
-    for wall_piece in walls:
-        field.nodes.append(get_nodes(field, wall_piece))
-
-    all_nodes = []
-    for node_struct in field.nodes:
-        for node in node_struct:
-            all_nodes.append(node)
-
-    for node_struct in field.nodes:
-        for node in node_struct:
-            node.find_visibles(all_nodes)
-            node.find_wall_connections(node_struct)
-
-    print("convert to str")
-    wall_str += str(walls).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-    trap_str += str(traps).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-    swamp_str += str(swamps).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-    deposit_area_str += str(deposit_areas).replace("[", "{").replace("]", "}") + ";"
-
-    filecontent = "/*walls*/ " + wall_str + "\n/*traps*/ " + trap_str + "\n/*swamps*/ " + swamp_str + "\n/*deposit*/ " + \
-                  deposit_area_str + "\n\n"  # + "\n/*nodes*/ " + node_str + "\n\n"
-
-    return filecontent
-
-
-def write_points_to_file(points, worldnr):
-    redpoints = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "REDPOINTS = {"
-    greenpoints = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "GREENPOINTS = {"
-    blackpoints = "std::vector<std::pair<int, int>> GAME" + str(worldnr) + "BLACKPOINTS = {"
-
-    for point in points:
-        if point.t == "Object_Red":
-            redpoints += "{" + str(int(point.virtual_x)) + ", " + str(int(point.virtual_y)) + "}, "
-        if point.t == "Object_Green":
-            greenpoints += "{" + str(int(point.virtual_x)) + ", " + str(int(point.virtual_y)) + "}, "
-        if point.t == "Object_Black":
-            blackpoints += "{" + str(int(point.virtual_x)) + ", " + str(int(point.virtual_y)) + "}, "
-
-    redpoints = (redpoints + "}").replace(", }", "};")
-    greenpoints = (greenpoints + "}").replace(", }", "};")
-    blackpoints = (blackpoints + "}").replace(", }", "};")
-
-    filecontent = redpoints + "\n" + greenpoints + "\n" + blackpoints + "\n\n\n"
-    return filecontent
-
-
 def main():
     print("setting up...")
 
@@ -917,39 +822,6 @@ def main():
     mapData.show(10)
 
     print(mapData)
-
-
-def has_to_be_reworked():
-    world_1_points = []
-    world_2_points = []
-    for child in FieldFD:
-        if child.tag == "World1":
-            world_1_points = find_color_points(child, 0)
-        if child.tag == "World2":
-            world_2_points = find_color_points(child, 1)
-    filename = "../code/MapData.cpp"
-
-    print("getting objects... (this might take some time)")
-
-    f = open("mapDataCPP", "r")
-    cpp_data = f.read() + "\n\n"
-    f.close()
-
-    field_a = ImageArray(FieldA)
-    field_a.expand_all(1, 5)  # expand all walls by 5
-    field_b = ImageArray(FieldB)
-    field_b.expand_all(1, 5)  # expand all walls by 5
-
-    field_a_str = convert_background(field_a, 0)
-    field_a_points = write_points_to_file(world_1_points, 0)
-    field_b_str = convert_background(field_b, 1)
-    field_b_points = write_points_to_file(world_2_points, 1)
-    #  print("writing to file...")
-    #  f = open(filename, "w+")
-    #  f.write(cpp_data + field_a_str + field_a_points + field_b_str + field_b_points)
-    #  f.close()
-
-    print("finished")
 
 
 if __name__ == '__main__':
