@@ -65,7 +65,7 @@ def color_switch(pixel):
         tuple([0, 0, 0]): 1,  # wall
         tuple([151, 186, 221]): 1,
         tuple([131, 177, 244]): 1,
-        tuple([0, 255, 255]): 2,  # trap
+        tuple([0, 255, 255]): 0,  # trap (only use the blue in the middle)
         tuple([151, 85, 47]): 2,
         tuple([166, 166, 166]): 3,  # swamp
         tuple([0, 153, 255]): 4,  # deposit
@@ -290,6 +290,23 @@ class ImageArray:
 
         return matches
 
+    def remove_dif_pixels(self, pixels, val):
+        """A method to check if all pixels in Pixels have the value val. It returns all different pixels"""
+
+        different_pixels = []
+
+        #  loop through every pixel in pixels
+        for struct in pixels:
+            for pixel in struct:
+                # value check
+                if abs(pixel.val) != val:
+                    #  remove pixel right away
+                    struct.remove(pixel)
+                    print("removed")
+                    different_pixels.append(pixel)
+
+        return different_pixels
+
     def avg(self, i, j):
         """This function calculates the average point of all adjacent Pixels to the Pixel at i, j"""
 
@@ -377,7 +394,11 @@ def order_nodes(nodes):
         open_nodes.pop(0)
 
         #  as long as there are nodes to be sorted
-        while len(open_nodes) > 0:
+        while len(open_nodes) > 1:
+
+            print("len of open_nodes: " + str(len(open_nodes)))
+            print("len of boundaries: " + str(len(n.boundary_connections)))
+
             #  loop over the wall_connections and get the connection that is not already ordered
             for i in range(len(n.boundary_connections)):
                 if n.boundary_connections[i] in open_nodes:
@@ -389,10 +410,36 @@ def order_nodes(nodes):
 
                     #  break the loop to only add one node at a time
                     break
-                if i > 0:
-                    print("endless loop")
+        if len(open_nodes) > 0:
+            ordered[len(ordered) - 1].append(open_nodes[0])
         ordered[len(ordered) - 1].append(end)
     return ordered
+
+
+def draw_polygons(draw, polygons, scale, starting_hue=0, sat=255, lum=255, hue_dif=40):
+    """draw the boundaries of each polygon in polygons"""
+
+    x_off = scale
+    y_off = scale
+
+    # j is to differentiate each polygon from each other
+    j = 0
+    for polygon in polygons:
+        for k in range(0, len(polygon)):
+            p1 = polygon[k]
+            p2 = polygon[(k + 1) % (len(polygon))]
+            for p in get_line(p1.x, p1.y, p2.x, p2.y):
+                coord = (
+                    p[0] * scale - scale / 2 + x_off, p[1] * scale - scale / 2 + y_off,
+                    p[0] * scale + scale / 2 + x_off, p[1] * scale + scale / 2 + y_off)
+                draw.rectangle(coord, width=scale, fill=(starting_hue + j * hue_dif, sat, lum))
+
+            coord = (
+                p1.x * scale - scale / 2 + x_off, p1.y * scale - scale / 2 + y_off,
+                p1.x * scale + scale / 2 + x_off, p1.y * scale + scale / 2 + y_off)
+            draw.rectangle(coord, width=scale, fill=(2 * starting_hue + j * hue_dif, sat + 50, lum))
+
+        j += 1
 
 
 class MapData:
@@ -404,7 +451,8 @@ class MapData:
         self.walls = []  # wall_structs <- defined by points as polygon
         self.traps = []  # trap_structs <- defined by points as polygon
         self.swamps = []  # swamp_structs <- defined by points as polygon
-        self.deposit_areas = []  # deposit areas defined as points
+        self.deposit_areas = []  # deposit areas <- defined as points
+        self.bonus_areas = []  # Bonus_areas <- defined by points as polygon
 
         self.img_arrs = []  # collection of ImageArray objects
 
@@ -422,23 +470,24 @@ class MapData:
             traps = []
             swamps = []
             deposit_areas = []
+            bonus_areas = []
 
             print("\tConverting ImageArray")
+
             for j in range(img_arr.height):
                 for i in range(img_arr.width):
                     p = img_arr.img_arr[j][i]
                     if p.val == 0:
                         pass
                     elif p.val == 1:
-                        img_arr.expand(i, j, 3)
+                        img_arr.expand(i, j, int(detail * 5))
                         walls.append(img_arr.flood_fill(i, j, 1, -1, store=True))
                         print("\t\tAdded wall-struct")
                     elif p.val == 2:
-                        img_arr.expand(i, j, 2)
+                        img_arr.expand(i, j, int(detail * 10))
                         traps.append(img_arr.flood_fill(i, j, 2, -2, store=True))
                         print("\t\tAdded traps-struct")
                     elif p.val == 3:
-                        img_arr.expand(i, j, 2)
                         swamps.append(img_arr.flood_fill(i, j, 3, -3, store=True))
                         print("\t\tAdded swamp-struct")
                     elif p.val == 4:
@@ -450,6 +499,20 @@ class MapData:
 
                         deposit_areas.append(img_arr.img_arr[avg[1]][avg[0]])
                         print("\t\tAdded deposit_area")
+                    elif p.val == 5:
+                        bonus_areas.append(img_arr.flood_fill(i, j, 5, -5, store=True))
+                        print("\t\tAdded wall-struct")
+
+            #  Check if all Pixels in the arrays represent what they really are:
+            img_arr.remove_dif_pixels(walls, 1)
+            img_arr.remove_dif_pixels(traps, 2)
+            img_arr.remove_dif_pixels(swamps, 3)
+            img_arr.remove_dif_pixels(bonus_areas, 5)
+
+            for j in range(img_arr.height):
+                for i in range(img_arr.width):
+                    img_arr.img_arr[j][i].val = abs(img_arr.img_arr[j][i].val)
+
 
             print("\n\tCollecting Nodes...")
 
@@ -467,7 +530,8 @@ class MapData:
             trap_nodes = []
             for trap_piece in traps:
                 trap_nodes.append(get_nodes(img_arr, trap_piece))
-            #  trap_nodes = order_nodes(trap_nodes)
+            trap_nodes = order_nodes(trap_nodes)
+            traps = []
             for struct in trap_nodes:
                 traps.append([node.boundary for node in struct])
 
@@ -475,9 +539,19 @@ class MapData:
             swamp_nodes = []
             for swamp_piece in swamps:
                 swamp_nodes.append(get_nodes(img_arr, swamp_piece))
-            # swamp_nodes = order_nodes(swamp_nodes)
+            swamp_nodes = order_nodes(swamp_nodes)
+            swamps = []
             for struct in swamp_nodes:
                 swamps.append([node.boundary for node in struct])
+
+            print("\t\t Bonus-Area Nodes")
+            bonus_area_nodes = []
+            for bonus_piece in bonus_areas:
+                bonus_area_nodes.append(get_nodes(img_arr, bonus_piece))
+            bonus_area_nodes = order_nodes(bonus_area_nodes)
+            bonus_areas = []
+            for struct in bonus_area_nodes:
+                bonus_areas.append([node.boundary for node in struct])
 
             all_nodes = []
             for node_struct in nodes:
@@ -492,6 +566,8 @@ class MapData:
             self.traps.append(traps)
             self.swamps.append(swamps)
             self.deposit_areas.append(deposit_areas)
+            self.bonus_areas.append(bonus_areas)
+            print("\tfinished")
 
     def show(self, scale):
 
@@ -520,30 +596,33 @@ class MapData:
                         (n.x + n.direction[0]) * scale + x_off, (n.y + n.direction[1]) * scale + y_off)
                     draw.line(coord, fill=(60, 255, 255))
 
+                    #  To toggle showing visibles on and off
+                    show_visibles = False
+
                     #  line to visibles
-                    for visible in n.visible_nodes:
-                        if visible is not None:
-                            coord = (
-                                n.x * scale + x_off, n.y * scale + + y_off,
-                                visible.x * scale + x_off, visible.y * scale + + y_off)
-                            draw.line(coord, fill=(j * 40, 255, 255, 50))
-                        else:
-                            print("Error")
+                    if show_visibles:
+                        for visible in n.visible_nodes:
+                            if visible is not None:
+                                coord = (
+                                    n.x * scale + x_off, n.y * scale + + y_off,
+                                    visible.x * scale + x_off, visible.y * scale + + y_off)
+                                draw.line(coord, fill=(j * 40, 255, 255, 50))
+                            else:
+                                print("Error")
                 # points.append((n.x, n.y))
                 j += 1
 
             # show the walls
-            j = 0
-            for wall_struct in self.walls[i]:
-                for k in range(0, len(wall_struct)):
-                    w1 = wall_struct[k]
-                    w2 = wall_struct[(k + 1) % (len(wall_struct))]
-                    for p in get_line(w1.x, w1.y, w2.x, w2.y):
-                        coord = (
-                            p[0] * scale - scale / 2 + x_off, p[1] * scale - scale / 2 + y_off,
-                            p[0] * scale + scale / 2 + x_off, p[1] * scale + scale / 2 + y_off)
-                        draw.rectangle(coord, width=scale, fill=(255, 0, 255))
-                j += 1
+            draw_polygons(draw, self.walls[i], scale, sat=0, lum=255)
+
+            # show the traps
+            draw_polygons(draw, self.traps[i], scale, starting_hue=40, hue_dif=0)
+
+            # show the swamps
+            draw_polygons(draw, self.swamps[i], scale, sat=0, lum=50)
+
+            # show the bonus_areas
+            draw_polygons(draw, self.bonus_areas[i], scale, starting_hue=80, hue_dif=0)
 
             im.show("Map%s" % i)
             i += 1
@@ -553,24 +632,28 @@ class MapData:
         i = 0
         for img_arr in self.img_arrs:
             wall_str = "std::vector<Obstacle> GAME%sWALLS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Wall Polygon)
-            trap_str = "std::vector<Trap> GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
-            swamp_str = "std::vector<std::pair<int, int>> GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
-            deposit_area_str = "std::vector<std::pair<int, int>> GAME%sDEPOSITAREAS = " % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
             node_str = "std::vector<Node> GAME%sNodes = " % i  # {{x1, y1}, {x2, y2}...} (Node Objects)
+            trap_str = "std::vector<Trap> GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
+            swamp_str = "std::vector<Swamp> GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
+            bonus_area_str = "std::vector<Water> GAME%sBOMUSAREAS = " % i  # {{x1, y1}, {x2, y2}...} (Water Polygon)
+            deposit_area_str = "std::vector<std::pair<int, int>> GAME%sDEPOSITAREAS = " % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
 
             wall_str += str(self.walls[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            node_str += str(self.nodes[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
             trap_str += str(self.traps[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
             swamp_str += str(self.swamps[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            bonus_area_str += str(self.bonus_areas[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
             deposit_area_str += str(self.deposit_areas[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-            node_str += str(self.nodes[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
 
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
             file_content += "/*walls*/ " + wall_str + \
+                            "\n/*nodes*/ " + node_str + \
                             "\n/*traps*/ " + trap_str + \
                             "\n/*swamps*/ " + swamp_str + \
-                            "\n\n/*deposit*/ " + deposit_area_str + \
-                            "\n\n/*nodes*/ " + node_str + "\n\n"
+                            "\n/*Water*/ " + bonus_area_str + \
+                            "\n\n/*deposit*/ " + deposit_area_str + "\n\n"
+
 
             i += 1
 
@@ -713,7 +796,7 @@ class Node(Point):
         """Gets the two connection_nodes for a certain Node"""
 
         #  boundary value
-        b_v = self.boundary.val
+        b_v = abs(self.boundary.val)
 
         #  q (short for queue) used for a non recursiv flood fill
         q = [self.boundary]
@@ -740,7 +823,7 @@ class Node(Point):
                         continue
 
                     #  check if the values match
-                    if p.val != b_v:
+                    if abs(p.val) != b_v:
                         # print("\t invalid (value doesn't match)")
                         continue
 
@@ -766,8 +849,8 @@ class Node(Point):
                     is_node_connection = False
                     for node in node_struct:
                         if p is node.boundary:
-                            if self.can_see(node, excluded_vals=[
-                                self.boundary.val]) or not node.reachable or not self.reachable:
+                            if self.can_see(node, excluded_vals=[self.boundary.val]) \
+                                    or not node.reachable or not self.reachable:
                                 self.boundary_connections.append(node)
                                 is_node_connection = True
                             break
@@ -783,7 +866,7 @@ class Node(Point):
             q.pop(0)
             #  print(q)
         if len(self.boundary_connections) > 2:
-            pass  # print(self.boundary_connections)
+            print(self.boundary_connections)
 
     def __str__(self):
         """Returns Node as coord including how many other nodes this node can see. For Debugging"""
