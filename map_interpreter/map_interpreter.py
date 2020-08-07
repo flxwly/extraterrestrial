@@ -1,4 +1,5 @@
 import os.path
+import random
 import xml.etree.ElementTree as ET
 
 import numpy.linalg as la
@@ -14,14 +15,14 @@ setrecursionlimit(10000)
 # 1 is max detail
 detail = 0.5
 
-# for new CoSpace Versions
+# for old CoSpace Versions
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
 FieldFD = ET.parse("../../../../../store/media/Rescue/Map/Sec/Design/Field.FD")
 
 cospace_version = "2.6.2"
 
-# for CoSpace 2.6.2
+# for CoSpace 2.6.2+
 if cospace_version == "2.6.2":
     FieldA = "../../../../../store/media/CS.C/RSC/Map/Design/FieldA"
     FieldB = "../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
@@ -75,11 +76,31 @@ def color_switch(pixel):
     return switcher.get(pixel, 0)
 
 
+def remove_dif_pixels(pixels, val):
+    """A method to check if all pixels in Pixels have the value val. It returns all different pixels"""
+
+    different_pixels = []
+
+    #  loop through every pixel in pixels
+    for struct in pixels:
+        for pixel in struct:
+            # value check
+            if abs(pixel.val) != val:
+                #  remove pixel right away
+                struct.remove(pixel)
+                print("removed")
+                different_pixels.append(pixel)
+
+    return different_pixels
+
+
 class ImageArray:
     """Completely reworked and commented"""
 
     def __init__(self, _dir):
         """A class to collect one single map as Pixels by converting _dir/Background.bmp"""
+
+        global detail
 
         # The array all pixels are stored in
         self.img_arr = []
@@ -215,6 +236,8 @@ class ImageArray:
 
     def collect_pixels(self, val):
         """This function returns every pixel of type val in self.img_arr in form of structs"""
+        """NOTE: This function does not work on deactivated pixels and only collects acivated pixels"""
+
         pixels = []
 
         disabled_val = -val
@@ -289,23 +312,6 @@ class ImageArray:
                 matches.append(square)
 
         return matches
-
-    def remove_dif_pixels(self, pixels, val):
-        """A method to check if all pixels in Pixels have the value val. It returns all different pixels"""
-
-        different_pixels = []
-
-        #  loop through every pixel in pixels
-        for struct in pixels:
-            for pixel in struct:
-                # value check
-                if abs(pixel.val) != val:
-                    #  remove pixel right away
-                    struct.remove(pixel)
-                    print("removed")
-                    different_pixels.append(pixel)
-
-        return different_pixels
 
     def avg(self, i, j):
         """This function calculates the average point of all adjacent Pixels to the Pixel at i, j"""
@@ -385,34 +391,33 @@ def order_nodes(nodes):
         #  open_nodes are all unsorted nodes
         open_nodes = node_struct
 
-        #  nodes should be ordered into structs afterwards too
+        #  nodes should be ordered in structs afterwards too
         ordered.append([])
 
         #  n is the node that is currently checked
         n = open_nodes[0]
-        end = n
+
+        #  the first node that is checked is alays at the front
+        ordered[len(ordered) - 1].append(n)
         open_nodes.pop(0)
 
         #  as long as there are nodes to be sorted
-        while len(open_nodes) > 1:
+        while len(open_nodes) > 0:
 
             print("len of open_nodes: " + str(len(open_nodes)))
             print("len of boundaries: " + str(len(n.boundary_connections)))
 
             #  loop over the wall_connections and get the connection that is not already ordered
-            for i in range(len(n.boundary_connections)):
-                if n.boundary_connections[i] in open_nodes:
-                    open_nodes.remove(n.boundary_connections[i])
-                    n = n.boundary_connections[i]
+            for boundary_connection in n.boundary_connections:
+                #  there should always be at least one boundary_connection in open_nodes
+                if boundary_connection in open_nodes:
+                    #  the boundary_connection in open_nodes is the new node that has to be checked.
+                    n = boundary_connection
 
-                    #  add last collected node to ordered
-                    ordered[len(ordered) - 1].append(n)
+            #  add last add boundary to ordered and remove it from open_nodes
+            open_nodes.remove(n)
+            ordered[len(ordered) - 1].append(n)
 
-                    #  break the loop to only add one node at a time
-                    break
-        if len(open_nodes) > 0:
-            ordered[len(ordered) - 1].append(open_nodes[0])
-        ordered[len(ordered) - 1].append(end)
     return ordered
 
 
@@ -447,11 +452,14 @@ class MapData:
         """A Object to collect all other map objects and also convert them to string or to a picture"""
         print("Creating MapData-Object...")
 
-        self.nodes = []  # "waypoints" for pathfinding/pathplanning
+        self.wall_nodes = []  # "waypoints" for pathfinding/pathplanning
         self.walls = []  # wall_structs <- defined by points as polygon
+        self.trap_nodes = []
         self.traps = []  # trap_structs <- defined by points as polygon
+        self.swamp_nodes = []
         self.swamps = []  # swamp_structs <- defined by points as polygon
         self.deposit_areas = []  # deposit areas <- defined as points
+        self.bonus_area_nodes = []
         self.bonus_areas = []  # Bonus_areas <- defined by points as polygon
 
         self.img_arrs = []  # collection of ImageArray objects
@@ -474,17 +482,20 @@ class MapData:
 
             print("\tConverting ImageArray")
 
+            img_arr.expand_all(1, int(detail * 16))
+            img_arr.expand_all(2, int(detail * 16))
+            img_arr.expand_all(3, int(detail * 2))
+            img_arr.expand_all(5, int(detail * 2))
+
             for j in range(img_arr.height):
                 for i in range(img_arr.width):
                     p = img_arr.img_arr[j][i]
                     if p.val == 0:
                         pass
                     elif p.val == 1:
-                        img_arr.expand(i, j, int(detail * 5))
                         walls.append(img_arr.flood_fill(i, j, 1, -1, store=True))
                         print("\t\tAdded wall-struct")
                     elif p.val == 2:
-                        img_arr.expand(i, j, int(detail * 10))
                         traps.append(img_arr.flood_fill(i, j, 2, -2, store=True))
                         print("\t\tAdded traps-struct")
                     elif p.val == 3:
@@ -503,16 +514,10 @@ class MapData:
                         bonus_areas.append(img_arr.flood_fill(i, j, 5, -5, store=True))
                         print("\t\tAdded wall-struct")
 
-            #  Check if all Pixels in the arrays represent what they really are:
-            img_arr.remove_dif_pixels(walls, 1)
-            img_arr.remove_dif_pixels(traps, 2)
-            img_arr.remove_dif_pixels(swamps, 3)
-            img_arr.remove_dif_pixels(bonus_areas, 5)
-
+            #  activate all pixels again
             for j in range(img_arr.height):
                 for i in range(img_arr.width):
                     img_arr.img_arr[j][i].val = abs(img_arr.img_arr[j][i].val)
-
 
             print("\n\tCollecting Nodes...")
 
@@ -521,7 +526,6 @@ class MapData:
             for wall_piece in walls:
                 wall_nodes.append(get_nodes(img_arr, wall_piece))
             wall_nodes = order_nodes(wall_nodes)
-            nodes = wall_nodes
             walls = []
             for struct in wall_nodes:
                 walls.append([node.boundary for node in struct])
@@ -562,11 +566,15 @@ class MapData:
                 node.find_visibles(all_nodes)
 
             self.walls.append(walls)
-            self.nodes.append(nodes)
+            self.wall_nodes.append(wall_nodes)
             self.traps.append(traps)
+            self.trap_nodes.append(trap_nodes)
             self.swamps.append(swamps)
+            self.swamp_nodes.append(swamp_nodes)
             self.deposit_areas.append(deposit_areas)
             self.bonus_areas.append(bonus_areas)
+            self.bonus_area_nodes.append(bonus_area_nodes)
+
             print("\tfinished")
 
     def show(self, scale):
@@ -581,36 +589,9 @@ class MapData:
 
             # show the nodes
             j = 0
-            for node_struct in self.nodes[i]:
+            for node_struct in self.wall_nodes[i]:
                 for n in node_struct:
-                    #  the node itself
-                    coord = (
-                        n.x * scale - scale / 2 + x_off, n.y * scale - scale / 2 + y_off,
-                        n.x * scale + scale / 2 + x_off, n.y * scale + scale / 2 + y_off)
-                    draw.rectangle(coord, width=scale,
-                                   fill=(90 * int(not n.reachable), 255, 255))
-
-                    #  line to adjacent wall
-                    coord = (
-                        n.x * scale + x_off, n.y * scale + + y_off,
-                        (n.x + n.direction[0]) * scale + x_off, (n.y + n.direction[1]) * scale + y_off)
-                    draw.line(coord, fill=(60, 255, 255))
-
-                    #  To toggle showing visibles on and off
-                    show_visibles = False
-
-                    #  line to visibles
-                    if show_visibles:
-                        for visible in n.visible_nodes:
-                            if visible is not None:
-                                coord = (
-                                    n.x * scale + x_off, n.y * scale + + y_off,
-                                    visible.x * scale + x_off, visible.y * scale + + y_off)
-                                draw.line(coord, fill=(j * 40, 255, 255, 50))
-                            else:
-                                print("Error")
-                # points.append((n.x, n.y))
-                j += 1
+                    n.show(draw, scale, show_visibles=False)
 
             # show the walls
             draw_polygons(draw, self.walls[i], scale, sat=0, lum=255)
@@ -639,7 +620,7 @@ class MapData:
             deposit_area_str = "std::vector<std::pair<int, int>> GAME%sDEPOSITAREAS = " % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
 
             wall_str += str(self.walls[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-            node_str += str(self.nodes[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            node_str += str(self.wall_nodes[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
             trap_str += str(self.traps[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
             swamp_str += str(self.swamps[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
             bonus_area_str += str(self.bonus_areas[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
@@ -653,7 +634,6 @@ class MapData:
                             "\n/*swamps*/ " + swamp_str + \
                             "\n/*Water*/ " + bonus_area_str + \
                             "\n\n/*deposit*/ " + deposit_area_str + "\n\n"
-
 
             i += 1
 
@@ -754,11 +734,13 @@ class Node(Point):
         #  All other Nodes this Node can see (only for debugging)
         self.visible_nodes = []
 
+        self.pos_in_ordered = 0
+
     def can_see(self, point, excluded_vals=[1]):
         """Returns a boolean weather this Node can see a point. Works best if point is a Node"""
 
-        #  A Node can't see itself or anything if it's out of bounds
-        if self is point or not self.reachable:
+        #  A Node can't see itself
+        if self is point:
             return False
 
         if point is Node:
@@ -794,45 +776,81 @@ class Node(Point):
 
     def find_connections(self, node_struct):
         """Gets the two connection_nodes for a certain Node"""
+        """NOTE: This function only works correct if all pixels in the struct are active"""
+
+        print("finding connections for %s" % self)
 
         #  boundary value
-        b_v = abs(self.boundary.val)
+        b_v = self.boundary.val
 
         #  q (short for queue) used for a non recursiv flood fill
         q = [self.boundary]
 
         #  To not go back (could've also used node.val but it needs to be reversed afterwards)
         removed = []
+        seen_nodes = []
 
-        while len(q) > 0:
-            #  for each direct neighbor
-            steps = ((q[0].x + 1, q[0].y), (q[0].x - 1, q[0].y), (q[0].x, q[0].y + 1), (q[0].x, q[0].y - 1))
+        #  The Idea is that every pixel that has at least one neighbor pixel with
+        #  a different value is a pixel on the edge of a struct. This allows to "walk" on the edge
+        #  the first pixel which is also a boundary of some node then is the boundary_connection
+        #  of this node
+        while len(q) > 0 and len(self.boundary_connections) < 2:
+
+            #  It is not good to step over diagonals since nodes can be directly next to each other.
+            #  In a case like that doing a diagonal step would mean skipping one of the nodes
+            steps = ((1, 0), (-1, 0), (0, 1), (0, -1))
             for step in steps:
 
-                #  Out of bounds check
-                if 0 <= step[0] < self.field.width and 0 <= step[1] < self.field.height:
+                x = q[0].x + step[0]
+                y = q[0].y + step[1]
 
-                    #  n is the pixel that might be added
-                    p = self.field.img_arr[step[1]][step[0]]
-                    #  print("Checking if %s is valid" % n)
+                #  Even if nodes can be out of bounds, this loop does checks pixels so
+                #  it is mandatory do a out of bounds check. (Pixels can never be out of bounds)
+                if 0 <= x < self.field.width and 0 <= y < self.field.height:
+
+                    #  p is the pixel that has to be checked for validility
+                    p = self.field.img_arr[y][x]
+
+                    #  check if wall is a valid connection to a node
+                    is_node_connection = False
+                    for node in node_struct:
+                        if p is node.boundary:
+                            print("%s might be a connection" % node)
+                            if self.can_see(node, excluded_vals=[b_v]) and node not in seen_nodes:
+                                print("%s is a connection" % node)
+                                self.boundary_connections.append(node)
+                                seen_nodes.append(node)
+                                is_node_connection = True
+
+                    if is_node_connection:
+                        # print("\t invalid (is node connection)")
+                        continue
 
                     #  check if n is or was in q to prevent double checks
-                    already_seen = False
+                    #  This is to always walk into one direction.
+                    #  Without it there would be an endless loop at some point
+                    #  because there can be 2 neighboring pixels that both fulfill every condition
                     if p in q or p in removed:
                         # print("\t invalid (already look at it)")
                         continue
 
-                    #  check if the values match
-                    if abs(p.val) != b_v:
+                    #  If the values of the neighbor and the current pixel don't match
+                    #  the neighboring pixel can not be walked.
+                    if p.val != b_v:
                         # print("\t invalid (value doesn't match)")
                         continue
 
                     #  check if neighbor has a neighbor that has a different initial value
+                    #  A neighbor with a different value means that this pixel is on the outside
+                    #  of the current struct
                     has_different_neighbor = False
                     for i in range(p.x - 1, p.x + 2):
+                        if has_different_neighbor:
+                            break
                         for j in range(p.y - 1, p.y + 2):
 
-                            #  a field outside of bounds is counted as a neighbor of other type
+                            #  a pixel outside of bounds is counted as a neighbor of other type
+                            #  because it basically is
                             if 0 <= i < self.field.width and 0 <= j < self.field.height:
                                 if self.field.img_arr[j][i].val != b_v:
                                     has_different_neighbor = True
@@ -845,28 +863,64 @@ class Node(Point):
                         # print("\t invalid (has only wall neighbors)")
                         continue
 
-                    #  check if wall is a valid connection to a node
-                    is_node_connection = False
-                    for node in node_struct:
-                        if p is node.boundary:
-                            if self.can_see(node, excluded_vals=[self.boundary.val]) \
-                                    or not node.reachable or not self.reachable:
-                                self.boundary_connections.append(node)
-                                is_node_connection = True
-                            break
-
-                    if is_node_connection:
-                        # print("\t invalid (is node connection)")
-                        continue
-
-                    #  this pixel can be added to the queue
+                    #  Every condition was fulfilled so this pixel can be added to the queue
                     q.append(p)
 
+            #  After valid pixels have been appended the last checked pixel has to be removed
             removed.append(q[0])
             q.pop(0)
-            #  print(q)
-        if len(self.boundary_connections) > 2:
-            print(self.boundary_connections)
+
+            """Problems: If 4 nodes surround a single pixel no Node will be added as connection
+            """
+
+    def show(self, draw, scale, show_visibles=True, show_boundary_connections=True,
+             hue=90, sat=255, lum=255):
+        """This function displays the node in the given draw object"""
+        random.seed()
+        visible_hue = random.randint(0, 255)
+        boundary_hue = random.randint(100, 360)
+
+        x_off = scale + int(scale / 2)
+        y_off = scale + int(scale / 2)
+
+        #  The upper left and bottom right corner coords of the node itself
+        coord = (
+            self.x * scale - scale / 2 + x_off, self.y * scale - scale / 2 + y_off,
+            self.x * scale + scale / 2 + x_off, self.y * scale + scale / 2 + y_off)
+
+        #  draw a rectangle at the position. Color = green if reachable; red if not
+        draw.rectangle(coord, width=scale,
+                       fill=(hue * int(self.reachable), sat, lum))
+
+        #  draw a line to it's adjacent wall
+        coord = (
+            self.x * scale + x_off, self.y * scale + y_off,
+            self.boundary.x * scale + x_off, self.boundary.y * scale + y_off)
+        #  This line is always green
+        draw.line(coord, fill=(60, 255, 255))
+
+        #  draw a number above the node to display it's position in the ordered array
+
+        draw.text((self.x * scale + x_off, self.y * scale - y_off), str(len(self.boundary_connections)), stroke_fill=2,
+                  stroke_width=2)
+
+        #  line to visibles
+        if show_visibles:
+            for visible in self.visible_nodes:
+                coord = (
+                    self.x * scale + x_off, self.y * scale + + y_off,
+                    visible.x * scale + x_off, visible.y * scale + + y_off)
+                draw.line(coord, fill=(visible_hue, 255, 255, 50))
+
+        #  line to boundaries
+        if show_boundary_connections:
+            for boundary in self.boundary_connections:
+                coord = (
+                    self.x * scale + x_off, self.y * scale + + y_off,
+                    boundary.x * scale + x_off, boundary.y * scale + + y_off)
+                draw.line(coord, fill=(boundary_hue, 255, 255, 50))
+
+        # points.append((n.x, n.y))
 
     def __str__(self):
         """Returns Node as coord including how many other nodes this node can see. For Debugging"""
@@ -900,8 +954,7 @@ class Collectible(Point):
 def main():
     print("setting up...")
 
-    mapData = MapData(img_dirs=(FieldA, FieldB), fd_dirs=FieldFD)
-
+    mapData = MapData(img_dirs=[FieldA, FieldB], fd_dirs=FieldFD)
     mapData.show(10)
 
     print(mapData)
