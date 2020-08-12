@@ -1,14 +1,10 @@
 import os.path
 import random
 import xml.etree.ElementTree as ET
-
-import numpy.linalg as la
-import numpy as np
-from numpy import arctan2, dot, cross
+from sys import setrecursionlimit
 
 import cv2
 from PIL import Image, ImageDraw
-from sys import setrecursionlimit
 
 setrecursionlimit(10000)
 
@@ -404,8 +400,8 @@ def order_nodes(nodes):
         #  as long as there are nodes to be sorted
         while len(open_nodes) > 0:
 
-            print("len of open_nodes: " + str(len(open_nodes)))
-            print("len of boundaries: " + str(len(n.boundary_connections)))
+            # print("len of open_nodes: " + str(len(open_nodes)))
+            # print("len of boundaries: " + str(len(n.boundary_connections)))
 
             #  loop over the wall_connections and get the connection that is not already ordered
             for boundary_connection in n.boundary_connections:
@@ -612,28 +608,33 @@ class MapData:
         file_content = ""
         i = 0
         for img_arr in self.img_arrs:
-            wall_str = "std::vector<Obstacle> GAME%sWALLS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Wall Polygon)
-            node_str = "std::vector<Node> GAME%sNodes = " % i  # {{x1, y1}, {x2, y2}...} (Node Objects)
-            trap_str = "std::vector<Trap> GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
-            swamp_str = "std::vector<Swamp> GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
-            bonus_area_str = "std::vector<Water> GAME%sBOMUSAREAS = " % i  # {{x1, y1}, {x2, y2}...} (Water Polygon)
-            deposit_area_str = "std::vector<std::pair<int, int>> GAME%sDEPOSITAREAS = " % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
+            wall_str = "std::vector<Obstacle>GAME%sWALLS =\t" % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Wall Polygon)
+            node_str = "std::vector<Node>GAME%sNODES =\t" % i  # {{x1, y1}, {x2, y2}...} (Node Objects)
+            trap_str = "std::vector<Trap>GAME%sTRAPS =\t" % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
+            swamp_str = "std::vector<Swamp>GAME%sSWAMPS =\t" % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
+            bonus_area_str = "std::vector<Water>GAME%sWATERS =\t" % i  # {{x1, y1}, {x2, y2}...} (Water Polygon)
+            deposit_area_str = "std::vector<std::pair<int, int>>GAME%sDEPOSITS =\t" % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
 
-            wall_str += str(self.walls[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-            node_str += str(self.wall_nodes[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-            trap_str += str(self.traps[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-            swamp_str += str(self.swamps[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-            bonus_area_str += str(self.bonus_areas[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            wall_str += str(self.walls[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
+                            .replace("}},", "}},\n\t\t\t\t") + ";"
+            node_str += str(self.wall_nodes[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
+                            .replace("}},", "}},\n\t\t\t\t") + ";"
+            trap_str += str(self.traps[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
+                            .replace("}},", "}},\n\t\t\t\t") + ";"
+            swamp_str += str(self.swamps[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
+                             .replace("}},", "}},\n\t\t\t\t") + ";"
+            bonus_area_str += str(self.bonus_areas[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
+                                  .replace("}},", "}},\n\t\t\t\t") + ";"
             deposit_area_str += str(self.deposit_areas[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
 
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
-            file_content += "/*walls*/ " + wall_str + \
-                            "\n/*nodes*/ " + node_str + \
-                            "\n/*traps*/ " + trap_str + \
-                            "\n/*swamps*/ " + swamp_str + \
-                            "\n/*Water*/ " + bonus_area_str + \
-                            "\n\n/*deposit*/ " + deposit_area_str + "\n\n"
+            file_content += "\t\t\t\t/*walls*/\n" + wall_str + \
+                            "\n\t\t\t\t/*nodes*/\n" + node_str + \
+                            "\n\t\t\t\t/*traps*/\n" + trap_str + \
+                            "\n\t\t\t\t/*swamps*/\n" + swamp_str + \
+                            "\n\t\t\t\t/*Water*/\n" + bonus_area_str + \
+                            "\n\t\t\t\t/*deposit*/\n" + deposit_area_str + "\n\n"
 
             i += 1
 

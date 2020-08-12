@@ -1,21 +1,75 @@
 #include "Pathfinder.hpp"
 
-node::node(int _x, int _y, bool _is_w, bool _is_t, bool _is_s) {
-    node::isClosed = false, node::isOpen = false,
-            // for nodes that may influence the path
-    node::isTrap = _is_t, node::isSwamp = _is_s;
-    // for nodes that cant be passed
-    node::isWall = _is_w;
+Node::Node(const Point &pos, Field *field) {
+    Node::isClosed = false, Node::isOpen = false;
+    Node::pos_ = pos;
 
-    // position
-    node::x = _x, node::y = _y;
+    // For Map building
+    Node::Field_ = field;
+
     // cost and value
-    node::g = 0, node::f = 0;
+    Node::g = 0, Node::f = 0;
+
     // used to traverse the path
-    node::previous = nullptr;
+    Node::previous = nullptr;
+    Node::neighbors = {};
 }
+
+// Node::getCost():  cost calculation from Node:: to node
+//      Input:  Node node
+//      Return: -1 <=> impossible; >=0 <=> cost
+double Node::getCost(Node &node) {
+    Line line = Line(Node::pos_, node.pos());
+    for (const auto &area : Node::Field_->getArea()) {
+        for (auto bound : area) {
+            Point intersection = line.intersects(bound);
+            if (intersection.x == -1 && intersection.y == -1) {
+                return -1;
+            }
+        }
+    }
+
+    std::vector<Point> intersections;
+    for (const auto &swamp : *Node::Swamps_) {
+        for (auto bound : swamp.bounds) {
+            Point intersection = line.intersects(bound);
+            if (intersection.x != -1 && intersection.y != -1) {
+                intersections.push_back(intersection);
+            }
+        }
+    }
+    int modifier = 1;
+    if (!intersections.empty()) {
+        for (const auto &swamp : *Node::Swamps_) {
+            if (swamp.isInside(Node::pos_)) {
+                modifier = SWAMP_SPEED_PENALITY;
+                break;
+            }
+        }
+    }
+    intersections.push_back(node.pos());
+
+    double cost = 0;
+    Point last_intersection = Node::pos_;
+    for (auto intersection : intersections) {
+        cost += modifier *
+                sqrt(pow(last_intersection.x - intersection.x, 2) + pow(last_intersection.y - intersection.y, 2));
+        modifier = (modifier == SWAMP_SPEED_PENALITY) ? 1 : SWAMP_SPEED_PENALITY;
+    }
+
+    return cost;
+}
+
+std::vector<std::pair<Node *, double>> Node::neighbors(bool traps) {
+    if (!traps) {
+        return Node::neighbors_[0];
+    } else {
+        return Node::neighbors_[1];
+    }
+}
+
 // Distance between two nodes
-double Pathfinder::heuristic(const node &cur, const node &end) {
+double Pathfinder::heuristic(const Node &cur, const Node &end) {
     int xDiff = abs(cur.x - end.x);
     int yDiff = abs(cur.y - end.y);
 

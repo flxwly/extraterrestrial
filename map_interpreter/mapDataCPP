@@ -1,272 +1,178 @@
 #include "MapData.hpp"
 
-#define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+/** ----------- **/
+/** Collectible **/
+/** ----------- **/
+
+// Collectible::Collectible(): Constructor for Collectible Class
+Collectible::Collectible(const Point &p, const unsigned short &c) {
+    Collectible::pos_ = p;
+    Collectible::color_ = c;
+}
+
+// Getter for Collectible::pos_
+Point Collectible::pos() {
+    return Collectible::pos_;
+}
+
+// Getter for Collectible::color_
+int Collectible::color() const {
+    return Collectible::color_;
+}
+
+/** ----------- **/
+/**     Line    **/
+/** ----------- **/
+
+// Line::Line(): Constructor for Line Class
+Line::Line(const Point &p1, const Point &p2) {
+    /** Set private vars **/
+    Line::p1_ = p1;
+    Line::p2_ = p2;
+}
+
+// Getter for Line::p1_
+Point Line::p1() {
+    return Line::p1_;
+}
+
+// Getter for Line::p2_
+Point Line::p2() {
+    return Line::p2_;
+}
 
 
-MapData::MapData(int mapX, int mapY,
-                 std::vector<std::pair<int, int>> *redPoints,
-                 std::vector<std::pair<int, int>> *greenPoints,
-                 std::vector<std::pair<int, int>> *blackPoints,
-                 std::vector<std::pair<int, int>> *deposits,
-                 std::vector<std::pair<int, int>> *walls,
-                 std::vector<std::pair<int, int>> *traps,
-                 std::vector<std::pair<int, int>> *swamps) {
+// Line::intersects():  Test if a line l intersects Line::
+//      Input:  Line l
+//      Return: intersection Point if existing. Otherwise {-1,-1}
+Point Line::intersects(Line &l) {
+    // line - line intersection using determinants:
+    // source: https://en.wikipedia.ord/wiki/Line%E2%%80%90line_intersection
 
-    // #########  map  ##########
-    MapData::MapX = mapX;
-    MapData::MapY = mapY;
-    for (int i = 0; i < MapX; i++) {
-        const std::vector<int> _v;
-        MapData::Map.push_back(_v);
-        for (int j = 0; j < MapY; j++) {
-            MapData::Map[i].push_back(0);
+    // determiant = x1 * y2- x2 * y1
+    int L1 = Line::p1().x * Line::p2().y - Line::p2().x * Line::p1().y;
+    int L2 = l.p1().x * l.p2().y - l.p2().x * l.p1().y;
+
+    // difs
+    int L1xdif = Line::p1().x - Line::p2().x;
+    int L1ydif = Line::p1().y - Line::p2().y;
+    int L2xdif = l.p1().x - l.p2().x;
+    int L2ydif = l.p1().y - l.p2().y;
+
+    // determiant a*d - b*c
+    double xnom = L1 * L2xdif - L2 * L1xdif;
+    double ynom = L1 * L2ydif - L2 * L2ydif;
+    double denom = L1xdif * L2ydif - L2xdif * L1ydif;
+
+    // Lines don't cross
+    if (denom == 0) {
+        return {-1, -1};
+    }
+    // return intersection
+    return {static_cast<int>(round(xnom / denom)), static_cast<int>(round(ynom / denom))};
+}
+
+/** ----------- **/
+/**     Area    **/
+/** ----------- **/
+
+// Area::Area(): Constructor for Area class
+Area::Area(const std::vector <Point> &p_s) {
+
+    // xmin = 0, ymin = 0;
+    Area::min = {65665, 65665};
+    // xmax = Infinity, ymax = Infinity;
+    Area::max = {0, 0};
+
+    Area::edges = p_s;
+    Point last_p = p_s.back();
+    for (Point p : p_s) {
+        Area::bounds_.emplace_back(last_p, p);
+        last_p = p;
+
+        // Set boundary box x
+        if (p.x < Area::min.x) {
+            Area::min.x = p.x;
         }
-    }
-    for (const std::pair<int, int> &wall : *walls) {        // walls
-        MapData::Map[wall.first][wall.second] = 1;
-    }
-    for (const std::pair<int, int> &trap : *traps) {        // traps
-        MapData::Map[trap.first][trap.second] = 2;
-    }
-    for (const std::pair<int, int> &swamp : *swamps) {      // swamps
-        MapData::Map[swamp.first][swamp.second] = 3;
-    }
-    for (const std::pair<int, int> &deposit : *deposits) {  // deposit_areas
-        MapData::DepositAreas.push_back(deposit);
-    }
-
-    // ########  points  ############
-    for (auto &redPoint : *redPoints) {                   // red_points
-        MapData::RedPoints.emplace_back(&redPoint, 0);
-    }
-    for (auto &greenPoint : *greenPoints) {
-        MapData::GreenPoints.emplace_back(&greenPoint, 1);      // green_points/cyan_points
-    }
-    for (auto &blackPoint : *blackPoints) {
-        MapData::BlackPoints.emplace_back(&blackPoint, 2);      // green_points/cyan_points
-    }
-
-    // Push everything to all_points
-    for (auto &point : MapData::RedPoints) {
-        MapData::AllPoints.push_back(&point);
-    }
-    for (auto &point : MapData::GreenPoints) {
-        MapData::AllPoints.push_back(&point);
-    }
-    for (auto &point : MapData::BlackPoints) {
-        MapData::AllPoints.push_back(&point);
-    }
-}
-
-Point *MapData::find_point(std::pair<int, int> p, const int _color) {
-    std::vector<Point> *ptr = MapData::get_ptr_to_arr(_color);
-
-    for (auto &i : *ptr) {
-        if (i.dist(p) < 5) {
-            return &i;
+        if (p.x > Area::max.x) {
+            Area::max.x = p.x;
         }
-    }
 
-    std::cerr << __FUNCTION__ << " P(" << std::to_string(p.first) << "" << std::to_string(p.second) << ") | c("
-              << std::to_string(_color) << ") is not existing";
-    return nullptr;
-}
-
-std::vector<Point> *MapData::get_ptr_to_arr(const int &_color) {
-    switch (_color) {
-        case 0:
-            return &this->RedPoints;
-        case 1:
-            return &this->GreenPoints;
-        case 2:
-            return &this->BlackPoints;
-        default:
-            std::cerr << __FUNCTION__ << " color: " << std::to_string(_color) << " is not valid";
-            return &this->RedPoints;
-    }
-}
-
-std::vector<std::pair<int, int>> MapData::getDepositAreas() {
-    return MapData::DepositAreas;
-}
-
-std::vector<Point *> MapData::getAllPoints() {
-    return MapData::AllPoints;
-}
-
-std::pair<std::vector<Point *>, std::pair<int, int>> MapData::get_path(std::array<int, 3>
-                                                                       loaded_objects, int loaded_objects_num,
-                                                                       std::pair<int, int> pos) {
-    // point array which which will later be returned
-    std::vector<Point *> point_path;
-
-    // point finding algorithm. (See Idea 4 on https://stackoverflow.com/questions/62179174)
-    //      This would be an optimal solution if there was no restriction for which points can be collected.
-
-    double b_overall_dist = -1;
-    std::pair<int, int> t_deposit_area;
-
-    for (auto deposit_area : MapData::DepositAreas) {
-
-        ERROR_MESSAGE("Next Deposit_Area")
-        std::array<int, 3> t_loaded_objects = loaded_objects;
-        int t_loaded_objects_num = loaded_objects_num;
-        // temporary array to be able to compare
-        std::vector<Point *> cur_path;
-
-        // cur_path_dist is used to decide which route to which deposit_area to pick
-        double cur_path_dist = 0;
-
-        // add upto 6 points to cur_path;
-        for (int i = t_loaded_objects_num; i < 6; ++i) {
-
-            Point *b_point = nullptr;
-            double b_f_cost = -1;
-
-            // getAllPoints() returns a vector<array<int, 3>>:
-            //      get the point with the lowest f
-            for (const auto &point : MapData::AllPoints) {
-
-                // check if the object_type is chosen less or equal to 2 times
-                if (t_loaded_objects[point->color] < 2) {
-                    // g_dist is the dist from the last chosen point to the current point
-                    double g_dist = 0;
-                    // h_dist is the distance to the deposit area
-                    double h_dist = h_dist = point->dist(deposit_area);
-
-                    if (!cur_path.empty()) {
-                        g_dist = point->dist(cur_path.back()->pos);
-                    } else {
-                        g_dist = point->dist(pos);
-                    }
-
-                    // if f_cost is lower set f_cost to cur_cost
-                    if ((g_dist + h_dist < b_f_cost || b_point == nullptr) && point->state != 0) {
-                        // ERROR_MESSAGE("Found better Point");
-                        // check if point is already in path
-                        if (std::find(cur_path.begin(), cur_path.end(), point) == cur_path.end()) {
-                            // ERROR_MESSAGE("Set new best point");
-                            b_f_cost = g_dist + h_dist;
-                            b_point = point;
-                        }
-                    }
-                }
-            }
-            // ERROR_MESSAGE("Found b_Point #" + std::to_string(b_point->color));
-            t_loaded_objects[b_point->color]++;
-            // The best point is added to the cur_path alongside with it's distance
-            if (!cur_path.empty()) {
-                cur_path_dist += b_point->dist(cur_path.back()->pos);
-            } else {
-                cur_path_dist += b_point->dist(pos);
-            }
-            cur_path.push_back(b_point);
+        // Set boundary box y
+        if (p.y < Area::min.y) {
+            Area::min.y = p.y;
         }
-        // add the dist from the last point to the deposit_area
-        cur_path_dist += cur_path.back()->dist(deposit_area);
-
-        // if the overall path length is shorter then before -> set best to cur
-        if (cur_path_dist < b_overall_dist || b_overall_dist == -1) {
-            b_overall_dist = cur_path_dist;
-
-            // this wont overfill because point_path gets set to cur_path and therefore forgets it's earlier content
-            point_path = cur_path;
-            t_deposit_area = deposit_area;
-        }
-    }
-
-    return {point_path, t_deposit_area};
-
-}
-Point *MapData::getClosestPoint(std::pair<int, int> pos) {
-    double b_dist = 0;
-    Point *b_point = nullptr;
-    for (const auto &p : MapData::getAllPoints()) {
-        if (p->dist(pos) < b_dist || b_point == nullptr) {
-            b_dist = p->dist(pos);
-            b_point = p;
-        }
-    }
-    return b_point;
-}
-
-void MapData::print(sf::RenderWindow *window) {
-
-    sf::Vector2u size = window->getSize();
-    sf::Vector2f scale = {size.x / static_cast<float> (MapData::MapX), size.y / static_cast<float> (MapData::MapY)};
-
-
-    sf::RectangleShape grid_node(sf::Vector2f(scale.x, scale.y));
-    for (unsigned int i = 0; i < MapData::MapX; i++) {
-        for (unsigned int j = 0; j < MapData::MapY; j++) {
-
-            switch (MapData::Map[i][j]) {
-                case 0:
-                    grid_node.setFillColor(sf::Color::White);
-                    break;
-                case 1:
-                    grid_node.setFillColor(sf::Color::Black);
-                    break;
-                case 2:
-                    grid_node.setFillColor(sf::Color::Yellow);
-                    break;
-                case 3:
-                    grid_node.setFillColor({166, 166, 166});    // gray
-                    break;
-                default:
-                    grid_node.setFillColor(sf::Color::Red);
-                    break;
-            }
-            grid_node.setPosition(static_cast<float> (i) * scale.x, static_cast<float> (MapData::MapY - 1 - j) * scale.y);
-            window->draw(grid_node);
-        }
-    }
-
-    // Deposit Areas
-    grid_node.setSize(sf::Vector2f(scale.x * 10, scale.y * 10));
-    grid_node.setFillColor({255, 153, 0});
-    for (auto deposit : MapData::getDepositAreas()) {
-        grid_node.setPosition(static_cast<float> (deposit.first) * scale.x,
-                              static_cast<float> (MapData::MapY - 1 - deposit.second) * scale.y);
-        window->draw(grid_node);
-    }
-
-    // Points
-    grid_node.setSize(sf::Vector2f(scale.x * 5, scale.y * 5));
-    for (auto point : MapData::AllPoints) {
-        if (point->state != 0) {
-            grid_node.setPosition(static_cast<float> (point->pos.first) * scale.x,
-                                  static_cast<float> (MapData::MapY - 1 - point->pos.second) * scale.y);
-            switch (point->color) {
-                case 0:
-                    grid_node.setFillColor(sf::Color::Red);
-                    break;
-                case 1:
-                    grid_node.setFillColor(sf::Color::Cyan);
-                    break;
-                case 2:
-                    grid_node.setFillColor({50, 50, 50});            // dark gray
-                    break;
-                default:
-                    grid_node.setFillColor(sf::Color::White);
-                    break;
-            }
-
-            window->draw(grid_node);
+        if (p.y > Area::max.y) {
+            Area::max.y = p.y;
         }
     }
 }
 
-int MapData::markPoint(std::pair<int, int> pos, int state, int c) {
-    Point *p = getClosestPoint(pos);
-    if (p->color == c) {
-        if (p->state == state) {
-            return 0;
-        } else {
-            p->state = state;
-            return 1;
-        }
-    } else {
-        return -1;
+// geometry::onSide():  Test if a point p2 is left/on/right a line through p0 and p1.
+//      Input:  Point p0, p1, p2
+//      Return: >0 left; =0 on; <0 right
+namespace geometry {
+    int onSide(Point p0, Point p1, Point p2) {
+        return ((p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y));
     }
+};
+
+// Area::isInside():  winding number test for a point in area/polygon
+//      Input:  Point p
+//      Return: wn != 0 <=> true
+bool Area::isInside(const Point &p) const {
+    // Point in Polygon(PIP) using the winding number algorithm:
+    // source: https://en.wikipedia.ord/wiki/Point_in_polygon
+
+    int wn = 0;    // the  winding number counter
+
+    std::vector <Point> poly = Area::edges;      // vector with
+    poly.push_back(poly.front());
+
+    // loop through all edges of the polygon
+    for (unsigned int i = 0; i < Area::edges.size(); i++) {     // edge from V[i] to  V[i+1]
+        if (poly[i].y <= p.y) {                                 // start y <= P.y
+            if (poly[i + 1].y > p.y)                            // an upward crossing
+                if (geometry::onSide(poly[i], poly[i + 1], p) > 0)        // P left of  edge
+                    ++wn;                                       // have  a valid up intersect
+        } else {                                                // start y > P.y (no test needed)
+            if (poly[i + 1].y <= p.y)                           // a downward crossing
+                if (geometry::onSide(poly[i], poly[i + 1], p) < 0)        // P right of  edge
+                    --wn;                                       // have  a valid down intersect
+        }
+    }
+    return wn != 0;
+}
+
+/** ----------- **/
+/**   MapData   **/
+/** ----------- **/
+
+// Field::Field(): Constructor for Field class
+Field::Field(const int &width, const int &height,
+             const std::vector <Area> &walls,
+             const std::vector <Point> &wnodes,
+             const std::vector <Area> &traps,
+             const std::vector <Point> &tnodes,
+             const std::vector <Area> &swamps,
+             const std::vector <Point> &deposits,
+             const std::vector <Area> &waters,
+             const std::vector <std::vector<Collectible>> &collectibles) {
+
+    Field::size_ = {width, height};
+
+    Field::Walls = walls;
+    Field::wNodes = wnodes;
+    Field::Traps = traps;
+    Field::tNodes = tnodes;
+    Field::Swamps = swamps;
+    Field::Deposits = deposits;
+    Field::Waters = waters;
+
+    Field::Collectibles = collectibles;
+}
+
+/** Getter for Field::size **/
+std::pair<int, int> Field::size() {
+    return Field::size_;
 }
