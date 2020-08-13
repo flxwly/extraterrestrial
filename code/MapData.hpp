@@ -11,27 +11,66 @@
 #include <array>
 #include <cmath>
 
+
 /** struct Point represents a simple Point with integer coordinates
  *          it could also be a typedef for std::pair<int, int> **/
 typedef struct {
-    /** int x, y are the coordinates of the Point**/
+    /** int x, y are the coordinates of the Point **/
     int x, y;
 } Point;
 
 
+/** class Collectible represents an object on the map that can be collected
+ *          Members of this object are generally only created upon initializing the program
+ *
+ *          A Collectible can have 3 states: -1 doesn't exist, 0 existance unknown, 1 exist
+ *          These states tell the robot if it's worth it going after a point. This is needed since not all points
+ *                          in the Field.FD file are actually visible
+ *
+ * **/
 class Collectible {
 public:
+
+    /** Collectible::Collectible(): Constructor for Collectible class
+     * Input:  Point p; int color;
+     * Return: Collectible **/
     Collectible(const Point &p, const short unsigned int &c);
 
+
+    /** Collectible::pos(): Getter method for Collectible::pos_
+     * Input:
+     * Return: Collectible::pos_ **/
     Point pos();
 
+
+    /** Collectible::color(): Getter method for Collectible::color_
+     * Input:
+     * Return: Collectible::color_ **/
     [[nodiscard]] int color() const;
 
+
+    /** Collectible::state(): Getter method for Collectible::state_
+     * Input:
+     * Return: Collectible::state_ **/
+    int state();
+
+    /** Collectible::setState(): Setter method for Collectible::state_
+     * Input: short int s;
+     * Return:  **/
+    void setState(short int s);
+
+
 private:
+    short int state_;
     Point pos_{};
     unsigned short color_;
 };
 
+
+/**
+ *
+ *
+ * **/
 class Line {
 public:
     Line(const Point &p1, const Point &p2);
@@ -201,5 +240,6 @@ private:
     Point size_;
 
 };
+
 
 #endif // !CODE_MAPDATA_HPP

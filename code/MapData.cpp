@@ -1,16 +1,17 @@
 #include "MapData.hpp"
 
 
-    /** ----------- **/
+/**     -----------     **/
 /**                     **/
 /**     Collectible     **/
 /**                     **/
-    /** ----------- **/
+/**     -----------     **/
 
 // Collectible::Collectible(): Constructor for Collectible Class
 Collectible::Collectible(const Point &p, const unsigned short &c) {
     Collectible::pos_ = p;
     Collectible::color_ = c;
+    Collectible::state_ = 0;
 }
 
 // Getter for Collectible::pos_
@@ -23,11 +24,19 @@ int Collectible::color() const {
     return Collectible::color_;
 }
 
-    /** ----------- **/
+int Collectible::state() {
+    return static_cast<int>(Collectible::state_);
+}
+
+void Collectible::setState(short s) {
+    Collectible::state_ = s;
+}
+
+/**     -----------     **/
 /**                     **/
 /**         Line        **/
 /**                     **/
-    /** ----------- **/
+/**     -----------     **/
 
 // Line::Line(): Constructor for Line Class
 Line::Line(const Point &p1, const Point &p2) {
@@ -78,11 +87,11 @@ Point Line::intersects(Line &l) {
 }
 
 
-    /** ----------- **/
+/**     -----------     **/
 /**                     **/
 /**         Area        **/
 /**                     **/
-    /** ----------- **/
+/**     -----------     **/
 
 // Area::Area(): Constructor for Area class
 Area::Area(const std::vector<Point> &p_s) {
@@ -216,11 +225,11 @@ std::vector<Line> Area::Edges() {
 }
 
 
-    /** ----------- **/
+/**     -----------     **/
 /**                     **/
 /**       MapData       **/
 /**                     **/
-    /** ----------- **/
+/**     -----------     **/
 
 
 
