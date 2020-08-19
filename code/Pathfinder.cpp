@@ -1,6 +1,6 @@
 #include "Pathfinder.hpp"
 
-Node::Node(const Point &pos, Field *field) {
+Node::Node(Point &pos, Field *field) {
     Node::isClosed = false, Node::isOpen = false;
     Node::pos_ = pos;
 
@@ -12,35 +12,36 @@ Node::Node(const Point &pos, Field *field) {
 
     // used to traverse the path
     Node::previous = nullptr;
-    Node::neighbors = {};
+    Node::neighbors_ = {};
 }
 
 // Node::getCost():  cost calculation from Node:: to node
 //      Input:  Node node
 //      Return: -1 <=> impossible; >=0 <=> cost
 double Node::getCost(Node &node) {
-    Line line = Line(Node::pos_, node.pos());
-    for (const auto &area : Node::Field_->getArea()) {
-        for (auto bound : area) {
-            Point intersection = line.intersects(bound);
-            if (intersection.x == -1 && intersection.y == -1) {
-                return -1;
-            }
-        }
-    }
 
+    // Check if a Node is visible
+    if (!Node::canSee(node, Node::Field_->MapObjects(1)))
+        return -1;
+
+    // Line
+    Line line(Node::pos_, node.pos());
+
+    // Get all swamp intersections.
     std::vector<Point> intersections;
-    for (const auto &swamp : *Node::Swamps_) {
-        for (auto bound : swamp.bounds) {
+    for (auto &swamp : Node::Field_->MapObjects(5)) {
+        for (auto bound : swamp.Edges()) {
             Point intersection = line.intersects(bound);
             if (intersection.x != -1 && intersection.y != -1) {
                 intersections.push_back(intersection);
             }
         }
     }
+
+    // A Line either enters or exits a swamp. So the Swamp_speed_penality is toggled.
     int modifier = 1;
     if (!intersections.empty()) {
-        for (const auto &swamp : *Node::Swamps_) {
+        for (auto &swamp : Node::Field_->MapObjects(5)) {
             if (swamp.isInside(Node::pos_)) {
                 modifier = SWAMP_SPEED_PENALITY;
                 break;
@@ -49,23 +50,32 @@ double Node::getCost(Node &node) {
     }
     intersections.push_back(node.pos());
 
+    // The cost that is returned at the end
     double cost = 0;
+
     Point last_intersection = Node::pos_;
     for (auto intersection : intersections) {
+
+        // add cost
         cost += modifier *
                 sqrt(pow(last_intersection.x - intersection.x, 2) + pow(last_intersection.y - intersection.y, 2));
+
+        // Toggle the modifier
         modifier = (modifier == SWAMP_SPEED_PENALITY) ? 1 : SWAMP_SPEED_PENALITY;
+
+        // set last_intersection
+        last_intersection = intersection;
     }
 
     return cost;
 }
 
-std::vector<std::pair<Node *, double>> Node::neighbors(bool traps) {
-    if (!traps) {
-        return Node::neighbors_[0];
-    } else {
-        return Node::neighbors_[1];
-    }
+std::vector<std::pair<Node *, double>> Node::neighbors() {
+    return Node::neighbors_;
+}
+
+Point Node::pos() {
+    return Node::pos_();
 }
 
 // Distance between two nodes
@@ -207,10 +217,13 @@ std::vector<std::pair<int, int>> Pathfinder::AStar(node *start, node *end, bool 
 
     return {};
 }
-std::vector<std::pair<int, int>> Pathfinder::AStar(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps) {
+
+std::vector<std::pair<int, int>>
+Pathfinder::AStar(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps) {
     return Pathfinder::AStar(&Pathfinder::map[start.first][start.second], &Pathfinder::map[end.first][end.second],
-                                watch_for_traps);
+                             watch_for_traps);
 }
+
 std::vector<node> Pathfinder::traverse(node *end) {
     // clear
     std::vector<node> t_path;
@@ -233,6 +246,7 @@ std::vector<node> Pathfinder::traverse(node *end) {
 
     return Pathfinder::shorten(t_path);
 }
+
 std::vector<node> Pathfinder::shorten(std::vector<node> t_path) {
 
     std::vector<node> f_path;
@@ -284,6 +298,7 @@ std::vector<node> Pathfinder::shorten(std::vector<node> t_path) {
 
     return f_path;
 }
+
 std::vector<std::pair<int, int>> Pathfinder::to_pair(const std::vector<node> &p) {
     std::vector<std::pair<int, int>> p_path;
     p_path.reserve(p.size());

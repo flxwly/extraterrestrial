@@ -13,9 +13,25 @@
 // By what factor the speed is reduced in swamps.
 #define SWAMP_SPEED_PENALITY 10
 
+/**
+   *  @brief A point in a 2D word used by Pathfinders
+   *
+   *  @ingroup TODO
+   *
+   *  @tparam pos   Position of Node in a 2D world.
+   *  @tparam field Field-Object a Node is working on.
+   *
+   *  A %Node can be described as anchor point in a 2D grid.
+   *  It offers functions for quick visibility checks for other
+   *  Nodes, which can even be in other 2D grids, variables to keep
+   *  track of their status in the current pathfinding problem and
+   *  a vector containing all visible nodes in the same grid together
+   *  with respective their costs.
+  */
+
 class Node {
 public:
-    Node(const Point &pos, Field *field);
+    Node(Point &pos, Field *field);
 
     // bools for list indication
     bool isClosed, isOpen;
@@ -29,15 +45,17 @@ public:
     // getter for Node::pos_
     Point pos();
 
-    // 0 = walls; 1 = walls + traps
-    std::vector<std::pair<Node *, double>> neighbors(bool traps);
+    // getter for Node::neighbors_
+    std::vector<std::pair<Node *, double>> neighbors();
 
 private:
     Point pos_{};
     Field *Field_;
-    std::array<std::vector<std::pair<Node *, double>>, 2> neighbors_; // Node / cost
+    std::vector<std::pair<Node *, double>> neighbors_; // Node / cost
 
     double getCost(Node &node);
+    bool canSee(Node &node, std::vector<Area> Obstacles);
+
 
     int getNeighbors(std::vector<std::vector<Area>> ObstacleStructs);
 

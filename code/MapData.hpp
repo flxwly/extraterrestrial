@@ -11,23 +11,42 @@
 #include <array>
 #include <cmath>
 
-
-/** struct Point represents a simple Point with integer coordinates
- *          it could also be a typedef for std::pair<int, int> **/
+/**
+   *  @brief A point in a 2D word
+   *
+   *  @ingroup TODO
+   *
+   *  @tparam x x-Position of the Point.
+   *  @tparam y y-Position of the Point.
+   *
+   *  There's no much functionality to a %Point.
+   *  It only offers simple access and storage of
+   *  an integer 2D coord. For more functionality
+   *  use std::pair<int, int>
+  */
 typedef struct {
-    /** int x, y are the coordinates of the Point **/
     int x, y;
 } Point;
 
-
-/** class Collectible represents an object on the map that can be collected
- *          Members of this object are generally only created upon initializing the program
- *
- *          A Collectible can have 3 states: -1 doesn't exist, 0 existance unknown, 1 exist
- *          These states tell the robot if it's worth it going after a point. This is needed since not all points
- *                          in the Field.FD file are actually visible
- *
- * **/
+/**
+   *  @brief A Collectible is a type of Point that can be collected by a robot.
+   *
+   *  @ingroup TODO
+   *
+   *  @tparam p Position of the Collectible.
+   *  @tparam c Color of the Collectible.
+   *
+   *  A %Collectible can be described as a Point in a 2D grid that
+   *  can be picked up by a robot in the CoSpace-Simulator environment.
+   *  It can have 3 different states that each represent a different knowledge
+   *  of the Collectible: -1 doesn't exist, 0 existence unknown, 1 exists
+   *  It offers functions for changing it's own state based on position and
+   *  rotation of robots.
+   *
+   *  @note Generally Collectibles are only created upon initializing Field-Objectrs
+   *
+   *  TODO: Collectible::setState(Point pos, int rotation)
+  */
 class Collectible {
 public:
 
@@ -68,9 +87,17 @@ private:
 
 
 /**
- *
- *
- * **/
+   *  @brief A Line connects two Points.
+   *
+   *  @ingroup TODO
+   *
+   *  @tparam p1 Position of the 1st Point.
+   *  @tparam p2 Position of the 2nd Point.
+   *
+   *  A %Line can be described as 2 Points in a 2D grid, which are connected
+   *  by a straight line. It offers a function to find out if another %Line
+   *  intersects it and where exactly it does so.
+  */
 class Line {
 public:
     Line(const Point &p1, const Point &p2);
@@ -86,38 +113,50 @@ private:
     Point p2_{};
 };
 
-
-/** class Area represents an area (lol)
- *  It contains a set of "ordered" points stored in a vector "corners". Ordered means that P[i] and P[i+1] make up one boundary.
- *                                                                              (special case for P[n] and P[0] since the polygon is closed)
- *  Additionally a vector of Lines "edges" is generated upon initializing a member of this class. This vector contains all edges of the polygon (also ordered).
- *  An Area can never be changed and is ultimately just a collection of "pseudo constant" vars and functions.
- *
- * **/
+/**
+   *  @brief An Area represents a Polygon in a 2D grid.
+   *
+   *  @ingroup TODO
+   *
+   *  @tparam p_s The Corners of the Area
+   *
+   *  An %Area can be described as a collection of Points in a 2D grid,
+   *  which are connected the way they are given by it's params
+   *                                                    (p_s[0] -> p_s[1]).
+   *  It offers a function to check wether a Point lies inside it or not
+   *
+   *  @note It is possible to create complex Areas (complex Polygons)
+   *  and the methods still work. However it is not recommended
+   *  since this can lead to logical problems in other classes/functions.
+   *  @note p_s must be an ordered list of Points otherwise the edges
+   *  are calculated wrong and the Area might give unexpected results
+  */
 class Area {
 public:
 
     /** Area::Area(): Constructor for Area class
-     * Input:  std::vector<Point> p_s
+     * Input:  std::vector<%Point> p_s
      * Return: Area */
     explicit Area(const std::vector<Point> &p_s);
 
 
-    /** Area::isInside(): calculates if a point lies inside the Area
-     * Input: Point p
-     * Return: true if point lies inside of the Area. Otherwise false */
+    /**
+     * @brief calculates if a point lies inside the Area
+     * @param p A Point
+     * @return true if point lies inside of the Area. Otherwise false
+    */
     [[nodiscard]] bool isInside(const Point &p) const;
 
-
-    /** Area::Corners(): Getter method for Area::Corners_
-     * Input:
-     * Return: std::vector<Point> Corners_ */
+    /**
+     * @brief Getter method for Area::Corners_
+     * @return std::vector<Point> Corners_
+    */
     std::vector<Point> Corners();
 
-
-    /** Area::Edges(): Getter method for Area::Edges_
-     * Input:
-     * Return: std::vector<Point> Edges_ */
+    /**
+     * @brief Getter method for Area::Edges_
+     * @return std::vector<Point> Edges_
+    */
     std::vector<Line> Edges();
 
 
