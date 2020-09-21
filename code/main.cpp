@@ -21,7 +21,6 @@ using namespace std;
 #include "MapData.hpp"
 #include "DebugTools.hpp"
 #include "Robot.hpp"
-#include "Point.hpp"
 
 #endif
 

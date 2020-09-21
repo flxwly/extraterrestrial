@@ -7,3 +7,4 @@ map_interpreter/.idea
 CMakeLists.txt
 Kackprojekt
 extraterrestrial.dll
+__pycache__/

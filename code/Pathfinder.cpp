@@ -1,18 +1,29 @@
 #include "Pathfinder.hpp"
 
+/**     -----------     **/
+/**                     **/
+/**         Node        **/
+/**                     **/
+/**     -----------     **/
+
+// Node::Node(): Constructor for Node Class
 Node::Node(Point &pos, Field *field) {
     Node::isClosed = false, Node::isOpen = false;
     Node::pos_ = pos;
-
-    // For Map building
     Node::Field_ = field;
-
-    // cost and value
     Node::g = 0, Node::f = 0;
-
-    // used to traverse the path
     Node::previous = nullptr;
     Node::neighbors_ = {};
+}
+
+// Node::neighbors(): Getter for Node::neighbors_
+std::vector<std::pair<Node *, double>> Node::neighbors() {
+    return Node::neighbors_;
+}
+
+// Node::pos(): Getter for Node::pos_
+Point Node::pos() {
+    return Node::pos_;
 }
 
 // Node::getCost():  cost calculation from Node:: to node
@@ -21,7 +32,7 @@ Node::Node(Point &pos, Field *field) {
 double Node::getCost(Node &node) {
 
     // Check if a Node is visible
-    if (!Node::canSee(node, Node::Field_->MapObjects(1)))
+    if (!Node::canSee(node, {Node::Field_->MapObjects({1})}))
         return -1;
 
     // Line
@@ -29,10 +40,10 @@ double Node::getCost(Node &node) {
 
     // Get all swamp intersections.
     std::vector<Point> intersections;
-    for (auto &swamp : Node::Field_->MapObjects(5)) {
+    for (auto &swamp : Node::Field_->MapObjects({3})) {
         for (auto bound : swamp.Edges()) {
             Point intersection = line.intersects(bound);
-            if (intersection.x != -1 && intersection.y != -1) {
+            if (intersection) {
                 intersections.push_back(intersection);
             }
         }
@@ -41,7 +52,7 @@ double Node::getCost(Node &node) {
     // A Line either enters or exits a swamp. So the Swamp_speed_penality is toggled.
     int modifier = 1;
     if (!intersections.empty()) {
-        for (auto &swamp : Node::Field_->MapObjects(5)) {
+        for (auto &swamp : Node::Field_->MapObjects({3})) {
             if (swamp.isInside(Node::pos_)) {
                 modifier = SWAMP_SPEED_PENALITY;
                 break;
@@ -56,7 +67,7 @@ double Node::getCost(Node &node) {
     Point last_intersection = Node::pos_;
     for (auto intersection : intersections) {
 
-        // add cost
+        // add cost (modifier * distance)
         cost += modifier *
                 sqrt(pow(last_intersection.x - intersection.x, 2) + pow(last_intersection.y - intersection.y, 2));
 
@@ -70,93 +81,143 @@ double Node::getCost(Node &node) {
     return cost;
 }
 
-std::vector<std::pair<Node *, double>> Node::neighbors() {
-    return Node::neighbors_;
+
+bool Node::canSee(Node &node, const std::vector<Area> &Obstacles) {
+
+    Line l1(Node::pos_, node.pos());
+    for (Area Obstacle : Obstacles) {
+        for (auto edge : Obstacle.Edges()) {
+            Point intersection = l1.intersects(edge);
+            if (!intersection)
+                return false;
+        }
+    }
+
+    return true;
 }
 
-Point Node::pos() {
-    return Node::pos_();
+int Node::getNeighbors(const std::vector<Node> &Nodes, const std::vector<Area> &Obstacles) {
+
+    for (auto node : Nodes) {
+
+        if (Node::canSee(node, Obstacles)) {
+
+            bool already_added = false;
+            for (auto neighbor : Node::neighbors_) {
+                if (neighbor.first == &node) {
+                    already_added = true;
+                    break;
+                }
+            }
+
+            if (!already_added)
+                Node::neighbors_.emplace_back(&node, Node::getCost(node));
+        }
+    }
+
+    return Node::neighbors_.size();
 }
+
+/**     -----------     **/
+/**                     **/
+/**     Pathfinder      **/
+/**                     **/
+/**     -----------     **/
+
+// Pathfinder::Pathfinder(): Constructor for Pathfinder Class
+Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) {
+
+    Pathfinder::trap_sensitive_ = trap_sensitive;
+    Pathfinder::field_ptr_ = &MAP;
+
+    std::vector<Node *> node_ptrs;
+
+    if (trap_sensitive) {
+        for (auto node_pt : MAP.Nodes({1, 2})) {
+            // create & store Node
+            Pathfinder::map.emplace_back(node_pt, &MAP);
+            // store Node ptr
+            node_ptrs.push_back(&Pathfinder::map.back());
+        }
+        // get neighbor Nodes
+        for (auto node : Pathfinder::map) {
+            //TODO: If this works; If putting Pathfinder::map as arguments lets getNeigbors work on that vector
+            // and adds correct ptrs.
+            node.getNeighbors(Pathfinder::map, MAP.MapObjects({1, 2}));
+        }
+    } else {
+        for (auto node_pt : MAP.Nodes({1})) {
+            // create & store Node
+            Pathfinder::map.emplace_back(node_pt, &MAP);
+        }
+        // get neighbor Nodes
+        for (auto node : Pathfinder::map) {
+            //TODO: If this works; If putting Pathfinder::map as arguments lets getNeigbors work on that vector
+            // and adds correct ptrs.
+            node.getNeighbors(Pathfinder::map, MAP.MapObjects({1}));
+        }
+    }
+
+
+
+
+
+}
+
 
 // Distance between two nodes
-double Pathfinder::heuristic(const Node &cur, const Node &end) {
+double Pathfinder::heuristic(const Point &cur, const Point &end) {
     int xDiff = abs(cur.x - end.x);
     int yDiff = abs(cur.y - end.y);
 
     return sqrt(pow(xDiff, 2) + pow(yDiff, 2));
 }
 
-Pathfinder::Pathfinder(const std::vector<std::vector<int>> &MAP) {
-    // copy map to Pathfinder object
-    for (unsigned int i = 0; i < MAP.size(); i++) {
-        // insert node array
-        const std::vector<node> _v;
-        Pathfinder::map.push_back(_v);
-        for (unsigned int j = 0; j < MAP[i].size(); j++) {
-            // insert node
+std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
 
-            Pathfinder::map[i].push_back(
-                    node(static_cast<int>(i), static_cast<int>(j), MAP[i][j] == 1, MAP[i][j] == 2, MAP[i][j] == 3));
+    // The most cost intensive part of this algorithm
+    //TODO: STOPPED HERE LAST TIME
 
-        }
+    Node start = Node(begin, Pathfinder::field_ptr_);
+    Node end = Node(goal, Pathfinder::field_ptr_);
+
+    if (Pathfinder::trap_sensitive_) {
+        start.getNeighbors(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
+        end.getNeighbors(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
+    } else {
+        start.getNeighbors(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
+        end.getNeighbors(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
     }
-
-    // add neighbours
-    for (unsigned int i = 0; i < Pathfinder::map.size(); i++) {
-        for (unsigned int j = 0; j < Pathfinder::map[i].size(); j++) {
-
-            for (int x = static_cast<int>(i) - 1; x <= static_cast<int>(i) + 1; x++) {
-                for (int y = static_cast<int>(j) - 1; y <= static_cast<int>(j) + 1; y++) {
-                    // out of bounds check
-                    if (x >= 0 && x < static_cast<int>(map.size()) && y >= 0 && y < static_cast<int>(map[i].size())) {
-
-                        if (!Pathfinder::map[x][y].isWall && (static_cast<int>(i) != x || static_cast<int>(j) != y)) {
-                            Pathfinder::map[i][j].neighbours.push_back(&Pathfinder::map[x][y]);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    std::cout << "created Map: " << Pathfinder::map.size() << " | " << Pathfinder::map[0].size() << std::endl;
-}
-
-bool Pathfinder::isPassable(node *_n, bool traps) {
-    return !(traps && _n->isTrap);
-}
-
-std::vector<std::pair<int, int>> Pathfinder::AStar(node *start, node *end, bool watchForTraps) {
 
     // start = end ==> no real path
-    if (start == end) {
-        return {{start->x, start->y}};
+    if (begin == goal) {
+        return {begin};
     }
 
     // init open- & closedList
-    std::priority_queue<node *, std::vector<node *>, Pathfinder::PRIORITY> openList;
-    std::vector<node *> closedList;
+    std::priority_queue<Node *, std::vector<Node *>, Pathfinder::PRIORITY> openList;
+    std::vector<Node *> closedList;
 
     // add start to openList
-    openList.push(start);
-    start->isOpen = true;
+    openList.push(&start);
+    start.isOpen = true;
     double temp_g;
 
     // update start.g & start.f
-    start->g = 0;
-    start->f = (start->g + heuristic(*start, *end));
+    start.g = 0;
+    start.f = (start.g + heuristic(start.pos(), end.pos()));
 
     // loop until soultion is found or no solution possible
     while (!openList.empty()) {
         // choose node with lowest f
-        node *cur = openList.top();
+        Node *cur = openList.top();
 
         // if cur and end are the same, the path is found
-        if (cur == end) {
+        if (cur == &end) {
 
-            std::vector<std::pair<int, int>> p_path = Pathfinder::to_pair(Pathfinder::traverse(end));
+            std::vector<Point> p_path = Pathfinder::to_point(Pathfinder::traverse(&end));
 
-            for (node *element : closedList) {
+            for (Node *element : closedList) {
                 element->isClosed = false;
             }
             while (!openList.empty()) {
@@ -172,32 +233,31 @@ std::vector<std::pair<int, int>> Pathfinder::AStar(node *start, node *end, bool 
             cur->isOpen = false;
 
             // for every neighbour from cur:
-            for (node *neighbour : cur->neighbours) {
-                if (neighbour->isClosed || !isPassable(neighbour, watchForTraps)) {
+            for (auto neighbor : cur->neighbors()) {
+                if (neighbor.first->isClosed) {
                     continue;
                 }
                 // temp_g = g cost over cur
-                // cost is multiplied if neighbour isSwamp
                 temp_g =
-                        cur->g + ((neighbour->isSwamp) ? 2 * heuristic(*cur, *neighbour) : heuristic(*cur, *neighbour));
+                        cur->g + neighbor.second;
                 // if neighbour is in openList just update | otherwise add and update
-                if (neighbour->isOpen) {
+                if (neighbor.first->isOpen) {
                     // only if path over cur is better
-                    if (neighbour->g > temp_g) {
+                    if (neighbor.first->g > temp_g) {
                         //if(!pqContainsNode(openList, neighbour) || temp_g < neighbour.g)
                         // update
-                        neighbour->g = temp_g;
-                        neighbour->f = temp_g + heuristic(*neighbour, *end);
-                        neighbour->previous = cur;
+                        neighbor.first->g = temp_g;
+                        neighbor.first->f = temp_g + heuristic(neighbor.first->pos(), end.pos());
+                        neighbor.first->previous = cur;
                         //cout << " - updated " << neighbour << " - ";
                     }
                 } else {
                     // add
-                    neighbour->g = temp_g;
-                    neighbour->f = temp_g + heuristic(*neighbour, *end);
-                    neighbour->previous = cur;
-                    openList.push(neighbour);
-                    neighbour->isOpen = true;
+                    neighbor.first->g = temp_g;
+                    neighbor.first->f = temp_g + heuristic(neighbor.first->pos(), end.pos());
+                    neighbor.first->previous = cur;
+                    openList.push(neighbor.first);
+                    neighbor.first->isOpen = true;
                     //std::cout << " - added " << neighbour << " - " << std::endl;
                 }
             }
@@ -207,7 +267,7 @@ std::vector<std::pair<int, int>> Pathfinder::AStar(node *start, node *end, bool 
         }
     }
     // resetting everything
-    for (node *element : closedList) {
+    for (Node *element : closedList) {
         element->isClosed = false;
     }
     while (!openList.empty()) {
@@ -218,35 +278,26 @@ std::vector<std::pair<int, int>> Pathfinder::AStar(node *start, node *end, bool 
     return {};
 }
 
-std::vector<std::pair<int, int>>
-Pathfinder::AStar(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps) {
-    return Pathfinder::AStar(&Pathfinder::map[start.first][start.second], &Pathfinder::map[end.first][end.second],
-                             watch_for_traps);
-}
-
-std::vector<node> Pathfinder::traverse(node *end) {
+std::vector<Node> Pathfinder::traverse(Node *end) {
     // clear
-    std::vector<node> t_path;
-    node *t_ptr;
+    std::vector<Node> t_path;
+    Node *t_ptr;
 
-    // old direction = no direction
-    std::pair<int, int> oldDirection = {0, 0};
     while (end->previous != nullptr) {
-        // if old Direction - new Direction != 0 : new Direction
-        if (oldDirection.first != end->x - end->previous->x || oldDirection.second != end->y - end->previous->y) {
-            oldDirection.first = end->x - end->previous->x;
-            oldDirection.second = end->y - end->previous->y;
-        }
+        // add
         t_path.push_back(*end);
+
+        // get next
         t_ptr = end->previous;
         end->previous = nullptr;
         end = t_ptr;
         //cout << endl << end.x << " | " << end.y;
     }
 
-    return Pathfinder::shorten(t_path);
+    return t_path;
 }
-
+// unnescessary doing
+/*
 std::vector<node> Pathfinder::shorten(std::vector<node> t_path) {
 
     std::vector<node> f_path;
@@ -298,13 +349,15 @@ std::vector<node> Pathfinder::shorten(std::vector<node> t_path) {
 
     return f_path;
 }
+*/
 
-std::vector<std::pair<int, int>> Pathfinder::to_pair(const std::vector<node> &p) {
-    std::vector<std::pair<int, int>> p_path;
+std::vector<Point> Pathfinder::to_point(const std::vector<Node> &p) {
+    std::vector<Point> p_path;
     p_path.reserve(p.size());
-    for (const node &n: p) {
-        p_path.emplace_back(n.x, n.y);
+    for (Node n: p) {
+        p_path.emplace_back(n.pos());
     }
+
     return p_path;
 }
 

@@ -24,9 +24,16 @@
    *  an integer 2D coord. For more functionality
    *  use std::pair<int, int>
   */
-typedef struct {
+class Point {
+public:
+    Point()= default;;
+    Point(int x, int y);
     int x, y;
-} Point;
+
+    friend bool operator== (const Point &p1, const Point &p2);
+    friend bool operator!= (const Point &p1, const Point &p2);
+    explicit operator bool() const;
+};
 
 /**
    *  @brief A Collectible is a type of Point that can be collected by a robot.
@@ -50,39 +57,37 @@ typedef struct {
 class Collectible {
 public:
 
-    /** Collectible::Collectible(): Constructor for Collectible class
-     * Input:  Point p; int color;
-     * Return: Collectible **/
-    Collectible(const Point &p, const short unsigned int &c);
+    Collectible(const Point &p, const int &c);
 
-
-    /** Collectible::pos(): Getter method for Collectible::pos_
-     * Input:
-     * Return: Collectible::pos_ **/
+    /**
+     * @brief Getter method for Collectible::pos_
+     * @return Collectible::pos_
+    */
     Point pos();
 
+    /**
+     * @brief Getter method for Collectible::color_
+     * @return Collectible::color_
+    */
+    int color();
 
-    /** Collectible::color(): Getter method for Collectible::color_
-     * Input:
-     * Return: Collectible::color_ **/
-    [[nodiscard]] int color() const;
-
-
-    /** Collectible::state(): Getter method for Collectible::state_
-     * Input:
-     * Return: Collectible::state_ **/
+    /**
+     * @brief Getter method for Collectible::state_
+     * @return Collectible::state_
+    */
     int state();
 
-    /** Collectible::setState(): Setter method for Collectible::state_
-     * Input: short int s;
-     * Return:  **/
-    void setState(short int s);
+    /**
+     * @brief Setter method for Collectible::state_
+     * @param int s
+    */
+    void setState(int s);
 
 
 private:
-    short int state_;
+    int state_;
     Point pos_{};
-    unsigned short color_;
+    int color_;
 };
 
 
@@ -99,19 +104,35 @@ private:
    *  intersects it and where exactly it does so.
   */
 class Line {
+
 public:
+
     Line(const Point &p1, const Point &p2);
 
+    /**
+     * @brief check if this line intersects a line l1.
+     * @param l1 A Line
+     * @return The intersection point if existing. Otherwise P{-1, -1}
+    */
     Point intersects(Line &l1);
 
+    /**
+     * @brief Getter method for Line::p1_
+     * @return Point p1_
+    */
     Point p1();
 
+    /**
+     * @brief Getter method for Line::p2_
+     * @return Point p2_
+    */
     Point p2();
 
 private:
     Point p1_{};
     Point p2_{};
 };
+
 
 /**
    *  @brief An Area represents a Polygon in a 2D grid.
@@ -134,18 +155,14 @@ private:
 class Area {
 public:
 
-    /** Area::Area(): Constructor for Area class
-     * Input:  std::vector<%Point> p_s
-     * Return: Area */
     explicit Area(const std::vector<Point> &p_s);
-
 
     /**
      * @brief calculates if a point lies inside the Area
      * @param p A Point
      * @return true if point lies inside of the Area. Otherwise false
     */
-    [[nodiscard]] bool isInside(const Point &p) const;
+    bool isInside(const Point &p);
 
     /**
      * @brief Getter method for Area::Corners_
@@ -162,27 +179,37 @@ public:
 
 private:
 
-    /** Area::Corners_: private vector that holds all Corners of the Area-polygon as ordered Points.
-     *                      Since this vector is exactly as the input in the constructor it is important
-     *                              that the given points are already ordered. There's no further check for correctness
-     *                              and the functionality might suffer from a wrong order**/
+    /**
+     * @brief private vector that holds all Corners of the Area-polygon as ordered Points.
+     * @note Since this vector is exactly as the input
+     * in the constructor it is important that the given points are already
+     * ordered. There's no further check for correctness and the functionality
+     * might suffer from a wrong order
+    */
     std::vector<Point> Corners_;
 
-
-    /** Area::Edges_: private vector that holds all Edges of the Area-polygon as ordered Lines.
-     *                      This vector is generated from the ordered points upon initialization.
-     *                              Note that the Edges are also ordered although at this point there's no function or method
-     *                              that makes use of this.**/
+    /**
+     * @brief private vector that holds all Edges of the Area-polygon as ordered Lines.
+     * @note This vector is generated from the ordered points upon initialization.
+     * Note that the Edges are also ordered although at this point there's no function or
+     * method that makes use of this.
+    */
     std::vector<Line> Edges_;
 
+    /**
+     * @brief private Points that represent either the upper right or lower left corner
+     * of a rectangle which contains all Edges of the Object.
+     * @note This is used as boundary box for pre checks if a point lies inside this box.
+    */
+    Point min_;
 
-    /** Area::(min/max)_: private Points that represent either the upper right or lower left corner of a
-     *                      rectangle which contains all Edges of the Object. This is used as boundary box for pre checks
-     *                              if a point lies inside this box.**/
-    Point min_{};
-    Point max_{};
+    /**
+     * @brief private Points that represent either the upper right or lower left corner
+     * of a rectangle which contains all Edges of the Object.
+     * @note This is used as boundary box for pre checks if a point lies inside this box.
+    */
+    Point max_;
 };
-
 
 /** class Field represents one map of the CoSpaceRescue-Sim
  *  It contains all information given by the map_interpreter.py script.
@@ -216,15 +243,15 @@ public:
 
 
     /** Field::MapObjects(): Getter method for Field::(MapObjectName)_
-     * Input:  short int index => walls - 1; traps - 2; swamps - 3; waters - 5;
+     * Input:  unsigned int index => walls - 1; traps - 2; swamps - 3; waters - 5;
      * Return: std::vector<Area> MapObject (of one type)*/
-    std::vector<Area> MapObjects(short int index);
+    std::vector<Area> MapObjects(std::vector<unsigned int> indices);
 
 
     /** Field::Nodes(): Getter method for Field::(type)Node_
-     * Input:  short int index => wallNodes - 1; trapNodes - 2;
+     * Input:  unsigned int index => wallNodes - 1; trapNodes - 2;
      * Return: std::vector<Point> Nodes (of one type)*/
-    std::vector<Point> Nodes(short int index);
+    std::vector<Point> Nodes(std::vector<unsigned int> indices);
 
     /** Field::Deposits(): Getter method for Field::Deposits_
      * Input:
@@ -232,9 +259,9 @@ public:
     std::vector<Point> Deposits();
 
     /** Field::Deposits(): Getter method for Field::Collectibles_
-     * Input:  short int index => reds - 1; cyans/greens - 2; blacks - 3
+     * Input:  unsigned int index => reds - 1; cyans/greens - 2; blacks - 3
      * Return: std::vector<Collectible> Collectibles (one type)*/
-    std::vector<Collectible> Collectibles(short int index);
+    std::vector<Collectible> Collectibles(std::vector<unsigned int> indices);
 
 private:
 
@@ -242,7 +269,7 @@ private:
      *                                                      note that deposits are Points and no MapObjects
      *                         the vectors hold members of the Area class which each represent one MapObject
      *                         A MapObject is a closed simple polygon.
-     *                         There's a "general" getter for the MapObjects: Field::MapObject(short int index); 1 <= index < 6; index != 4 **/
+     *                         There's a "general" getter for the MapObjects: Field::MapObject(int index); 1 <= index < 6; index != 4 **/
     std::vector<Area> Walls_;
     std::vector<Area> Traps_;
     std::vector<Area> Swamps_;
@@ -253,7 +280,7 @@ private:
      *                                                      note that at this point there are only Wall and Trap Nodes imported
      *                     the vector holds members of the Point class which represent Nodes.
      *                     It is inefficient to have members of the Node class instead, because they're only needed by the Pathfinder class.
-     *                     There's a general getter for the Nodes: Field::Nodes(short int index); 1 <= index < 3 **/
+     *                     There's a general getter for the Nodes: Field::Nodes(int index); 1 <= index < 3 **/
     std::vector<Point> wNodes_;
     std::vector<Point> tNodes_;
 
@@ -268,7 +295,7 @@ private:
      *                      These Collectibles represent all *possible* Collectible Points and there Position.
      *                      TODO: Check if Collectible lies inside Wall Area which means that a Collectible is not reachable and therefore can be ignored.
      *                      They're ordered the following: index = 0 <=> Red; 1 <=> Cyan/Green; 2 <=> Black
-     *                      There's a getter Method: Field::Collectibles(short int index); 0 <= index < 4 **/
+     *                      There's a getter Method: Field::Collectibles(unsigned int index); 0 <= index < 4 **/
     std::array<std::vector<Collectible>, 3> Collectibles_;
 
 
@@ -279,6 +306,14 @@ private:
     Point size_;
 
 };
+
+namespace geometry {
+    int onSide(Point p0, Point p1, Point p2);
+
+    bool isInside(const Point &p, Area &area);
+
+    Point intersects(Line &l1, Line &l2);
+}
 
 
 #endif // !CODE_MAPDATA_HPP

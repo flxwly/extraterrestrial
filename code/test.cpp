@@ -1,4 +1,4 @@
-#ifdef ddddd
+#ifdef TEST_CPP_PROGRAMM
 
 
 #include"Point.hpp"

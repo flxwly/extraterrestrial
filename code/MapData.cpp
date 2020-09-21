@@ -1,5 +1,30 @@
 #include "MapData.hpp"
 
+/**     -----------     **/
+/**                     **/
+/**        Point        **/
+/**                     **/
+/**     -----------     **/
+
+
+Point::Point(int x, int y) {
+    Point::x = x;
+    Point::y = y;
+}
+
+bool operator==(const Point &p1, const Point &p2) {
+    return p1.x == p2.x && p1.y == p2.y;
+}
+
+bool operator!=(const Point &p1, const Point &p2) {
+    return !(p1 == p2);
+}
+
+Point::operator bool() const {
+    return Point::x == -1 && Point::y == -1;
+}
+
+
 
 /**     -----------     **/
 /**                     **/
@@ -8,7 +33,7 @@
 /**     -----------     **/
 
 // Collectible::Collectible(): Constructor for Collectible Class
-Collectible::Collectible(const Point &p, const unsigned short &c) {
+Collectible::Collectible(const Point &p, const int &c) {
     Collectible::pos_ = p;
     Collectible::color_ = c;
     Collectible::state_ = 0;
@@ -20,15 +45,17 @@ Point Collectible::pos() {
 }
 
 // Getter for Collectible::color_
-int Collectible::color() const {
+int Collectible::color() {
     return Collectible::color_;
 }
 
+// Getter for Collectible::state_
 int Collectible::state() {
     return static_cast<int>(Collectible::state_);
 }
 
-void Collectible::setState(short s) {
+// Setter for Collectible::state_
+void Collectible::setState(int s) {
     Collectible::state_ = s;
 }
 
@@ -126,73 +153,7 @@ Area::Area(const std::vector<Point> &p_s) {
 }
 
 
-// namespace geometry contains important geomatric functions such as onSide, isInside or intersects.
-namespace geometry {
-    // geometry::onSide():  Test if a point p2 is left/on/right a line through p0 and p1.
-    //      Input:  Point p0, p1, p2
-    //      Return: >0 left; =0 on; <0 right
-    int onSide(Point p0, Point p1, Point p2) {
-        return ((p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y));
-    }
-
-    bool isInside(const Point &p, Area &area) {
-        // Point in Polygon(PIP) using the winding number algorithm:
-        // source: https://en.wikipedia.ord/wiki/Point_in_polygon
-
-        int wn = 0;    // the  winding number counter
-        int n = area.Corners().size(); // The number of corners
-
-
-        std::vector<Point> poly = area.Corners();      // vector with all corners + V[0] at V[n+1]
-        poly.push_back(poly.front());
-
-        // loop through all edges of the polygon
-        for (unsigned int i = 0; i < n; i++) {     // edge from V[i] to  V[i+1]
-            if (poly[i].y <= p.y) {                                 // start y <= P.y
-                if (poly[i + 1].y > p.y)                            // an upward crossing
-                    if (onSide(poly[i], poly[i + 1], p) > 0)        // P left of  edge
-                        ++wn;                                       // have  a valid up intersect
-            } else {                                                // start y > P.y (no test needed)
-                if (poly[i + 1].y <= p.y)                           // a downward crossing
-                    if (onSide(poly[i], poly[i + 1], p) < 0)        // P right of  edge
-                        --wn;                                       // have  a valid down intersect
-            }
-        }
-        return wn != 0;
-    }
-
-    Point intersects(Line &l1, Line &l2) {
-        // line - line intersection using determinants:
-        // source: https://en.wikipedia.ord/wiki/Line%E2%%80%90line_intersection
-
-        // determiant = x1 * y2- x2 * y1
-        int L1 = l1.p1().x * l1.p2().y - l1.p2().x * l1.p1().y;
-        int L2 = l2.p1().x * l2.p2().y - l2.p2().x * l2.p1().y;
-
-        // difs
-        int L1xdif = l1.p1().x - l1.p2().x;
-        int L1ydif = l1.p1().y - l1.p2().y;
-        int L2xdif = l2.p1().x - l2.p2().x;
-        int L2ydif = l2.p1().y - l2.p2().y;
-
-        // determiant a*d - b*c
-        double xnom = L1 * L2xdif - L2 * L1xdif;
-        double ynom = L1 * L2ydif - L2 * L2ydif;
-        double denom = L1xdif * L2ydif - L2xdif * L1ydif;
-
-        // Lines don't cross
-        if (denom == 0) {
-            return {-1, -1};
-        }
-        // return intersection
-        return {static_cast<int>(round(xnom / denom)), static_cast<int>(round(ynom / denom))};
-    }
-};
-
-// Area::isInside():  winding number test for a point in area/polygon
-//      Input:  Point p
-//      Return: wn != 0 <=> true
-bool Area::isInside(const Point &p) const {
+bool Area::isInside(const Point &p) {
     // Point in Polygon(PIP) using the winding number algorithm:
     // source: https://en.wikipedia.ord/wiki/Point_in_polygon
 
@@ -269,31 +230,45 @@ Point Field::size() {
 }
 
 /** Getter for Field::(MapObjectName)_ **/
-std::vector<Area> Field::MapObjects(short int index) {
-    switch (index) {
-        case 1:
-            return Field::Walls_;
-        case 2:
-            return Field::Traps_;
-        case 3:
-            return Field::Swamps_;
-        case 5:
-            return Field::Waters_;
-        default: ERROR_MESSAGE("index out of range")
-            return {};
+std::vector<Area> Field::MapObjects(std::vector<unsigned int> indices) {
+    std::vector<Area> return_vector;
+    // return after all indices have been checked.
+    while (!indices.empty()) {
+        unsigned int index = indices.back();
+        indices.pop_back();
+        switch (index) {
+            case 1:
+                return_vector.insert(std::end(return_vector), std::begin(Field::Walls_), std::end(Field::Walls_));
+            case 2:
+                return_vector.insert(std::end(return_vector), std::begin(Field::Traps_), std::end(Field::Traps_));
+            case 3:
+                return_vector.insert(std::end(return_vector), std::begin(Field::Swamps_), std::end(Field::Swamps_));
+            case 5:
+                return_vector.insert(std::end(return_vector), std::begin(Field::Waters_), std::end(Field::Waters_));
+            default: ERROR_MESSAGE("index out of range/invalid")
+        }
     }
+
+    return return_vector;
 }
 
 /** Getter for Field::(type)Nodes_ **/
-std::vector<Point> Field::Nodes(short int index) {
-    switch (index) {
-        case 1:
-            return Field::wNodes_;
-        case 2:
-            return Field::tNodes_;
-        default: ERROR_MESSAGE("index out of range")
-            return {};
+std::vector<Point> Field::Nodes(std::vector<unsigned int> indices) {
+    std::vector<Point> return_vector;
+    // return after all indices have been checked.
+    while (!indices.empty()) {
+        unsigned int index = indices.back();
+        indices.pop_back();
+        switch (index) {
+            case 1:
+                return_vector.insert(std::end(return_vector), std::begin(Field::wNodes_), std::end(Field::wNodes_));
+            case 2:
+                return_vector.insert(std::end(return_vector), std::begin(Field::tNodes_), std::end(Field::tNodes_));
+            default: ERROR_MESSAGE("index out of range/invalid")
+        }
     }
+
+    return return_vector;
 }
 
 /** Getter for Field::Collectibles_ **/
@@ -302,15 +277,97 @@ std::vector<Point> Field::Deposits() {
 }
 
 /** Getter for Field::Collectibles_ **/
-std::vector<Collectible> Field::Collectibles(short int index) {
-    switch (index) {
-        case 0:
-            return Field::Collectibles_[0];
-        case 1:
-            return Field::Collectibles_[1];
-        case 2:
-            return Field::Collectibles_[2];
-        default: ERROR_MESSAGE("index out of range")
-            return {};
+std::vector<Collectible> Field::Collectibles(std::vector<unsigned int> indices) {
+    std::vector<Collectible> return_vector;
+    // return after all indices have been checked.
+    while (!indices.empty()) {
+        unsigned int index = indices.back();
+        indices.pop_back();
+        switch (index) {
+            case 1:
+                return_vector.insert(std::end(return_vector), std::begin(Field::Collectibles_[0]),
+                                     std::end(Field::Collectibles_[0]));
+            case 2:
+                return_vector.insert(std::end(return_vector), std::begin(Field::Collectibles_[1]),
+                                     std::end(Field::Collectibles_[1]));
+            case 3:
+                return_vector.insert(std::end(return_vector), std::begin(Field::Collectibles_[2]),
+                                     std::end(Field::Collectibles_[2]));
+            default: ERROR_MESSAGE("index out of range")
+        }
     }
+    return return_vector;
 }
+
+
+
+
+/*
+ *
+ * namespace geometry
+ *
+ * */
+
+
+// geometry::onSide():  Test if a point p2 is left/on/right a line through p0 and p1.
+//      Input:  Point p0, p1, p2
+//      Return: >0 left; =0 on; <0 right
+int onSide(Point p0, Point p1, Point p2) {
+    return ((p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y));
+}
+
+
+bool isInside(const Point &p, Area &area) {
+    // Point in Polygon(PIP) using the winding number algorithm:
+    // source: https://en.wikipedia.ord/wiki/Point_in_polygon
+
+    int wn = 0;    // the  winding number counter
+    int n = area.Corners().size(); // The number of corners
+
+
+    std::vector<Point> poly = area.Corners();      // vector with all corners + V[0] at V[n+1]
+    poly.push_back(poly.front());
+
+    // loop through all edges of the polygon
+    for (unsigned int i = 0; i < n; i++) {     // edge from V[i] to  V[i+1]
+        if (poly[i].y <= p.y) {                                 // start y <= P.y
+            if (poly[i + 1].y > p.y)                            // an upward crossing
+                if (onSide(poly[i], poly[i + 1], p) > 0)        // P left of  edge
+                    ++wn;                                       // have  a valid up intersect
+        } else {                                                // start y > P.y (no test needed)
+            if (poly[i + 1].y <= p.y)                           // a downward crossing
+                if (onSide(poly[i], poly[i + 1], p) < 0)        // P right of  edge
+                    --wn;                                       // have  a valid down intersect
+        }
+    }
+    return wn != 0;
+}
+
+Point intersects(Line &l1, Line &l2) {
+    // line - line intersection using determinants:
+    // source: https://en.wikipedia.ord/wiki/Line%E2%%80%90line_intersection
+
+    // determiant = x1 * y2- x2 * y1
+    int L1 = l1.p1().x * l1.p2().y - l1.p2().x * l1.p1().y;
+    int L2 = l2.p1().x * l2.p2().y - l2.p2().x * l2.p1().y;
+
+    // difs
+    int L1xdif = l1.p1().x - l1.p2().x;
+    int L1ydif = l1.p1().y - l1.p2().y;
+    int L2xdif = l2.p1().x - l2.p2().x;
+    int L2ydif = l2.p1().y - l2.p2().y;
+
+    // determiant a*d - b*c
+    double xnom = L1 * L2xdif - L2 * L1xdif;
+    double ynom = L1 * L2ydif - L2 * L2ydif;
+    double denom = L1xdif * L2ydif - L2xdif * L1ydif;
+
+    // Lines don't cross
+    if (denom == 0) {
+        return {-1, -1};
+    }
+    // return intersection
+    return {static_cast<int>(round(xnom / denom)), static_cast<int>(round(ynom / denom))};
+}
+
+
