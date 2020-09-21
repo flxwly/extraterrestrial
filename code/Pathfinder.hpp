@@ -1,7 +1,7 @@
 #ifndef PATHFINDING_HPP
 #define PATHFINDING_HPP
 
-#include "CommonFunctions.hpp"
+#include "MapData.hpp"
 #include <utility>
 #include <vector>
 #include <algorithm>
@@ -9,16 +9,120 @@
 #include <queue>
 #include <cmath>
 
-class node {
-public:
-    node(int _x, int _y, bool _is_w, bool _is_t, bool _is_s);
+/**
+   *  @brief By what factor the speed is reduced in swamps.
+  */
+#define SWAMP_SPEED_PENALITY 10
 
+/**
+   *  @brief A point in a 2D word used by Pathfinders
+   *
+   *  @ingroup TODO
+   *
+   *  @tparam pos   Position of Node in a 2D world.
+   *  @tparam field Field-Object a Node is working on.
+   *
+   *  A %Node can be described as anchor point in a 2D grid.
+   *  It offers functions for quick visibility checks for other
+   *  Nodes, which can even be in other 2D grids, variables to keep
+   *  track of their status in the current pathfinding problem and
+   *  a vector containing all visible nodes in the same grid together
+   *  with respective their costs.
+  */
+class Node{
+public:
+    Node(Point &pos, Field *field);
+
+    /**
+     * @brief Booleans that indicate if this Node is in a special list
+     * used by the A*Pathfinding algorithm
+     * @note These variables aren't updated automatically
+    */
     bool isClosed, isOpen;
-    bool isTrap, isWall, isSwamp;
-    int x, y;
+
+    /**
+     * @brief Doubles that are used in the A*Pathfinding algorithm
+     * @note These variables aren't updated automatically
+    */
     double g, f;
-    std::vector<node *> neighbours;
-    node *previous;
+
+    /**
+     * @brief A pointer to the last visited Node. This is used
+     * by the A*Pathfinding algorithm
+     * @note This variable isn't updated automatically
+    */
+    Node *previous;
+
+    /**
+     * @brief Getter method for Node::pos_
+     * @return Point pos_
+    */
+    Point pos();
+
+    /**
+     * @brief Getter method for Node::neighbours_
+     * @return std::vector<std::pair<Node*, double>> neighbours_
+    */
+    std::vector<std::pair<Node *, double>> neighbours();
+
+    /**
+     * @brief This Method calculates a cost to a Node
+     * @param node
+     * @details This function takes visibility into account(for that it uses Node::canSee()).
+     * If this Node can't see the other Node the cost will be -1.
+     * Other wise the cost is calculated also taking swamps into account.
+    */
+    double getCost(Node &node);
+
+    /**
+     * @brief This Method checks if this Node can see a certain other Node
+     * @param node
+     * @param ObstaclesStructs A vector containing all structures that are counted
+     * as Obstacles
+    */
+    bool canSee(Node &node, const std::vector<Area>& ObstaclesStructs);
+
+    /**
+     * @brief This Method gets every neighbour and calculates the cost.
+     * @param Nodes A vector of pointers to Nodes
+     * @param ObstaclesStructs A vector containing all structures that are counted
+     * as Obstacles
+     * @return the number of existing neighbours
+     *
+     * @note Every Node in %Nodes has to be initialized before executing this Method
+    */
+    int getneighbours(const std::vector<Node>& Nodes, const std::vector<Area>& ObstacleStructs);
+
+private:
+
+    /**
+     * @brief A Point struct that stores the position of this node
+     * @note This variable could be constant and is not meant to change.
+     * However for useability reasons it's not constant.
+    */
+    Point pos_{};
+
+    /**
+     * @brief A pointer to the Field Object this Node is storred in
+     * @details This pointer can be used to find neighbours or obstacles.
+     * It is important that a node knows in which Field it is operating in.
+     *
+     * @note This variable could be constant and is not meant to change.
+     * However for useability reasons it's not constant.
+     *
+     * @attention Maybe theres a better solution to this
+    */
+    Field *Field_;
+
+    /**
+     * @brief A vector that stores all visible neighbour nodes with their
+     * respective costs.
+     * @details To optimise both speed and memory usage the A*Pathfinding
+     * works on a precalculated enviroment. This vector keeps track of
+     * neighbours and distances/costs.
+    */
+    std::vector<std::pair<Node *, double>> neighbours_; // Node / cost
+
 };
 
 
@@ -28,34 +132,31 @@ public:
 
 class Pathfinder {
 public:
-    explicit Pathfinder(const std::vector<std::vector<int>> &MAP);
+    Pathfinder(Field &MAP, bool trap_sensitive);
 
-    // the map the pathfinding works on
-    //      TODO: don't use 2d array. instead use more prepared 1d array
-    std::vector<std::vector<node>> map;
+    std::vector<Node> map;
 
     // pathfinding algorithm
-    std::vector<std::pair<int, int>> AStar(node *start, node *end, bool watchForTraps);
-    std::vector<std::pair<int, int>> AStar(std::pair<int, int> start, std::pair<int, int> end, bool watch_for_traps);
+    std::vector<Point> AStar(Point &start, Point &end);
 
 private:
+
+    bool trap_sensitive_;
+    Field* field_ptr_;
+
     struct PRIORITY {
-        bool operator()(node *child, node *parent) const {
+        bool operator()(Node *child, Node *parent) const {
             return parent->f < child->f;
         }
     };
 
-    static double heuristic(const node &cur, const node &end);
-    static bool isPassable(node *, bool traps);
+    double heuristic(const Point &cur, const Point &end);
 
     // convert previous pointers of nodes to path
-    static std::vector<node> traverse(node *end);
-
-    // shorten path
-    static std::vector<node> shorten(std::vector<node> t_path);
+    std::vector<Node> traverse(Node *end);
 
     // convert nodepath to pair
-    static std::vector<std::pair<int, int>> to_pair(const std::vector<node> &p);
+    std::vector<Point> to_point(const std::vector<Node> &p);
 };
 
 

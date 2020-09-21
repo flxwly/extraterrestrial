@@ -83,11 +83,12 @@ private:
 
     // typedef for time (basically a macro)
     typedef std::chrono::steady_clock timer;
+    std::chrono::time_point<std::chrono::steady_clock> last_cycle;
 
     // functions to collect
     std::chrono::time_point<std::chrono::steady_clock> collecting_since;
     bool should_collect();
-    void collect();
+    int collect();
 
     // functions to deposit
     std::chrono::time_point<std::chrono::steady_clock> depositing_since;
