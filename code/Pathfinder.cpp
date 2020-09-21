@@ -13,12 +13,12 @@ Node::Node(Point &pos, Field *field) {
     Node::Field_ = field;
     Node::g = 0, Node::f = 0;
     Node::previous = nullptr;
-    Node::neighbors_ = {};
+    Node::neighbours_ = {};
 }
 
-// Node::neighbors(): Getter for Node::neighbors_
-std::vector<std::pair<Node *, double>> Node::neighbors() {
-    return Node::neighbors_;
+// Node::neighbours(): Getter for Node::neighbours_
+std::vector<std::pair<Node *, double>> Node::neighbours() {
+    return Node::neighbours_;
 }
 
 // Node::pos(): Getter for Node::pos_
@@ -96,26 +96,26 @@ bool Node::canSee(Node &node, const std::vector<Area> &Obstacles) {
     return true;
 }
 
-int Node::getNeighbors(const std::vector<Node> &Nodes, const std::vector<Area> &Obstacles) {
+int Node::getneighbours(const std::vector<Node> &Nodes, const std::vector<Area> &Obstacles) {
 
     for (auto node : Nodes) {
 
         if (Node::canSee(node, Obstacles)) {
 
             bool already_added = false;
-            for (auto neighbor : Node::neighbors_) {
-                if (neighbor.first == &node) {
+            for (auto neighbour : Node::neighbours_) {
+                if (neighbour.first == &node) {
                     already_added = true;
                     break;
                 }
             }
 
             if (!already_added)
-                Node::neighbors_.emplace_back(&node, Node::getCost(node));
+                Node::neighbours_.emplace_back(&node, Node::getCost(node));
         }
     }
 
-    return Node::neighbors_.size();
+    return Node::neighbours_.size();
 }
 
 /**     -----------     **/
@@ -139,29 +139,24 @@ Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) {
             // store Node ptr
             node_ptrs.push_back(&Pathfinder::map.back());
         }
-        // get neighbor Nodes
+        // get neighbour Nodes
         for (auto node : Pathfinder::map) {
             //TODO: If this works; If putting Pathfinder::map as arguments lets getNeigbors work on that vector
             // and adds correct ptrs.
-            node.getNeighbors(Pathfinder::map, MAP.MapObjects({1, 2}));
+            node.getneighbours(Pathfinder::map, MAP.MapObjects({1, 2}));
         }
     } else {
         for (auto node_pt : MAP.Nodes({1})) {
             // create & store Node
             Pathfinder::map.emplace_back(node_pt, &MAP);
         }
-        // get neighbor Nodes
+        // get neighbour Nodes
         for (auto node : Pathfinder::map) {
             //TODO: If this works; If putting Pathfinder::map as arguments lets getNeigbors work on that vector
             // and adds correct ptrs.
-            node.getNeighbors(Pathfinder::map, MAP.MapObjects({1}));
+            node.getneighbours(Pathfinder::map, MAP.MapObjects({1}));
         }
     }
-
-
-
-
-
 }
 
 
@@ -182,11 +177,11 @@ std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
     Node end = Node(goal, Pathfinder::field_ptr_);
 
     if (Pathfinder::trap_sensitive_) {
-        start.getNeighbors(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
-        end.getNeighbors(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
+        start.getneighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
+        end.getneighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
     } else {
-        start.getNeighbors(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
-        end.getNeighbors(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
+        start.getneighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
+        end.getneighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
     }
 
     // start = end ==> no real path
@@ -233,31 +228,31 @@ std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
             cur->isOpen = false;
 
             // for every neighbour from cur:
-            for (auto neighbor : cur->neighbors()) {
-                if (neighbor.first->isClosed) {
+            for (auto neighbour : cur->neighbours()) {
+                if (neighbour.first->isClosed) {
                     continue;
                 }
                 // temp_g = g cost over cur
                 temp_g =
-                        cur->g + neighbor.second;
+                        cur->g + neighbour.second;
                 // if neighbour is in openList just update | otherwise add and update
-                if (neighbor.first->isOpen) {
+                if (neighbour.first->isOpen) {
                     // only if path over cur is better
-                    if (neighbor.first->g > temp_g) {
+                    if (neighbour.first->g > temp_g) {
                         //if(!pqContainsNode(openList, neighbour) || temp_g < neighbour.g)
                         // update
-                        neighbor.first->g = temp_g;
-                        neighbor.first->f = temp_g + heuristic(neighbor.first->pos(), end.pos());
-                        neighbor.first->previous = cur;
+                        neighbour.first->g = temp_g;
+                        neighbour.first->f = temp_g + heuristic(neighbour.first->pos(), end.pos());
+                        neighbour.first->previous = cur;
                         //cout << " - updated " << neighbour << " - ";
                     }
                 } else {
                     // add
-                    neighbor.first->g = temp_g;
-                    neighbor.first->f = temp_g + heuristic(neighbor.first->pos(), end.pos());
-                    neighbor.first->previous = cur;
-                    openList.push(neighbor.first);
-                    neighbor.first->isOpen = true;
+                    neighbour.first->g = temp_g;
+                    neighbour.first->f = temp_g + heuristic(neighbour.first->pos(), end.pos());
+                    neighbour.first->previous = cur;
+                    openList.push(neighbour.first);
+                    neighbour.first->isOpen = true;
                     //std::cout << " - added " << neighbour << " - " << std::endl;
                 }
             }

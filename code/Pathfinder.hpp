@@ -60,10 +60,10 @@ public:
     Point pos();
 
     /**
-     * @brief Getter method for Node::neighbors_
-     * @return std::vector<std::pair<Node*, double>> neighbors_
+     * @brief Getter method for Node::neighbours_
+     * @return std::vector<std::pair<Node*, double>> neighbours_
     */
-    std::vector<std::pair<Node *, double>> neighbors();
+    std::vector<std::pair<Node *, double>> neighbours();
 
     /**
      * @brief This Method calculates a cost to a Node
@@ -83,15 +83,15 @@ public:
     bool canSee(Node &node, const std::vector<Area>& ObstaclesStructs);
 
     /**
-     * @brief This Method gets every Neighbor and calculates the cost.
+     * @brief This Method gets every neighbour and calculates the cost.
      * @param Nodes A vector of pointers to Nodes
      * @param ObstaclesStructs A vector containing all structures that are counted
      * as Obstacles
-     * @return the number of existing neighbors
+     * @return the number of existing neighbours
      *
      * @note Every Node in %Nodes has to be initialized before executing this Method
     */
-    int getNeighbors(const std::vector<Node>& Nodes, const std::vector<Area>& ObstacleStructs);
+    int getneighbours(const std::vector<Node>& Nodes, const std::vector<Area>& ObstacleStructs);
 
 private:
 
@@ -104,7 +104,7 @@ private:
 
     /**
      * @brief A pointer to the Field Object this Node is storred in
-     * @details This pointer can be used to find neighbors or obstacles.
+     * @details This pointer can be used to find neighbours or obstacles.
      * It is important that a node knows in which Field it is operating in.
      *
      * @note This variable could be constant and is not meant to change.
@@ -115,13 +115,13 @@ private:
     Field *Field_;
 
     /**
-     * @brief A vector that stores all visible neighbor nodes with their
+     * @brief A vector that stores all visible neighbour nodes with their
      * respective costs.
      * @details To optimise both speed and memory usage the A*Pathfinding
      * works on a precalculated enviroment. This vector keeps track of
-     * neighbors and distances/costs.
+     * neighbours and distances/costs.
     */
-    std::vector<std::pair<Node *, double>> neighbors_; // Node / cost
+    std::vector<std::pair<Node *, double>> neighbours_; // Node / cost
 
 };
 
