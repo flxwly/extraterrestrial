@@ -1,14 +1,15 @@
-import xml.etree.ElementTree as ET
-from sys import setrecursionlimit
-from cv2 import resize, imread, INTER_NEAREST, imshow
-from os import path
 import random
+import xml.etree.ElementTree as ET
+from os import path
+from sys import setrecursionlimit
+
 from PIL import Image, ImageDraw
+from cv2 import resize, imread, INTER_NEAREST
 
 setrecursionlimit(10000)
 
 # 1 is max detail
-detail = 0.5
+detail = 1
 
 # for old CoSpace Versions
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
@@ -24,6 +25,13 @@ if cospace_version == "2.6.2":
     FieldFD = ET.parse("../../../../../store/media/CS.C/RSC/Map/Design/Field.FD")
 
 FieldFD = FieldFD.getroot()
+
+
+def convert_arr_to_area_vector_string(arr):
+    if len(arr) == 0:
+        return "{}"
+    return "{\n\t" + str(arr).replace("[", "{").replace("]", "}").replace(" ", "").replace("{{{", "{{") \
+        .replace("}},", "}}),\n\t").replace("{{", "Area({{").replace("}}}", "}})}") + ";"
 
 
 def find_color_points(world, worldnr):
@@ -349,7 +357,7 @@ class FieldObject:
 
             # convert the Image into pixels
             self.img_arr = [[Pixel(self, i, j, t_img[j][i]) for i in range(len(t_img[j]))] for j in
-                            range(len(t_img))]  # TODO: Add support for more specific files
+                            range(len(t_img))]
 
             # set the dimensions
             self.width = len(self.img_arr[0])
@@ -750,29 +758,25 @@ class MapData:
         file_content = ""
         i = 0
         for img_arr in self.img_arrs:
-            wall_str = "std::vector<Area>GAME%sWALLS =\t" % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Wall Polygon)
-            trap_str = "std::vector<Area>GAME%sTRAPS =\t" % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
-            swamp_str = "std::vector<Area>GAME%sSWAMPS =\t" % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
-            bonus_area_str = "std::vector<Area>GAME%sWATERS =\t" % i  # {{x1, y1}, {x2, y2}...} (Water Polygon)
-            deposit_area_str = "std::vector<Point>GAME%sDEPOSITS =\t" % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
+            wall_str = "std::vector<Area>GAME%sWALLS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Wall Polygon)
+            trap_str = "std::vector<Area>GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
+            swamp_str = "std::vector<Area>GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
+            bonus_area_str = "std::vector<Area>GAME%sWATERS = " % i  # {{x1, y1}, {x2, y2}...} (Water Polygon)
+            deposit_area_str = "std::vector<Point>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
 
-            wall_str += str(self.map_objects[i][0]).replace("[", "{").replace("]", "}").replace(" ", "") \
-                            .replace("}},", "}},\n\t\t\t\t") + ";"
-            trap_str += str(self.map_objects[i][1]).replace("[", "{").replace("]", "}").replace(" ", "") \
-                            .replace("}},", "}},\n\t\t\t\t") + ";"
-            swamp_str += str(self.map_objects[i][2]).replace("[", "{").replace("]", "}").replace(" ", "") \
-                             .replace("}},", "}},\n\t\t\t\t") + ";"
-            bonus_area_str += str(self.map_objects[i][4]).replace("[", "{").replace("]", "}").replace(" ", "") \
-                                  .replace("}},", "}},\n\t\t\t\t") + ";"
+            wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
+            trap_str += convert_arr_to_area_vector_string(self.map_objects[i][1])
+            swamp_str += convert_arr_to_area_vector_string(self.map_objects[i][2])
             deposit_area_str += str(self.map_objects[i][3]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            bonus_area_str += convert_arr_to_area_vector_string(self.map_objects[i][4])
 
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
-            file_content += "\t\t\t\t/*walls*/\n" + wall_str + \
-                            "\n\t\t\t\t/*traps*/\n" + trap_str + \
-                            "\n\t\t\t\t/*swamps*/\n" + swamp_str + \
-                            "\n\t\t\t\t/*Water*/\n" + bonus_area_str + \
-                            "\n\t\t\t\t/*deposit*/\n" + deposit_area_str + "\n\n"
+            file_content += "\t\t/*walls*/\n" + wall_str + \
+                            "\n\t\t/*traps*/\n" + trap_str + \
+                            "\n\t\t/*swamps*/\n" + swamp_str + \
+                            "\n\t\t/*Water*/\n" + bonus_area_str + \
+                            "\n\t\t/*deposit*/\n" + deposit_area_str + "\n\n"
 
             i += 1
 
@@ -786,7 +790,27 @@ def main():
     mapData = MapData(img_dirs=[FieldA, FieldB], fd_dirs=FieldFD)
     mapData.show(10)
 
-    print(mapData)
+    begin = "\n\n\n" \
+            "//   _______                _____          __\n" \
+            "//  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
+            "//  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
+            "//  |__|_|__||___._||   __||_____/ |___._||____||___._|\n" \
+            "//                  |__|\n"
+
+    f = open("../code/MapData.cpp")
+    content = f.read()
+    f.close()
+    content_data = content.split(begin)
+    if len(content_data) == 2:
+        content_data[1] = begin + "\n\n\n" + str(mapData)
+    else:
+        content_data.append(begin + "\n\n\n" + str(mapData))
+
+    data = "".join(content_data)
+
+    f = open("../code/MapData.cpp", "w")
+    f.write(data)
+    f.close()
 
 
 if __name__ == '__main__':
