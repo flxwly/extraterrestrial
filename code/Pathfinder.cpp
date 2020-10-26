@@ -355,7 +355,3 @@ std::vector<Point> Pathfinder::to_point(const std::vector<Node> &p) {
 
     return p_path;
 }
-
-
-
-
