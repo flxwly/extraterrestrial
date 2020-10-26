@@ -96,11 +96,11 @@ bool Node::canSee(Node &node, const std::vector<Area> &Obstacles) {
     return true;
 }
 
-int Node::getneighbours(const std::vector<Node> &Nodes, const std::vector<Area> &Obstacles) {
+int Node::getNeighbours(const std::vector<Node> &Nodes, const std::vector<Area> &ObstacleStructs) {
 
     for (auto node : Nodes) {
 
-        if (Node::canSee(node, Obstacles)) {
+        if (Node::canSee(node, ObstacleStructs)) {
 
             bool already_added = false;
             for (auto neighbour : Node::neighbours_) {
@@ -143,7 +143,7 @@ Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) {
         for (auto node : Pathfinder::map) {
             //TODO: If this works; If putting Pathfinder::map as arguments lets getNeigbors work on that vector
             // and adds correct ptrs.
-            node.getneighbours(Pathfinder::map, MAP.MapObjects({1, 2}));
+            node.getNeighbours(Pathfinder::map, MAP.MapObjects({1, 2}));
         }
     } else {
         for (auto node_pt : MAP.Nodes({1})) {
@@ -154,7 +154,7 @@ Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) {
         for (auto node : Pathfinder::map) {
             //TODO: If this works; If putting Pathfinder::map as arguments lets getNeigbors work on that vector
             // and adds correct ptrs.
-            node.getneighbours(Pathfinder::map, MAP.MapObjects({1}));
+            node.getNeighbours(Pathfinder::map, MAP.MapObjects({1}));
         }
     }
 }
@@ -177,11 +177,11 @@ std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
     Node end = Node(goal, Pathfinder::field_ptr_);
 
     if (Pathfinder::trap_sensitive_) {
-        start.getneighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
-        end.getneighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
+        start.getNeighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
+        end.getNeighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
     } else {
-        start.getneighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
-        end.getneighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
+        start.getNeighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
+        end.getNeighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
     }
 
     // start = end ==> no real path

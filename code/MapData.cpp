@@ -152,29 +152,8 @@ Area::Area(const std::vector<Point> &p_s) {
     }
 }
 
-
 bool Area::isInside(const Point &p) {
-    // Point in Polygon(PIP) using the winding number algorithm:
-    // source: https://en.wikipedia.ord/wiki/Point_in_polygon
-
-    int wn = 0;    // the  winding number counter
-
-    std::vector<Point> poly = Area::Corners_;      // vector with
-    poly.push_back(poly.front());
-
-    // loop through all edges of the polygon
-    for (unsigned int i = 0; i < Area::Corners_.size(); i++) {     // edge from V[i] to  V[i+1]
-        if (poly[i].y <= p.y) {                                 // start y <= P.y
-            if (poly[i + 1].y > p.y)                            // an upward crossing
-                if (geometry::onSide(poly[i], poly[i + 1], p) > 0)        // P left of  edge
-                    ++wn;                                       // have  a valid up intersect
-        } else {                                                // start y > P.y (no test needed)
-            if (poly[i + 1].y <= p.y)                           // a downward crossing
-                if (geometry::onSide(poly[i], poly[i + 1], p) < 0)        // P right of  edge
-                    --wn;                                       // have  a valid down intersect
-        }
-    }
-    return wn != 0;
+    return geometry::isInside(p, *this);
 }
 
 std::vector<Point> Area::Corners() {
@@ -188,7 +167,7 @@ std::vector<Line> Area::Edges() {
 
 /**     -----------     **/
 /**                     **/
-/**       MapData       **/
+/**        Field        **/
 /**                     **/
 /**     -----------     **/
 
@@ -369,5 +348,3 @@ Point intersects(Line &l1, Line &l2) {
     // return intersection
     return {static_cast<int>(round(xnom / denom)), static_cast<int>(round(ynom / denom))};
 }
-
-

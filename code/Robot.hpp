@@ -9,7 +9,7 @@
 #include <ctime>
 #include <chrono>
 #include <array>
-#include "CommonFunctions.hpp"
+#include "libs/CommonFunctions.hpp"
 #include "ColorRecognition.hpp"
 #include "MapData.hpp"
 #include "Pathfinder.hpp"

@@ -91,7 +91,7 @@ public:
      *
      * @note Every Node in %Nodes has to be initialized before executing this Method
     */
-    int getneighbours(const std::vector<Node>& Nodes, const std::vector<Area>& ObstacleStructs);
+    int getNeighbours(const std::vector<Node>& Nodes, const std::vector<Area>& ObstacleStructs);
 
 private:
 

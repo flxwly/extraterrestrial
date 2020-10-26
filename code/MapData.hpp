@@ -315,5 +315,6 @@ namespace geometry {
     Point intersects(Line &l1, Line &l2);
 }
 
+extern std::vector<Area>GAME0WALLS;
 
 #endif // !CODE_MAPDATA_HPP

@@ -12,14 +12,14 @@
 using namespace std;
 
 #include "CoSpaceFunctions.hpp"
-#include "CommonFunctions.hpp"
+#include "libs/CommonFunctions.hpp"
 #include "ColorRecognition.hpp"
 
 
 // Classes
 #include "Pathfinder.hpp"
 #include "MapData.hpp"
-#include "DebugTools.hpp"
+#include "libs/DebugTools.hpp"
 #include "Robot.hpp"
 
 #endif
@@ -42,8 +42,7 @@ void updateHSL() {
     DEBUG_MESSAGE("finished updating HSL \n", 3);
 }
 
-MapData GAME0(240, 180, &GAME0REDPOINTS, &GAME0GREENPOINTS, &GAME0BLACKPOINTS, &GAME0DEPOSITAREAS, &GAME0WALLS,
-              &GAME0TRAPS, &GAME0SWAMPS);
+Field GAME0();
 
 MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &GAME1DEPOSITAREAS, &GAME1WALLS,
               &GAME1TRAPS, &GAME1SWAMPS);

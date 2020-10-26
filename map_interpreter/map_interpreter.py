@@ -606,35 +606,42 @@ class MapData:
 
     def __str__(self):
         file_content = ""
+        file_content += "/**     -----------     **/\n" \
+                        "/**                     **/\n" \
+                        "/**       MapData       **/\n" \
+                        "/**                     **/\n" \
+                        "/**     -----------     **/\n\n"
+
+
         i = 0
         for img_arr in self.img_arrs:
-            wall_str = "std::vector<Obstacle>GAME%sWALLS =\t" % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Wall Polygon)
-            node_str = "std::vector<Node>GAME%sNODES =\t" % i  # {{x1, y1}, {x2, y2}...} (Node Objects)
-            trap_str = "std::vector<Trap>GAME%sTRAPS =\t" % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
-            swamp_str = "std::vector<Swamp>GAME%sSWAMPS =\t" % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
-            bonus_area_str = "std::vector<Water>GAME%sWATERS =\t" % i  # {{x1, y1}, {x2, y2}...} (Water Polygon)
-            deposit_area_str = "std::vector<std::pair<int, int>>GAME%sDEPOSITS =\t" % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
+            wall_str = "std::vector<Area>GAME%sWALLS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Wall Polygon)
+            node_str = "std::vector<Point>GAME%sNODES = " % i  # {{x1, y1}, {x2, y2}...} (Node Objects)
+            trap_str = "std::vector<Area>GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
+            swamp_str = "std::vector<Area>GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
+            bonus_area_str = "std::vector<Area>GAME%sWATERS = " % i  # {{x1, y1}, {x2, y2}...} (Water Polygon)
+            deposit_area_str = "std::vector<Point>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (# Single Deposit_Area points)
 
             wall_str += str(self.walls[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
-                            .replace("}},", "}},\n\t\t\t\t") + ";"
+                            .replace("}},", "}},\n\t") + ";"
             node_str += str(self.wall_nodes[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
-                            .replace("}},", "}},\n\t\t\t\t") + ";"
+                            .replace("}},", "}},\n\t") + ";"
             trap_str += str(self.traps[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
-                            .replace("}},", "}},\n\t\t\t\t") + ";"
+                            .replace("}},", "}},\n\t") + ";"
             swamp_str += str(self.swamps[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
-                             .replace("}},", "}},\n\t\t\t\t") + ";"
+                             .replace("}},", "}},\n\t") + ";"
             bonus_area_str += str(self.bonus_areas[i]).replace("[", "{").replace("]", "}").replace(" ", "") \
-                                  .replace("}},", "}},\n\t\t\t\t") + ";"
+                                  .replace("}},", "}},\n\t") + ";"
             deposit_area_str += str(self.deposit_areas[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
 
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
-            file_content += "\t\t\t\t/*walls*/\n" + wall_str + \
-                            "\n\t\t\t\t/*nodes*/\n" + node_str + \
-                            "\n\t\t\t\t/*traps*/\n" + trap_str + \
-                            "\n\t\t\t\t/*swamps*/\n" + swamp_str + \
-                            "\n\t\t\t\t/*Water*/\n" + bonus_area_str + \
-                            "\n\t\t\t\t/*deposit*/\n" + deposit_area_str + "\n\n"
+            file_content += "\t\t/*walls*/\n" + wall_str + \
+                            "\n\t\t/*nodes*/\n" + node_str + \
+                            "\n\t\t/*traps*/\n" + trap_str + \
+                            "\n\t\t/*swamps*/\n" + swamp_str + \
+                            "\n\t\t/*Water*/\n" + bonus_area_str + \
+                            "\n\t\t/*deposit*/\n" + deposit_area_str + "\n\n"
 
             i += 1
 
@@ -963,3 +970,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    exit()
