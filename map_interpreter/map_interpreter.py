@@ -9,7 +9,7 @@ from cv2 import resize, imread, INTER_NEAREST
 setrecursionlimit(10000)
 
 # 1 is max detail
-detail = 1
+detail = 0.5
 
 # for old CoSpace Versions
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
@@ -29,7 +29,7 @@ FieldFD = FieldFD.getroot()
 
 def convert_arr_to_area_vector_string(arr):
     if len(arr) == 0:
-        return "{}"
+        return "{};"
     return "{\n\t" + str(arr).replace("[", "{").replace("]", "}").replace(" ", "").replace("{{{", "{{") \
         .replace("}},", "}}),\n\t").replace("{{", "Area({{").replace("}}}", "}})}") + ";"
 
@@ -672,6 +672,7 @@ class MapData:
         print("Creating MapData-Object...")
 
         self.map_objects = []
+        self.map_objects_nodes = []
 
         self.img_arrs = []  # collection of ImageArray objects
 
@@ -696,6 +697,11 @@ class MapData:
                 [],  # swamps
                 [],  # deposits
                 []  # waters
+            ]
+
+            temp_map_objects_nodes = [
+                [],  # walls
+                [],  # traps
             ]
 
             for j in range(img_arr.height):
@@ -723,7 +729,14 @@ class MapData:
                 else:
                     temp_map_objects[3] = [img_arr.avg(deposit) for deposit in temp_map_objects[3]]
 
+            for i in [0, 1]:
+                for obj in temp_map_objects[i]:
+                    for c in obj:
+                        if c.match[1].field:
+                            temp_map_objects_nodes[i].append(c.match[1])
+
             self.map_objects.append(temp_map_objects)
+            self.map_objects_nodes.append(temp_map_objects_nodes)
 
             print("\tfinished")
 
@@ -758,11 +771,13 @@ class MapData:
         file_content = ""
         i = 0
         for img_arr in self.img_arrs:
-            wall_str = "std::vector<Area>GAME%sWALLS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Wall Polygon)
-            trap_str = "std::vector<Area>GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Trap Polygon)
-            swamp_str = "std::vector<Area>GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Swamp Polygon)
-            bonus_area_str = "std::vector<Area>GAME%sWATERS = " % i  # {{x1, y1}, {x2, y2}...} (Water Polygon)
-            deposit_area_str = "std::vector<Point>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single Deposit_Area points)
+            wall_str = "const std::vector<Area>GAME%sWALLS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
+            trap_str = "const std::vector<Area>GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
+            swamp_str = "const std::vector<Area>GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Polygon)
+            bonus_area_str = "const std::vector<Area>GAME%sWATERS = " % i  # {{x1, y1}, {x2, y2}...} (Polygon)
+            deposit_area_str = "const std::vector<Point>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            wall_nodes_str = "const std::vector<Point>GAME%sWALLNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            trap_nodes_str = "const std::vector<Point>GAME%sTRAPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
 
             wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
             trap_str += convert_arr_to_area_vector_string(self.map_objects[i][1])
@@ -770,13 +785,21 @@ class MapData:
             deposit_area_str += str(self.map_objects[i][3]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
             bonus_area_str += convert_arr_to_area_vector_string(self.map_objects[i][4])
 
+            wall_nodes_str += str(self.map_objects_nodes[i][0]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
             file_content += "\t\t/*walls*/\n" + wall_str + \
                             "\n\t\t/*traps*/\n" + trap_str + \
                             "\n\t\t/*swamps*/\n" + swamp_str + \
                             "\n\t\t/*Water*/\n" + bonus_area_str + \
-                            "\n\t\t/*deposit*/\n" + deposit_area_str + "\n\n"
+                            "\n\t\t/*deposit*/\n" + deposit_area_str
+
+            file_content += "\n\n\t//------ Nodes ------//\n"
+
+            file_content += "\t\t/*wall_nodes*/\n" + wall_nodes_str + \
+                            "\n\t\t/*trap_nodes*/\n" + trap_nodes_str + "\n\n"
 
             i += 1
 
@@ -788,14 +811,14 @@ def main():
 
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
     mapData = MapData(img_dirs=[FieldA, FieldB], fd_dirs=FieldFD)
-    mapData.show(10)
+    # mapData.show(10)
 
     begin = "\n\n\n" \
-            "//   _______                _____          __\n" \
-            "//  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
-            "//  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
-            "//  |__|_|__||___._||   __||_____/ |___._||____||___._|\n" \
-            "//                  |__|\n"
+            "///   _______                _____          __\n" \
+            "///  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
+            "///  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
+            "///  |__|_|__||___._||   __||_____/ |___._||____||___._|\n" \
+            "///                  |__|\n"
 
     f = open("../code/MapData.cpp")
     content = f.read()
@@ -811,7 +834,8 @@ def main():
     f = open("../code/MapData.cpp", "w")
     f.write(data)
     f.close()
-
+    for n in mapData.map_objects_nodes:
+        print(n)
 
 if __name__ == '__main__':
     main()

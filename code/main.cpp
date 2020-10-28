@@ -42,13 +42,10 @@ void updateHSL() {
     DEBUG_MESSAGE("finished updating HSL \n", 3);
 }
 
-Field GAME0();
+Field GAME0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS, GAME0WALLNODES, GAME0TRAPNODES, GAME0COLLECTIBLES);
 
-MapData GAME1(360, 270, &GAME1REDPOINTS, &GAME1GREENPOINTS, &GAME1BLACKPOINTS, &GAME1DEPOSITAREAS, &GAME1WALLS,
-              &GAME1TRAPS, &GAME1SWAMPS);
-Pathfinder PathfinderGame0(GAME0.Map);
+Field GAME1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS, GAME1WALLNODES, GAME1TRAPNODES, GAME1COLLECTIBLES);
 
-Pathfinder PathfinderGame1(GAME1.Map);
 
 sf::RenderWindow *CC = nullptr;
 sf::Font *unbutton = nullptr;
@@ -57,7 +54,7 @@ Robot Bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperOb
           &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
           &US_Left, &US_Front, &US_Right,
           &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time,
-          &GAME0, &GAME1, &PathfinderGame0, &PathfinderGame1);
+          &GAME0, &GAME1);
 
 void Setup() {
     system("cls");
@@ -168,7 +165,7 @@ void Game1_Debug() {
 
     // Vars for drawing on map
     sf::Vector2u size = CC->getSize();
-    sf::Vector2f scale = {size.x / static_cast<float> (GAME1.MapX), size.y / static_cast<float> (GAME1.MapY)};
+    sf::Vector2f scale = {size.x / static_cast<float> (GAME1.getSize().x), size.y / static_cast<float> (GAME1.getSize().y)};
     sf::RectangleShape block(sf::Vector2f(scale.x, scale.y));
 
     //##########//
@@ -184,7 +181,7 @@ void Game1_Debug() {
     CC->draw(label);
 
     // MapData
-    GAME1.print(CC);
+    //GAME1.print(CC);
 
     // Path
     block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
@@ -192,9 +189,9 @@ void Game1_Debug() {
     sf::VertexArray path_lines;
     for (const auto &path : Bot.complete_path) {
         for (auto point : path) {
-            path_lines.append({sf::Vector2f(static_cast<float> (point.first) * scale.x, static_cast<float> (GAME1.MapY - 1 - point.second) *scale.y), sf::Color::Red});
+            path_lines.append({sf::Vector2f(static_cast<float> (point.first) * scale.x, static_cast<float> (GAME1.getSize().y - 1 - point.second) *scale.y), sf::Color::Red});
             block.setPosition(static_cast<float> (point.first) * scale.x,
-                              static_cast<float> (GAME1.MapY - 1 - point.second) * scale.y);
+                              static_cast<float> (GAME1.getSize().y - 1 - point.second) * scale.y);
             CC->draw(block);
         }
         block.setFillColor({160, 0, 255});       // purple
@@ -206,7 +203,7 @@ void Game1_Debug() {
     block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
     block.setFillColor({140, 30, 0});             // dark red / brown
     block.setPosition(static_cast<float> (PositionX) * scale.x,
-                      static_cast<float> (GAME1.MapY - 1 - PositionY) * scale.y);
+                      static_cast<float> (GAME1.getSize().y - 1 - PositionY) * scale.y);
     CC->draw(block);
 
 

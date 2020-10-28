@@ -8,114 +8,115 @@
 
 // Node::Node(): Constructor for Node Class
 Node::Node(Point &pos, Field *field) {
-    Node::isClosed = false, Node::isOpen = false;
-    Node::pos_ = pos;
-    Node::Field_ = field;
-    Node::g = 0, Node::f = 0;
-    Node::previous = nullptr;
-    Node::neighbours_ = {};
-}
+	Node::pos_ = pos;
+	Node::Field_ = field;
 
-// Node::neighbours(): Getter for Node::neighbours_
-std::vector<std::pair<Node *, double>> Node::neighbours() {
-    return Node::neighbours_;
-}
+	Node::isClosed = false, Node::isOpen = false;
+	Node::g = 0, Node::f = 0;
+	Node::previous = nullptr;
 
-// Node::pos(): Getter for Node::pos_
-Point Node::pos() {
-    return Node::pos_;
+	Node::neighbours_ = {};
 }
 
 // Node::getCost():  cost calculation from Node:: to node
 //      Input:  Node node
 //      Return: -1 <=> impossible; >=0 <=> cost
-double Node::getCost(Node &node) {
+double Node::calculateCost(Node &node) {
 
-    // Check if a Node is visible
-    if (!Node::canSee(node, {Node::Field_->MapObjects({1})}))
-        return -1;
+	// Line from this.pos to node.pos
+	Line line(pos_, node.getPos());
 
-    // Line
-    Line line(Node::pos_, node.pos());
+	// Get all swamp intersections.
+	std::vector<std::pair<Point, int>> intersections;
+	for (auto &swamp : Field_->getMapObjects({2})) {
+		for (auto bound : swamp.getEdges()) {
+			Point intersection = geometry::isIntersecting(line, bound);
 
-    // Get all swamp intersections.
-    std::vector<Point> intersections;
-    for (auto &swamp : Node::Field_->MapObjects({3})) {
-        for (auto bound : swamp.Edges()) {
-            Point intersection = line.intersects(bound);
-            if (intersection) {
-                intersections.push_back(intersection);
-            }
-        }
-    }
+			if (intersection) {
+				intersections.emplace_back(intersection, geometry::dist(intersection, pos_));
+			}
+		}
+	}
 
-    // A Line either enters or exits a swamp. So the Swamp_speed_penality is toggled.
-    int modifier = 1;
-    if (!intersections.empty()) {
-        for (auto &swamp : Node::Field_->MapObjects({3})) {
-            if (swamp.isInside(Node::pos_)) {
-                modifier = SWAMP_SPEED_PENALITY;
-                break;
-            }
-        }
-    }
-    intersections.push_back(node.pos());
+	// interrupt everything if no intersections were found
+	if (intersections.empty())
+		return geometry::dist(pos_, node.getPos());
 
-    // The cost that is returned at the end
-    double cost = 0;
 
-    Point last_intersection = Node::pos_;
-    for (auto intersection : intersections) {
+	// sort for distance
+	std::sort(intersections.begin(), intersections.end(), helper::compare);
 
-        // add cost (modifier * distance)
-        cost += modifier *
-                sqrt(pow(last_intersection.x - intersection.x, 2) + pow(last_intersection.y - intersection.y, 2));
+	// A Line either enters or exits a swamp. So the Swamp_speed_penality is toggled.
+	int modifier = 1;
+	for (auto &swamp : Field_->getMapObjects({2})) {
+		if (geometry::isInside(pos_, swamp)) {
+			modifier = SWAMP_SPEED_PENALITY;
+			break;
+		}
+	}
 
-        // Toggle the modifier
-        modifier = (modifier == SWAMP_SPEED_PENALITY) ? 1 : SWAMP_SPEED_PENALITY;
+	intersections.insert(intersections.begin(), {pos_, 0});
 
-        // set last_intersection
-        last_intersection = intersection;
-    }
+	// The cost that is returned at the end
+	double cost = 0;
+	for (int i = 0; i < intersections.size() - 1; i++) {
 
-    return cost;
+		// add cost (modifier * distance)
+		cost += modifier * (intersections[i + 1].second - intersections[i].second);
+
+		// Toggle the modifier
+		modifier = (modifier == SWAMP_SPEED_PENALITY) ? 1 : SWAMP_SPEED_PENALITY;
+	}
+
+	return cost;
 }
-
 
 bool Node::canSee(Node &node, const std::vector<Area> &Obstacles) {
 
-    Line l1(Node::pos_, node.pos());
-    for (Area Obstacle : Obstacles) {
-        for (auto edge : Obstacle.Edges()) {
-            Point intersection = l1.intersects(edge);
-            if (!intersection)
-                return false;
-        }
-    }
+	Line l1(pos_, node.getPos());
+	for (const Area &Obstacle : Obstacles) {
+		for (auto edge : Obstacle.getEdges()) {
+			Point intersection = geometry::isIntersecting(l1, edge);
+			if (!intersection)
+				return false;
+		}
+	}
 
-    return true;
+	return true;
 }
 
-int Node::getNeighbours(const std::vector<Node> &Nodes, const std::vector<Area> &ObstacleStructs) {
+int Node::findNeighbours(const std::vector<Node> &Nodes, const std::vector<Area> &Obstacles) {
 
-    for (auto node : Nodes) {
+	for (auto node : Nodes) {
 
-        if (Node::canSee(node, ObstacleStructs)) {
+		if (canSee(node, Obstacles)) {
 
-            bool already_added = false;
-            for (auto neighbour : Node::neighbours_) {
-                if (neighbour.first == &node) {
-                    already_added = true;
-                    break;
-                }
-            }
+			bool already_added = false;
+			for (auto neighbour : neighbours_) {
+				if (neighbour.first == &node) {
+					already_added = true;
+					break;
+				}
+			}
 
-            if (!already_added)
-                Node::neighbours_.emplace_back(&node, Node::getCost(node));
-        }
-    }
+			if (!already_added)
+				neighbours_.emplace_back(&node, calculateCost(node));
+		}
+	}
 
-    return Node::neighbours_.size();
+	return neighbours_.size();
+}
+
+const Point &Node::getPos() const {
+	return pos_;
+}
+
+Field *Node::getField() const {
+	return Field_;
+}
+
+const std::vector<std::pair<Node *, double>> &Node::getNeighbours() const {
+	return neighbours_;
 }
 
 /**     -----------     **/
@@ -127,169 +128,160 @@ int Node::getNeighbours(const std::vector<Node> &Nodes, const std::vector<Area> 
 // Pathfinder::Pathfinder(): Constructor for Pathfinder Class
 Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) {
 
-    Pathfinder::trap_sensitive_ = trap_sensitive;
-    Pathfinder::field_ptr_ = &MAP;
+	trap_sensitive_ = trap_sensitive;
+	Field_ = &MAP;
 
-    std::vector<Node *> node_ptrs;
+	if (trap_sensitive) {
+		for (auto node : MAP.getMapNodes({0, 1})) {
+			// create & store Node
+			map.emplace_back(node, Field_);
+		}
+		// get neighbour Nodes
+		for (auto node : Pathfinder::map) {
+			node.findNeighbours(Pathfinder::map, Field_->getMapObjects({0, 1}));
+		}
 
-    if (trap_sensitive) {
-        for (auto node_pt : MAP.Nodes({1, 2})) {
-            // create & store Node
-            Pathfinder::map.emplace_back(node_pt, &MAP);
-            // store Node ptr
-            node_ptrs.push_back(&Pathfinder::map.back());
-        }
-        // get neighbour Nodes
-        for (auto node : Pathfinder::map) {
-            //TODO: If this works; If putting Pathfinder::map as arguments lets getNeigbors work on that vector
-            // and adds correct ptrs.
-            node.getNeighbours(Pathfinder::map, MAP.MapObjects({1, 2}));
-        }
-    } else {
-        for (auto node_pt : MAP.Nodes({1})) {
-            // create & store Node
-            Pathfinder::map.emplace_back(node_pt, &MAP);
-        }
-        // get neighbour Nodes
-        for (auto node : Pathfinder::map) {
-            //TODO: If this works; If putting Pathfinder::map as arguments lets getNeigbors work on that vector
-            // and adds correct ptrs.
-            node.getNeighbours(Pathfinder::map, MAP.MapObjects({1}));
-        }
-    }
+	} else {
+		for (auto node : MAP.getMapNodes({0})) {
+			// create & store Node
+			map.emplace_back(node, Field_);
+		}
+		// get neighbour Nodes
+		for (auto node : Pathfinder::map) {
+			node.findNeighbours(Pathfinder::map, Field_->getMapObjects({0}));
+		}
+	}
+
+
 }
-
 
 // Distance between two nodes
 double Pathfinder::heuristic(const Point &cur, const Point &end) {
-    int xDiff = abs(cur.x - end.x);
-    int yDiff = abs(cur.y - end.y);
-
-    return sqrt(pow(xDiff, 2) + pow(yDiff, 2));
+	return geometry::dist(cur, end);
 }
 
 std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
 
-    // The most cost intensive part of this algorithm
-    //TODO: STOPPED HERE LAST TIME
+	// The most cost intensive part of this algorithm
+	//TODO: STOPPED HERE LAST TIME
 
-    Node start = Node(begin, Pathfinder::field_ptr_);
-    Node end = Node(goal, Pathfinder::field_ptr_);
+	Node start = Node(begin, Field_);
+	Node end = Node(goal, Field_);
 
-    if (Pathfinder::trap_sensitive_) {
-        start.getNeighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
-        end.getNeighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1, 2}));
-    } else {
-        start.getNeighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
-        end.getNeighbours(Pathfinder::map, Pathfinder::field_ptr_->MapObjects({1}));
-    }
+	if (trap_sensitive_) {
+		start.findNeighbours(Pathfinder::map, Field_->getMapObjects({0, 1}));
+		end.findNeighbours(Pathfinder::map, Field_->getMapObjects({0, 1}));
+	} else {
+		start.findNeighbours(Pathfinder::map, Field_->getMapObjects({0}));
+		end.findNeighbours(Pathfinder::map, Field_->getMapObjects({0}));
+	}
 
-    // start = end ==> no real path
-    if (begin == goal) {
-        return {begin};
-    }
+	// start = end ==> no real path
+	if (begin == goal) {
+		return {begin};
+	}
 
-    // init open- & closedList
-    std::priority_queue<Node *, std::vector<Node *>, Pathfinder::PRIORITY> openList;
-    std::vector<Node *> closedList;
+	// init open- & closedList
+	std::priority_queue<Node *, std::vector<Node *>, Pathfinder::PRIORITY> openList;
+	std::vector<Node *> closedList;
 
-    // add start to openList
-    openList.push(&start);
-    start.isOpen = true;
-    double temp_g;
+	// add start to openList
+	openList.push(&start);
+	start.isOpen = true;
+	double temp_g;
 
-    // update start.g & start.f
-    start.g = 0;
-    start.f = (start.g + heuristic(start.pos(), end.pos()));
+	// update start.g & start.f
+	start.g = 0;
+	start.f = (start.g + heuristic(start.getPos(), end.getPos()));
 
-    // loop until soultion is found or no solution possible
-    while (!openList.empty()) {
-        // choose node with lowest f
-        Node *cur = openList.top();
+	// loop until soultion is found or no solution possible
+	while (!openList.empty()) {
+		// choose node with lowest f
+		Node *cur = openList.top();
 
-        // if cur and end are the same, the path is found
-        if (cur == &end) {
+		// if cur and end are the same, the path is found
+		if (cur == &end) {
 
-            std::vector<Point> p_path = Pathfinder::to_point(Pathfinder::traverse(&end));
+			std::vector<Point> p_path = Pathfinder::to_point(Pathfinder::traverse(&end));
 
-            for (Node *element : closedList) {
-                element->isClosed = false;
-            }
-            while (!openList.empty()) {
-                openList.top()->isOpen = false;
-                openList.pop();
-            }
-            return p_path;
-        }
-            // continue loop
-        else {
-            // remove cur from openList & add cur to closedList
-            openList.pop();
-            cur->isOpen = false;
+			for (Node *element : closedList) {
+				element->isClosed = false;
+			}
+			while (!openList.empty()) {
+				openList.top()->isOpen = false;
+				openList.pop();
+			}
+			return p_path;
+		}
+			// continue loop
+		else {
+			// remove cur from openList & add cur to closedList
+			openList.pop();
+			cur->isOpen = false;
 
-            // for every neighbour from cur:
-            for (auto neighbour : cur->neighbours()) {
-                if (neighbour.first->isClosed) {
-                    continue;
-                }
-                // temp_g = g cost over cur
-                temp_g =
-                        cur->g + neighbour.second;
-                // if neighbour is in openList just update | otherwise add and update
-                if (neighbour.first->isOpen) {
-                    // only if path over cur is better
-                    if (neighbour.first->g > temp_g) {
-                        //if(!pqContainsNode(openList, neighbour) || temp_g < neighbour.g)
-                        // update
-                        neighbour.first->g = temp_g;
-                        neighbour.first->f = temp_g + heuristic(neighbour.first->pos(), end.pos());
-                        neighbour.first->previous = cur;
-                        //cout << " - updated " << neighbour << " - ";
-                    }
-                } else {
-                    // add
-                    neighbour.first->g = temp_g;
-                    neighbour.first->f = temp_g + heuristic(neighbour.first->pos(), end.pos());
-                    neighbour.first->previous = cur;
-                    openList.push(neighbour.first);
-                    neighbour.first->isOpen = true;
-                    //std::cout << " - added " << neighbour << " - " << std::endl;
-                }
-            }
+			// for every neighbour from cur:
+			for (auto neighbour : cur->getNeighbours()) {
+				if (neighbour.first->isClosed) {
+					continue;
+				}
+				// temp_g = g cost over cur
+				temp_g =
+						cur->g + neighbour.second;
+				// if neighbour is in openList just update | otherwise add and update
+				if (neighbour.first->isOpen) {
+					// only if path over cur is better
+					if (neighbour.first->g > temp_g) {
+						//if(!pqContainsNode(openList, neighbour) || temp_g < neighbour.g)
+						// update
+						neighbour.first->g = temp_g;
+						neighbour.first->f = temp_g + heuristic(neighbour.first->getPos(), end.getPos());
+						neighbour.first->previous = cur;
+						//cout << " - updated " << neighbour << " - ";
+					}
+				} else {
+					// add
+					neighbour.first->g = temp_g;
+					neighbour.first->f = temp_g + heuristic(neighbour.first->getPos(), end.getPos());
+					neighbour.first->previous = cur;
+					openList.push(neighbour.first);
+					neighbour.first->isOpen = true;
+					//std::cout << " - added " << neighbour << " - " << std::endl;
+				}
+			}
 
-            closedList.push_back(cur);
-            cur->isClosed = true;
-        }
-    }
-    // resetting everything
-    for (Node *element : closedList) {
-        element->isClosed = false;
-    }
-    while (!openList.empty()) {
-        openList.top()->isOpen = false;
-        openList.pop();
-    }
+			closedList.push_back(cur);
+			cur->isClosed = true;
+		}
+	}
+	// resetting everything
+	for (Node *element : closedList) {
+		element->isClosed = false;
+	}
+	while (!openList.empty()) {
+		openList.top()->isOpen = false;
+		openList.pop();
+	}
 
-    return {};
+	return {};
 }
 
 std::vector<Node> Pathfinder::traverse(Node *end) {
-    // clear
-    std::vector<Node> t_path;
-    Node *t_ptr;
+	// clear
+	std::vector<Node> t_path;
+	Node *t_ptr;
 
-    while (end->previous != nullptr) {
-        // add
-        t_path.push_back(*end);
+	while (end->previous != nullptr) {
+		// add
+		t_path.push_back(*end);
 
-        // get next
-        t_ptr = end->previous;
-        end->previous = nullptr;
-        end = t_ptr;
-        //cout << endl << end.x << " | " << end.y;
-    }
+		// get next
+		t_ptr = end->previous;
+		end->previous = nullptr;
+		end = t_ptr;
+		//cout << endl << end.x << " | " << end.y;
+	}
 
-    return t_path;
+	return t_path;
 }
 // unnescessary doing
 /*
@@ -347,11 +339,11 @@ std::vector<node> Pathfinder::shorten(std::vector<node> t_path) {
 */
 
 std::vector<Point> Pathfinder::to_point(const std::vector<Node> &p) {
-    std::vector<Point> p_path;
-    p_path.reserve(p.size());
-    for (Node n: p) {
-        p_path.emplace_back(n.pos());
-    }
+	std::vector<Point> p_path;
+	p_path.reserve(p.size());
+	for (const Node& n: p) {
+		p_path.emplace_back(n.getPos());
+	}
 
-    return p_path;
+	return p_path;
 }
