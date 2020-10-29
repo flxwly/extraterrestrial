@@ -19,7 +19,6 @@ optimisation_level = 0
 # SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 
-
 # for new CoSpace Versions
 out_path = "./"
 
@@ -37,7 +36,7 @@ def compile_code():
 
     file_list = glob.glob(code_path + "*.cpp", recursive=False)
 
-    command = "\"" + "g++" + "\"" + " -shared -static "
+    command = "g++" + " -shared -static "
     if 0.5 < optimisation_level < 3.5:
         print("Using optimisation level: " + str(optimisation_level))
         command += "-O" + str(int(optimisation_level)) + " " + \

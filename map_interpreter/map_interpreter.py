@@ -4,7 +4,7 @@ from os import path
 from sys import setrecursionlimit
 
 from PIL import Image, ImageDraw
-from cv2 import resize, imread, INTER_NEAREST
+from cv2 import resize, imread, INTER_NEAREST, copyTo
 
 setrecursionlimit(10000)
 
@@ -12,19 +12,17 @@ setrecursionlimit(10000)
 detail = 0.5
 
 # for old CoSpace Versions
-FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
-FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
-FieldFD = ET.parse("../../../../../store/media/Rescue/Map/Sec/Design/Field.FD")
+FieldA = "../../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
+FieldB = "../../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
+FieldFD = "../../../../../../store/media/Rescue/Map/Sec/Design/Field.FD"
 
-cospace_version = "2.6.2"
+cospace_version = "4.0.9" #"2.6.2"
 
 # for CoSpace 2.6.2+
 if cospace_version == "2.6.2":
-    FieldA = "../../../../../store/media/CS.C/RSC/Map/Design/FieldA"
-    FieldB = "../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
-    FieldFD = ET.parse("../../../../../store/media/CS.C/RSC/Map/Design/Field.FD")
-
-FieldFD = FieldFD.getroot()
+    FieldA = "../../../../../../store/media/CS.C/RSC/Map/Design/FieldA"
+    FieldB = "../../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
+    FieldFD = "../../../../../../store/media/CS.C/RSC/Map/Design/Field.FD"
 
 
 def convert_arr_to_area_vector_string(arr):
@@ -138,6 +136,7 @@ def color_switch(color):
         tuple([131, 177, 244]): 1,
         tuple([0, 255, 255]): 0,  # trap (only use the blue in the middle)
         tuple([151, 85, 47]): 2,
+        tuple([196, 114, 68]): 2,
         tuple([166, 166, 166]): 3,  # swamp
         tuple([0, 153, 255]): 4,  # deposit
         tuple([0, 102, 255]): 4,
@@ -349,8 +348,13 @@ class FieldObject:
         if path.isdir(_dir):
 
             # resize the image for less detail but less ram usage and duration
-            t_img = resize(imread(_dir + "/Background.bmp"), None, fx=detail, fy=detail,
-                           interpolation=INTER_NEAREST)
+            t_img = None
+            if path.isfile(_dir + "\Background(complete).bmp"):
+                t_img = resize(imread(_dir + "/Background(complete).bmp"), None, fx=detail, fy=detail,
+                               interpolation=INTER_NEAREST)
+            else:
+                t_img = resize(imread(_dir + "/Background.bmp"), None, fx=detail, fy=detail,
+                       interpolation=INTER_NEAREST)
 
             # img = Image.fromarray(t_img)
             # img.show("orig")
@@ -785,8 +789,10 @@ class MapData:
             deposit_area_str += str(self.map_objects[i][3]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
             bonus_area_str += convert_arr_to_area_vector_string(self.map_objects[i][4])
 
-            wall_nodes_str += str(self.map_objects_nodes[i][0]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-            trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            wall_nodes_str += str(self.map_objects_nodes[i][0]).replace("[", "{").replace("]", "}").replace(" ",
+                                                                                                            "") + ";"
+            trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
+                                                                                                            "") + ";"
 
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
@@ -811,7 +817,7 @@ def main():
 
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
     mapData = MapData(img_dirs=[FieldA, FieldB], fd_dirs=FieldFD)
-    # mapData.show(10)
+    mapData.show(10)
 
     begin = "\n\n\n" \
             "///   _______                _____          __\n" \
@@ -834,8 +840,7 @@ def main():
     f = open("../code/MapData.cpp", "w")
     f.write(data)
     f.close()
-    for n in mapData.map_objects_nodes:
-        print(n)
+
 
 if __name__ == '__main__':
     main()
