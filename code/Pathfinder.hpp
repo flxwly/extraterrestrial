@@ -11,6 +11,7 @@
 
 /// The factor by what speed is reduced in swamps
 #define SWAMP_SPEED_PENALITY 10
+#define PATH_RADIUS 10
 
 /** @brief A point in a 2D word used by Pathfinders
   *
@@ -118,7 +119,21 @@ private:
 };
 
 
-// distance between two nodes
+class Path {
+public:
+	Path(std::vector<Point> points, double r);
+
+	double getR() const;
+	void setR(double r);
+	std::vector<Point> getPoints() const;
+
+	bool isEmpty() {return points_.empty(); };
+	unsigned int length() {return points_.size(); };
+
+private:
+	std::vector<Point> points_;
+	double r_;
+};
 
 
 
@@ -129,7 +144,7 @@ public:
 	std::vector<Node> map;
 
 	// pathfinding algorithm
-	std::vector<Point> AStar(Point &start, Point &end);
+	Path AStar(Point &start, Point &end);
 
 private:
 
@@ -146,7 +161,7 @@ private:
 	static double heuristic(const Point &cur, const Point &end);
 
 	// convert previous pointers of nodes to path
-	static std::vector<Node> traverse(Node *end);
+	static Path traverse(Node *end);
 
 	// convert nodepath to pair
 	static std::vector<Point> to_point(const std::vector<Node> &p);

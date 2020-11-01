@@ -284,7 +284,13 @@ Collectible *Field::getCollectible(Point robot_pos, double angle, double uncerta
 		}
 	}
 
+	ERROR_MESSAGE("no valid collectible found")
 	return nullptr;
+}
+
+//TODO
+std::vector<Point> Field::getPointPath() {
+	return std::vector<Point>();
 }
 
 

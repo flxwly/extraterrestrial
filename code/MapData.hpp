@@ -265,6 +265,8 @@ public:
 
 	Collectible *getCollectible(Point robot_pos, double angle, double uncertainty, int color);
 
+	std::vector<Point> getPointPath();
+
 private:
 	/// Contains all walls
 	std::vector<Area> Walls_;

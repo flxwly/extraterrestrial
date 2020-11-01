@@ -1,5 +1,7 @@
 #include "Pathfinder.hpp"
 
+#include <utility>
+
 /**     -----------     **/
 /**                     **/
 /**         Node        **/
@@ -160,7 +162,7 @@ double Pathfinder::heuristic(const Point &cur, const Point &end) {
 	return geometry::dist(cur, end);
 }
 
-std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
+Path Pathfinder::AStar(Point &begin, Point &goal) {
 
 	// The most cost intensive part of this algorithm
 	//TODO: STOPPED HERE LAST TIME
@@ -178,7 +180,7 @@ std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
 
 	// start = end ==> no real path
 	if (begin == goal) {
-		return {begin};
+		return Path({begin}, PATH_RADIUS);
 	}
 
 	// init open- & closedList
@@ -202,7 +204,7 @@ std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
 		// if cur and end are the same, the path is found
 		if (cur == &end) {
 
-			std::vector<Point> p_path = Pathfinder::to_point(Pathfinder::traverse(&end));
+			Path path = Pathfinder::traverse(&end);
 
 			for (Node *element : closedList) {
 				element->isClosed = false;
@@ -211,7 +213,7 @@ std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
 				openList.top()->isOpen = false;
 				openList.pop();
 			}
-			return p_path;
+			return path;
 		}
 			// continue loop
 		else {
@@ -262,10 +264,10 @@ std::vector<Point> Pathfinder::AStar(Point &begin, Point &goal) {
 		openList.pop();
 	}
 
-	return {};
+	return Path({}, PATH_RADIUS);
 }
 
-std::vector<Node> Pathfinder::traverse(Node *end) {
+Path Pathfinder::traverse(Node *end) {
 	// clear
 	std::vector<Node> t_path;
 	Node *t_ptr;
@@ -281,7 +283,7 @@ std::vector<Node> Pathfinder::traverse(Node *end) {
 		//cout << endl << end.x << " | " << end.y;
 	}
 
-	return t_path;
+	return Path(to_point(t_path), PATH_RADIUS);
 }
 // unnescessary doing
 /*
@@ -351,4 +353,20 @@ std::vector<Point> Pathfinder::to_point(const std::vector<Node> &p) {
 
 bool helper::compare(const std::pair<Point, double> &p, const std::pair<Point, double> &q) {
 	return p.second < q.second;
+}
+
+Path::Path(std::vector<Point> points, double r) : points_(std::move(points)), r_(r){
+
+}
+
+double Path::getR() const {
+	return r_;
+}
+
+void Path::setR(double r) {
+	r_ = r;
+}
+
+std::vector<Point> Path::getPoints() const {
+	return points_;
 }
