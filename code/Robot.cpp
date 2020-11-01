@@ -450,8 +450,10 @@ void Robot::game1Loop() {
 	// set last coords to normal coords (last coords wont get overwritten by the sim)
 	lPos_.set(*x, *y);
 	lastPositionUpdate_ = timer::now();
+
+	//
 	//#####################
-	// -- PATHFINDING --
+	//  TODO -- PATHFINDING --
 	//#####################
 
 	// There's no path to follow
@@ -570,5 +572,5 @@ Point Robot::getVelocity(double dt) {
 }
 
 void Robot::moveAlongPath(Path path) {
-
+	//TODO
 }
