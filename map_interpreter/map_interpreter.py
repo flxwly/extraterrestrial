@@ -1,10 +1,10 @@
 import random
-import xml.etree.ElementTree as ET
 from os import path
+from sys import exit
 from sys import setrecursionlimit
 
 from PIL import Image, ImageDraw
-from cv2 import resize, imread, INTER_NEAREST, copyTo
+from cv2 import resize, imread, INTER_NEAREST
 
 setrecursionlimit(10000)
 
@@ -12,17 +12,17 @@ setrecursionlimit(10000)
 detail = 0.5
 
 # for old CoSpace Versions
-FieldA = "../../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
-FieldB = "../../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
-FieldFD = "../../../../../../store/media/Rescue/Map/Sec/Design/Field.FD"
+FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
+FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
+FieldFD = "../../../../../store/media/Rescue/Map/Sec/Design/Field.FD"
 
-cospace_version = "4.0.9" #"2.6.2"
+cospace_version = "2.6.2" #"4.0.9" #
 
 # for CoSpace 2.6.2+
 if cospace_version == "2.6.2":
-    FieldA = "../../../../../../store/media/CS.C/RSC/Map/Design/FieldA"
-    FieldB = "../../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
-    FieldFD = "../../../../../../store/media/CS.C/RSC/Map/Design/Field.FD"
+    FieldA = "../../../../../store/media/CS.C/RSC/Map/Design/FieldA"
+    FieldB = "../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
+    FieldFD = "../../../../../store/media/CS.C/RSC/Map/Design/Field.FD"
 
 
 def convert_arr_to_area_vector_string(arr):
@@ -368,7 +368,7 @@ class FieldObject:
             self.height = len(self.img_arr)
         else:
             # Error
-            exit("Path does not exist")
+            print("Path \"" + _dir + "\" does not exist")
 
     def get_pixel(self, x, y):
         if 0 <= x < self.width and 0 <= y < self.height:
@@ -844,3 +844,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    exit(0)

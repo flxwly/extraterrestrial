@@ -15,93 +15,115 @@
 #include "Pathfinder.hpp"
 
 #define ROBOT_SPEED 0.03333333               // in milliseconds for wheel_speed = 1
+#define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
 
+/** The robot of the CoSpace-simulator
+ *
+ *  @tparam *input[20] a pointer array to all vars of the simulator.
+ *  @tparam _map0 a pointer to the first MapData object.
+ *	@tparam _map0 a pointer to the second MapData object.
+ *
+ *
+*/
 class Robot {
 public:
-    // constructor
-    Robot(int *_x, int *_y, int *_comp, int *_sobj_num, int *_sobj_x, int *_sobj_y,
-          int *_rc_r, int *_rc_g, int *_rc_b, int *_lc_r, int *_lc_g, int *_lc_b,
-          int *_rus, int *_fus, int *_lus,
-          int *_whl_l, int *_whl_r, int *_led, int *_tp, int *_g_time,
-          Field *_map0, Field *_map1);
+	Robot(int *input[20], Field *_map0, Field *_map1);
 
 
-    std::vector<std::vector<std::pair<int, int>>> complete_path;
+	/// typedef for time (basically a macro)
+	typedef std::chrono::steady_clock timer;
 
-    // public functions
-    void wheels(int l, int r);
+	/// the complete path (contains sub-paths from point to point)
+	std::vector<std::vector<Point>> completePath;
 
-    int move_to(int x, int y, bool safety);
+	/// controls the robots wheels
+	void wheels(int l, int r);
 
-    int move_to(std::pair<int, int> p, bool safety);
+	/// points the robot towards a point. Safety regulates if the robot should approach the target slowly
+	int moveTo(double x, double y, bool safety);
+	int moveTo(Point p, bool safety);
 
-    int check_us_sensors(int l, int f, int r);
+	/// checks if l, f or r is higher than the us-sensor vals. returns a binary-encoded value
+	int checkUsSensors(int l, int f, int r);
 
-    void game_0_loop();
+	void game0Loop();
+	void game1Loop();
 
-    void game_1_loop();
+	/// returns loaded objects
+	std::array<int, 3> getLoadedObjects();
 
-    std::array<int, 3> get_loaded_objects();
-
-    [[nodiscard]] int get_loaded_objects_num() const;
+	/// returns the number of the loaded objects
+	[[nodiscard]] int getLoadedObjectsNum() const;
 
 private:
-    //               ______
-    //______________/ Vars \_____________
+	//               ______
+	//______________/ vars \_____________
 
-    // === Variable pointers to vars updated by the sim ===
-    int *x, *y;                                 // robots position
-    int *comp;                                  // compass
-    int *sobj_num;                              // super_object_num
-    int *sobj_x, *sobj_y;                       // last super_object_coords
-    std::array<int *, 3> rc{}, lc{};             // color sensors
-    std::array<int *, 3> us{};                   // ultrasonic sensors
-    int *whl_l, *whl_r;                         // wheels
-    int *led;                                   // led for collect and deposit
-    int *tp;                                    // where to teleport
-    int *g_time;                                // game_time var
+	// === Variable pointers to vars updated by the sim ===
+	int *x, *y;                                             ///< robots position
+	int *compass;                                           ///< compass
+	int *superObjectNum;                                    ///< super_object_num
+	int *superObject_x, *superObject_y;                     ///< last super_object_coords
+	std::array<int *, 3> rightColorSensors, leftColorSensors;  	///< color sensors
+	std::array<int *, 3> ultraSonicSensors;                   	///< ultrasonic sensors
+	int *wheelLeft, *wheelRight;                            ///< wheels
+	int *led;                                               ///< led for collect and deposit
+	int *tp;                                                ///< where to teleport
+	int *gameTime;                                          ///< the in-game time
 
-    // === Robot vars ===
+	// === Robot vars ===
 
-    Field *map0, *map1;
-    Pathfinder pathfinder0, pathfinder1;
-	Pathfinder pathfinder0T, pathfinder1T;
+	Field *map0_, *map1_;                                   ///< Field vars
+	Pathfinder pathfinder0_, pathfinder1_;                  ///< Pathfinders that ignore traps
+	Pathfinder pathfinder0T_, pathfinder1T_;                ///< Pathfinders that don't ignore traps
 
-    int loaded_objects_num;                     // number of objects loaded
-    std::array<int, 3> loaded_objects{};        // complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
+	int loadedObjectsNum_;                                  ///< number of objects loaded
+	std::array<int, 3> loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
 
-    std::pair<int, int> n_target;               // pathfinder waypoint chasing
-    bool n_target_is_last;                      // is n_target the last element of a path
-    int chasing_sobj_num;                       // the super_objects_num that the robot chases in it's current path
+	Point nTarget_;                                         ///< pathfinder waypoint chasing
+	bool nTargetIsLast_;                                    ///< is nTarget the last element of a path
+	int chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
 
-    //               ___________
-    //______________/ functions \_____________
+	Point aPos_;                                            ///< more accurate position of the robot
+	Point lPos_;                                          	///< last coordinates of the robot (for signal loss)
+	std::chrono::time_point<timer> lastCycle_;              ///< the time the last cycle was executed
+	std::chrono::time_point<timer> depositingSince_;        ///< the time last depositing has started
+	std::chrono::time_point<timer> collectingSince_;        ///< the time last collecting has started
+	std::chrono::time_point<timer> lastPositionUpdate_;     ///< the last time the position was updated
 
-    // function to update the position based on speed and time
-    int l_x, l_y;                               // last coordinates of the robot (for signal loss)
-    std::chrono::time_point<std::chrono::steady_clock> latest_position_update;
-    void update_pos();
+	//               ___________
+	//______________/ functions \_____________
 
-    // typedef for time (basically a macro)
-    typedef std::chrono::steady_clock timer;
-    std::chrono::time_point<std::chrono::steady_clock> last_cycle;
+	/// updates the position of the robot mathematically and returns the change
+	Point updatePos();
 
-    // functions to collect
-    std::chrono::time_point<std::chrono::steady_clock> collecting_since;
-    bool should_collect();
-    int collect();
+	/// calculates how long the breaking distance is
+	double getBrakingDistance(double friction);
 
-    // functions to deposit
-    std::chrono::time_point<std::chrono::steady_clock> depositing_since;
-    bool should_deposit();
-    void deposit();
+	/// gets the current velocity for a certain change in time
+	Point getVelocity(double dt);
 
-    // functions to teleport
-    bool should_teleport();
-    void teleport();
 
-    // a helper function to not drive off map
-    int avoid_void();
+	/// decides whether collecting a point is a good idea or not
+	bool shouldCollect();
+
+	/// collects a point
+	int collect();
+
+	/// decides whether depositing is a good idea or not
+	bool shouldDeposit();
+
+	/// deposits
+	void deposit();
+
+	/// decides whether teleporting is a good idea or not
+	bool shouldTeleport();
+
+	/// teleports
+	void teleport();
+
+	/// returns a turning direction if the robot is about to drive off map
+	int avoidVoid();
 };
 
 

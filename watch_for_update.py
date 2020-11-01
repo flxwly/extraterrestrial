@@ -74,6 +74,8 @@ class Event(PatternMatchingEventHandler):
 
     def on_any_event(self, event):
         if datetime.now() - self.last_modified > timedelta(seconds=5):
+            clear = lambda: system('cls')
+            clear()
             compile_code()
             self.last_modified = datetime.now()
 

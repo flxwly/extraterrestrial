@@ -11,33 +11,52 @@
 #include <array>
 #include <cmath>
 
+
+#define COLOR_SENSOR_ANGLE_OFFSET 3.5
+#define COLOR_SENSOR_DIST_TO_CORE 5
+
 /** A point in a 2D word
- *
- *  @ingroup TODO
  *
  *  @tparam x x-Position of the Point.
  *  @tparam y y-Position of the Point.
  *
- *  There's no much functionality to a %Point.
- *  It only offers simple access and storage of
- *  an integer 2D coord. For more functionality
- *  use std::pair<int, int>
+ *  Can also be used as a 2D vector.
 */
 class Point {
 public:
 	Point() = default;
 
-	Point(int _x, int _y);
+	Point(double _x, double _y);
 
-	int x, y;
+	double x, y;
+
+	[[nodiscard]] Point round() const;
 
 	friend bool operator==(const Point &p1, const Point &p2);
 
 	friend bool operator!=(const Point &p1, const Point &p2);
 
-	friend Point operator+(const Point& a, const Point& b);
+	Point& operator+=(const Point& rhs) {
+		x = x + rhs.x, y = y + rhs.y;
+		return *this;
+	};
 
-	friend Point operator-(const Point& a, const Point& b);
+	friend Point operator+(Point& lhs, const Point& rhs) {
+		return lhs += rhs;
+	};
+
+	Point& operator-=(const Point& rhs) {
+		x = x - rhs.x, y = y - rhs.y;
+		return *this;
+	};
+
+	friend Point operator-(Point& lhs, const Point& rhs) {
+		return lhs -= rhs;
+	};
+
+	friend Point operator*(const Point &p, const double &m);
+
+	friend Point operator/(const Point &p, const double &m);
 
 	explicit operator bool() const;
 };
@@ -241,6 +260,8 @@ public:
 	/// Getter method for collectibles
 	std::vector<Collectible> getCollectibles(std::vector<unsigned int> colors);
 
+	Collectible *getCollectible(Point robot_pos, double angle, double uncertainty, int color);
+
 private:
 	/// Contains all walls
 	std::vector<Area> Walls_;
@@ -297,6 +318,10 @@ namespace geometry {
 	double sqDist(const Point &p1, const Point &p2);
 
 	double dist(const Point &p1, const Point &p2);
+
+	Point angle2Vector(double a);
+	double vector2Angle(Point v);
+	double vector2Angle(double x, double y);
 }
 
 

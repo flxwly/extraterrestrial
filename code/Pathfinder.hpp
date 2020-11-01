@@ -12,21 +12,18 @@
 /// The factor by what speed is reduced in swamps
 #define SWAMP_SPEED_PENALITY 10
 
-/**
-   *  @brief A point in a 2D word used by Pathfinders
-   *
-   *  @ingroup TODO
-   *
-   *  @tparam pos   Position of Node in a 2D world.
-   *  @tparam field Field-Object a Node is working on.
-   *
-   *  A %Node can be described as anchor point in a 2D grid.
-   *  It offers functions for quick visibility checks for other
-   *  Nodes, which can even be in other 2D grids, variables to keep
-   *  track of their status in the current pathfinding problem and
-   *  a vector containing all visible nodes in the same grid together
-   *  with respective their costs.
-  */
+/** @brief A point in a 2D word used by Pathfinders
+  *
+  *  @tparam pos   Position of Node in a 2D world.
+  *  @tparam field Field-Object a Node is working on.
+  *
+  *  A %Node can be described as anchor point in a 2D grid.
+  *  It offers functions for quick visibility checks for other
+  *  Nodes, which can even be in other 2D grids, variables to keep
+  *  track of their status in the current pathfinding problem and
+  *  a vector containing all visible nodes in the same grid together
+  *  with respective their costs.
+*/
 class Node {
 public:
 	Node(Point &pos, Field *field);
