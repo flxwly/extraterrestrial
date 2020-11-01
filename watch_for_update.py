@@ -19,7 +19,6 @@ optimisation_level = 0
 # SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 
-
 # for new CoSpace Versions
 out_path = "./"
 
@@ -35,9 +34,9 @@ def compile_code():
     code_path = "./code/"
     global out_path
 
-    file_list = glob.glob(code_path + "*.cpp", recursive=False)
+    file_list = glob.glob(code_path + "**/*.cpp", recursive=True)
 
-    command = "\"" + "g++" + "\"" + " -shared -static "
+    command = "g++" + " -shared -static "
     if 0.5 < optimisation_level < 3.5:
         print("Using optimisation level: " + str(optimisation_level))
         command += "-O" + str(int(optimisation_level)) + " " + \
@@ -53,17 +52,17 @@ def compile_code():
     for file_path in file_list:
         print(file_path)
         command += " " + file_path
-    command += " -o " + "\"" + out_path + "extraterrestrial.dll\"" + SFML
+    command += " -o " + "\"" + out_path + "extraterrestrial2.dll\"" + SFML
 
     # command = command + " & REM 2> errors.txt strip --strip-unneeded \"" + out_path + "extraterrestrial.dll\" pause"]
 
     if is_strip:
-        command += " &  strip --strip-unneeded \"" + out_path + "extraterrestrial.dll\""
+        command += " &  strip --strip-unneeded \"" + out_path + "extraterrestrial2.dll\""
     print("\n" + command + "\n")
     print("compiling...")
     subprocess.call(command, shell=True)
     print("finished")
-    print("Output: " + str(out_path) + "extraterrestrial.dll")
+    print("Output: " + str(out_path) + "extraterrestrial2.dll")
     sys.stdout.flush()
 
 
@@ -75,6 +74,8 @@ class Event(PatternMatchingEventHandler):
 
     def on_any_event(self, event):
         if datetime.now() - self.last_modified > timedelta(seconds=5):
+            clear = lambda: system('cls')
+            clear()
             compile_code()
             self.last_modified = datetime.now()
 
