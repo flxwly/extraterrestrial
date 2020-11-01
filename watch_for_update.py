@@ -34,7 +34,7 @@ def compile_code():
     code_path = "./code/"
     global out_path
 
-    file_list = glob.glob(code_path + "*.cpp", recursive=False)
+    file_list = glob.glob(code_path + "**/*.cpp", recursive=True)
 
     command = "g++" + " -shared -static "
     if 0.5 < optimisation_level < 3.5:
@@ -52,17 +52,17 @@ def compile_code():
     for file_path in file_list:
         print(file_path)
         command += " " + file_path
-    command += " -o " + "\"" + out_path + "extraterrestrial.dll\"" + SFML
+    command += " -o " + "\"" + out_path + "extraterrestrial2.dll\"" + SFML
 
     # command = command + " & REM 2> errors.txt strip --strip-unneeded \"" + out_path + "extraterrestrial.dll\" pause"]
 
     if is_strip:
-        command += " &  strip --strip-unneeded \"" + out_path + "extraterrestrial.dll\""
+        command += " &  strip --strip-unneeded \"" + out_path + "extraterrestrial2.dll\""
     print("\n" + command + "\n")
     print("compiling...")
     subprocess.call(command, shell=True)
     print("finished")
-    print("Output: " + str(out_path) + "extraterrestrial.dll")
+    print("Output: " + str(out_path) + "extraterrestrial2.dll")
     sys.stdout.flush()
 
 

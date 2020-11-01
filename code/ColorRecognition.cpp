@@ -1,6 +1,4 @@
 #include "ColorRecognition.hpp"
-#include "CoSpaceFunctions.hpp"
-#include "libs/CommonFunctions.hpp"
 
 bool isRedLeft() { return satL >= 75 && lumL >= 30 && isInRange(hueL, 340, 361); } // check
 bool isRedRight() { return satR >= 75 && lumR >= 30 && isInRange(hueR, 340, 361); }

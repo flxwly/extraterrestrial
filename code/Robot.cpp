@@ -81,7 +81,7 @@ int Robot::collect() {
 		// This is to prevent the robot from moving
 		wheels(0, 0);
 		*led = 1;
-		return 0;
+		return -1;
 	}
 		// the robot begins to collect
 	else {
@@ -95,16 +95,16 @@ int Robot::collect() {
 
 		if (isRed() || isSuperObj()) {
 			loadedObjects_[0]++;
-			return 1;
+			return 0;
 		} else if (isCyan()) {
 			loadedObjects_[1]++;
-			return 2;
+			return 1;
 		} else if (isBlack()) {
 			loadedObjects_[2]++;
-			return 3;
+			return 2;
 		}
 	}
-	return 0;
+	return -1;
 }
 
 // TODO: logic to should deposit function
@@ -425,7 +425,7 @@ void Robot::game1Loop() {
 		double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
 				timer::now() - lastPositionUpdate_).count();
 
-		double distance = dist(*x, lX, *y, l_y);
+		double distance = geometry::dist(Point(*x, *y), lPos_);
 
 		std::cout << distance / time_dif << std::endl;
 
@@ -436,23 +436,30 @@ void Robot::game1Loop() {
 	if (*x == 0 && *y == 0) {
 
 		// set normal coords to last coords and update with function
-		*x = l_x, *y = l_y;
-		updatePos_();
+		*x = static_cast<int>(round(lPos_.x)), *y = static_cast<int>(round(lPos_.y));
+		updatePos();
 		ERROR_MESSAGE("Position lost");
+	} else {
+		if (geometry::dist(aPos_, Point(*x, *y)) > 2) {
+			aPos_.set(*x, *y);
+		}
+
+		updatePos();
 	}
 
 	// set last coords to normal coords (last coords wont get overwritten by the sim)
-	lX = *x, l_y = *y;
-	latestPositionUpdate = timer::now();
+	lPos_.set(*x, *y);
+	lastPositionUpdate_ = timer::now();
 	//#####################
 	// -- PATHFINDING --
 	//#####################
 
 	// There's no path to follow
+#ifdef Pathfinding
 	if (completePath.empty()) {
 		// get a path of points
 		std::vector<Point> pathOfCollectibles = getPathOfCollectibles();
-		Point start = {*x, *y};
+		Point start = Point(*x, *y);
 
 		// calculate a path from one point to the next
 		for (auto end : pathOfCollectibles) {
@@ -479,6 +486,7 @@ void Robot::game1Loop() {
 	}
 
 
+
 		// get the next target
 	else {
 
@@ -502,7 +510,7 @@ void Robot::game1Loop() {
 			}
 		}
 	}
-
+#endif
 	/*--------------------
 	 * Priority Structure
 	 * -------------------
@@ -514,7 +522,7 @@ void Robot::game1Loop() {
 	 * */
 
 
-	if (shouldDeposit_() && (isOrangeLeft() || isOrangeRight())) {
+	if (shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
 		if (isOrange()) {
 			deposit();
 		} else if (isOrangeRight()) {
@@ -524,21 +532,14 @@ void Robot::game1Loop() {
 		}
 
 	} else if (shouldCollect()) {
-		Point *ptr = nullptr;
-		switch (collect()) {
-			case 1:
-				ptr = map1->find_point({*x, *y}, 0);
-				if (ptr != nullptr) ptr->state = 0;
-				break;
-			case 2:
-				ptr = map1->find_point({*x, *y}, 1);
-				if (ptr != nullptr) ptr->state = 0;
-				break;
-			case 3:
-				ptr = map1->find_point({*x, *y}, 2);
-				if (ptr != nullptr) ptr->state = 0;
-				break;
+		int color = collect();
+
+		// if the robot is collecting take some time
+		if (color != -1) {
+			// set state of collected collectible to 0
+			map1_->getCollectible(aPos_, *compass, 2, color)->setState(0);
 		}
+
 	} else {
 		*led = 0;
 		moveTo(nTarget_, nTargetIsLast_);
@@ -563,7 +564,7 @@ void Robot::game1Loop() {
 }
 
 double Robot::getBrakingDistance(double friction) {
-	return (*wheelLeft + *wheelRight) / 2;
+	return static_cast<double>(*wheelLeft + *wheelRight) / 2;
 }
 
 Point Robot::getVelocity(double dt) {

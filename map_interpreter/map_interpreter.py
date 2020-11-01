@@ -1,6 +1,6 @@
 import random
+import xml.etree.ElementTree as ET
 from os import path
-from sys import exit
 from sys import setrecursionlimit
 
 from PIL import Image, ImageDraw
@@ -14,15 +14,15 @@ detail = 0.5
 # for old CoSpace Versions
 FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
-FieldFD = "../../../../../store/media/Rescue/Map/Sec/Design/Field.FD"
+FieldFD = "../../../../../store/media/Rescue/Map/Sec/Design"
 
-cospace_version = "2.6.2" #"4.0.9" #
+cospace_version = "2.6.2"  # "4.0.9" #
 
 # for CoSpace 2.6.2+
 if cospace_version == "2.6.2":
     FieldA = "../../../../../store/media/CS.C/RSC/Map/Design/FieldA"
     FieldB = "../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
-    FieldFD = "../../../../../store/media/CS.C/RSC/Map/Design/Field.FD"
+    FieldFD = "../../../../../store/media/CS.C/RSC/Map/Design"
 
 
 def convert_arr_to_area_vector_string(arr):
@@ -32,31 +32,29 @@ def convert_arr_to_area_vector_string(arr):
         .replace("}},", "}}),\n\t").replace("{{", "Area({{").replace("}}}", "}})}") + ";"
 
 
-def find_color_points(world, worldnr):
+def collectible_type_switch(obj_type):
+    # format: b, g, r
+    switcher = {
+        "Object_Red": 0,
+        "Object_Green": 1,
+        "Object_Black": 2
+    }
+    return switcher.get(obj_type, 0)
+
+
+def find_color_points(world, field):
     arr = []
-    for field_obj in world:
-        if field_obj.tag == "FieldObjects":
-            for obj in field_obj:
-                is_object = False
-                for attribute in obj:
-                    if attribute.tag == "ObjType":
-                        if attribute.text in ["Object_Black", "Object_Red", "Object_Green"]:
-                            is_object = True
-                            break
-                        else:
-                            break
-                if is_object:
-                    t = ""
-                    cx = 0
-                    cy = 0
-                    for attribute in obj:
-                        if attribute.tag == "ObjType":
-                            t = attribute.text
-                        if attribute.tag == "CX":
-                            cx = attribute.text
-                        if attribute.tag == "CY":
-                            cy = attribute.text
-                    arr.append(Collectible(t, cx, cy, worldnr))
+
+    field_obj_collection = world.find("FieldObjects")
+    field_objs = field_obj_collection.findall("FOBJ")
+
+    for fobj in field_objs:
+        obj_type = fobj.find("ObjType").text
+        if obj_type in ["Object_Black", "Object_Red", "Object_Green"]:
+            obj_type = collectible_type_switch(obj_type)
+            cx = float(fobj.find("CX").text)
+            cy = float(fobj.find("CY").text)
+            arr.append(Collectible(obj_type, cx, cy, field))
 
     return arr
 
@@ -312,8 +310,8 @@ class Collectible(Point):
         # x and y are real coordinates in the simulator. Not the coordinates used by the robot
         #  Virtual coordinates are the ones used by the robot
         #  world 1 is 90 cm bigger in both directions (x, y)
-        self.virtual_x = -100 * float(x) + self.field.width / 2
-        self.virtual_y = 100 * float(y) + self.field.height / 2
+        self.virtual_x = round(-100 * float(x) + field.width / 2)
+        self.virtual_y = round(100 * float(y) + field.height / 2)
 
         #  The color (red = 0; cyan/green = 1; black = 2)
         self.t = t
@@ -324,7 +322,7 @@ class Collectible(Point):
 
     def __repr__(self):
         """Returns Collectible as typical C++ pair coord"""
-        return "{%s,%s}" % (self.virtual_x, self.virtual_y)
+        return "{{%s,%s},%s}" % (self.virtual_x, self.virtual_y, self.t)
 
 
 ###########################
@@ -354,7 +352,7 @@ class FieldObject:
                                interpolation=INTER_NEAREST)
             else:
                 t_img = resize(imread(_dir + "/Background.bmp"), None, fx=detail, fy=detail,
-                       interpolation=INTER_NEAREST)
+                               interpolation=INTER_NEAREST)
 
             # img = Image.fromarray(t_img)
             # img.show("orig")
@@ -671,12 +669,14 @@ def order_corners(corners):
 
 
 class MapData:
-    def __init__(self, img_dirs, fd_dirs):
+    def __init__(self, img_dirs, fd_dir):
         """A Object to collect all other map objects and also convert them to string or to a picture"""
         print("Creating MapData-Object...")
 
         self.map_objects = []
         self.map_objects_nodes = []
+
+        self.collectibles = []
 
         self.img_arrs = []  # collection of ImageArray objects
 
@@ -744,6 +744,18 @@ class MapData:
 
             print("\tfinished")
 
+        if path.isfile(fd_dir + "/Field.FD"):
+            tree = ET.parse(fd_dir + "/Field.FD")
+            root = tree.getroot()
+            w1 = root.find("World1")
+            w2 = root.find("World2")
+            self.collectibles.append(find_color_points(w1, self.img_arrs[0]))
+            self.collectibles.append(find_color_points(w2, self.img_arrs[1]))
+
+            # print(self.collectibles)
+        else:
+            print("File: " + fd_dir + "/Field.FD not found")
+
     def show(self, scale):
 
         x_off = scale
@@ -782,6 +794,7 @@ class MapData:
             deposit_area_str = "const std::vector<Point>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             wall_nodes_str = "const std::vector<Point>GAME%sWALLNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             trap_nodes_str = "const std::vector<Point>GAME%sTRAPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            collectibles_str = "const std::vector<Collectible> GAME%sCOLLECTIBLES = " % i
 
             wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
             trap_str += convert_arr_to_area_vector_string(self.map_objects[i][1])
@@ -793,6 +806,8 @@ class MapData:
                                                                                                             "") + ";"
             trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                             "") + ";"
+
+            collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ","") + ";"
 
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
@@ -807,6 +822,10 @@ class MapData:
             file_content += "\t\t/*wall_nodes*/\n" + wall_nodes_str + \
                             "\n\t\t/*trap_nodes*/\n" + trap_nodes_str + "\n\n"
 
+            file_content += "\n\n\t//------ Collectibles ------//\n"
+
+            file_content += "\t\t/*collectibles*/\n" + collectibles_str + "\n\n"
+
             i += 1
 
         return file_content
@@ -816,8 +835,8 @@ def main():
     print("setting up...")
 
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
-    mapData = MapData(img_dirs=[FieldA, FieldB], fd_dirs=FieldFD)
-    mapData.show(10)
+    mapData = MapData(img_dirs=[FieldA, FieldB], fd_dir=FieldFD)
+    # mapData.show(10)
 
     begin = "\n\n\n" \
             "///   _______                _____          __\n" \
@@ -844,4 +863,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    exit(0)

@@ -44,7 +44,7 @@ Field GAME1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEP
 sf::RenderWindow *CC = nullptr;
 sf::Font *unbutton = nullptr;
 
-const int *INPUTS[20] = {&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
+int *INPUTS[20] = {&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
                    &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
                    &US_Left, &US_Front, &US_Right,
                    &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time};
@@ -124,7 +124,7 @@ void Game1Debug() {
 
 	// Vars for drawing on map
 	sf::Vector2u size = CC->getSize();
-	sf::Vector2f scale = {cast<float>(size.x) / cast<float>(GAME1.getSize().x), cast<float>(size.y) / cast<float>(GAME1.getSize().y)};
+	sf::Vector2f scale = {size.x / static_cast<float>(GAME1.getSize().x), size.y / static_cast<float>(GAME1.getSize().y)};
 	sf::RectangleShape block(sf::Vector2f(scale.x, scale.y));
 
 	//##########//

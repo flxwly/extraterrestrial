@@ -153,9 +153,7 @@ private:
 };
 
 namespace helper {
-	bool compare(std::pair<void *, double> *p, std::pair<void *, double> *q) {
-		return p->second < q->second;
-	}
+	bool compare(const std::pair<Point, double> &p, const std::pair<Point, double> &q);
 }
 
 #endif //PATHFINDING_HPP

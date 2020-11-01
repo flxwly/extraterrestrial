@@ -30,6 +30,9 @@ public:
 
 	double x, y;
 
+	void set(double _x, double _y);
+	void set(Point p);
+
 	[[nodiscard]] Point round() const;
 
 	friend bool operator==(const Point &p1, const Point &p2);
@@ -237,7 +240,7 @@ public:
 	      const std::vector<Point> &deposits,
 	      const std::vector<Point> &wallNodes,
 	      const std::vector<Point> &trapNodes,
-	      const std::array<std::vector<Collectible>, 3> &collectibles);
+	      const std::vector<Collectible> &collectibles);
 
 	/// Getter for the size
 	Point getSize();
@@ -340,7 +343,7 @@ extern const std::vector<Point> GAME0DEPOSITS;
 extern const std::vector<Point> GAME0WALLNODES;
 extern const std::vector<Point> GAME0TRAPNODES;
 
-extern const std::array<std::vector<Collectible>, 3> GAME0COLLECTIBLES;
+extern const std::vector<Collectible> GAME0COLLECTIBLES;
 
 
 extern const std::vector<Area> GAME1WALLS;
@@ -353,7 +356,7 @@ extern const std::vector<Point> GAME1WALLNODES;
 extern const std::vector<Point> GAME1TRAPNODES;
 
 
-extern const std::array<std::vector<Collectible>, 3> GAME1COLLECTIBLES;
+extern const std::vector<Collectible> GAME1COLLECTIBLES;
 
 
 

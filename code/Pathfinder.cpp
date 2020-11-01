@@ -27,7 +27,7 @@ double Node::calculateCost(Node &node) {
 	Line line(pos_, node.getPos());
 
 	// Get all swamp intersections.
-	std::vector<std::pair<Point, int>> intersections;
+	std::vector<std::pair<Point, double>> intersections;
 	for (auto &swamp : Field_->getMapObjects({2})) {
 		for (auto bound : swamp.getEdges()) {
 			Point intersection = geometry::isIntersecting(line, bound);
@@ -346,4 +346,9 @@ std::vector<Point> Pathfinder::to_point(const std::vector<Node> &p) {
 	}
 
 	return p_path;
+}
+
+
+bool helper::compare(const std::pair<Point, double> &p, const std::pair<Point, double> &q) {
+	return p.second < q.second;
 }
