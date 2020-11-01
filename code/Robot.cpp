@@ -222,7 +222,7 @@ int Robot::avoidVoid() {
 //          Public Functions
 //====================================
 void Robot::wheels(int l, int r) {
-	*wheelRight = l, *wheelRight = r;
+	*wheelRight = 20 * l, *wheelRight = 20 * r;
 }
 
 std::array<int, 3> Robot::getLoadedObjects() {
@@ -455,7 +455,6 @@ void Robot::game1Loop() {
 	//#####################
 
 	// There's no path to follow
-#ifdef Pathfinding
 	if (completePath.empty()) {
 		// get a path of points
 		std::vector<Point> pathOfCollectibles = getPathOfCollectibles();
@@ -466,7 +465,7 @@ void Robot::game1Loop() {
 			if (start) {
 
 				// depending on the current number of objects traps should be avoided or ignored
-				std::vector<Point> p = (loadedObjectsNum_ > 0) ? pathfinder1T_.AStar(start, end)
+				Path p = (loadedObjectsNum_ > 0) ? pathfinder1T_.AStar(start, end)
 				                                               : pathfinder1_.AStar(start, end);
 
 				if (!p.empty()) {
@@ -510,7 +509,6 @@ void Robot::game1Loop() {
 			}
 		}
 	}
-#endif
 	/*--------------------
 	 * Priority Structure
 	 * -------------------
@@ -569,4 +567,8 @@ double Robot::getBrakingDistance(double friction) {
 
 Point Robot::getVelocity(double dt) {
 	return (geometry::angle2Vector(*compass) * (*wheelLeft + *wheelRight) / 2) * dt;
+}
+
+void Robot::moveAlongPath(Path path) {
+
 }

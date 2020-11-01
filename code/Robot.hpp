@@ -43,6 +43,8 @@ public:
 	int moveTo(double x, double y, bool safety);
 	int moveTo(Point p, bool safety);
 
+	void moveAlongPath(Path path);
+
 	/// checks if l, f or r is higher than the us-sensor vals. returns a binary-encoded value
 	int checkUsSensors(int l, int f, int r);
 
