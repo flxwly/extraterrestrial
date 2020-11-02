@@ -11,60 +11,62 @@
 #include <array>
 #include <cmath>
 
-
 #define COLOR_SENSOR_ANGLE_OFFSET 3.5
 #define COLOR_SENSOR_DIST_TO_CORE 5
 
 /** A point in a 2D word
  *
- *  @tparam x x-Position of the Point.
- *  @tparam y y-Position of the Point.
+ *  @tparam x x-Position of the PVector.
+ *  @tparam y y-Position of the PVector.
  *
  *  Can also be used as a 2D vector.
 */
-class Point {
+class PVector {
 public:
-	Point() = default;
+	PVector() = default;
 
-	Point(double _x, double _y);
+	PVector(double _x, double _y);
 
 	double x, y;
 
 	void set(double _x, double _y);
-	void set(Point p);
+	void set(PVector p);
 
-	[[nodiscard]] Point round() const;
+	double getMag() const;
+	void setMag(double mag);
 
-	friend bool operator==(const Point &p1, const Point &p2);
+	[[nodiscard]] PVector round() const;
 
-	friend bool operator!=(const Point &p1, const Point &p2);
+	friend bool operator==(const PVector& p1, const PVector& p2);
 
-	Point& operator+=(const Point& rhs) {
+	friend bool operator!=(const PVector& p1, const PVector& p2);
+
+	PVector& operator+=(const PVector& rhs) {
 		x = x + rhs.x, y = y + rhs.y;
 		return *this;
 	};
 
-	friend Point operator+(Point& lhs, const Point& rhs) {
+	friend PVector operator+(PVector& lhs, const PVector& rhs) {
 		return lhs += rhs;
 	};
 
-	Point& operator-=(const Point& rhs) {
+	PVector& operator-=(const PVector& rhs) {
 		x = x - rhs.x, y = y - rhs.y;
 		return *this;
 	};
 
-	friend Point operator-(Point& lhs, const Point& rhs) {
-		return lhs -= rhs;
+	friend PVector operator-(const PVector& lhs, const PVector& rhs) {
+		return PVector(lhs.x - rhs.x, lhs.y - rhs.y);
 	};
 
-	friend Point operator*(const Point &p, const double &m);
+	friend PVector operator*(const PVector& p, const double& m);
 
-	friend Point operator/(const Point &p, const double &m);
+	friend PVector operator/(const PVector& p, const double& m);
 
 	explicit operator bool() const;
 };
 
-/** A type of Point that can be collected by a robot.
+/** A type of PVector that can be collected by a robot.
  *
  * <p>Collectibles have a color value in addition to normal points in
  * 2D-plane. They can be picked up by the robot in the CoSpace-SE.
@@ -83,10 +85,10 @@ public:
 class Collectible {
 public:
 
-	Collectible(const Point &p, const int &c);
+	Collectible(const PVector& p, const int& c);
 
 	/// Getter method for Collectible::pos_
-	const Point &getPos() const;
+	const PVector& getPos() const;
 
 	/// Getter method for Collectible::color_
 	unsigned int getColor() const;
@@ -107,7 +109,7 @@ public:
 	 * @param angle the actual angle of the robot given by the simulator
 	 * @param uncertainty how imprecise the position and the angle is
 	 */
-	bool isCorrectCollectible(Point robot_pos, double angle, double uncertainty);
+	bool isCorrectCollectible(PVector robot_pos, double angle, double uncertainty);
 
 private:
 
@@ -134,7 +136,7 @@ private:
 	unsigned int color_;
 
 	/// Represents the position
-	Point pos_{};
+	PVector pos_{};
 };
 
 /** A Line in a 2D grid.
@@ -143,32 +145,32 @@ private:
  * functionality by itself and is simply a container for two points
  * under a namespace.
  *
- * @tparam p1 Position of the 1st Point.
- * @tparam p2 Position of the 2nd Point.
+ * @tparam p1 Position of the 1st PVector.
+ * @tparam p2 Position of the 2nd PVector.
 */
 class Line {
 public:
-	Line(const Point &p1, const Point &p2);
+	Line(const PVector& p1, const PVector& p2);
 
 	/// Getter method for Line::p1_
-	const Point &getP1() const;
+	const PVector& getP1() const;
 
 	/// Getter method for Line::p2_
-	const Point &getP2() const;
+	const PVector& getP2() const;
 
 	/// Setter method for Line::p1_
-	void setP1(const Point &p_1);
+	void setP1(const PVector& p_1);
 
 	/// Setter method for Line::p2_
-	void setP2(const Point &p_2);
+	void setP2(const PVector& p_2);
 
 private:
 
 	/// One end of the line
-	Point p1_{};
+	PVector p1_{};
 
 	/// The other end of the line
-	Point p2_{};
+	PVector p2_{};
 };
 
 /** A polygon in a 2D grid
@@ -183,33 +185,33 @@ private:
 class Area {
 public:
 
-	explicit Area(const std::vector<Point> &p_s);
+	explicit Area(const std::vector<PVector>& p_s);
 
 	/// Getter method for Area::Corners_
-	const std::vector<Point> &getCorners() const;
+	const std::vector<PVector>& getCorners() const;
 
 	/// Getter method for Area::Edges_
-	const std::vector<Line> &getEdges() const;
+	const std::vector<Line>& getEdges() const;
 
 	/// Getter method for Area::min_
-	const Point &getMin() const;
+	const PVector& getMin() const;
 
 	/// Getter method for Area::max_
-	const Point &getMax() const;
+	const PVector& getMax() const;
 
 private:
 
 	/// Holds all corners of the Area as ordered points.
-	std::vector<Point> Corners_;
+	std::vector<PVector> Corners_;
 
 	/// Holds all edges of the Area as ordered lines.
 	std::vector<Line> Edges_;
 
 	/// Lowest x and y coordinates
-	Point min_;
+	PVector min_;
 
 	/// Highest x and y coordinates
-	Point max_;
+	PVector max_;
 };
 
 /** Contains all important map data about the map
@@ -232,18 +234,18 @@ private:
 class Field {
 public:
 
-	Field(const int &width, const int &height,
-	      const std::vector<Area> &walls,
-	      const std::vector<Area> &traps,
-	      const std::vector<Area> &swamps,
-	      const std::vector<Area> &waters,
-	      const std::vector<Point> &deposits,
-	      const std::vector<Point> &wallNodes,
-	      const std::vector<Point> &trapNodes,
-	      const std::vector<Collectible> &collectibles);
+	Field(const int& width, const int& height,
+		const std::vector<Area>& walls,
+		const std::vector<Area>& traps,
+		const std::vector<Area>& swamps,
+		const std::vector<Area>& waters,
+		const std::vector<PVector>& deposits,
+		const std::vector<PVector>& wallNodes,
+		const std::vector<PVector>& trapNodes,
+		const std::vector<Collectible>& collectibles);
 
 	/// Getter for the size
-	Point getSize();
+	PVector getSize();
 
 	/**  Getter for map objects
 	 *
@@ -255,17 +257,17 @@ public:
 	 *
 	 * @param indices 0 -> walls; 1 -> traps;
 	 */
-	std::vector<Point> getMapNodes(std::vector<unsigned int> indices);
+	std::vector<PVector> getMapNodes(std::vector<unsigned int> indices);
 
 	/// Getter method for deposits
-	std::vector<Point> getDeposits();
+	std::vector<PVector> getDeposits();
 
 	/// Getter method for collectibles
 	std::vector<Collectible> getCollectibles(std::vector<unsigned int> colors);
 
-	Collectible *getCollectible(Point robot_pos, double angle, double uncertainty, int color);
+	Collectible* getCollectible(PVector robot_pos, double angle, double uncertainty, int color);
 
-	std::vector<Point> getPointPath();
+	std::vector<PVector> getPointPath();
 
 private:
 	/// Contains all walls
@@ -278,12 +280,12 @@ private:
 	std::vector<Area> Waters_;
 
 	/// The deposits saved as points in their respective center
-	std::vector<Point> Deposits_;
+	std::vector<PVector> Deposits_;
 
 	/// Contains all wall nodes
-	std::vector<Point> WallNodes_;
+	std::vector<PVector> WallNodes_;
 	/// Contains all trap nodes
-	std::vector<Point> TrapNodes_;
+	std::vector<PVector> TrapNodes_;
 
 	/** contains collectibles of all colors
 	 * They're ordered the following: index = 0 <=> Red; 1 <=> Cyan/Green; 2 <=> Black
@@ -297,7 +299,7 @@ private:
 	 * @note There can never be a negative sized Field. The size is
 	 * also defined by the CoSpace-Rules so FieldA = {270, 180}; FieldB = {360, 270})
 	*/
-	Point size_;
+	PVector size_;
 
 };
 
@@ -305,27 +307,30 @@ private:
 /// namespace for geometric functions
 namespace geometry {
 
-	bool isLeft(Point p0, Point p1, Point p2);
+	bool isLeft(PVector p0, PVector p1, PVector p2);
 
 	/** checks if a point lies inside the Area
 	 * @param p A point
 	 * @return true if point lies inside of the Area. Otherwise false
 	*/
-	bool isInside(const Point &p, Area &area);
+	bool isInside(const PVector& p, Area& area);
 
 	/** calculates an intersection point between two lines
 	 * @param l1 a line
 	 * @param l2 another line
 	 * @return intersection point if existing. Otherwise (-1, -1)
 	*/
-	Point isIntersecting(Line &l1, Line &l2);
+	PVector isIntersecting(Line& l1, Line& l2);
 
-	double sqDist(const Point &p1, const Point &p2);
+	double sqDist(const PVector& p1, const PVector& p2);
 
-	double dist(const Point &p1, const Point &p2);
+	double dist(const PVector& p1, const PVector& p2);
 
-	Point angle2Vector(double a);
-	double vector2Angle(Point v);
+	double dot(PVector p1, PVector p2);
+	PVector getNormalPoint(Line line, PVector point);
+
+	PVector angle2Vector(double a);
+	double vector2Angle(PVector v);
 	double vector2Angle(double x, double y);
 }
 
@@ -340,32 +345,22 @@ extern const std::vector<Area> GAME0WALLS;
 extern const std::vector<Area> GAME0TRAPS;
 extern const std::vector<Area> GAME0SWAMPS;
 extern const std::vector<Area> GAME0WATERS;
-extern const std::vector<Point> GAME0DEPOSITS;
+extern const std::vector<PVector> GAME0DEPOSITS;
 
-extern const std::vector<Point> GAME0WALLNODES;
-extern const std::vector<Point> GAME0TRAPNODES;
+extern const std::vector<PVector> GAME0WALLNODES;
+extern const std::vector<PVector> GAME0TRAPNODES;
 
 extern const std::vector<Collectible> GAME0COLLECTIBLES;
-
 
 extern const std::vector<Area> GAME1WALLS;
 extern const std::vector<Area> GAME1TRAPS;
 extern const std::vector<Area> GAME1SWAMPS;
 extern const std::vector<Area> GAME1WATERS;
-extern const std::vector<Point> GAME1DEPOSITS;
+extern const std::vector<PVector> GAME1DEPOSITS;
 
-extern const std::vector<Point> GAME1WALLNODES;
-extern const std::vector<Point> GAME1TRAPNODES;
-
+extern const std::vector<PVector> GAME1WALLNODES;
+extern const std::vector<PVector> GAME1TRAPNODES;
 
 extern const std::vector<Collectible> GAME1COLLECTIBLES;
-
-
-
-
-
-
-
-
 
 #endif // !CODE_MAPDATA_HPP

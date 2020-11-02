@@ -2,46 +2,53 @@
 
 /**     -----------     **/
 /**                     **/
-/**        Point        **/
+/**        PVector        **/
 /**                     **/
 /**     -----------     **/
 
 
-Point::Point(double _x, double _y) {
-	Point::x = _x;
-	Point::y = _y;
+PVector::PVector(double _x, double _y) {
+	PVector::x = _x;
+	PVector::y = _y;
 }
 
-Point Point::round() const {
-	return Point(std::round(x), std::round(y));
+PVector PVector::round() const {
+	return PVector(std::round(x), std::round(y));
 }
 
-bool operator==(const Point &p1, const Point &p2) {
+bool operator==(const PVector& p1, const PVector& p2) {
 	return p1.x == p2.x && p1.y == p2.y;
 }
 
-bool operator!=(const Point &p1, const Point &p2) {
+bool operator!=(const PVector& p1, const PVector& p2) {
 	return !(p1 == p2);
 }
 
-Point::operator bool() const {
+PVector::operator bool() const {
 	return x != 0 || y != 0;
 }
 
-Point operator*(const Point &p, const double &m) {
-	return Point(p.x * m, p.y * m);
+PVector operator*(const PVector& p, const double& m) {
+	return PVector(p.x * m, p.y * m);
 }
 
-Point operator/(const Point &p, const double &m) {
-	return Point(p.x / m, p.y / m);
+PVector operator/(const PVector& p, const double& m) {
+	return PVector(p.x / m, p.y / m);
 }
 
-void Point::set(double _x, double _y) {
+void PVector::set(double _x, double _y) {
 	x = _x, y = _y;
 }
 
-void Point::set(Point p) {
+void PVector::set(PVector p) {
 	set(p.x, p.y);
+}
+double PVector::getMag() const {
+	return sqrt(x * x + y * y);
+}
+void PVector::setMag(double mag) {
+	double oldMag = getMag();
+	set(x / oldMag * mag, y / oldMag * mag);
 }
 
 
@@ -51,7 +58,7 @@ void Point::set(Point p) {
 /**                     **/
 /**     -----------     **/
 
-Collectible::Collectible(const Point &p, const int &c) {
+Collectible::Collectible(const PVector& p, const int& c) {
 	Collectible::pos_ = p;
 	Collectible::color_ = c;
 	Collectible::state_ = 0;
@@ -61,7 +68,7 @@ unsigned int Collectible::getColor() const {
 	return color_;
 }
 
-const Point &Collectible::getPos() const {
+const PVector& Collectible::getPos() const {
 	return pos_;
 }
 
@@ -73,7 +80,7 @@ void Collectible::setState(unsigned int state) {
 	state_ = state;
 }
 
-bool Collectible::isCorrectCollectible(Point robot_pos, double angle, double uncertainty) {
+bool Collectible::isCorrectCollectible(PVector robot_pos, double angle, double uncertainty) {
 
 	auto p = robot_pos + (geometry::angle2Vector(angle + COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
 
@@ -96,25 +103,25 @@ bool Collectible::isCorrectCollectible(Point robot_pos, double angle, double unc
 /**     -----------     **/
 
 // Line::Line(): Constructor for Line Class
-Line::Line(const Point &p1, const Point &p2) {
+Line::Line(const PVector& p1, const PVector& p2) {
 	/** Set private vars **/
 	Line::p1_ = p1;
 	Line::p2_ = p2;
 }
 
-const Point &Line::getP1() const {
+const PVector& Line::getP1() const {
 	return p1_;
 }
 
-const Point &Line::getP2() const {
+const PVector& Line::getP2() const {
 	return p2_;
 }
 
-void Line::setP1(const Point &p_1) {
+void Line::setP1(const PVector& p_1) {
 	p1_ = p_1;
 }
 
-void Line::setP2(const Point &p_2) {
+void Line::setP2(const PVector& p_2) {
 	p2_ = p_2;
 }
 
@@ -125,11 +132,11 @@ void Line::setP2(const Point &p_2) {
 /**     -----------     **/
 
 // Area::Area(): Constructor for Area class
-Area::Area(const std::vector<Point> &p_s) : min_{p_s.front()}, max_{0, 0} {
+Area::Area(const std::vector<PVector>& p_s) : min_{ p_s.front() }, max_{ 0, 0 } {
 
 	Area::Corners_ = p_s;
-	Point last_p = p_s.back();
-	for (Point p : p_s) {
+	PVector last_p = p_s.back();
+	for (PVector p : p_s) {
 		Area::Edges_.emplace_back(last_p, p);
 		last_p = p;
 
@@ -151,7 +158,7 @@ Area::Area(const std::vector<Point> &p_s) : min_{p_s.front()}, max_{0, 0} {
 	}
 }
 
-const std::vector<Point> &Area::getCorners() const {
+const std::vector<PVector>& Area::getCorners() const {
 	return Corners_;
 }
 
@@ -159,11 +166,11 @@ const std::vector<Line> &Area::getEdges() const {
 	return Edges_;
 }
 
-const Point &Area::getMin() const {
+const PVector& Area::getMin() const {
 	return min_;
 }
 
-const Point &Area::getMax() const {
+const PVector& Area::getMax() const {
 	return max_;
 }
 
@@ -175,15 +182,15 @@ const Point &Area::getMax() const {
 /**     -----------     **/
 
 
-Field::Field(const int &width, const int &height,
-             const std::vector<Area> &walls,
-             const std::vector<Area> &traps,
-             const std::vector<Area> &swamps,
-             const std::vector<Area> &waters,
-             const std::vector<Point> &deposits,
-             const std::vector<Point> &wallNodes,
-             const std::vector<Point> &trapNodes,
-             const std::vector<Collectible> &collectibles) :
+Field::Field(const int& width, const int& height,
+	const std::vector<Area>& walls,
+	const std::vector<Area>& traps,
+	const std::vector<Area>& swamps,
+	const std::vector<Area>& waters,
+	const std::vector<PVector>& deposits,
+	const std::vector<PVector>& wallNodes,
+	const std::vector<PVector>& trapNodes,
+	const std::vector<Collectible>& collectibles) :
 		size_{static_cast<double>(width), static_cast<double>(height)} {
 
 	// Field::(MapObjectName)_: Different MapObjects that can be displayed as areas.
@@ -201,7 +208,7 @@ Field::Field(const int &width, const int &height,
 	}
 }
 
-Point Field::getSize() {
+PVector Field::getSize() {
 	return size_;
 }
 
@@ -227,18 +234,18 @@ std::vector<Area> Field::getMapObjects(std::vector<unsigned int> indices) {
 	return return_vector;
 }
 
-std::vector<Point> Field::getMapNodes(std::vector<unsigned int> indices) {
-	std::vector<Point> return_vector;
+std::vector<PVector> Field::getMapNodes(std::vector<unsigned int> indices) {
+	std::vector<PVector> return_vector;
 	// return after all indices have been checked.
 	while (!indices.empty()) {
 		unsigned int index = indices.back();
 		indices.pop_back();
 		switch (index) {
-			case 0:
-				return_vector.insert(std::end(return_vector), std::begin(Field::WallNodes_),
-				                     std::end(Field::WallNodes_));
-			case 1:
-				return_vector.insert(std::end(return_vector), std::begin(Field::TrapNodes_),
+		case 0:
+			return_vector.insert(std::end(return_vector), std::begin(Field::WallNodes_),
+				std::end(Field::WallNodes_));
+		case 1:
+			return_vector.insert(std::end(return_vector), std::begin(Field::TrapNodes_),
 				                     std::end(Field::TrapNodes_));
 			default: ERROR_MESSAGE("index out of range/invalid")
 		}
@@ -248,7 +255,7 @@ std::vector<Point> Field::getMapNodes(std::vector<unsigned int> indices) {
 }
 
 /** Getter for Field::Collectibles_ **/
-std::vector<Point> Field::getDeposits() {
+std::vector<PVector> Field::getDeposits() {
 	return Deposits_;
 }
 
@@ -269,7 +276,7 @@ std::vector<Collectible> Field::getCollectibles(std::vector<unsigned int> colors
 	return return_vector;
 }
 
-Collectible *Field::getCollectible(Point robot_pos, double angle, double uncertainty, int color) {
+Collectible* Field::getCollectible(PVector robot_pos, double angle, double uncertainty, int color) {
 
 	if (color < 0 || color > 3) {
 		ERROR_MESSAGE("color " + std::to_string(color) + " is not existing!")
@@ -278,7 +285,7 @@ Collectible *Field::getCollectible(Point robot_pos, double angle, double uncerta
 
 	auto Collectibles = Collectibles_[color];
 
-	for (auto &collectible : Collectibles) {
+	for (auto& collectible : Collectibles) {
 		if (collectible.isCorrectCollectible(robot_pos, angle, uncertainty)) {
 			return &collectible;
 		}
@@ -289,8 +296,8 @@ Collectible *Field::getCollectible(Point robot_pos, double angle, double uncerta
 }
 
 //TODO
-std::vector<Point> Field::getPointPath() {
-	return std::vector<Point>();
+std::vector<PVector> Field::getPointPath() {
+	return std::vector<PVector>();
 }
 
 
@@ -302,23 +309,23 @@ std::vector<Point> Field::getPointPath() {
 
 
 // geometry::onSide():  Test if a point p2 is left/on/right a line through p0 and p1.
-//      Input:  Point p0, p1, p2
+//      Input:  PVector p0, p1, p2
 //      Return: >0 left; =0 on; <0 right
-bool geometry::isLeft(Point p0, Point p1, Point p2) {
+bool geometry::isLeft(PVector p0, PVector p1, PVector p2) {
 	return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y) > 0;
 }
 
 // geometry::isInside():  Test if a point p2 is left/on/right a line through p0 and p1.
-//      Input:  Point p0, p1, p2
+//      Input:  PVector p0, p1, p2
 //      Return: >0 left; =0 on; <0 right
-bool geometry::isInside(const Point &p, Area &area) {
-	// Point in Polygon(PIP) using the winding number algorithm:
+bool geometry::isInside(const PVector& p, Area& area) {
+	// PVector in Polygon(PIP) using the winding number algorithm:
 	// source: https://en.wikipedia.ord/wiki/Point_in_polygon
 
 	int wn = 0;    // the  winding number counter
 	unsigned int n = area.getCorners().size(); // The number of corners
 
-	std::vector<Point> poly = area.getCorners();      // vector with all corners + V[0] at V[n+1]
+	std::vector<PVector> poly = area.getCorners();      // vector with all corners + V[0] at V[n+1]
 	poly.push_back(poly.front());
 
 	// loop through all edges of the polygon
@@ -338,7 +345,7 @@ bool geometry::isInside(const Point &p, Area &area) {
 	return wn != 0;
 }
 
-Point geometry::isIntersecting(Line &l1, Line &l2) {
+PVector geometry::isIntersecting(Line& l1, Line& l2) {
 	// line - line intersection using determinants:
 	// source: https://en.wikipedia.ord/wiki/Line%E2%%80%90line_intersection
 
@@ -366,16 +373,16 @@ Point geometry::isIntersecting(Line &l1, Line &l2) {
 	return {xnom / denom, ynom / denom};
 }
 
-double geometry::sqDist(const Point &p1, const Point &p2) {
+double geometry::sqDist(const PVector& p1, const PVector& p2) {
 	return pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2);
 }
 
-double geometry::dist(const Point &p1, const Point &p2) {
+double geometry::dist(const PVector& p1, const PVector& p2) {
 	return sqrt(geometry::sqDist(p1, p2));
 }
 
-Point geometry::angle2Vector(double a) {
-	return {cos(a), sin(a)};
+PVector geometry::angle2Vector(double a) {
+	return { cos(a), sin(a) };
 }
 
 double geometry::vector2Angle(double x, double y) {
@@ -407,8 +414,24 @@ double geometry::vector2Angle(double x, double y) {
 	return angle;
 }
 
-double geometry::vector2Angle(Point v) {
+double geometry::vector2Angle(PVector v) {
 	return geometry::vector2Angle(v.x, v.y);
+}
+
+double geometry::dot(PVector p1, PVector p2) {
+	return p1.x * p2.x + p1.y * p2.y;
+}
+
+PVector geometry::getNormalPoint(Line line, PVector point) {
+	PVector ap = point - line.getP1();
+	PVector ab = line.getP2() - line.getP1();
+
+	// normalize ab (set mag to 1)
+	ab.setMag(1);
+	ab = ab * geometry::dot(ap, ab);
+
+	// normal point
+	return point + ab;
 }
 
 
@@ -510,87 +533,87 @@ const std::vector<Area> GAME0WATERS = {
 		      {70, 1},
 		      {0,  1}}),
 		Area({{195, 60},
-		      {239, 60},
-		      {239, 1},
-		      {170, 1},
-		      {170, 35},
-		      {177, 35},
-		      {177, 27},
-		      {203, 27},
-		      {203, 53},
-		      {195, 53}})};
+		      { 239, 60 },
+		      { 239, 1 },
+		      { 170, 1 },
+		      { 170, 35 },
+		      { 177, 35 },
+		      { 177, 27 },
+		      { 203, 27 },
+		      { 203, 53 },
+		      { 195, 53 }}) };
 /*deposit*/
-const std::vector<Point> GAME0DEPOSITS = {{60,  129},
-                                          {178, 128}};
+const std::vector<PVector> GAME0DEPOSITS = {{ 60, 129 },
+                                            { 178, 128 }};
 
 //------ Nodes ------//
 /*wall_nodes*/
-const std::vector<Point> GAME0WALLNODES = {{62,  155},
-                                           {177, 155},
-                                           {177, 135},
-                                           {62,  135},
-                                           {76,  96},
-                                           {95,  96},
-                                           {95,  95},
-                                           {118, 73},
-                                           {118, 72},
-                                           {122, 72},
-                                           {122, 73},
-                                           {145, 95},
-                                           {145, 96},
-                                           {164, 96},
-                                           {164, 95},
-                                           {165, 95},
-                                           {165, 77},
-                                           {164, 77},
-                                           {138, 50},
-                                           {137, 50},
-                                           {137, 42},
-                                           {136, 42},
-                                           {136, 40},
-                                           {135, 40},
-                                           {135, 39},
-                                           {133, 39},
-                                           {133, 38},
-                                           {132, 38},
-                                           {132, 37},
-                                           {130, 37},
-                                           {109, 37},
-                                           {108, 37},
-                                           {108, 38},
-                                           {106, 38},
-                                           {106, 39},
-                                           {104, 41},
-                                           {103, 41},
-                                           {103, 44},
-                                           {102, 44},
-                                           {102, 50},
-                                           {101, 50},
-                                           {76,  76},
-                                           {75,  76},
-                                           {75,  95},
-                                           {76,  95},
-                                           {177, 53},
-                                           {203, 53},
-                                           {203, 27},
-                                           {177, 27},
-                                           {37,  52},
-                                           {62,  52},
-                                           {62,  27},
-                                           {37,  27}};
+const std::vector<PVector> GAME0WALLNODES = {{ 62, 155 },
+                                             { 177, 155 },
+                                             { 177, 135 },
+                                             { 62, 135 },
+                                             { 76, 96 },
+                                             { 95, 96 },
+                                             { 95, 95 },
+                                             { 118, 73 },
+                                             { 118, 72 },
+                                             { 122, 72 },
+                                             { 122, 73 },
+                                             { 145, 95 },
+                                             { 145, 96 },
+                                             { 164, 96 },
+                                             { 164, 95 },
+                                             { 165, 95 },
+                                             { 165, 77 },
+                                             { 164, 77 },
+                                             { 138, 50 },
+                                             { 137, 50 },
+                                             { 137, 42 },
+                                             { 136, 42 },
+                                             { 136, 40 },
+                                             { 135, 40 },
+                                             { 135, 39 },
+                                             { 133, 39 },
+                                             { 133, 38 },
+                                             { 132, 38 },
+                                             { 132, 37 },
+                                             { 130, 37 },
+                                             { 109, 37 },
+                                             { 108, 37 },
+                                             { 108, 38 },
+                                             { 106, 38 },
+                                             { 106, 39 },
+                                             { 104, 41 },
+                                             { 103, 41 },
+                                             { 103, 44 },
+                                             { 102, 44 },
+                                             { 102, 50 },
+                                             { 101, 50 },
+                                             { 76, 76 },
+                                             { 75, 76 },
+                                             { 75, 95 },
+                                             { 76, 95 },
+                                             { 177, 53 },
+                                             { 203, 53 },
+                                             { 203, 27 },
+                                             { 177, 27 },
+                                             { 37, 52 },
+                                             { 62, 52 },
+                                             { 62, 27 },
+                                             { 37, 27 }};
 /*trap_nodes*/
-const std::vector<Point> GAME0TRAPNODES = {{38,  139},
-                                           {63,  139},
-                                           {63,  136},
-                                           {68,  136},
-                                           {68,  109},
-                                           {38,  109},
-                                           {176, 139},
-                                           {203, 139},
-                                           {203, 109},
-                                           {172, 109},
-                                           {172, 136},
-                                           {176, 136}};
+const std::vector<PVector> GAME0TRAPNODES = {{ 38, 139 },
+                                             { 63, 139 },
+                                             { 63, 136 },
+                                             { 68, 136 },
+                                             { 68, 109 },
+                                             { 38, 109 },
+                                             { 176, 139 },
+                                             { 203, 139 },
+                                             { 203, 109 },
+                                             { 172, 109 },
+                                             { 172, 136 },
+                                             { 176, 136 }};
 
 
 
@@ -996,135 +1019,135 @@ const std::vector<Area> GAME1WATERS = {
 		      {309, 57},
 		      {312, 57},
 		      {312, 58},
-		      {314, 58},
-		      {314, 59},
-		      {316, 59},
-		      {316, 60},
-		      {319, 60},
-		      {319, 61},
-		      {323, 61},
-		      {323, 62},
-		      {329, 62}})};
+		      { 314, 58 },
+		      { 314, 59 },
+		      { 316, 59 },
+		      { 316, 60 },
+		      { 319, 60 },
+		      { 319, 61 },
+		      { 323, 61 },
+		      { 323, 62 },
+		      { 329, 62 }}) };
 /*deposit*/
-const std::vector<Point> GAME1DEPOSITS = {{91,  118},
-                                          {267, 118},
-                                          {179, 214}};
+const std::vector<PVector> GAME1DEPOSITS = {{ 91, 118 },
+                                            { 267, 118 },
+                                            { 179, 214 }};
 
 //------ Nodes ------//
 /*wall_nodes*/
-const std::vector<Point> GAME1WALLNODES = {{168, 241},
-                                           {191, 241},
-                                           {191, 240},
-                                           {196, 240},
-                                           {196, 239},
-                                           {198, 239},
-                                           {198, 238},
-                                           {200, 238},
-                                           {200, 237},
-                                           {202, 237},
-                                           {202, 236},
-                                           {208, 230},
-                                           {209, 230},
-                                           {209, 227},
-                                           {210, 227},
-                                           {210, 225},
-                                           {211, 225},
-                                           {211, 222},
-                                           {212, 222},
-                                           {212, 195},
-                                           {211, 195},
-                                           {211, 191},
-                                           {210, 191},
-                                           {210, 189},
-                                           {209, 189},
-                                           {209, 187},
-                                           {208, 187},
-                                           {208, 186},
-                                           {207, 186},
-                                           {207, 184},
-                                           {206, 184},
-                                           {204, 182},
-                                           {204, 181},
-                                           {202, 181},
-                                           {202, 180},
-                                           {200, 179},
-                                           {200, 178},
-                                           {197, 178},
-                                           {197, 177},
-                                           {194, 177},
-                                           {194, 176},
-                                           {189, 176},
-                                           {189, 175},
-                                           {170, 175},
-                                           {170, 176},
-                                           {165, 176},
-                                           {165, 177},
-                                           {162, 177},
-                                           {162, 178},
-                                           {159, 178},
-                                           {159, 179},
-                                           {157, 180},
-                                           {157, 181},
-                                           {155, 181},
-                                           {155, 182},
-                                           {152, 185},
-                                           {151, 185},
-                                           {151, 187},
-                                           {150, 187},
-                                           {150, 189},
-                                           {149, 189},
-                                           {149, 191},
-                                           {148, 191},
-                                           {148, 195},
-                                           {147, 195},
-                                           {147, 222},
-                                           {148, 222},
-                                           {148, 225},
-                                           {149, 225},
-                                           {149, 227},
-                                           {150, 227},
-                                           {150, 229},
-                                           {151, 229},
-                                           {151, 231},
-                                           {152, 231},
-                                           {157, 236},
-                                           {157, 237},
-                                           {159, 237},
-                                           {159, 238},
-                                           {161, 238},
-                                           {161, 239},
-                                           {163, 239},
-                                           {163, 240},
-                                           {168, 240},
-                                           {102, 175},
-                                           {128, 175},
-                                           {128, 119},
-                                           {102, 119},
-                                           {231, 175},
-                                           {257, 175},
-                                           {257, 120},
-                                           {231, 120},
-                                           {152, 95},
-                                           {207, 95},
-                                           {207, 70},
-                                           {152, 70}};
+const std::vector<PVector> GAME1WALLNODES = {{ 168, 241 },
+                                             { 191, 241 },
+                                             { 191, 240 },
+                                             { 196, 240 },
+                                             { 196, 239 },
+                                             { 198, 239 },
+                                             { 198, 238 },
+                                             { 200, 238 },
+                                             { 200, 237 },
+                                             { 202, 237 },
+                                             { 202, 236 },
+                                             { 208, 230 },
+                                             { 209, 230 },
+                                             { 209, 227 },
+                                             { 210, 227 },
+                                             { 210, 225 },
+                                             { 211, 225 },
+                                             { 211, 222 },
+                                             { 212, 222 },
+                                             { 212, 195 },
+                                             { 211, 195 },
+                                             { 211, 191 },
+                                             { 210, 191 },
+                                             { 210, 189 },
+                                             { 209, 189 },
+                                             { 209, 187 },
+                                             { 208, 187 },
+                                             { 208, 186 },
+                                             { 207, 186 },
+                                             { 207, 184 },
+                                             { 206, 184 },
+                                             { 204, 182 },
+                                             { 204, 181 },
+                                             { 202, 181 },
+                                             { 202, 180 },
+                                             { 200, 179 },
+                                             { 200, 178 },
+                                             { 197, 178 },
+                                             { 197, 177 },
+                                             { 194, 177 },
+                                             { 194, 176 },
+                                             { 189, 176 },
+                                             { 189, 175 },
+                                             { 170, 175 },
+                                             { 170, 176 },
+                                             { 165, 176 },
+                                             { 165, 177 },
+                                             { 162, 177 },
+                                             { 162, 178 },
+                                             { 159, 178 },
+                                             { 159, 179 },
+                                             { 157, 180 },
+                                             { 157, 181 },
+                                             { 155, 181 },
+                                             { 155, 182 },
+                                             { 152, 185 },
+                                             { 151, 185 },
+                                             { 151, 187 },
+                                             { 150, 187 },
+                                             { 150, 189 },
+                                             { 149, 189 },
+                                             { 149, 191 },
+                                             { 148, 191 },
+                                             { 148, 195 },
+                                             { 147, 195 },
+                                             { 147, 222 },
+                                             { 148, 222 },
+                                             { 148, 225 },
+                                             { 149, 225 },
+                                             { 149, 227 },
+                                             { 150, 227 },
+                                             { 150, 229 },
+                                             { 151, 229 },
+                                             { 151, 231 },
+                                             { 152, 231 },
+                                             { 157, 236 },
+                                             { 157, 237 },
+                                             { 159, 237 },
+                                             { 159, 238 },
+                                             { 161, 238 },
+                                             { 161, 239 },
+                                             { 163, 239 },
+                                             { 163, 240 },
+                                             { 168, 240 },
+                                             { 102, 175 },
+                                             { 128, 175 },
+                                             { 128, 119 },
+                                             { 102, 119 },
+                                             { 231, 175 },
+                                             { 257, 175 },
+                                             { 257, 120 },
+                                             { 231, 120 },
+                                             { 152, 95 },
+                                             { 207, 95 },
+                                             { 207, 70 },
+                                             { 152, 70 }};
 /*trap_nodes*/
-const std::vector<Point> GAME1TRAPNODES = {{84,  202},
-                                           {116, 202},
-                                           {116, 174},
-                                           {103, 174},
-                                           {103, 170},
-                                           {84,  170},
-                                           {243, 202},
-                                           {276, 202},
-                                           {276, 170},
-                                           {256, 170},
-                                           {256, 174},
-                                           {243, 174},
-                                           {163, 35},
-                                           {196, 35},
-                                           {196, 3},
-                                           {163, 3}};
+const std::vector<PVector> GAME1TRAPNODES = {{ 84, 202 },
+                                             { 116, 202 },
+                                             { 116, 174 },
+                                             { 103, 174 },
+                                             { 103, 170 },
+                                             { 84, 170 },
+                                             { 243, 202 },
+                                             { 276, 202 },
+                                             { 276, 170 },
+                                             { 256, 170 },
+                                             { 256, 174 },
+                                             { 243, 174 },
+                                             { 163, 35 },
+                                             { 196, 35 },
+                                             { 196, 3 },
+                                             { 163, 3 }};
 
 
 

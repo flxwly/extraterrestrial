@@ -25,7 +25,7 @@ double map(double Mmin, double Mmax, double Imin, double Imax, double input);
 template<class T1, class T2>
 std::string str(T1 x, T2 y);
 
-std::string str(Point p);
+std::string str(PVector p);
 
 
 #endif // !COMMONFUNCTIONS_HPP

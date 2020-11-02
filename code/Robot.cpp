@@ -28,12 +28,12 @@ Robot::Robot(int *input[20],
 //====================================
 
 // TODO: updatePos_ function
-Point Robot::updatePos() {
+PVector Robot::updatePos() {
 	// time difference between last known position and now
 	double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - lastPositionUpdate_).count();
 
 	// total distance
-	Point change = getVelocity(time_dif);
+	PVector change = getVelocity(time_dif);
 
 	// add change on actual position
 	aPos_ += change;
@@ -217,12 +217,15 @@ int Robot::avoidVoid() {
 	return 0;
 }
 
-
 //====================================
 //          Public Functions
 //====================================
 void Robot::wheels(int l, int r) {
-	*wheelRight = 20 * l, *wheelRight = 20 * r;
+	*wheelRight = l, *wheelRight = 20 * r;
+}
+
+void Robot::addWheels(int l, int r) {
+	*wheelRight += l, *wheelRight += r;
 }
 
 std::array<int, 3> Robot::getLoadedObjects() {
@@ -233,7 +236,7 @@ int Robot::getLoadedObjectsNum() const {
 	return loadedObjectsNum_;
 }
 
-int Robot::moveTo(Point p, bool safety) {
+int Robot::moveTo(PVector p, bool safety) {
 
 	double dist = geometry::dist(aPos_, p);
 
@@ -337,7 +340,7 @@ int Robot::moveTo(Point p, bool safety) {
 }
 
 int Robot::moveTo(double x, double y, bool safety) {
-	return Robot::moveTo(Point(x, y), safety);
+	return Robot::moveTo(PVector(x, y), safety);
 }
 
 int Robot::checkUsSensors(int l, int f, int r) {
@@ -423,9 +426,9 @@ void Robot::game1Loop() {
 	if (false && *wheelLeft == *wheelRight && *wheelLeft != 0) {
 
 		double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
-				timer::now() - lastPositionUpdate_).count();
+			timer::now() - lastPositionUpdate_).count();
 
-		double distance = geometry::dist(Point(*x, *y), lPos_);
+		double distance = geometry::dist(PVector(*x, *y), lPos_);
 
 		std::cout << distance / time_dif << std::endl;
 
@@ -440,7 +443,7 @@ void Robot::game1Loop() {
 		updatePos();
 		ERROR_MESSAGE("Position lost");
 	} else {
-		if (geometry::dist(aPos_, Point(*x, *y)) > 2) {
+		if (geometry::dist(aPos_, PVector(*x, *y)) > 2) {
 			aPos_.set(*x, *y);
 		}
 
@@ -459,8 +462,8 @@ void Robot::game1Loop() {
 	// There's no path to follow
 	if (completePath.empty()) {
 		// get a path of points
-		std::vector<Point> pathOfCollectibles = getPathOfCollectibles();
-		Point start = Point(*x, *y);
+		std::vector<PVector> pathOfCollectibles = getPathOfCollectibles();
+		PVector start = PVector(*x, *y);
 
 		// calculate a path from one point to the next
 		for (auto end : pathOfCollectibles) {
@@ -468,7 +471,7 @@ void Robot::game1Loop() {
 
 				// depending on the current number of objects traps should be avoided or ignored
 				Path p = (loadedObjectsNum_ > 0) ? pathfinder1T_.AStar(start, end)
-				                                               : pathfinder1_.AStar(start, end);
+				                                 : pathfinder1_.AStar(start, end);
 
 				if (!p.empty()) {
 
@@ -547,9 +550,9 @@ void Robot::game1Loop() {
 		//std::cout << "Is at: " << str(*x, *y) << "\tmoving to: " << str(nTarget_) << std::endl;
 
 		// if the distance is very small the target has been reached
-		if (geometry::dist(Point(*x, *y), nTarget_) < 5) {
+		if (geometry::dist(PVector(*x, *y), nTarget_) < 5) {
 			//std::cout << "reached Object" << std::endl;
-			nTarget_ = {-1, -1};
+			nTarget_ = { -1, -1 };
 		}
 
 		// avoid the void by driving left || avoid trap on the right if objects are loaded
@@ -567,10 +570,14 @@ double Robot::getBrakingDistance(double friction) {
 	return static_cast<double>(*wheelLeft + *wheelRight) / 2;
 }
 
-Point Robot::getVelocity(double dt) {
+PVector Robot::getVelocity(double dt) {
 	return (geometry::angle2Vector(*compass) * (*wheelLeft + *wheelRight) / 2) * dt;
 }
 
-void Robot::moveAlongPath(Path path) {
-	//TODO
+void Robot::moveAlongPath(Path& path) {
+	PVector futureLoc = PVector(*x, *y);
+	futureLoc += getVelocity(5000);
+
+	PVector target = path.getClosestNormalPoint(futureLoc, 20);
+	moveTo(target, true);
 }

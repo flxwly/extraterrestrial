@@ -29,21 +29,21 @@ class Robot {
 public:
 	Robot(int *input[20], Field *_map0, Field *_map1);
 
-
 	/// typedef for time (basically a macro)
 	typedef std::chrono::steady_clock timer;
 
 	/// the complete path (contains sub-paths from point to point)
-	std::vector<std::vector<Point>> completePath;
+	std::vector<std::vector<PVector>> completePath;
 
 	/// controls the robots wheels
 	void wheels(int l, int r);
+	void addWheels(int l, int r);
 
 	/// points the robot towards a point. Safety regulates if the robot should approach the target slowly
 	int moveTo(double x, double y, bool safety);
-	int moveTo(Point p, bool safety);
+	int moveTo(PVector p, bool safety);
 
-	void moveAlongPath(Path path);
+	void moveAlongPath(Path& path);
 
 	/// checks if l, f or r is higher than the us-sensor vals. returns a binary-encoded value
 	int checkUsSensors(int l, int f, int r);
@@ -75,19 +75,21 @@ private:
 
 	// === Robot vars ===
 
-	Field *map0_, *map1_;                                   ///< Field vars
+	Field* map0_, * map1_;                                   ///< Field vars
 	Pathfinder pathfinder0_, pathfinder1_;                  ///< Pathfinders that ignore traps
 	Pathfinder pathfinder0T_, pathfinder1T_;                ///< Pathfinders that don't ignore traps
 
 	int loadedObjectsNum_;                                  ///< number of objects loaded
-	std::array<int, 3> loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
+	std::array<int, 3>
+		loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
 
-	Point nTarget_;                                         ///< pathfinder waypoint chasing
+	PVector nTarget_;                                         ///< pathfinder waypoint chasing
 	bool nTargetIsLast_;                                    ///< is nTarget the last element of a path
-	int chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
+	int
+		chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
 
-	Point aPos_;                                            ///< more accurate position of the robot
-	Point lPos_;                                          	///< last coordinates of the robot (for signal loss)
+	PVector aPos_;                                            ///< more accurate position of the robot
+	PVector lPos_;                                            ///< last coordinates of the robot (for signal loss)
 	std::chrono::time_point<timer> lastCycle_;              ///< the time the last cycle was executed
 	std::chrono::time_point<timer> depositingSince_;        ///< the time last depositing has started
 	std::chrono::time_point<timer> collectingSince_;        ///< the time last collecting has started
@@ -97,13 +99,13 @@ private:
 	//______________/ functions \_____________
 
 	/// updates the position of the robot mathematically and returns the change
-	Point updatePos();
+	PVector updatePos();
 
 	/// calculates how long the breaking distance is
 	double getBrakingDistance(double friction);
 
 	/// gets the current velocity for a certain change in time
-	Point getVelocity(double dt);
+	PVector getVelocity(double dt);
 
 
 	/// decides whether collecting a point is a good idea or not
