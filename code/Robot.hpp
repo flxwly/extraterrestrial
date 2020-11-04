@@ -33,7 +33,7 @@ public:
 	typedef std::chrono::steady_clock timer;
 
 	/// the complete path (contains sub-paths from point to point)
-	std::vector<std::vector<PVector>> completePath;
+	std::vector<Path> completePath;
 
 	/// controls the robots wheels
 	void wheels(int l, int r);

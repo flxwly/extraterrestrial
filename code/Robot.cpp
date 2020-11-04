@@ -473,7 +473,7 @@ void Robot::game1Loop() {
 				Path p = (loadedObjectsNum_ > 0) ? pathfinder1T_.AStar(start, end)
 				                                 : pathfinder1_.AStar(start, end);
 
-				if (!p.empty()) {
+				if (!p.isEmpty()) {
 
 					// add the path to the complete path
 					// the first path is at the front of the vector
