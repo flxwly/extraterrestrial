@@ -297,7 +297,14 @@ Collectible* Field::getCollectible(PVector robot_pos, double angle, double uncer
 
 //TODO
 std::vector<PVector> Field::getPointPath() {
-	return std::vector<PVector>();
+	std::vector<PVector> c;
+
+	c.reserve(6);
+	for (int i = 0; i < 6; ++i) {
+		c.push_back(Collectibles_[0][i].getPos());
+	}
+
+	return c;
 }
 
 

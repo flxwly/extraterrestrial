@@ -14,7 +14,10 @@
 #include "MapData.hpp"
 #include "Pathfinder.hpp"
 
-#define ROBOT_SPEED 0.03333333               // in milliseconds for wheel_speed = 1
+/// TODO The speed of the robot in m/s for 20 % of maximum speed
+#define ROBOT_SPEED 0.03333333
+
+/// A simple preprocessor function for debugging
 #define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
 
 /** The robot of the CoSpace-simulator
@@ -85,8 +88,7 @@ private:
 
 	PVector nTarget_;                                         ///< pathfinder waypoint chasing
 	bool nTargetIsLast_;                                    ///< is nTarget the last element of a path
-	int
-		chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
+	int chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
 
 	PVector aPos_;                                            ///< more accurate position of the robot
 	PVector lPos_;                                            ///< last coordinates of the robot (for signal loss)

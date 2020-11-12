@@ -134,7 +134,7 @@ class Path {
 public:
 	Path(std::vector<PVector> points, double r);
 
-	PVector getClosestNormalPoint(PVector p, double aheadness);
+	PVector getClosestNormalPoint(PVector p, double d);
 
 	void addPoint(PVector p);
 	void removeLast();

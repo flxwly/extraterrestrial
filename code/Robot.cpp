@@ -462,7 +462,7 @@ void Robot::game1Loop() {
 	// There's no path to follow
 	if (completePath.empty()) {
 		// get a path of points
-		std::vector<PVector> pathOfCollectibles = getPathOfCollectibles();
+		std::vector<PVector> pathOfCollectibles = map1_->getPointPath();
 		PVector start = PVector(*x, *y);
 
 		// calculate a path from one point to the next
@@ -493,14 +493,13 @@ void Robot::game1Loop() {
 
 		// get the next target
 	else {
-
 		if (nTarget_.x == -1 && nTarget_.y == -1) {
 
 			// set nTarget_ to the last element of the first path in completePath
 			//      the paths in completePath are reversed; The end of the path is the first element
 
-			nTargetIsLast_ = completePath.front().size() == 1;
-			nTarget_ = completePath.front().back();
+			nTargetIsLast_ = completePath.front().length() == 1;
+			nTarget_ = completePath.front().getPoints().back();
 
 			//std::cout << "new target: " << str(nTarget_) << std::endl;
 
@@ -510,7 +509,7 @@ void Robot::game1Loop() {
 			}
 				// Otherwise just remove it
 			else {
-				completePath.front().pop_back();//erase(completePath.front().begin());
+				completePath.front().removeLast();//erase(completePath.front().begin());
 			}
 		}
 	}

@@ -147,7 +147,7 @@ void Game1Debug() {
 	block.setFillColor({80, 0, 255});        // purpleish
 	sf::VertexArray path_lines;
 	for (const auto &path : Bot.completePath) {
-		for (auto point : path) {
+		for (auto point : path.getPoints()) {
 			path_lines.append({sf::Vector2f(static_cast<float> (point.x) * scale.x, static_cast<float> (GAME1.getSize().y - 1 - point.y) *scale.y), sf::Color::Red});
 			block.setPosition(static_cast<float> (point.x) * scale.x,
 			                  static_cast<float> (GAME1.getSize().y - 1 - point.y) * scale.y);

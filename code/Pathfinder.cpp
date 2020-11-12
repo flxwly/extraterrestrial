@@ -369,7 +369,7 @@ std::vector<PVector> Path::getPoints() const {
 	return points_;
 }
 
-PVector Path::getClosestNormalPoint(PVector p, double aheadness) {
+PVector Path::getClosestNormalPoint(PVector p, double d) {
 	double dist = 1000;
 	PVector finalNormal = PVector(0, 0);
 	PVector dir = PVector(0, 0);
@@ -391,7 +391,7 @@ PVector Path::getClosestNormalPoint(PVector p, double aheadness) {
 			}
 		}
 	}
-	dir = dir * aheadness;
+	dir = dir * d;
 
 	return finalNormal + dir;
 }
