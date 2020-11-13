@@ -30,7 +30,7 @@ Robot::Robot(int *input[20],
 // TODO: updatePos_ function
 PVector Robot::updatePos() {
 	// time difference between last known position and now
-	double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - lastPositionUpdate_).count();
+	long long int time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - lastPositionUpdate_).count();
 
 	// total distance
 	PVector change = getVelocity(time_dif);
@@ -539,7 +539,11 @@ void Robot::game1Loop() {
 		// if the robot is collecting take some time
 		if (color != -1) {
 			// set state of collected collectible to 0
-			map1_->getCollectible(aPos_, *compass, 2, color)->setState(0);
+
+			Collectible *collectible = map1_->getCollectible(aPos_, *compass, 2, color);
+			if (collectible) {
+				collectible->setState(0);
+			}
 		}
 
 	} else {
@@ -569,8 +573,8 @@ double Robot::getBrakingDistance(double friction) {
 	return static_cast<double>(*wheelLeft + *wheelRight) / 2;
 }
 
-PVector Robot::getVelocity(double dt) {
-	return (geometry::angle2Vector(*compass) * (*wheelLeft + *wheelRight) / 2) * dt;
+PVector Robot::getVelocity(long long int dt) {
+	return (geometry::angle2Vector(*compass) * (*wheelLeft + *wheelRight) / 2) * static_cast<double>(dt);
 }
 
 void Robot::moveAlongPath(Path& path) {

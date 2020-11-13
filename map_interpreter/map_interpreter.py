@@ -16,7 +16,7 @@ FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
 FieldFD = "../../../../../store/media/Rescue/Map/Sec/Design"
 
-cospace_version = "2.6.2"  # "4.0.9" #
+cospace_version = "4.0.9" # "2.6.2" #
 
 # for CoSpace 2.6.2+
 if cospace_version == "2.6.2":
@@ -791,9 +791,9 @@ class MapData:
             trap_str = "const std::vector<Area>GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
             swamp_str = "const std::vector<Area>GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Polygon)
             bonus_area_str = "const std::vector<Area>GAME%sWATERS = " % i  # {{x1, y1}, {x2, y2}...} (Polygon)
-            deposit_area_str = "const std::vector<Point>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            wall_nodes_str = "const std::vector<Point>GAME%sWALLNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            trap_nodes_str = "const std::vector<Point>GAME%sTRAPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            deposit_area_str = "const std::vector<PVector>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            wall_nodes_str = "const std::vector<PVector>GAME%sWALLNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            trap_nodes_str = "const std::vector<PVector>GAME%sTRAPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             collectibles_str = "const std::vector<Collectible> GAME%sCOLLECTIBLES = " % i
 
             wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
@@ -837,6 +837,8 @@ def main():
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
     mapData = MapData(img_dirs=[FieldA, FieldB], fd_dir=FieldFD)
     # mapData.show(10)
+
+    mapData.show(10)
 
     begin = "\n\n\n" \
             "///   _______                _____          __\n" \

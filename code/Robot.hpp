@@ -25,8 +25,6 @@
  *  @tparam *input[20] a pointer array to all vars of the simulator.
  *  @tparam _map0 a pointer to the first MapData object.
  *	@tparam _map0 a pointer to the second MapData object.
- *
- *
 */
 class Robot {
 public:
@@ -106,8 +104,8 @@ private:
 	/// calculates how long the breaking distance is
 	double getBrakingDistance(double friction);
 
-	/// gets the current velocity for a certain change in time
-	PVector getVelocity(double dt);
+	/// gets the current velocity for a certain change in time (in ms)
+	PVector getVelocity(long long int dt);
 
 
 	/// decides whether collecting a point is a good idea or not

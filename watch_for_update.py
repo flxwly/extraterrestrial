@@ -12,7 +12,7 @@ from watchdog.observers import Observer
 is_strip = False
 more_warnings = True
 
-auto_update = True
+auto_update = False
 
 optimisation_level = 0
 
@@ -26,7 +26,7 @@ cospace_version = "2.6.2"
 
 # for CoSpace 2.6.2
 if cospace_version == "2.6.2":
-    out_path = "../../../../CS.C/User/RSC/extraterrestrial/"
+    out_path = "./"
 
 
 def compile_code():

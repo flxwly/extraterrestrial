@@ -51,9 +51,9 @@ void DebugTool::draw() {
     }
     sf::Font font;
 
-    float mapsY = static_cast<float>(10) * maps.size();
+    float mapsY = 10.0f * static_cast<float>(maps.size());
     for (const auto& map : maps) {
-        mapsY += map.second[0].size();
+        mapsY += static_cast<float>(map.second[0].size());
     }
 
     float move_y = 0;
@@ -87,6 +87,7 @@ void DebugTool::draw() {
                     case 4:
                         block.setSize(sf::Vector2f(scaleX * 4, scaleY * 4));
                         block.setFillColor({255, 153, 0});
+		                break;
                     default:
                         block.setFillColor(sf::Color::Red);
                         break;

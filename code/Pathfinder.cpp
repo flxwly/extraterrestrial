@@ -61,7 +61,7 @@ double Node::calculateCost(Node &node) {
 
 	// The cost that is returned at the end
 	double cost = 0;
-	for (int i = 0; i < intersections.size() - 1; i++) {
+	for (unsigned int i = 0; i < intersections.size() - 1; i++) {
 
 		// add cost (modifier * distance)
 		cost += modifier * (intersections[i + 1].second - intersections[i].second);
@@ -374,7 +374,7 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
 	PVector finalNormal = PVector(0, 0);
 	PVector dir = PVector(0, 0);
 
-	for (int i = 0; i < points_.size() - 1; ++i) {
+	for (unsigned int i = 0; i < points_.size() - 1; ++i) {
 		PVector normalPoint = geometry::getNormalPoint(Line(points_[i], points_[i + 1]), p);
 
 		// Test if this is the closest yet seen normalpoint

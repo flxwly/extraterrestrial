@@ -36,10 +36,11 @@ void updateHSL() {
 	lumL = rgb2l(CSLeft_R, CSLeft_G, CSLeft_B);
 }
 
-Field GAME0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS, GAME0WALLNODES, GAME0TRAPNODES, GAME0COLLECTIBLES);
+Field GAME0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS, GAME0WALLNODES, GAME0TRAPNODES,
+            GAME0COLLECTIBLES);
 
-Field GAME1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS, GAME1WALLNODES, GAME1TRAPNODES, GAME1COLLECTIBLES);
-
+Field GAME1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS, GAME1WALLNODES, GAME1TRAPNODES,
+            GAME1COLLECTIBLES);
 
 sf::RenderWindow *CC = nullptr;
 sf::Font *unbutton = nullptr;
@@ -70,6 +71,8 @@ void Setup() {
 	if (unbutton != nullptr) {
 		std::cout << "loaded font" << std::endl;
 	}
+
+
 
 
 	updateHSL();
@@ -124,7 +127,8 @@ void Game1Debug() {
 
 	// Vars for drawing on map
 	sf::Vector2u size = CC->getSize();
-	sf::Vector2f scale = {size.x / static_cast<float>(GAME1.getSize().x), size.y / static_cast<float>(GAME1.getSize().y)};
+	sf::Vector2f scale = {static_cast<float>(size.x) / static_cast<float>(GAME1.getSize().x),
+	                      static_cast<float>(size.y) / static_cast<float>(GAME1.getSize().y)};
 	sf::RectangleShape block(sf::Vector2f(scale.x, scale.y));
 
 	//##########//
@@ -148,7 +152,9 @@ void Game1Debug() {
 	sf::VertexArray path_lines;
 	for (const auto &path : Bot.completePath) {
 		for (auto point : path.getPoints()) {
-			path_lines.append({sf::Vector2f(static_cast<float> (point.x) * scale.x, static_cast<float> (GAME1.getSize().y - 1 - point.y) *scale.y), sf::Color::Red});
+			path_lines.append({sf::Vector2f(static_cast<float> (point.x) * scale.x,
+			                                static_cast<float> (GAME1.getSize().y - 1 - point.y) * scale.y),
+			                   sf::Color::Red});
 			block.setPosition(static_cast<float> (point.x) * scale.x,
 			                  static_cast<float> (GAME1.getSize().y - 1 - point.y) * scale.y);
 			CC->draw(block);
