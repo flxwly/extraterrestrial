@@ -221,11 +221,11 @@ int Robot::avoidVoid() {
 //          Public Functions
 //====================================
 void Robot::wheels(int l, int r) {
-	*wheelRight = l, *wheelRight = 20 * r;
+	*wheelLeft = 20 * l, *wheelRight = 20 * r;
 }
 
 void Robot::addWheels(int l, int r) {
-	*wheelRight += l, *wheelRight += r;
+	*wheelLeft += l, *wheelRight += r;
 }
 
 std::array<int, 3> Robot::getLoadedObjects() {

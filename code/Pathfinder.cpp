@@ -1,6 +1,5 @@
 #include "Pathfinder.hpp"
 
-#include <utility>
 
 /**     -----------     **/
 /**                     **/
@@ -89,6 +88,8 @@ bool Node::canSee(Node &node, const std::vector<Area> &Obstacles) {
 
 int Node::findNeighbours(const std::vector<Node> &Nodes, const std::vector<Area> &Obstacles) {
 
+
+
 	for (auto node : Nodes) {
 
 		if (canSee(node, Obstacles)) {
@@ -105,7 +106,7 @@ int Node::findNeighbours(const std::vector<Node> &Nodes, const std::vector<Area>
 				neighbours_.emplace_back(&node, calculateCost(node));
 		}
 	}
-
+	ERROR_MESSAGE(neighbours_.size())
 	return neighbours_.size();
 }
 
@@ -163,6 +164,12 @@ double Pathfinder::heuristic(const PVector &cur, const PVector &end) {
 
 Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 
+	// start = end ==> no real path
+	if (begin == goal) {
+		ERROR_MESSAGE("begin is end")
+		return Path({begin}, PATH_RADIUS);
+	}
+
 	// The most cost intensive part of this algorithm
 	//TODO: STOPPED HERE LAST TIME
 
@@ -175,11 +182,6 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 	} else {
 		start.findNeighbours(Pathfinder::map, Field_->getMapObjects({0}));
 		end.findNeighbours(Pathfinder::map, Field_->getMapObjects({0}));
-	}
-
-	// start = end ==> no real path
-	if (begin == goal) {
-		return Path({begin}, PATH_RADIUS);
 	}
 
 	// init open- & closedList
@@ -237,7 +239,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 						neighbour.first->g = temp_g;
 						neighbour.first->f = temp_g + heuristic(neighbour.first->getPos(), end.getPos());
 						neighbour.first->previous = cur;
-						//cout << " - updated " << neighbour << " - ";
+						std::cout << " - updated " << str(neighbour.first->getPos()) << " - ";
 					}
 				} else {
 					// add
@@ -246,7 +248,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 					neighbour.first->previous = cur;
 					openList.push(neighbour.first);
 					neighbour.first->isOpen = true;
-					//std::cout << " - added " << neighbour << " - " << std::endl;
+					std::cout << " - added " << str(neighbour.first->getPos()) << " - " << std::endl;
 				}
 			}
 

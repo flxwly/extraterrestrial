@@ -2,6 +2,7 @@
 #define PATHFINDING_HPP
 
 #include "MapData.hpp"
+#include "libs/CommonFunctions.hpp"
 #include <utility>
 #include <vector>
 #include <algorithm>

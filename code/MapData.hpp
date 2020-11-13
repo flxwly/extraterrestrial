@@ -251,19 +251,19 @@ public:
 	 *
 	 * @param indices 0 -> walls; 1 -> traps; 2 -> swamps; 3 -> waters / bonus areas;
 	 */
-	std::vector<Area> getMapObjects(std::vector<unsigned int> indices);
+	std::vector<Area> getMapObjects(const std::vector<unsigned int>& indices);
 
 	/**  Getter for map nodes
 	 *
 	 * @param indices 0 -> walls; 1 -> traps;
 	 */
-	std::vector<PVector> getMapNodes(std::vector<unsigned int> indices);
+	std::vector<PVector> getMapNodes(const std::vector<unsigned int>& indices);
 
 	/// Getter method for deposits
 	std::vector<PVector> getDeposits();
 
 	/// Getter method for collectibles
-	std::vector<Collectible> getCollectibles(std::vector<unsigned int> colors);
+	std::vector<Collectible> getCollectibles(const std::vector<unsigned int>& colors);
 
 	Collectible* getCollectible(PVector robot_pos, double angle, double uncertainty, int color);
 

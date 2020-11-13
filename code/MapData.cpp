@@ -203,6 +203,8 @@ Field::Field(const int &width, const int &height,
 
 	// Field::Deposits_: Deposit Areas of the Field
 	Deposits_ = deposits;
+	WallNodes_ = wallNodes;
+	TrapNodes_ = trapNodes;
 
 	// Field::Collectibles: Collectible Points of the Field
 	for (auto collectible : collectibles) {
@@ -214,12 +216,10 @@ PVector Field::getSize() {
 	return size_;
 }
 
-std::vector<Area> Field::getMapObjects(std::vector<unsigned int> indices) {
-	std::vector<Area> return_vector;
+std::vector<Area> Field::getMapObjects(const std::vector<unsigned int>& indices) {
+	std::vector<Area> return_vector = {};
 	// return after all indices have been checked.
-	while (!indices.empty()) {
-		unsigned int index = indices.back();
-		indices.pop_back();
+	for (unsigned int index : indices) {
 		switch (index) {
 			case 0:
 				return_vector.insert(std::end(return_vector), std::begin(Field::Walls_), std::end(Field::Walls_));
@@ -240,25 +240,26 @@ std::vector<Area> Field::getMapObjects(std::vector<unsigned int> indices) {
 	return return_vector;
 }
 
-std::vector<PVector> Field::getMapNodes(std::vector<unsigned int> indices) {
+std::vector<PVector> Field::getMapNodes(const std::vector<unsigned int>& indices) {
 	std::vector<PVector> return_vector;
+
 	// return after all indices have been checked.
-	while (!indices.empty()) {
-		unsigned int index = indices.back();
-		indices.pop_back();
+	for (unsigned int index : indices){
 		switch (index) {
 			case 0:
-				return_vector.insert(std::end(return_vector), std::begin(Field::WallNodes_),
-				                     std::end(Field::WallNodes_));
+				return_vector.insert(return_vector.end(), Field::WallNodes_.begin(),
+				                     Field::WallNodes_.end());
 				break;
 			case 1:
 				return_vector.insert(std::end(return_vector), std::begin(Field::TrapNodes_),
 				                     std::end(Field::TrapNodes_));
 				break;
 			default: ERROR_MESSAGE("index out of range/invalid")
+				break;
 		}
 	}
 
+	ERROR_MESSAGE(return_vector.size())
 	return return_vector;
 }
 
@@ -268,12 +269,10 @@ std::vector<PVector> Field::getDeposits() {
 }
 
 /** Getter for Field::Collectibles_ **/
-std::vector<Collectible> Field::getCollectibles(std::vector<unsigned int> colors) {
-	std::vector<Collectible> return_vector;
+std::vector<Collectible> Field::getCollectibles(const std::vector<unsigned int>& colors) {
+	std::vector<Collectible> return_vector = {};
 	// return after all indices have been checked.
-	while (!colors.empty()) {
-		unsigned int index = colors.back();
-		colors.pop_back();
+	for(unsigned int index : colors){
 		if (index <= 2) {
 			return_vector.insert(std::end(return_vector), std::begin(Field::Collectibles_[index]),
 			                     std::end(Field::Collectibles_[index]));
@@ -287,7 +286,7 @@ std::vector<Collectible> Field::getCollectibles(std::vector<unsigned int> colors
 Collectible *Field::getCollectible(PVector robot_pos, double angle, double uncertainty, int color) {
 
 	if (color < 0 || color > 3) {
-		ERROR_MESSAGE("color " + std::to_string(color) + " is not existing!")
+		ERROR_MESSAGE("color " << color << " is not existing!")
 		return nullptr;
 	}
 
