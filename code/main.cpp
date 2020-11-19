@@ -42,6 +42,8 @@ Field GAME0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEP
 Field GAME1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS, GAME1WALLNODES, GAME1TRAPNODES,
             GAME1COLLECTIBLES);
 
+DebugTool debugTool;
+
 sf::RenderWindow *CC = nullptr;
 sf::Font *unbutton = nullptr;
 
@@ -54,6 +56,8 @@ Robot Bot(INPUTS, &GAME0, &GAME1);
 
 void Setup() {
 	system("cls");
+
+	debugTool.addMap()
 
 	static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
 	CC = &window;
@@ -110,7 +114,7 @@ void Game1Debug() {
 
 	// check nullptr to prevent crash.
 	if (unbutton == nullptr || CC == nullptr) {
-		std::cout << "something went wrong" << std::endl;
+		ERROR_MESSAGE("Something went wrong. Window or font is not initialized correctly.")
 		return;
 	}
 
@@ -179,7 +183,7 @@ void Game1Debug() {
 void Game1() {
 	updateHSL();
 
-	Game1Debug();
+	//Game1Debug();
 	Bot.game1Loop();
 
 	// === Debug ===

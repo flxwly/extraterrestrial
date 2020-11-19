@@ -1,6 +1,3 @@
-//
-// Created by flxwly on 29.05.2020.
-//
 #ifndef EXTRATERRESTRIAL_DEBUGTOOLS_HPP
 #define EXTRATERRESTRIAL_DEBUGTOOLS_HPP
 
@@ -9,27 +6,38 @@
 
 class DebugTool {
 public:
-	explicit DebugTool(sf::RenderWindow *_window);
+	explicit DebugTool(const std::string& label = "console");
 
-	void add_map(const std::string &label, std::vector<std::vector<int>> *map);
+	void addMap(const std::string &label, std::vector<std::vector<int>> *map);
 
-	int remove_map(const std::string &label);
+	int removeMap(const std::string &label);
 
-	void add_r_pos(const std::string &label, std::pair<int *, int *> pos);
+	void clearMaps();
 
-	int remove_r_pos(const std::string &label);
+	void addRobotPosition(const std::string &label, std::pair<int *, int *> pos);
+
+	int removeRobotPosition(const std::string &label);
+
+	void clearRobotPositions();
+
+	void update();
 
 	void draw();
 
+	void render();
+
 private:
-	sf::RenderWindow *window;
-	unsigned int size_x, size_y;
+	const unsigned int maxSizeX_ = 1080, maxSizeY_ = 720;
 
-	std::vector<std::pair<std::string, std::vector<std::vector<int>> *>> maps;
-	std::vector<std::pair<std::string, std::pair<int *, int *>>> r_positions;
+	sf::RenderWindow window_ = sf::RenderWindow(sf::VideoMode(360, 270), "Debug_Console");
+	unsigned int sizeX_ = 360, sizeY_ = 270;
 
-	// create the window
+	float scaleX_ = 10, scaleY_ = 10;
 
+	std::vector<std::pair<std::string, std::vector<std::vector<int>> *>> maps_;
+	std::vector<std::pair<std::string, std::pair<int *, int *>>> robotPositions_;
+
+	bool changedContents = true;
 };
 
 
