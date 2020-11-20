@@ -1,20 +1,23 @@
 #ifndef EXTRATERRESTRIAL_DEBUGTOOLS_HPP
 #define EXTRATERRESTRIAL_DEBUGTOOLS_HPP
 
+#include <iostream>
+#include <vector>
 #include <SFML/Graphics.hpp>
-
 
 class DebugTool {
 public:
+	sf::RenderWindow window;
+
 	explicit DebugTool(const std::string& label = "console");
 
-	void addMap(const std::string &label, std::vector<std::vector<int>> *map);
+	void addMap(const std::string& label, std::vector<std::vector<int>>* map);
 
-	int removeMap(const std::string &label);
+	int removeMap(const std::string& label);
 
 	void clearMaps();
 
-	void addRobotPosition(const std::string &label, std::pair<int *, int *> pos);
+	void addRobotPosition(const std::string& label, std::pair<int*, int*> pos);
 
 	int removeRobotPosition(const std::string &label);
 
@@ -25,11 +28,9 @@ public:
 	void draw();
 
 	void render();
-
 private:
-	const unsigned int maxSizeX_ = 1080, maxSizeY_ = 720;
 
-	sf::RenderWindow window_ = sf::RenderWindow(sf::VideoMode(360, 270), "Debug_Console");
+	const unsigned int maxSizeX_ = 1080, maxSizeY_ = 720;
 	unsigned int sizeX_ = 360, sizeY_ = 270;
 
 	float scaleX_ = 10, scaleY_ = 10;

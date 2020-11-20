@@ -42,7 +42,7 @@ Field GAME0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEP
 Field GAME1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS, GAME1WALLNODES, GAME1TRAPNODES,
             GAME1COLLECTIBLES);
 
-DebugTool debugTool;
+//DebugTool debugTool;
 
 sf::RenderWindow *CC = nullptr;
 sf::Font *unbutton = nullptr;
@@ -57,7 +57,7 @@ Robot Bot(INPUTS, &GAME0, &GAME1);
 void Setup() {
 	system("cls");
 
-	debugTool.addMap()
+	//debugTool.addMap();
 
 	static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
 	CC = &window;
@@ -65,9 +65,11 @@ void Setup() {
 	static sf::Font font;
 	if (font.loadFromFile("../fonts/unbutton.ttf")) {
 		unbutton = &font;
-	} else if (font.loadFromFile("unbutton.ttf")) {
+	}
+	else if (font.loadFromFile("unbutton.ttf")) {
 		unbutton = &font;
-	} else if (font.loadFromFile(
+	}
+	else if (font.loadFromFile(
 			"C:/Users/flxwly/Microsoft Robotics Dev Studio 4/CS.C/User/RSC/extraterrestrial/unbutton.ttf")) {
 		unbutton = &font;
 	}
@@ -170,13 +172,14 @@ void Game1Debug() {
 
 	// Position
 	block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
-	block.setFillColor({140, 30, 0});             // dark red / brown
+	block.setFillColor({ 140, 30, 0 });             // dark red / brown
 	block.setPosition(static_cast<float> (PositionX) * scale.x,
-	                  static_cast<float> (GAME1.getSize().y - 1 - PositionY) * scale.y);
+		static_cast<float> (GAME1.getSize().y - 1 - PositionY) * scale.y);
 	CC->draw(block);
 
-
 	CC->display();
+
+	//debugTool.draw();
 }
 
 

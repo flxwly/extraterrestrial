@@ -1,7 +1,7 @@
 #include "DebugTools.hpp"
 
-DebugTool::DebugTool(const std::string& label) {
-	window_.setTitle(label);
+DebugTool::DebugTool(const std::string& label) : window{ sf::VideoMode(360, 270), "Debug_Console" } {
+	window.setTitle(label);
 }
 
 //############### Add / remove map features ##############################
@@ -74,7 +74,7 @@ void DebugTool::update() {
 			robotPositionsX = pos.first.size() * 3;
 	}
 	// for the coordinates
-	robotPositionsX +=  9 * 3;
+	robotPositionsX += 9 * 3;
 	unsigned int robotPositionsY = robotPositions_.size() * 6;
 
 	unsigned int biggestX = robotPositionsX + mapsX;
@@ -82,7 +82,7 @@ void DebugTool::update() {
 
 	sizeX_ = std::min(biggestX, static_cast<unsigned int>(maxSizeX_));
 	sizeY_ = std::min(biggestY, static_cast<unsigned int>(maxSizeY_));
-	window_.setSize({sizeX_, sizeY_});
+	window.setSize({ sizeX_, sizeY_ });
 }
 
 
@@ -116,26 +116,26 @@ void DebugTool::draw() {
                         block.setFillColor(sf::Color::Yellow);
                         break;
                     case 3:
-                        block.setFillColor({166, 166, 166});
-                        break;
-                    case 4:
-                        block.setSize({4, 4});
-                        block.setFillColor({255, 153, 0});
-		                break;
-                    default:
-                        block.setFillColor(sf::Color::Red);
-                        break;
+	                    block.setFillColor({ 166, 166, 166 });
+	                break;
+                case 4:
+	                block.setSize({ 4, 4 });
+	                block.setFillColor({ 255, 153, 0 });
+	                break;
+                default:
+	                block.setFillColor(sf::Color::Red);
+	                break;
                 }
-                block.setPosition(i, j);
-                window_.draw(block);
+	            block.setPosition(static_cast<float>(i), static_cast<float>(j));
+	            window.draw(block);
             }
         }
         move_y += 10;
     }
 
-    window_.display();
+	render();
 }
 
 void DebugTool::render() {
-	window_.display();
+	window.display();
 }
