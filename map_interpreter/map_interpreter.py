@@ -3,8 +3,8 @@ import xml.etree.ElementTree as ET
 from os import path
 from sys import setrecursionlimit
 
-from PIL import Image, ImageDraw
 from cv2 import resize, imread, INTER_NEAREST
+from PIL import Image, ImageDraw
 
 setrecursionlimit(10000)
 
@@ -16,7 +16,7 @@ FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
 FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
 FieldFD = "../../../../../store/media/Rescue/Map/Sec/Design"
 
-cospace_version = "4.0.9" # "2.6.2" #
+cospace_version = "4.0.9"  # "2.6.2" #
 
 # for CoSpace 2.6.2+
 if cospace_version == "2.6.2":
@@ -807,7 +807,16 @@ class MapData:
             trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                             "") + ";"
 
-            collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ","") + ";"
+            collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+
+            # TODO -- ONLY TEMP FOR DEBBUGGING -- REMOVELATER
+            wall_str = "const std::vector<Area>GAME%sWALLS = {};" % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
+            trap_str = "const std::vector<Area>GAME%sTRAPS = {};" % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
+            swamp_str = "const std::vector<Area>GAME%sSWAMPS = {};" % i  # {{x1, y1}, {x2, y2}...} (Polygon)
+            bonus_area_str = "const std::vector<Area>GAME%sWATERS = {};" % i  # {{x1, y1}, {x2, y2}...} (Polygon)
+            deposit_area_str = "const std::vector<PVector>GAME%sDEPOSITS = {};" % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            wall_nodes_str = "const std::vector<PVector>GAME%sWALLNODES = {};" % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            trap_nodes_str = "const std::vector<PVector>GAME%sTRAPNODES = {};" % i  # {{x1, y1}, {x2, y2}...} (Single points)
 
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 

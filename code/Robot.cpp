@@ -497,7 +497,7 @@ void Robot::game1Loop() {
 
         // get the next target
     else {
-        if (nTarget_.x == -1 && nTarget_.y == -1) {
+        if (nTarget_ == -1) {
 
             // set nTarget_ to the last element of the first path in completePath
             //      the paths in completePath are reversed; The end of the path is the first element
