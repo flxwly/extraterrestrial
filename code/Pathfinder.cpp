@@ -239,7 +239,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 						neighbour.first->g = temp_g;
 						neighbour.first->f = temp_g + heuristic(neighbour.first->getPos(), end.getPos());
 						neighbour.first->previous = cur;
-						std::cout << " - updated " << str(neighbour.first->getPos()) << " - ";
+						std::cout << " - updated " << PVector::str(neighbour.first->getPos()) << " - ";
 					}
 				} else {
 					// add
@@ -248,7 +248,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 					neighbour.first->previous = cur;
 					openList.push(neighbour.first);
 					neighbour.first->isOpen = true;
-					std::cout << " - added " << str(neighbour.first->getPos()) << " - " << std::endl;
+					std::cout << " - added " << PVector::str(neighbour.first->getPos()) << " - " << std::endl;
 				}
 			}
 

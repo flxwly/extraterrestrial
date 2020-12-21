@@ -49,7 +49,3 @@ template<class T1, class T2>
 std::string str(T1 x, T2 y) {
 	return std::to_string(x) + " | " + std::to_string(y);
 }
-
-std::string str(PVector p) {
-    return str(p.x, p.y);
-}

@@ -1,5 +1,5 @@
 #include "CoSpaceFunctions.hpp"
-#include "libs/CommonFunctions.hpp"
+#include "CommonFunctions.hpp"
 
 char AI_MyID[2] = {'0', '2'};
 int Duration = 0;

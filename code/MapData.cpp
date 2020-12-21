@@ -53,6 +53,9 @@ void PVector::setMag(double mag) {
 	set(x / oldMag * mag, y / oldMag * mag);
 }
 
+std::string PVector::str(PVector pVector) {
+    return std::to_string(pVector.x) + " | " + std::to_string(pVector.y);
+}
 
 /**     -----------     **/
 /**                     **/

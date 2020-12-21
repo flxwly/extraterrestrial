@@ -28,7 +28,28 @@
 */
 class Robot {
 public:
-	Robot(int *input[20], Field *_map0, Field *_map1);
+	Robot(int *_x, int *_y, int *_compass, int *_superObjectNum, int *_superObjectX, int *_superObjectY,
+          int *_rightColorSensorRed, int *_rightColorSensorGreen, int *_rightColorSensorBlue,
+          int *_leftColorSensorRed, int *_leftColorSensorGreen, int *_leftColorSensorBlue,
+          int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
+          int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime,
+          Field *_map0, Field *_map1);
+
+    //               ______
+    //______________/ vars \_____________
+
+    // === Variable pointers to vars updated by the sim ===
+    int *x, *y;                                             ///< robots position
+    int *compass;                                           ///< compass
+    int *superObjectNum;                                    ///< super_object_num
+    int *superObjectX, *superObjectY;                     ///< last super_object_coords
+    std::array<int *, 3> rightColorSensors, leftColorSensors;  	///< color sensors
+    std::array<int *, 3> ultraSonicSensors;                   	///< ultrasonic sensors
+    int *wheelLeft, *wheelRight;                            ///< wheels
+    int *led;                                               ///< led for collect and deposit
+    int *tp;                                                ///< where to teleport
+    int *gameTime;                                          ///< the in-game time
+
 
 	/// typedef for time (basically a macro)
 	typedef std::chrono::steady_clock timer;
@@ -59,20 +80,6 @@ public:
 	[[nodiscard]] int getLoadedObjectsNum() const;
 
 private:
-	//               ______
-	//______________/ vars \_____________
-
-	// === Variable pointers to vars updated by the sim ===
-	int *x, *y;                                             ///< robots position
-	int *compass;                                           ///< compass
-	int *superObjectNum;                                    ///< super_object_num
-	int *superObject_x, *superObject_y;                     ///< last super_object_coords
-	std::array<int *, 3> rightColorSensors, leftColorSensors;  	///< color sensors
-	std::array<int *, 3> ultraSonicSensors;                   	///< ultrasonic sensors
-	int *wheelLeft, *wheelRight;                            ///< wheels
-	int *led;                                               ///< led for collect and deposit
-	int *tp;                                                ///< where to teleport
-	int *gameTime;                                          ///< the in-game time
 
 	// === Robot vars ===
 

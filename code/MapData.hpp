@@ -65,6 +65,8 @@ public:
 	friend PVector operator/(const PVector& p, const double& m);
 
 	explicit operator bool() const;
+
+	static std::string str(PVector pVector);
 };
 
 /** A type of PVector that can be collected by a robot.
