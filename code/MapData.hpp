@@ -24,49 +24,55 @@
 */
 class PVector {
 public:
-	PVector() = default;
+    PVector() = default;
 
-	PVector(double _x, double _y);
+    PVector(double _x, double _y);
 
-	double x, y;
+    double x, y;
 
-	void set(double _x, double _y);
-	void set(PVector p);
+    void set(double _x, double _y);
 
-	double getMag() const;
-	void setMag(double mag);
+    void set(PVector p);
 
-	[[nodiscard]] PVector round() const;
+    double getMag() const;
 
-	friend bool operator==(const PVector& p1, const PVector& p2);
+    void setMag(double mag);
 
-	friend bool operator!=(const PVector& p1, const PVector& p2);
+    [[nodiscard]] PVector round() const;
 
-	PVector& operator+=(const PVector& rhs) {
-		x = x + rhs.x, y = y + rhs.y;
-		return *this;
-	};
+    friend bool operator==(const PVector &p1, const PVector &p2);
 
-	friend PVector operator+(PVector& lhs, const PVector& rhs) {
-		return lhs += rhs;
-	};
+    friend bool operator==(const PVector &p, const double &n);
 
-	PVector& operator-=(const PVector& rhs) {
-		x = x - rhs.x, y = y - rhs.y;
-		return *this;
-	};
+    friend bool operator!=(const PVector &p1, const PVector &p2);
 
-	friend PVector operator-(const PVector& lhs, const PVector& rhs) {
-		return PVector(lhs.x - rhs.x, lhs.y - rhs.y);
-	};
+    friend bool operator!=(const PVector &p, const double &n);
 
-	friend PVector operator*(const PVector& p, const double& m);
+    PVector &operator+=(const PVector &rhs) {
+        x = x + rhs.x, y = y + rhs.y;
+        return *this;
+    };
 
-	friend PVector operator/(const PVector& p, const double& m);
+    friend PVector operator+(PVector &lhs, const PVector &rhs) {
+        return lhs += rhs;
+    };
 
-	explicit operator bool() const;
+    PVector &operator-=(const PVector &rhs) {
+        x = x - rhs.x, y = y - rhs.y;
+        return *this;
+    };
 
-	static std::string str(PVector pVector);
+    friend PVector operator-(const PVector &lhs, const PVector &rhs) {
+        return PVector(lhs.x - rhs.x, lhs.y - rhs.y);
+    };
+
+    friend PVector operator*(const PVector &p, const double &m);
+
+    friend PVector operator/(const PVector &p, const double &m);
+
+    explicit operator bool() const;
+
+    static std::string str(PVector pVector);
 };
 
 /** A type of PVector that can be collected by a robot.
@@ -88,58 +94,58 @@ public:
 class Collectible {
 public:
 
-	Collectible(const PVector& p, const int& c);
+    Collectible(const PVector &p, const int &c);
 
-	/// Getter method for Collectible::pos_
-	const PVector& getPos() const;
+    /// Getter method for Collectible::pos_
+    const PVector &getPos() const;
 
-	/// Getter method for Collectible::color_
-	unsigned int getColor() const;
+    /// Getter method for Collectible::color_
+    unsigned int getColor() const;
 
-	/// Getter method for Collectible::state_
-	unsigned int getState() const;
+    /// Getter method for Collectible::state_
+    unsigned int getState() const;
 
-	/// Setter method for Collectible::state_
-	void setState(unsigned int state);
+    /// Setter method for Collectible::state_
+    void setState(unsigned int state);
 
-	/** Checks if this collectible could be the seen one (position wise)
-	 *
-	 * <p>The color sensors of the robots aren't the same coords as the robot's
-	 * ones. Therefore it is mandatory to check whether a collectible is actually
-	 * the right/seen one before changing it's state.
-	 *
-	 * @param robot_pos the actual position of the robot given by the simulator
-	 * @param angle the actual angle of the robot given by the simulator
-	 * @param uncertainty how imprecise the position and the angle is
-	 */
-	bool isCorrectCollectible(PVector robot_pos, double angle, double uncertainty);
+    /** Checks if this collectible could be the seen one (position wise)
+     *
+     * <p>The color sensors of the robots aren't the same coords as the robot's
+     * ones. Therefore it is mandatory to check whether a collectible is actually
+     * the right/seen one before changing it's state.
+     *
+     * @param robot_pos the actual position of the robot given by the simulator
+     * @param angle the actual angle of the robot given by the simulator
+     * @param uncertainty how imprecise the position and the angle is
+     */
+    bool isCorrectCollectible(PVector robot_pos, double angle, double uncertainty);
 
 private:
 
-	/** Represents the state
-	 *
-	 * <p>Depending on whether a robot has seen, not seen or collected
-	 * this collectible state is changed. Since not all collectibles
-	 * on the map will be available from the start it's important to
-	 * mark missing ones to prevent going after non existing / not
-	 * collectible collectibles
-	 *
-	 * @note state = 0 => never seen; state = 1 => seen; state = 2 => collected
-	*/
-	unsigned int state_;
+    /** Represents the state
+     *
+     * <p>Depending on whether a robot has seen, not seen or collected
+     * this collectible state is changed. Since not all collectibles
+     * on the map will be available from the start it's important to
+     * mark missing ones to prevent going after non existing / not
+     * collectible collectibles
+     *
+     * @note state = 0 => never seen; state = 1 => seen; state = 2 => collected
+    */
+    unsigned int state_;
 
-	/** Represents the color
-	 *
-	 * <p>Normally a collectible can have either of the 3 colors (red, cyan, black,
-	 * [special case for superobjects: pink]).
-	 * Collectibles with different colors give different amounts of score points.
-	 * In addition certain combinations of colors create bonus score. To track
-	 * maximize the score the robot needs to now which color each object.
-	 */
-	unsigned int color_;
+    /** Represents the color
+     *
+     * <p>Normally a collectible can have either of the 3 colors (red, cyan, black,
+     * [special case for superobjects: pink]).
+     * Collectibles with different colors give different amounts of score points.
+     * In addition certain combinations of colors create bonus score. To track
+     * maximize the score the robot needs to now which color each object.
+     */
+    unsigned int color_;
 
-	/// Represents the position
-	PVector pos_{};
+    /// Represents the position
+    PVector pos_{};
 };
 
 /** A Line in a 2D grid.
@@ -153,27 +159,27 @@ private:
 */
 class Line {
 public:
-	Line(const PVector& p1, const PVector& p2);
+    Line(const PVector &p1, const PVector &p2);
 
-	/// Getter method for Line::p1_
-	const PVector& getP1() const;
+    /// Getter method for Line::p1_
+    const PVector &getP1() const;
 
-	/// Getter method for Line::p2_
-	const PVector& getP2() const;
+    /// Getter method for Line::p2_
+    const PVector &getP2() const;
 
-	/// Setter method for Line::p1_
-	void setP1(const PVector& p_1);
+    /// Setter method for Line::p1_
+    void setP1(const PVector &p_1);
 
-	/// Setter method for Line::p2_
-	void setP2(const PVector& p_2);
+    /// Setter method for Line::p2_
+    void setP2(const PVector &p_2);
 
 private:
 
-	/// One end of the line
-	PVector p1_{};
+    /// One end of the line
+    PVector p1_{};
 
-	/// The other end of the line
-	PVector p2_{};
+    /// The other end of the line
+    PVector p2_{};
 };
 
 /** A polygon in a 2D grid
@@ -188,33 +194,33 @@ private:
 class Area {
 public:
 
-	explicit Area(const std::vector<PVector>& p_s);
+    explicit Area(const std::vector<PVector> &p_s);
 
-	/// Getter method for Area::Corners_
-	const std::vector<PVector>& getCorners() const;
+    /// Getter method for Area::Corners_
+    const std::vector<PVector> &getCorners() const;
 
-	/// Getter method for Area::Edges_
-	const std::vector<Line>& getEdges() const;
+    /// Getter method for Area::Edges_
+    const std::vector<Line> &getEdges() const;
 
-	/// Getter method for Area::min_
-	const PVector& getMin() const;
+    /// Getter method for Area::min_
+    const PVector &getMin() const;
 
-	/// Getter method for Area::max_
-	const PVector& getMax() const;
+    /// Getter method for Area::max_
+    const PVector &getMax() const;
 
 private:
 
-	/// Holds all corners of the Area as ordered points.
-	std::vector<PVector> Corners_;
+    /// Holds all corners of the Area as ordered points.
+    std::vector<PVector> Corners_;
 
-	/// Holds all edges of the Area as ordered lines.
-	std::vector<Line> Edges_;
+    /// Holds all edges of the Area as ordered lines.
+    std::vector<Line> Edges_;
 
-	/// Lowest x and y coordinates
-	PVector min_;
+    /// Lowest x and y coordinates
+    PVector min_;
 
-	/// Highest x and y coordinates
-	PVector max_;
+    /// Highest x and y coordinates
+    PVector max_;
 };
 
 /** Contains all important map data about the map
@@ -237,72 +243,72 @@ private:
 class Field {
 public:
 
-	Field(const int& width, const int& height,
-		const std::vector<Area>& walls,
-		const std::vector<Area>& traps,
-		const std::vector<Area>& swamps,
-		const std::vector<Area>& waters,
-		const std::vector<PVector>& deposits,
-		const std::vector<PVector>& wallNodes,
-		const std::vector<PVector>& trapNodes,
-		const std::vector<Collectible>& collectibles);
+    Field(const int &width, const int &height,
+          const std::vector<Area> &walls,
+          const std::vector<Area> &traps,
+          const std::vector<Area> &swamps,
+          const std::vector<Area> &waters,
+          const std::vector<PVector> &deposits,
+          const std::vector<PVector> &wallNodes,
+          const std::vector<PVector> &trapNodes,
+          const std::vector<Collectible> &collectibles);
 
-	/// Getter for the size
-	PVector getSize();
+    /// Getter for the size
+    PVector getSize();
 
-	/**  Getter for map objects
-	 *
-	 * @param indices 0 -> walls; 1 -> traps; 2 -> swamps; 3 -> waters / bonus areas;
-	 */
-	std::vector<Area> getMapObjects(const std::vector<unsigned int>& indices);
+    /**  Getter for map objects
+     *
+     * @param indices 0 -> walls; 1 -> traps; 2 -> swamps; 3 -> waters / bonus areas;
+     */
+    std::vector<Area> getMapObjects(const std::vector<unsigned int> &indices);
 
-	/**  Getter for map nodes
-	 *
-	 * @param indices 0 -> walls; 1 -> traps;
-	 */
-	std::vector<PVector> getMapNodes(const std::vector<unsigned int>& indices);
+    /**  Getter for map nodes
+     *
+     * @param indices 0 -> walls; 1 -> traps;
+     */
+    std::vector<PVector> getMapNodes(const std::vector<unsigned int> &indices);
 
-	/// Getter method for deposits
-	std::vector<PVector> getDeposits();
+    /// Getter method for deposits
+    std::vector<PVector> getDeposits();
 
-	/// Getter method for collectibles
-	std::vector<Collectible> getCollectibles(const std::vector<unsigned int>& colors);
+    /// Getter method for collectibles
+    std::vector<Collectible> getCollectibles(const std::vector<unsigned int> &colors);
 
-	Collectible* getCollectible(PVector robot_pos, double angle, double uncertainty, int color);
+    Collectible *getCollectible(PVector robot_pos, double angle, double uncertainty, int color);
 
-	std::vector<PVector> getPointPath();
+    std::vector<PVector> getPointPath();
 
 private:
-	/// Contains all walls
-	std::vector<Area> Walls_;
-	/// Contains all traps
-	std::vector<Area> Traps_;
-	/// Contains all swamps
-	std::vector<Area> Swamps_;
-	/// Contains all waters / bonus areas
-	std::vector<Area> Waters_;
+    /// Contains all walls
+    std::vector<Area> Walls_;
+    /// Contains all traps
+    std::vector<Area> Traps_;
+    /// Contains all swamps
+    std::vector<Area> Swamps_;
+    /// Contains all waters / bonus areas
+    std::vector<Area> Waters_;
 
-	/// The deposits saved as points in their respective center
-	std::vector<PVector> Deposits_;
+    /// The deposits saved as points in their respective center
+    std::vector<PVector> Deposits_;
 
-	/// Contains all wall nodes
-	std::vector<PVector> WallNodes_;
-	/// Contains all trap nodes
-	std::vector<PVector> TrapNodes_;
+    /// Contains all wall nodes
+    std::vector<PVector> WallNodes_;
+    /// Contains all trap nodes
+    std::vector<PVector> TrapNodes_;
 
-	/** contains collectibles of all colors
-	 * They're ordered the following: index = 0 <=> Red; 1 <=> Cyan/Green; 2 <=> Black
-	 *
-	 * @Note It doesn't contain super-objects
-	*/
-	std::array<std::vector<Collectible>, 3> Collectibles_;
+    /** contains collectibles of all colors
+     * They're ordered the following: index = 0 <=> Red; 1 <=> Cyan/Green; 2 <=> Black
+     *
+     * @Note It doesn't contain super-objects
+    */
+    std::array<std::vector<Collectible>, 3> Collectibles_;
 
-	/** represents the size in cm of the field object
-	 *
-	 * @note There can never be a negative sized Field. The size is
-	 * also defined by the CoSpace-Rules so FieldA = {270, 180}; FieldB = {360, 270})
-	*/
-	PVector size_;
+    /** represents the size in cm of the field object
+     *
+     * @note There can never be a negative sized Field. The size is
+     * also defined by the CoSpace-Rules so FieldA = {270, 180}; FieldB = {360, 270})
+    */
+    PVector size_;
 
 };
 
@@ -310,31 +316,34 @@ private:
 /// namespace for geometric functions
 namespace geometry {
 
-	bool isLeft(PVector p0, PVector p1, PVector p2);
+    bool isLeft(PVector p0, PVector p1, PVector p2);
 
-	/** checks if a point lies inside the Area
-	 * @param p A point
-	 * @return true if point lies inside of the Area. Otherwise false
-	*/
-	bool isInside(const PVector& p, Area& area);
+    /** checks if a point lies inside the Area
+     * @param p A point
+     * @return true if point lies inside of the Area. Otherwise false
+    */
+    bool isInside(const PVector &p, Area &area);
 
-	/** calculates an intersection point between two lines
-	 * @param l1 a line
-	 * @param l2 another line
-	 * @return intersection point if existing. Otherwise (-1, -1)
-	*/
-	PVector isIntersecting(Line& l1, Line& l2);
+    /** calculates an intersection point between two lines
+     * @param l1 a line
+     * @param l2 another line
+     * @return intersection point if existing. Otherwise (-1, -1)
+    */
+    PVector isIntersecting(Line &l1, Line &l2);
 
-	double sqDist(const PVector& p1, const PVector& p2);
+    double sqDist(const PVector &p1, const PVector &p2);
 
-	double dist(const PVector& p1, const PVector& p2);
+    double dist(const PVector &p1, const PVector &p2);
 
-	double dot(PVector p1, PVector p2);
-	PVector getNormalPoint(Line line, PVector point);
+    double dot(PVector p1, PVector p2);
 
-	PVector angle2Vector(double a);
-	double vector2Angle(PVector v);
-	double vector2Angle(double x, double y);
+    PVector getNormalPoint(Line line, PVector point);
+
+    PVector angle2Vector(double a);
+
+    double vector2Angle(PVector v);
+
+    double vector2Angle(double x, double y);
 }
 
 

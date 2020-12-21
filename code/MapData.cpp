@@ -57,6 +57,14 @@ std::string PVector::str(PVector pVector) {
     return std::to_string(pVector.x) + " | " + std::to_string(pVector.y);
 }
 
+bool operator==(const PVector &p, const double &n) {
+    return p.x == n && p.y == n;
+}
+
+bool operator!=(const PVector &p, const double &n) {
+    return p.x != n && p.y != n;
+}
+
 /**     -----------     **/
 /**                     **/
 /**     Collectible     **/
