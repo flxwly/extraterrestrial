@@ -6,6 +6,7 @@
 #ifndef CODE_MAPDATA_HPP
 #define CODE_MAPDATA_HPP
 
+
 #include <vector>
 #include <iostream>
 #include <array>

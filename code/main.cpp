@@ -11,15 +11,15 @@
 
 using namespace std;
 
-#include "CoSpaceFunctions.hpp"
+// Libs
+#include "libs/CoSpaceFunctions.hpp"
 #include "libs/CommonFunctions.hpp"
-#include "ColorRecognition.hpp"
+#include "libs/ColorRecognition.hpp"
 
 
 // Classes
 #include "Pathfinder.hpp"
 #include "MapData.hpp"
-#include "libs/DebugTools.hpp"
 #include "Robot.hpp"
 
 #endif

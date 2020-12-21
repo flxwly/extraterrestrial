@@ -1,7 +1,7 @@
 #ifndef COLORRECOGNITION_HPP
 #define COLORRECOGNITION_HPP
 
-#include "CoSpaceFunctions.hpp"
+#include "libs/CoSpaceFunctions.hpp"
 #include "libs/CommonFunctions.hpp"
 
 bool isRedLeft();

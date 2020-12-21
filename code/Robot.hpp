@@ -10,7 +10,7 @@
 #include <chrono>
 #include <array>
 #include "libs/CommonFunctions.hpp"
-#include "ColorRecognition.hpp"
+#include "libs/ColorRecognition.hpp"
 #include "MapData.hpp"
 #include "Pathfinder.hpp"
 
