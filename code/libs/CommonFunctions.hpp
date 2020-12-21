@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <cmath>
-#include "../MapData.hpp"
 
 double toRadians(double n);
 

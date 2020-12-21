@@ -1,7 +1,3 @@
-//
-// Created by flxwl on 05.06.2020.
-//
-
 #ifndef EXTRATERRESTRIAL_ROBOT_HPP
 #define EXTRATERRESTRIAL_ROBOT_HPP
 
@@ -11,6 +7,7 @@
 #include <array>
 #include "libs/CommonFunctions.hpp"
 #include "libs/ColorRecognition.hpp"
+#include "libs/CoSpaceFunctions.hpp"
 #include "MapData.hpp"
 #include "Pathfinder.hpp"
 

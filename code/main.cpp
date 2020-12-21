@@ -7,7 +7,6 @@
 #include <iostream>
 #include <windows.h>
 #include <cstdlib>
-#include <SFML/Graphics.hpp>
 
 // Libs
 
@@ -16,13 +15,17 @@
 #include "libs/ColorRecognition.hpp"
 // Classes
 
-
 #include "Pathfinder.hpp"
 #include "MapData.hpp"
 #include "Robot.hpp"
 #endif
 
-using namespace std;
+// TODO: Make SFML work
+//#define USE_SFML_FOR_DEBUGGING
+#ifdef USE_SFML_FOR_DEBUGGING
+#include <SFML/Graphics.hpp>
+#endif
+
 
 void updateHSL() {
 
@@ -36,8 +39,10 @@ void updateHSL() {
 	lumL = rgb2l(CSLeft_R, CSLeft_G, CSLeft_B);
 }
 
+#ifdef USE_SFML_FOR_DEBUGGING
 sf::RenderWindow *CC = nullptr;
 sf::Font *unbutton = nullptr;
+#endif
 
 Field *GAME0 = nullptr;
 
@@ -67,9 +72,12 @@ void Setup() {
 
     //debugTool.addMap();
 
-	static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
-	CC = &window;
-	CC->setFramerateLimit(10);
+#ifdef USE_SFML_FOR_DEBUGGING
+
+    static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
+    CC = &window;
+    CC->setFramerateLimit(10);
+
 	static sf::Font font;
 	if (font.loadFromFile("../fonts/unbutton.ttf")) {
 		unbutton = &font;
@@ -85,6 +93,7 @@ void Setup() {
 	if (unbutton != nullptr) {
 		std::cout << "loaded font" << std::endl;
 	}
+#endif
 
 	updateHSL();
 
@@ -118,7 +127,7 @@ void Game1Debug() {
 	//##########//
 	//  Setup   //
 	//##########//
-
+#ifdef USE_SFML_FOR_DEBUGGING
 	// check nullptr to prevent crash.
 	if (unbutton == nullptr || CC == nullptr) {
 		ERROR_MESSAGE("Something went wrong. Window or font is not initialized correctly.")
@@ -183,7 +192,7 @@ void Game1Debug() {
 	CC->draw(block);
 
 	CC->display();
-
+#endif
 	//debugTool.draw();
 }
 

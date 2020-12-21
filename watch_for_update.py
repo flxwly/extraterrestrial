@@ -14,13 +14,14 @@ more_warnings = True
 
 auto_update = False
 
-optimisation_level = 0
+optimisation_level = 3
 
 # SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 
 # for new CoSpace Versions
 out_path = "./"
+file_name = "extraterrestrial2.dll"
 
 cospace_version = "2.6.2"
 
@@ -52,17 +53,17 @@ def compile_code():
     for file_path in file_list:
         print(file_path)
         command += " " + file_path
-    command += " -o " + "\"" + out_path + "extraterrestrial2.dll\"" + SFML
+    command += " -o " + "\"" + out_path + file_name + "\"" + SFML
 
     # command = command + " & REM 2> errors.txt strip --strip-unneeded \"" + out_path + "extraterrestrial.dll\" pause"]
 
     if is_strip:
-        command += " &  strip --strip-unneeded \"" + out_path + "extraterrestrial2.dll\""
+        command += " &  strip --strip-unneeded \"" + out_path + file_name + "\""
     print("\n" + command + "\n")
     print("compiling...")
     subprocess.call(command, shell=True)
     print("finished")
-    print("Output: " + str(out_path) + "extraterrestrial2.dll")
+    print("Output: " + str(out_path) + file_name)
     sys.stdout.flush()
 
 
