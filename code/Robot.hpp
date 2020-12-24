@@ -26,26 +26,26 @@
 class Robot {
 public:
 	Robot(int *_x, int *_y, int *_compass, int *_superObjectNum, int *_superObjectX, int *_superObjectY,
-          int *_rightColorSensorRed, int *_rightColorSensorGreen, int *_rightColorSensorBlue,
-          int *_leftColorSensorRed, int *_leftColorSensorGreen, int *_leftColorSensorBlue,
-          int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
-          int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime,
-          Field *_map0, Field *_map1);
+	      int *_rightColorSensorRed, int *_rightColorSensorGreen, int *_rightColorSensorBlue,
+	      int *_leftColorSensorRed, int *_leftColorSensorGreen, int *_leftColorSensorBlue,
+	      int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
+	      int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime,
+	      Field *_map0, Field *_map1);
 
-    //               ______
-    //______________/ vars \_____________
+	//               ______
+	//______________/ vars \_____________
 
-    // === Variable pointers to vars updated by the sim ===
-    int *x, *y;                                             ///< robots position
-    int *compass;                                           ///< compass
-    int *superObjectNum;                                    ///< super_object_num
-    int *superObjectX, *superObjectY;                     ///< last super_object_coords
-    std::array<int *, 3> rightColorSensors, leftColorSensors;  	///< color sensors
-    std::array<int *, 3> ultraSonicSensors;                   	///< ultrasonic sensors
-    int *wheelLeft, *wheelRight;                            ///< wheels
-    int *led;                                               ///< led for collect and deposit
-    int *tp;                                                ///< where to teleport
-    int *gameTime;                                          ///< the in-game time
+	// === Variable pointers to vars updated by the sim ===
+	int *x, *y;                                             ///< robots position
+	int *compass;                                           ///< compass
+	int *superObjectNum;                                    ///< super_object_num
+	int *superObjectX, *superObjectY;                                ///< last super_object_coords
+	std::array<int *, 3> rightColorSensors, leftColorSensors;        ///< color sensors
+	std::array<int *, 3> ultraSonicSensors;                            ///< ultrasonic sensors
+	int *wheelLeft, *wheelRight;                            ///< wheels
+	int *led;                                               ///< led for collect and deposit
+	int *tp;                                                ///< where to teleport
+	int *gameTime;                                          ///< the in-game time
 
 
 	/// typedef for time (basically a macro)
@@ -56,44 +56,37 @@ public:
 
 	/// controls the robots wheels
 	void wheels(int l, int r);
-	void addWheels(int l, int r);
 
-	/// points the robot towards a point. Safety regulates if the robot should approach the target slowly
-	int moveTo(double x, double y, bool safety);
-	int moveTo(PVector p, bool safety);
+	void moveAlongPath(Path &path);
 
-	void moveAlongPath(Path& path);
+	int moveToPosition(PVector p, bool safety);
 
 	/// checks if l, f or r is higher than the us-sensor vals. returns a binary-encoded value
 	int checkUsSensors(int l, int f, int r);
 
+	/// game loop for first map
 	void game0Loop();
+
+	/// game loop for second map
 	void game1Loop();
-
-	/// returns loaded objects
-	std::array<int, 3> getLoadedObjects();
-
-	/// returns the number of the loaded objects
-	[[nodiscard]] int getLoadedObjectsNum() const;
 
 private:
 
 	// === Robot vars ===
 
-	Field* map0_, * map1_;                                   ///< Field vars
+	Field *map0_, *map1_;                                   ///< Field vars
 	Pathfinder pathfinder0_, pathfinder1_;                  ///< Pathfinders that ignore traps
 	Pathfinder pathfinder0T_, pathfinder1T_;                ///< Pathfinders that don't ignore traps
 
 	int loadedObjectsNum_;                                  ///< number of objects loaded
-	std::array<int, 3>
-		loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
+	std::array<int, 3> loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
 
-	PVector nTarget_;                                         ///< pathfinder waypoint chasing
+	PVector nTarget_;                                       ///< pathfinder waypoint chasing
 	bool nTargetIsLast_;                                    ///< is nTarget the last element of a path
 	int chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
 
-	PVector aPos_;                                            ///< more accurate position of the robot
-	PVector lPos_;                                            ///< last coordinates of the robot (for signal loss)
+	PVector aPos_;                                          ///< more accurate position of the robot
+	PVector lPos_;                                          ///< last coordinates of the robot (for signal loss)
 	std::chrono::time_point<timer> lastCycle_;              ///< the time the last cycle was executed
 	std::chrono::time_point<timer> depositingSince_;        ///< the time last depositing has started
 	std::chrono::time_point<timer> collectingSince_;        ///< the time last collecting has started

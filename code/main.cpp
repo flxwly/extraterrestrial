@@ -5,8 +5,6 @@
 #define ROBOT_RAD 6
 
 #include <iostream>
-#include <windows.h>
-#include <cstdlib>
 
 // Libs
 
@@ -70,10 +68,7 @@ void Setup() {
     Bot = &bot;
 
 
-    //debugTool.addMap();
-
 #ifdef USE_SFML_FOR_DEBUGGING
-
     static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
     CC = &window;
     CC->setFramerateLimit(10);
@@ -124,10 +119,11 @@ void Game0() {
 
 void Game1Debug() {
 
+#ifdef USE_SFML_FOR_DEBUGGING
 	//##########//
 	//  Setup   //
 	//##########//
-#ifdef USE_SFML_FOR_DEBUGGING
+
 	// check nullptr to prevent crash.
 	if (unbutton == nullptr || CC == nullptr) {
 		ERROR_MESSAGE("Something went wrong. Window or font is not initialized correctly.")
@@ -193,15 +189,12 @@ void Game1Debug() {
 
 	CC->display();
 #endif
-	//debugTool.draw();
 }
 
 
 void Game1() {
 	updateHSL();
 
-	//Game1Debug();
 	Bot->game1Loop();
-
-	// === Debug ===
+	Game1Debug();
 }

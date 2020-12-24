@@ -229,19 +229,7 @@ void Robot::wheels(int l, int r) {
     *wheelLeft = 20 * l, *wheelRight = 20 * r;
 }
 
-void Robot::addWheels(int l, int r) {
-    *wheelLeft += l, *wheelRight += r;
-}
-
-std::array<int, 3> Robot::getLoadedObjects() {
-    return loadedObjects_;
-}
-
-int Robot::getLoadedObjectsNum() const {
-    return loadedObjectsNum_;
-}
-
-int Robot::moveTo(PVector p, bool safety) {
+int Robot::moveToPosition(PVector p, bool safety) {
 
     double dist = geometry::dist(aPos_, p);
 
@@ -342,10 +330,6 @@ int Robot::moveTo(PVector p, bool safety) {
         default:
             return -1;
     }
-}
-
-int Robot::moveTo(double _x, double _y, bool safety) {
-    return Robot::moveTo(PVector(_x, _y), safety);
 }
 
 int Robot::checkUsSensors(int l, int f, int r) {
@@ -552,7 +536,7 @@ void Robot::game1Loop() {
 
     } else {
         *led = 0;
-        moveTo(nTarget_, nTargetIsLast_);
+	    moveToPosition(nTarget_, nTargetIsLast_);
         ERROR_MESSAGE(PVector::str(nTarget_));
         //std::cout << "Is at: " << str(*x, *y) << "\tmoving to: " << str(nTarget_) << std::endl;
 
@@ -586,5 +570,5 @@ void Robot::moveAlongPath(Path &path) {
     futureLoc += getVelocity(5000);
 
     PVector target = path.getClosestNormalPoint(futureLoc, 20);
-    moveTo(target, true);
+	moveToPosition(target, true);
 }
