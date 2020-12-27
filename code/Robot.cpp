@@ -226,7 +226,7 @@ int Robot::avoidVoid() {
 //          Public Functions
 //====================================
 void Robot::wheels(int l, int r) {
-    *wheelLeft = 20 * l, *wheelRight = 20 * r;
+    *wheelLeft = l, *wheelRight = r;
 }
 
 int Robot::moveToPosition(PVector p, bool safety) {
@@ -346,6 +346,43 @@ int Robot::checkUsSensors(int l, int f, int r) {
 
 
 void Robot::game0Loop() {
+
+    // ====== Just for speed measure only works in second world ====== //     (leave it in for later)
+    if (false) {
+
+        double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
+                timer::now() - lastPositionUpdate_).count();
+
+        double distance = geometry::dist(PVector(*x, *y), lPos_);
+
+        double calculated = Robot::getVelocity(time_dif).getMag();
+
+        if (measures.size() > 4000) {
+            measures.erase(measures.begin());
+        }
+
+        measures.push_back(calculated - distance/time_dif);
+
+        std::cout << "time dif between measures: " << time_dif << std::endl;
+        std::cout << "expected vel: "<< distance / time_dif << std::endl;
+        std::cout << "calculated vel: " << calculated << std::endl;
+
+        double error = 0;
+        for (double err : measures) {
+            error += err;
+        }
+        error = error / measures.size();
+
+        std::cout << "error: " << error << std::endl;
+
+
+        // set last coords to normal coords (last coords wont get overwritten by the sim)
+        lPos_.set(*x, *y);
+        lastPositionUpdate_ = timer::now();
+    }
+
+
+
     if (Robot::shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
         if (isOrange()) {
             Robot::deposit();
@@ -366,11 +403,11 @@ void Robot::game0Loop() {
         else if (isYellowLeft() && Robot::loadedObjectsNum_ > 0) {
             wheels(5, 0);
         } else {
-            /*switch (Robot::checkUsSensors(8, 12, 8)) {
+            switch (Robot::checkUsSensors(8, 12, 8)) {
                 // no obstacle
                 case 0:
                     // 4 | 4 is standard movement speed in w1
-                    wheels(4, 4);
+                    wheels(3, -2);
                     break;
                 case 1: // obstacle left
                     wheels(4, 0);
@@ -395,7 +432,8 @@ void Robot::game0Loop() {
                     break;
                 default:
                     break;
-            }*/
+            }
+            //wheels(3, -1);
             *Robot::led = 0;
         }
     }
@@ -536,7 +574,7 @@ void Robot::game1Loop() {
 
     } else {
         *led = 0;
-	    moveToPosition(nTarget_, nTargetIsLast_);
+        moveToPosition(nTarget_, nTargetIsLast_);
         ERROR_MESSAGE(PVector::str(nTarget_));
         //std::cout << "Is at: " << str(*x, *y) << "\tmoving to: " << str(nTarget_) << std::endl;
 
@@ -562,7 +600,24 @@ double Robot::getBrakingDistance(double friction) {
 }
 
 PVector Robot::getVelocity(long long int dt) {
-    return (geometry::angle2Vector(*compass) * (*wheelLeft + *wheelRight) / 2) * static_cast<double>(dt);
+
+    // For clarification on how this works see
+    // https://math.stackexchange.com/questions/3962859/calculate-path-of-vehicle-with-two-wheels-parallel-to-each-other
+
+    double v1 = *wheelLeft * ROBOT_SPEED;
+    double v2 = *wheelRight * ROBOT_SPEED;
+
+    if (v1 == v2) {
+        return (geometry::angle2Vector(*compass) * v1) * static_cast<double>(dt);
+    }
+
+    double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
+
+    PVector vel(s * cos(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)) - s,
+                s * sin(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)));
+    vel.rotate(toRadians(*compass));
+
+    return vel;
 }
 
 void Robot::moveAlongPath(Path &path) {
@@ -570,5 +625,5 @@ void Robot::moveAlongPath(Path &path) {
     futureLoc += getVelocity(5000);
 
     PVector target = path.getClosestNormalPoint(futureLoc, 20);
-	moveToPosition(target, true);
+    moveToPosition(target, true);
 }

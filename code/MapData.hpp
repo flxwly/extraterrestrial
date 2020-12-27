@@ -38,6 +38,9 @@ public:
 
     void setMag(double mag);
 
+    /// counter-clockwise rotation
+    void rotate(double angle);
+
     [[nodiscard]] PVector round() const;
 
     friend bool operator==(const PVector &p1, const PVector &p2);

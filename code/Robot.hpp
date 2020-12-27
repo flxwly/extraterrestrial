@@ -11,8 +11,12 @@
 #include "MapData.hpp"
 #include "Pathfinder.hpp"
 
-/// TODO The speed of the robot in m/s for 20 % of maximum speed
-#define ROBOT_SPEED 0.03333333
+// TODO measure predefined constants
+
+/// The speed of the robot in cm/ms for 20 % of maximum speed
+#define ROBOT_SPEED 0.000185185
+/// The distance between the two powered wheels in cm
+#define ROBOT_AXLE_LENGTH 13
 
 /// A simple preprocessor function for debugging
 #define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
@@ -46,6 +50,11 @@ public:
 	int *led;                                               ///< led for collect and deposit
 	int *tp;                                                ///< where to teleport
 	int *gameTime;                                          ///< the in-game time
+
+
+
+	std::vector<double> measures = {};
+
 
 
 	/// typedef for time (basically a macro)

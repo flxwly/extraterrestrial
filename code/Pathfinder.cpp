@@ -106,7 +106,6 @@ int Node::findNeighbours(const std::vector<Node> &Nodes, const std::vector<Area>
 				neighbours_.emplace_back(&node, calculateCost(node));
 		}
 	}
-	ERROR_MESSAGE(neighbours_.size())
 	return neighbours_.size();
 }
 
