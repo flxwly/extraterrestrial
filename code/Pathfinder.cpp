@@ -238,7 +238,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 						neighbour.first->g = temp_g;
 						neighbour.first->f = temp_g + heuristic(neighbour.first->getPos(), end.getPos());
 						neighbour.first->previous = cur;
-						std::cout << " - updated " << PVector::str(neighbour.first->getPos()) << " - ";
+						ERROR_MESSAGE(" - updated " + PVector::str(neighbour.first->getPos()) + " - ");
 					}
 				} else {
 					// add
@@ -247,7 +247,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 					neighbour.first->previous = cur;
 					openList.push(neighbour.first);
 					neighbour.first->isOpen = true;
-					std::cout << " - added " << PVector::str(neighbour.first->getPos()) << " - " << std::endl;
+					ERROR_MESSAGE(" - added " + PVector::str(neighbour.first->getPos()) +  " - ")
 				}
 			}
 
@@ -280,7 +280,6 @@ Path Pathfinder::traverse(Node *end) {
 		t_ptr = end->previous;
 		end->previous = nullptr;
 		end = t_ptr;
-		//cout << endl << end.x << " | " << end.y;
 	}
 
 	return Path(to_point(t_path), PATH_RADIUS);
@@ -317,13 +316,13 @@ std::vector<node> Pathfinder::shorten(std::vector<node> t_path) {
         for (unsigned int i = curStart + 1; i < curEnd - 1; ++i) {
             // point temppath[i] is on line. Continue to next
             double dist;
-            if (curLast->x - curFirst->x == 0 && curLast->y - curFirst->y == 0) {
-                dist = sqrt(pow(curLast->y - t_path[i].y, 2) + pow(curLast->x - t_path[i].x, 2));
+            if (curLast->posX - curFirst->posX == 0 && curLast->posY - curFirst->posY == 0) {
+                dist = sqrt(pow(curLast->posY - t_path[i].posY, 2) + pow(curLast->posX - t_path[i].posX, 2));
             } else {
                 const double den = abs(
-                        (curLast->y - curFirst->y) * t_path[i].x - (curLast->x - curFirst->x) * t_path[i].y +
-                        curLast->x * curFirst->y - curLast->y * curFirst->x);
-                const double num = sqrt(pow(curLast->y - curFirst->y, 2) + pow(curLast->x - curFirst->x, 2));
+                        (curLast->posY - curFirst->posY) * t_path[i].posX - (curLast->posX - curFirst->posX) * t_path[i].posY +
+                        curLast->posX * curFirst->posY - curLast->posY * curFirst->posX);
+                const double num = sqrt(pow(curLast->posY - curFirst->posY, 2) + pow(curLast->posX - curFirst->posX, 2));
                 dist = den / num;
             }
             if (dist < sqrt(2))

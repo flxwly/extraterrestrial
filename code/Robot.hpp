@@ -1,5 +1,9 @@
-#ifndef EXTRATERRESTRIAL_ROBOT_HPP
-#define EXTRATERRESTRIAL_ROBOT_HPP
+#ifndef ERROR_MESSAGE
+#define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#endif
+
+#ifndef CSBOT_ROBOT_HPP
+#define CSBOT_ROBOT_HPP
 
 #include <vector>
 #include <ctime>
@@ -17,9 +21,6 @@
 #define ROBOT_SPEED 0.000185185
 /// The distance between the two powered wheels in cm
 #define ROBOT_AXLE_LENGTH 13
-
-/// A simple preprocessor function for debugging
-#define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
 
 /** The robot of the CoSpace-simulator
  *
@@ -40,7 +41,7 @@ public:
 	//______________/ vars \_____________
 
 	// === Variable pointers to vars updated by the sim ===
-	int *x, *y;                                             ///< robots position
+	int *posX, *posY;                                             ///< robots position
 	int *compass;                                           ///< compass
 	int *superObjectNum;                                    ///< super_object_num
 	int *superObjectX, *superObjectY;                                ///< last super_object_coords
@@ -137,4 +138,4 @@ private:
 };
 
 
-#endif //EXTRATERRESTRIAL_ROBOT_HPP
+#endif //CSBOT_ROBOT_HPP

@@ -151,15 +151,13 @@ void Line::setP2(const PVector &p_2) {
 // Area::Area(): Constructor for Area class
 Area::Area(const std::vector<PVector> &p_s) : min_{p_s.front()}, max_{0, 0} {
 
-    std::cout << "hello";
-
     Area::Corners_ = p_s;
     PVector last_p = p_s.back();
     for (PVector p : p_s) {
         Area::Edges_.emplace_back(last_p, p);
         last_p = p;
 
-        // Set boundary box x
+        // Set boundary box posX
         if (p.x < Area::min_.x) {
             Area::min_.x = p.x;
         }
@@ -167,7 +165,7 @@ Area::Area(const std::vector<PVector> &p_s) : min_{p_s.front()}, max_{0, 0} {
             Area::max_.x = p.x;
         }
 
-        // Set boundary box y
+        // Set boundary box posY
         if (p.y < Area::min_.y) {
             Area::min_.y = p.y;
         }
@@ -362,11 +360,11 @@ bool geometry::isInside(const PVector &p, Area &area) {
     for (unsigned int i = 0; i < n; i++) {
 
         // edge from poly[i] to  poly[i+1]
-        if (poly[i].y <= p.y) {                                 // start y <= P.y
+        if (poly[i].y <= p.y) {                                 // start posY <= P.posY
             if (poly[i + 1].y > p.y)                            // an upward crossing
                 if (isLeft(poly[i], poly[i + 1], p))        // P left of  edge
                     ++wn;                                       // have  a valid up intersect
-        } else {                                                // start y > P.y (no test needed)
+        } else {                                                // start posY > P.posY (no test needed)
             if (poly[i + 1].y <= p.y)                           // a downward crossing
                 if (!isLeft(poly[i], poly[i + 1], p))        // P right of  edge
                     --wn;                                       // have  a valid down intersect
