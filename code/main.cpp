@@ -193,7 +193,7 @@ void Game1Debug() {
 void Game1() {
 	updateHSL();
 
-	Bot->game1Loop();
+	Bot->game0Loop();
 
 	//Bot->wheels(-1, 2);
 

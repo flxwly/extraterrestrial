@@ -343,7 +343,7 @@ int Robot::checkUsSensors(int l, int f, int r) {
 void Robot::game0Loop() {
 
     // ====== Just for speed measure only works in second world ====== //     (leave it in for later)
-    if (false) {
+    if (true) {
 
         double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
                 timer::now() - lastPositionUpdate_).count();
@@ -352,14 +352,14 @@ void Robot::game0Loop() {
 
         double calculated = Robot::getVelocity(time_dif).getMag();
 
-        if (measures.size() > 4000) {
+        if (measures.size() > 100) {
             measures.erase(measures.begin());
         }
 
-        measures.push_back(calculated - distance/time_dif);
+        measures.push_back(calculated - distance / time_dif);
 
         std::cout << "time dif between measures: " << time_dif << std::endl;
-        std::cout << "expected vel: "<< distance / time_dif << std::endl;
+        std::cout << "expected vel: " << distance / time_dif << std::endl;
         std::cout << "calculated vel: " << calculated << std::endl;
 
         double error = 0;
@@ -377,7 +377,6 @@ void Robot::game0Loop() {
     }
 
 
-
     if (Robot::shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
         if (isOrange()) {
             Robot::deposit();
@@ -388,7 +387,7 @@ void Robot::game0Loop() {
         }
 
     } else if (Robot::shouldCollect()) {
-        Robot::collect();
+        //Robot::collect();
     } else {
         // avoid trap on the right if objects are loaded
         if (isYellowRight() && Robot::loadedObjectsNum_ > 0) {
@@ -428,7 +427,6 @@ void Robot::game0Loop() {
                 default:
                     break;
             }
-            wheels(3, 0);
             *Robot::led = 0;
         }
     }
@@ -445,14 +443,13 @@ void Robot::game1Loop() {
             timer::now() - lastCycle_).count()));
 
 
-
     // check if robot is in signal lost zone
     if (*posX == 0 && *posY == 0) {
 
         // set normal coords to last coords and update with function
-        *posX = static_cast<int>(round(lPos_.x)), *posY = static_cast<int>(round(lPos_.y));
+        *posX = static_cast<int>(round(aPos_.x)), *posY = static_cast<int>(round(aPos_.y));
         updatePos();
-        ERROR_MESSAGE("Position lost");
+
     } else {
         if (geometry::dist(aPos_, PVector(*posX, *posY)) > 2) {
             aPos_.set(*posX, *posY);
@@ -465,7 +462,6 @@ void Robot::game1Loop() {
     lPos_.set(*posX, *posY);
     lastPositionUpdate_ = timer::now();
 
-    //
     //#####################
     //  TODO -- PATHFINDING --
     //#####################
@@ -474,26 +470,28 @@ void Robot::game1Loop() {
     if (completePath.empty()) {
         // get a path of points
         std::vector<PVector> pathOfCollectibles = map1_->getPointPath();
-        PVector start = PVector(*posX, *posY);
+
+        // the first start point should be the current position of the robot
+        PVector start = aPos_;
 
         // calculate a path from one point to the next
-        for (auto end : pathOfCollectibles) {
-            if (start) {
+        for (int i = 0; i < pathOfCollectibles.size(); i++) {
 
-                // depending on the current number of objects traps should be avoided or ignored
-                Path p = (loadedObjectsNum_ > 0) ? pathfinder1T_.AStar(start, end)
-                                                 : pathfinder1_.AStar(start, end);
+            auto end = pathOfCollectibles[i];
 
-                if (!p.isEmpty()) {
+            // depending on the current number of objects traps should be avoided or ignored
+            Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
+                                             : pathfinder1_.AStar(start, end);
 
-                    // add the path to the complete path
-                    // the first path is at the front of the vector
-                    completePath.push_back(p);
-                    //std::cout << "added Path\n";
-                } else {
-                    ERROR_MESSAGE("No Path found");
-                }
+            if (!path.isEmpty()) {
+                // add the path to the complete path
+                // the first path is at the front of the vector
+                completePath.push_back(path);
+
+            } else {
+                ERROR_MESSAGE("No Path found");
             }
+
             //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
             start = end;
         }
