@@ -1,5 +1,5 @@
-#ifndef PATHFINDING_HPP
-#define PATHFINDING_HPP
+#ifndef CSBOT_PATHFINDER_HPP
+#define CSBOT_PATHFINDER_HPP
 
 #include "MapData.hpp"
 #include "libs/CommonFunctions.hpp"
@@ -202,4 +202,4 @@ namespace helper {
 	bool compare(const std::pair<PVector, double>& p, const std::pair<PVector, double>& q);
 }
 
-#endif //PATHFINDING_HPP
+#endif // CSBOT_PATHFINDER_HPP

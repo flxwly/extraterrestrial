@@ -3,13 +3,13 @@
 //====================================
 //          Constructor
 //====================================
-Robot::Robot(int *_x, int *_y, int *_compass, int *_superObjectNum, int *_superObjectX, int *_superObjectY,
+Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_superObjectX, int *_superObjectY,
              int *_rightColorSensorRed, int *_rightColorSensorGreen, int *_rightColorSensorBlue,
              int *_leftColorSensorRed, int *_leftColorSensorGreen, int *_leftColorSensorBlue,
              int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
              int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime, Field *_map0, Field *_map1) :
 
-        x{_x}, y{_y}, compass{_compass}, superObjectNum{_superObjectNum},
+        posX{_posX}, posY{_posY}, compass{_compass}, superObjectNum{_superObjectNum},
         superObjectX{_superObjectX}, superObjectY{_superObjectY},
         rightColorSensors{_rightColorSensorRed, _rightColorSensorGreen, _rightColorSensorBlue},
         leftColorSensors{_leftColorSensorRed, _leftColorSensorGreen, _leftColorSensorBlue},
@@ -23,15 +23,13 @@ Robot::Robot(int *_x, int *_y, int *_compass, int *_superObjectNum, int *_superO
         pathfinder0_{*map0_, false}, pathfinder0T_{*map0_, true},
         pathfinder1_{*map1_, false}, pathfinder1T_{*map1_, true} {
 
-    std::cout << "constructed Bot-Object" <<
-              std::endl;
+    ERROR_MESSAGE("constructed Bot-Object")
 }
 
 //====================================
 //          Private Functions
 //====================================
 
-// TODO: updatePos_ function
 PVector Robot::updatePos() {
     // time difference between last known position and now
     long long int time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -42,9 +40,6 @@ PVector Robot::updatePos() {
 
     // add change on actual position
     aPos_ += change;
-
-    // update robot x and y position
-    *x = static_cast<int>(round(aPos_.x)), *y = static_cast<int>(round(aPos_.y));
 
     // return change
     return change;
@@ -199,24 +194,24 @@ void Robot::teleport() {
 
 
 int Robot::avoidVoid() {
-    if (*x >= 350 && *compass > 270 && *compass <= 360) {
+    if (*posX >= 350 && *compass > 270 && *compass <= 360) {
         return -1;
-    } else if (*x >= 350 && *compass > 180 && *compass <= 270) {
+    } else if (*posX >= 350 && *compass > 180 && *compass <= 270) {
         return 1;
         //Right END
-    } else if (*x <= 10 && *compass > 0 && *compass <= 90) {
+    } else if (*posX <= 10 && *compass > 0 && *compass <= 90) {
         return 1;
-    } else if (*x <= 10 && *compass > 90 && *compass <= 180) {
+    } else if (*posX <= 10 && *compass > 90 && *compass <= 180) {
         return -1;
         //TOP END
-    } else if (*y >= 260 && *compass > 270 && *compass <= 360) {
+    } else if (*posY >= 260 && *compass > 270 && *compass <= 360) {
         return 1;
-    } else if (*y >= 260 && *compass >= 0 && *compass <= 90) {
+    } else if (*posY >= 260 && *compass >= 0 && *compass <= 90) {
         return -1;
         //BOTTOM END
-    } else if (*y <= 10 && *compass > 180 && *compass <= 270) {
+    } else if (*posY <= 10 && *compass > 180 && *compass <= 270) {
         return -1;
-    } else if (*y <= 10 && *compass < 180 && *compass >= 90) {
+    } else if (*posY <= 10 && *compass < 180 && *compass >= 90) {
         return 1;
     }
     return 0;
@@ -226,22 +221,10 @@ int Robot::avoidVoid() {
 //          Public Functions
 //====================================
 void Robot::wheels(int l, int r) {
-    *wheelLeft = 20 * l, *wheelRight = 20 * r;
+    *wheelLeft = l, *wheelRight = r;
 }
 
-void Robot::addWheels(int l, int r) {
-    *wheelLeft += l, *wheelRight += r;
-}
-
-std::array<int, 3> Robot::getLoadedObjects() {
-    return loadedObjects_;
-}
-
-int Robot::getLoadedObjectsNum() const {
-    return loadedObjectsNum_;
-}
-
-int Robot::moveTo(PVector p, bool safety) {
+int Robot::moveToPosition(PVector p, bool safety) {
 
     double dist = geometry::dist(aPos_, p);
 
@@ -266,7 +249,7 @@ int Robot::moveTo(PVector p, bool safety) {
         // case 0 means checkUsSensors has detected no near obstacles
         //      -> the robot can move freely
         case 0:
-            // the angle to x, y is small so there's no correction of it needed
+            // the angle to posX, posY is small so there's no correction of it needed
             //      -> drive straight
             if (fabs(angle) < 10) {
                 if (!safety || dist < 15) {
@@ -344,10 +327,6 @@ int Robot::moveTo(PVector p, bool safety) {
     }
 }
 
-int Robot::moveTo(double _x, double _y, bool safety) {
-    return Robot::moveTo(PVector(_x, _y), safety);
-}
-
 int Robot::checkUsSensors(int l, int f, int r) {
     int sum = 0;
 
@@ -362,6 +341,42 @@ int Robot::checkUsSensors(int l, int f, int r) {
 
 
 void Robot::game0Loop() {
+
+    // ====== Just for speed measure only works in second world ====== //     (leave it in for later)
+    if (true) {
+
+        double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
+                timer::now() - lastPositionUpdate_).count();
+
+        double distance = geometry::dist(PVector(*posX, *posY), lPos_);
+
+        double calculated = Robot::getVelocity(time_dif).getMag();
+
+        if (measures.size() > 100) {
+            measures.erase(measures.begin());
+        }
+
+        measures.push_back(calculated - distance / time_dif);
+
+        std::cout << "time dif between measures: " << time_dif << std::endl;
+        std::cout << "expected vel: " << distance / time_dif << std::endl;
+        std::cout << "calculated vel: " << calculated << std::endl;
+
+        double error = 0;
+        for (double err : measures) {
+            error += err;
+        }
+        error = error / measures.size();
+
+        std::cout << "error: " << error << std::endl;
+
+
+        // set last coords to normal coords (last coords wont get overwritten by the sim)
+        lPos_.set(*posX, *posY);
+        lastPositionUpdate_ = timer::now();
+    }
+
+
     if (Robot::shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
         if (isOrange()) {
             Robot::deposit();
@@ -372,7 +387,7 @@ void Robot::game0Loop() {
         }
 
     } else if (Robot::shouldCollect()) {
-        Robot::collect();
+        //Robot::collect();
     } else {
         // avoid trap on the right if objects are loaded
         if (isYellowRight() && Robot::loadedObjectsNum_ > 0) {
@@ -382,11 +397,11 @@ void Robot::game0Loop() {
         else if (isYellowLeft() && Robot::loadedObjectsNum_ > 0) {
             wheels(5, 0);
         } else {
-            /*switch (Robot::checkUsSensors(8, 12, 8)) {
+            switch (Robot::checkUsSensors(8, 12, 8)) {
                 // no obstacle
                 case 0:
                     // 4 | 4 is standard movement speed in w1
-                    wheels(4, 4);
+                    wheels(3, -2);
                     break;
                 case 1: // obstacle left
                     wheels(4, 0);
@@ -411,7 +426,7 @@ void Robot::game0Loop() {
                     break;
                 default:
                     break;
-            }*/
+            }
             *Robot::led = 0;
         }
     }
@@ -423,43 +438,30 @@ void Robot::game0Loop() {
 
 void Robot::game1Loop() {
 
+
     ERROR_MESSAGE("Time for one cycle: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
             timer::now() - lastCycle_).count()));
-    lastCycle_ = timer::now();
-
-    // ====== Just for speed measure ====== //     (leave it in for later)
-    if (false && *wheelLeft == *wheelRight && *wheelLeft != 0) {
-
-        double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
-                timer::now() - lastPositionUpdate_).count();
-
-        double distance = geometry::dist(PVector(*x, *y), lPos_);
-
-        std::cout << distance / time_dif << std::endl;
-
-    }
 
 
     // check if robot is in signal lost zone
-    if (*x == 0 && *y == 0) {
+    if (*posX == 0 && *posY == 0) {
 
         // set normal coords to last coords and update with function
-        *x = static_cast<int>(round(lPos_.x)), *y = static_cast<int>(round(lPos_.y));
+        *posX = static_cast<int>(round(aPos_.x)), *posY = static_cast<int>(round(aPos_.y));
         updatePos();
-        ERROR_MESSAGE("Position lost");
+
     } else {
-        if (geometry::dist(aPos_, PVector(*x, *y)) > 2) {
-            aPos_.set(*x, *y);
+        if (geometry::dist(aPos_, PVector(*posX, *posY)) > 2) {
+            aPos_.set(*posX, *posY);
         }
 
         updatePos();
     }
 
     // set last coords to normal coords (last coords wont get overwritten by the sim)
-    lPos_.set(*x, *y);
+    lPos_.set(*posX, *posY);
     lastPositionUpdate_ = timer::now();
 
-    //
     //#####################
     //  TODO -- PATHFINDING --
     //#####################
@@ -468,26 +470,28 @@ void Robot::game1Loop() {
     if (completePath.empty()) {
         // get a path of points
         std::vector<PVector> pathOfCollectibles = map1_->getPointPath();
-        PVector start = PVector(*x, *y);
+
+        // the first start point should be the current position of the robot
+        PVector start = aPos_;
 
         // calculate a path from one point to the next
-        for (auto end : pathOfCollectibles) {
-            if (start) {
+        for (int i = 0; i < pathOfCollectibles.size(); i++) {
 
-                // depending on the current number of objects traps should be avoided or ignored
-                Path p = (loadedObjectsNum_ > 0) ? pathfinder1T_.AStar(start, end)
-                                                 : pathfinder1_.AStar(start, end);
+            auto end = pathOfCollectibles[i];
 
-                if (!p.isEmpty()) {
+            // depending on the current number of objects traps should be avoided or ignored
+            Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
+                                             : pathfinder1_.AStar(start, end);
 
-                    // add the path to the complete path
-                    // the first path is at the front of the vector
-                    completePath.push_back(p);
-                    //std::cout << "added Path\n";
-                } else {
-                    ERROR_MESSAGE("No Path found");
-                }
+            if (!path.isEmpty()) {
+                // add the path to the complete path
+                // the first path is at the front of the vector
+                completePath.push_back(path);
+
+            } else {
+                ERROR_MESSAGE("No Path found");
             }
+
             //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
             start = end;
         }
@@ -552,12 +556,12 @@ void Robot::game1Loop() {
 
     } else {
         *led = 0;
-        moveTo(nTarget_, nTargetIsLast_);
+        moveToPosition(nTarget_, nTargetIsLast_);
         ERROR_MESSAGE(PVector::str(nTarget_));
-        //std::cout << "Is at: " << str(*x, *y) << "\tmoving to: " << str(nTarget_) << std::endl;
+        //std::cout << "Is at: " << str(*posX, *posY) << "\tmoving to: " << str(nTarget_) << std::endl;
 
         // if the distance is very small the target has been reached
-        if (geometry::dist(PVector(*x, *y), nTarget_) < 5) {
+        if (geometry::dist(PVector(*posX, *posY), nTarget_) < 5) {
             //std::cout << "reached Object" << std::endl;
             nTarget_ = {-1, -1};
         }
@@ -571,6 +575,9 @@ void Robot::game1Loop() {
             wheels(5, 0);
         }
     }
+
+
+    lastCycle_ = timer::now();
 }
 
 double Robot::getBrakingDistance(double friction) {
@@ -578,13 +585,30 @@ double Robot::getBrakingDistance(double friction) {
 }
 
 PVector Robot::getVelocity(long long int dt) {
-    return (geometry::angle2Vector(*compass) * (*wheelLeft + *wheelRight) / 2) * static_cast<double>(dt);
+
+    // For clarification on how this works see
+    // https://math.stackexchange.com/questions/3962859/calculate-path-of-vehicle-with-two-wheels-parallel-to-each-other
+
+    double v1 = *wheelLeft * ROBOT_SPEED;
+    double v2 = *wheelRight * ROBOT_SPEED;
+
+    if (v1 == v2) {
+        return (geometry::angle2Vector(*compass) * v1) * static_cast<double>(dt);
+    }
+
+    double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
+
+    PVector vel(s * cos(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)) - s,
+                s * sin(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)));
+    vel.rotate(toRadians(*compass));
+
+    return vel;
 }
 
 void Robot::moveAlongPath(Path &path) {
-    PVector futureLoc = PVector(*x, *y);
+    PVector futureLoc = PVector(*posX, *posY);
     futureLoc += getVelocity(5000);
 
     PVector target = path.getClosestNormalPoint(futureLoc, 20);
-    moveTo(target, true);
+    moveToPosition(target, true);
 }

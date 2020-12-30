@@ -1,27 +1,23 @@
+#include "PPSettings.hpp"
+
 #define CsBot_AI_H //DO NOT delete this line
 #define CsBot_AI_C  //DO NOT delete this line
 #ifndef CSBOT_REAL
 
 #define ROBOT_RAD 6
-
 #include <iostream>
-#include <windows.h>
-#include <cstdlib>
 
 // Libs
-
 #include "libs/CoSpaceFunctions.hpp"
 #include "libs/CommonFunctions.hpp"
 #include "libs/ColorRecognition.hpp"
-// Classes
 
+// Classes
 #include "Pathfinder.hpp"
 #include "MapData.hpp"
 #include "Robot.hpp"
 #endif
 
-// TODO: Make SFML work
-//#define USE_SFML_FOR_DEBUGGING
 #ifdef USE_SFML_FOR_DEBUGGING
 #include <SFML/Graphics.hpp>
 #endif
@@ -70,10 +66,7 @@ void Setup() {
     Bot = &bot;
 
 
-    //debugTool.addMap();
-
 #ifdef USE_SFML_FOR_DEBUGGING
-
     static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
     CC = &window;
     CC->setFramerateLimit(10);
@@ -124,10 +117,11 @@ void Game0() {
 
 void Game1Debug() {
 
+#ifdef USE_SFML_FOR_DEBUGGING
 	//##########//
 	//  Setup   //
 	//##########//
-#ifdef USE_SFML_FOR_DEBUGGING
+
 	// check nullptr to prevent crash.
 	if (unbutton == nullptr || CC == nullptr) {
 		ERROR_MESSAGE("Something went wrong. Window or font is not initialized correctly.")
@@ -147,9 +141,9 @@ void Game1Debug() {
 
 	// Vars for drawing on map
 	sf::Vector2u size = CC->getSize();
-	sf::Vector2f scale = {static_cast<float>(size.x) / static_cast<float>(GAME1->getSize().x),
-	                      static_cast<float>(size.y) / static_cast<float>(GAME1->getSize().y)};
-	sf::RectangleShape block(sf::Vector2f(scale.x, scale.y));
+	sf::Vector2f scale = {static_cast<float>(size.posX) / static_cast<float>(GAME1->getSize().posX),
+	                      static_cast<float>(size.posY) / static_cast<float>(GAME1->getSize().posY)};
+	sf::RectangleShape block(sf::Vector2f(scale.posX, scale.posY));
 
 	//##########//
 	//  print   //
@@ -167,16 +161,16 @@ void Game1Debug() {
 	//GAME1.print(CC);
 
 	// Path
-	block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
+	block.setSize(sf::Vector2f(scale.posX * 3, scale.posY * 3));
 	block.setFillColor({80, 0, 255});        // purpleish
 	sf::VertexArray path_lines;
 	for (const auto &path : Bot->completePath) {
 		for (auto point : path.getPoints()) {
-			path_lines.append({sf::Vector2f(static_cast<float> (point.x) * scale.x,
-			                                static_cast<float> (GAME1->getSize().y - 1 - point.y) * scale.y),
+			path_lines.append({sf::Vector2f(static_cast<float> (point.posX) * scale.posX,
+			                                static_cast<float> (GAME1->getSize().posY - 1 - point.posY) * scale.posY),
 			                   sf::Color::Red});
-			block.setPosition(static_cast<float> (point.x) * scale.x,
-			                  static_cast<float> (GAME1->getSize().y - 1 - point.y) * scale.y);
+			block.setPosition(static_cast<float> (point.posX) * scale.posX,
+			                  static_cast<float> (GAME1->getSize().posY - 1 - point.posY) * scale.posY);
 			CC->draw(block);
 		}
 		block.setFillColor({160, 0, 255});       // purple
@@ -185,23 +179,24 @@ void Game1Debug() {
 	CC->draw(path_lines);
 
 	// Position
-	block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
+	block.setSize(sf::Vector2f(scale.posX * 4, scale.posY * 4));
 	block.setFillColor({ 140, 30, 0 });             // dark red / brown
-	block.setPosition(static_cast<float> (PositionX) * scale.x,
-		static_cast<float> (GAME1->getSize().y - 1 - PositionY) * scale.y);
+	block.setPosition(static_cast<float> (PositionX) * scale.posX,
+		static_cast<float> (GAME1->getSize().posY - 1 - PositionY) * scale.posY);
 	CC->draw(block);
 
 	CC->display();
 #endif
-	//debugTool.draw();
 }
 
 
 void Game1() {
 	updateHSL();
 
-	//Game1Debug();
-	Bot->game1Loop();
+	Bot->game0Loop();
 
-	// === Debug ===
+	//Bot->wheels(-1, 2);
+
+	//Bot->game1Loop();
+	//Game1Debug();
 }

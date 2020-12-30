@@ -1,5 +1,5 @@
-#ifndef COSPACE_SETTINGS
-#define COSPACE_SETTINGS
+#ifndef CSBOT_COSPACE_SETTINGS
+#define CSBOT_COSPACE_SETTINGS
 
 #define _USE_MATH_DEFINES
 #include <bits/stdc++.h>

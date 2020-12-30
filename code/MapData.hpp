@@ -1,10 +1,9 @@
-
 #ifndef ERROR_MESSAGE
 #define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
 #endif
 
-#ifndef CODE_MAPDATA_HPP
-#define CODE_MAPDATA_HPP
+#ifndef CSBOT_MAPDATA_HPP
+#define CSBOT_MAPDATA_HPP
 
 
 #include <vector>
@@ -17,15 +16,14 @@
 
 /** A point in a 2D word
  *
- *  @tparam x x-Position of the PVector.
- *  @tparam y y-Position of the PVector.
+ *  @tparam x posX-Position of the PVector.
+ *  @tparam y posY-Position of the PVector.
  *
  *  Can also be used as a 2D vector.
 */
 class PVector {
 public:
     PVector() = default;
-
     PVector(double _x, double _y);
 
     double x, y;
@@ -37,6 +35,9 @@ public:
     double getMag() const;
 
     void setMag(double mag);
+
+    /// counter-clockwise rotation
+    void rotate(double angle);
 
     [[nodiscard]] PVector round() const;
 
@@ -216,10 +217,10 @@ private:
     /// Holds all edges of the Area as ordered lines.
     std::vector<Line> Edges_;
 
-    /// Lowest x and y coordinates
+    /// Lowest posX and posY coordinates
     PVector min_;
 
-    /// Highest x and y coordinates
+    /// Highest posX and posY coordinates
     PVector max_;
 };
 
@@ -375,4 +376,4 @@ extern const std::vector<PVector> GAME1TRAPNODES;
 
 extern const std::vector<Collectible> GAME1COLLECTIBLES;
 
-#endif // !CODE_MAPDATA_HPP
+#endif // !CSBOT_MAPDATA_HPP
