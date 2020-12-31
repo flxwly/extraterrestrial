@@ -1,29 +1,21 @@
-#ifndef ERROR_MESSAGE
-#define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
-#endif
-
 #ifndef CSBOT_MAPDATA_HPP
 #define CSBOT_MAPDATA_HPP
 
+#include "libs/PPSettings.hpp"
 
 #include <vector>
 #include <iostream>
 #include <array>
 #include <cmath>
 
-#define COLOR_SENSOR_ANGLE_OFFSET 3.5
-#define COLOR_SENSOR_DIST_TO_CORE 5
-
-/** A point in a 2D word
+/** Primarily represents a 2D Vector
  *
- *  @tparam x posX-Position of the PVector.
- *  @tparam y posY-Position of the PVector.
- *
- *  Can also be used as a 2D vector.
+ *  @tparam x x-Position of the PVector.
+ *  @tparam y y-Position of the PVector.
 */
 class PVector {
 public:
-    PVector() = default;
+    PVector();
     PVector(double _x, double _y);
 
     double x, y;
@@ -95,7 +87,7 @@ public:
 class Collectible {
 public:
 
-    Collectible(const PVector &p, const int &c);
+    Collectible(const PVector &p, const unsigned int &c);
 
     /// Getter method for Collectible::pos_
     const PVector &getPos() const;
@@ -115,11 +107,11 @@ public:
      * ones. Therefore it is mandatory to check whether a collectible is actually
      * the right/seen one before changing it's state.
      *
-     * @param robot_pos the actual position of the robot given by the simulator
+     * @param robotPos the actual position of the robot given by the simulator
      * @param angle the actual angle of the robot given by the simulator
      * @param uncertainty how imprecise the position and the angle is
      */
-    bool isCorrectCollectible(PVector robot_pos, double angle, double uncertainty);
+    bool isCorrectCollectible(PVector robotPos, double angle, double uncertainty);
 
 private:
 

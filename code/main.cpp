@@ -1,13 +1,9 @@
-#include "PPSettings.hpp"
-
 #define CsBot_AI_H //DO NOT delete this line
 #define CsBot_AI_C  //DO NOT delete this line
 #ifndef CSBOT_REAL
 
-#define ROBOT_RAD 6
-#include <iostream>
-
 // Libs
+#include "libs/PPSettings.hpp"
 #include "libs/CoSpaceFunctions.hpp"
 #include "libs/CommonFunctions.hpp"
 #include "libs/ColorRecognition.hpp"
@@ -16,10 +12,16 @@
 #include "Pathfinder.hpp"
 #include "MapData.hpp"
 #include "Robot.hpp"
+
+#include <iostream>
+
 #endif
 
-#ifdef USE_SFML_FOR_DEBUGGING
+#ifdef SFML
 #include <SFML/Graphics.hpp>
+
+sf::RenderWindow *CC = nullptr;
+sf::Font *unbutton = nullptr;
 #endif
 
 
@@ -34,11 +36,6 @@ void updateHSL() {
 	lumR = rgb2l(CSRight_R, CSRight_G, CSRight_B);
 	lumL = rgb2l(CSLeft_R, CSLeft_G, CSLeft_B);
 }
-
-#ifdef USE_SFML_FOR_DEBUGGING
-sf::RenderWindow *CC = nullptr;
-sf::Font *unbutton = nullptr;
-#endif
 
 Field *GAME0 = nullptr;
 
@@ -66,7 +63,7 @@ void Setup() {
     Bot = &bot;
 
 
-#ifdef USE_SFML_FOR_DEBUGGING
+#ifdef SFML
     static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
     CC = &window;
     CC->setFramerateLimit(10);
@@ -105,19 +102,13 @@ void Game0() {
 
 /*
  * ///_________________________________GAME1________________________________________///
- * TODO Make Pathfinding work
- *  - Get new Waypoint if old one is not needed anymore
- *  - follow route
- *      - choose best point (in  to)
- *      - remember time of visited points.
- * TODO Hunt Superobject
- * TODO
+ *
  * ///__________________________________________________________________________________///
 */
 
 void Game1Debug() {
 
-#ifdef USE_SFML_FOR_DEBUGGING
+#ifdef SFML
 	//##########//
 	//  Setup   //
 	//##########//
@@ -193,7 +184,7 @@ void Game1Debug() {
 void Game1() {
 	updateHSL();
 
-	Bot->game0Loop();
+	Bot->game1Loop();
 
 	//Bot->wheels(-1, 2);
 

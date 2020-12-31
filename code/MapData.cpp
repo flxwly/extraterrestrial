@@ -7,13 +7,12 @@
 /**     -----------     **/
 
 
-PVector::PVector(double _x, double _y) {
-    PVector::x = _x;
-    PVector::y = _y;
-}
+PVector::PVector() : x{0}, y{0} {}
+
+PVector::PVector(double _x, double _y) : x{_x}, y{_y} {}
 
 PVector PVector::round() const {
-    return PVector(std::round(x), std::round(y));
+    return {std::round(x), std::round(y)};
 }
 
 bool operator==(const PVector &p1, const PVector &p2) {
@@ -29,11 +28,11 @@ PVector::operator bool() const {
 }
 
 PVector operator*(const PVector &p, const double &m) {
-    return PVector(p.x * m, p.y * m);
+    return {p.x * m, p.y * m};
 }
 
 PVector operator/(const PVector &p, const double &m) {
-    return PVector(p.x / m, p.y / m);
+    return {p.x / m, p.y / m};
 }
 
 void PVector::set(double _x, double _y) {
@@ -69,17 +68,14 @@ bool operator!=(const PVector &p, const double &n) {
     return p.x != n && p.y != n;
 }
 
+
 /**     -----------     **/
 /**                     **/
 /**     Collectible     **/
 /**                     **/
 /**     -----------     **/
 
-Collectible::Collectible(const PVector &p, const int &c) {
-    Collectible::pos_ = p;
-    Collectible::color_ = c;
-    Collectible::state_ = 0;
-}
+Collectible::Collectible(const PVector &p, const unsigned int &c) : pos_{p}, color_{c}, state_{0} {}
 
 unsigned int Collectible::getColor() const {
     return color_;
@@ -89,23 +85,23 @@ const PVector &Collectible::getPos() const {
     return pos_;
 }
 
-unsigned int Collectible::getState() const {
-    return state_;
-}
-
 void Collectible::setState(unsigned int state) {
     state_ = state;
 }
 
-bool Collectible::isCorrectCollectible(PVector robot_pos, double angle, double uncertainty) {
+unsigned int Collectible::getState() const {
+    return state_;
+}
 
-    auto p = robot_pos + (geometry::angle2Vector(angle + COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
+bool Collectible::isCorrectCollectible(PVector robotPos, double angle, double uncertainty) {
+
+    auto p = robotPos + (geometry::angle2Vector(angle + COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
 
     if (geometry::dist(p, pos_) < uncertainty) {
         return true;
     }
 
-    p = robot_pos + (geometry::angle2Vector(angle - COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
+    p = robotPos + (geometry::angle2Vector(angle - COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
     if (geometry::dist(p, pos_) < uncertainty) {
         return true;
     }
@@ -120,22 +116,18 @@ bool Collectible::isCorrectCollectible(PVector robot_pos, double angle, double u
 /**     -----------     **/
 
 // Line::Line(): Constructor for Line Class
-Line::Line(const PVector &p1, const PVector &p2) {
-    /** Set private vars **/
-    Line::p1_ = p1;
-    Line::p2_ = p2;
-}
+Line::Line(const PVector &p1, const PVector &p2) : p1_{p1}, p2_{p2} {}
 
 const PVector &Line::getP1() const {
     return p1_;
 }
 
-const PVector &Line::getP2() const {
-    return p2_;
-}
-
 void Line::setP1(const PVector &p_1) {
     p1_ = p_1;
+}
+
+const PVector &Line::getP2() const {
+    return p2_;
 }
 
 void Line::setP2(const PVector &p_2) {
@@ -149,9 +141,8 @@ void Line::setP2(const PVector &p_2) {
 /**     -----------     **/
 
 // Area::Area(): Constructor for Area class
-Area::Area(const std::vector<PVector> &p_s) : min_{p_s.front()}, max_{0, 0} {
+Area::Area(const std::vector<PVector> &p_s) : min_{p_s.front()}, max_{0, 0}, Corners_{p_s} {
 
-    Area::Corners_ = p_s;
     PVector last_p = p_s.back();
     for (PVector p : p_s) {
         Area::Edges_.emplace_back(last_p, p);
@@ -632,7 +623,69 @@ const std::vector<Collectible> GAME0COLLECTIBLES = {{{157, 60},  2},
 //------------- Game1_Objects --------------//
 
 /*walls*/
-const std::vector<Area> GAME1WALLS = {};
+const std::vector<Area> GAME1WALLS = {
+        Area({{90,  238},
+              {114, 238},
+              {114, 237},
+              {236, 237},
+              {236, 238},
+              {260, 238},
+              {260, 150},
+              {236, 150},
+              {236, 213},
+              {114, 213},
+              {114, 150},
+              {90,  150}}),
+        Area({{89,  133},
+              {113, 133},
+              {113, 67},
+              {236, 67},
+              {236, 133},
+              {260, 133},
+              {260, 43},
+              {89,  43}}),
+        Area({{35, 59},
+              {53, 59},
+              {53, 58},
+              {57, 58},
+              {57, 57},
+              {59, 57},
+              {59, 56},
+              {64, 51},
+              {65, 51},
+              {65, 47},
+              {66, 47},
+              {66, 25},
+              {65, 25},
+              {65, 22},
+              {64, 22},
+              {59, 17},
+              {59, 16},
+              {57, 16},
+              {57, 15},
+              {53, 15},
+              {53, 14},
+              {35, 14},
+              {35, 15},
+              {31, 15},
+              {31, 16},
+              {28, 16},
+              {28, 17},
+              {24, 21},
+              {23, 21},
+              {23, 24},
+              {21, 24},
+              {21, 40},
+              {22, 40},
+              {22, 48},
+              {23, 48},
+              {23, 52},
+              {24, 52},
+              {28, 56},
+              {28, 57},
+              {31, 57},
+              {31, 58},
+              {35, 58}})};
 /*traps*/
 const std::vector<Area> GAME1TRAPS = {
         Area({{164, 158},
@@ -745,7 +798,7 @@ const std::vector<Area> GAME1SWAMPS = {
               {30, 187},
               {30, 188},
               {32, 188}}),
-        Area({{107, 189},
+        Area({{115, 189},
               {159, 189},
               {159, 178},
               {157, 178},
@@ -769,10 +822,10 @@ const std::vector<Area> GAME1SWAMPS = {
               {137, 157},
               {136, 157},
               {136, 156},
-              {107, 156}}),
+              {115, 156}}),
         Area({{189, 189},
-              {244, 189},
-              {244, 157},
+              {235, 189},
+              {235, 157},
               {212, 157},
               {212, 159},
               {211, 159},
@@ -856,8 +909,8 @@ const std::vector<Area> GAME1SWAMPS = {
               {323, 126},
               {326, 126}}),
         Area({{213, 125},
-              {244, 125},
-              {244, 90},
+              {235, 125},
+              {235, 90},
               {193, 90},
               {193, 103},
               {195, 103},
@@ -882,7 +935,7 @@ const std::vector<Area> GAME1SWAMPS = {
               {212, 120},
               {212, 122},
               {213, 122}}),
-        Area({{107, 124},
+        Area({{114, 124},
               {136, 124},
               {136, 123},
               {137, 123},
@@ -913,7 +966,7 @@ const std::vector<Area> GAME1SWAMPS = {
               {160, 100},
               {162, 100},
               {162, 90},
-              {107, 90}})};
+              {114, 90}})};
 /*Water*/
 const std::vector<Area> GAME1WATERS = {
         Area({{103, 270},
@@ -925,12 +978,73 @@ const std::vector<Area> GAME1WATERS = {
               {252, 1},
               {104, 1}})};
 /*deposit*/
-const std::vector<PVector> GAME1DEPOSITS = {{174, 65},
-                                            {178, 196}};
+const std::vector<PVector> GAME1DEPOSITS = {{174, 68},
+                                            {178, 192}};
 
 //------ Nodes ------//
 /*wall_nodes*/
-const std::vector<PVector> GAME1WALLNODES = {};
+const std::vector<PVector> GAME1WALLNODES = {{89,  239},
+                                             {115, 239},
+                                             {115, 238},
+                                             {235, 238},
+                                             {235, 239},
+                                             {261, 239},
+                                             {261, 149},
+                                             {235, 149},
+                                             {235, 212},
+                                             {115, 212},
+                                             {115, 149},
+                                             {89,  149},
+                                             {88,  134},
+                                             {114, 134},
+                                             {114, 68},
+                                             {235, 68},
+                                             {235, 134},
+                                             {261, 134},
+                                             {261, 42},
+                                             {88,  42},
+                                             {34,  60},
+                                             {54,  60},
+                                             {54,  59},
+                                             {58,  59},
+                                             {58,  58},
+                                             {60,  58},
+                                             {60,  57},
+                                             {65,  52},
+                                             {66,  52},
+                                             {66,  48},
+                                             {67,  48},
+                                             {67,  24},
+                                             {66,  24},
+                                             {66,  21},
+                                             {65,  21},
+                                             {60,  16},
+                                             {60,  15},
+                                             {58,  15},
+                                             {58,  14},
+                                             {54,  14},
+                                             {54,  13},
+                                             {34,  13},
+                                             {34,  14},
+                                             {30,  14},
+                                             {30,  15},
+                                             {27,  15},
+                                             {27,  16},
+                                             {23,  20},
+                                             {22,  20},
+                                             {22,  23},
+                                             {20,  23},
+                                             {20,  41},
+                                             {21,  41},
+                                             {21,  49},
+                                             {22,  49},
+                                             {22,  53},
+                                             {23,  53},
+                                             {27,  57},
+                                             {27,  58},
+                                             {30,  58},
+                                             {30,  59},
+                                             {34,  59}};
 /*trap_nodes*/
 const std::vector<PVector> GAME1TRAPNODES = {{163, 159},
                                              {187, 159},

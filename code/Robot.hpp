@@ -1,32 +1,22 @@
-#ifndef ERROR_MESSAGE
-#define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
-#endif
-
 #ifndef CSBOT_ROBOT_HPP
 #define CSBOT_ROBOT_HPP
+
+#include "libs/PPSettings.hpp"
+#include "libs/CommonFunctions.hpp"
+#include "libs/ColorRecognition.hpp"
+#include "libs/CoSpaceFunctions.hpp"
+
+#include "MapData.hpp"
+#include "Pathfinder.hpp"
 
 #include <vector>
 #include <ctime>
 #include <chrono>
 #include <array>
-#include "libs/CommonFunctions.hpp"
-#include "libs/ColorRecognition.hpp"
-#include "libs/CoSpaceFunctions.hpp"
-#include "MapData.hpp"
-#include "Pathfinder.hpp"
 
-// TODO measure predefined constants
-
-/// The speed of the robot in cm/ms for 20 % of maximum speed
-#define ROBOT_SPEED 0.000185185
-/// The distance between the two powered wheels in cm
-#define ROBOT_AXLE_LENGTH 12.6
 
 /** The robot of the CoSpace-simulator
  *
- *  @tparam *input[20] a pointer array to all vars of the simulator.
- *  @tparam _map0 a pointer to the first MapData object.
- *	@tparam _map0 a pointer to the second MapData object.
 */
 class Robot {
 public:

@@ -47,7 +47,7 @@ def compile_code():
                    "-Wendif-labels -Winit-self -Winline -Wlogical-op -Wmissing-include-dirs " \
                    "-Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wpacked -Wpointer-arith " \
                    "-Wredundant-decls -Wshadow -Wsign-promo -Wswitch-default -Wswitch-enum " \
-                   "-Wunsafe-loop-optimizations -Wvariadic-macros -Wwrite-strings"
+                   "-Wvariadic-macros -Wwrite-strings"
 
     # -Wfloat-equal
     for file_path in file_list:

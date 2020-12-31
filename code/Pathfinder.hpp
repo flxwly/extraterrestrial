@@ -1,8 +1,10 @@
 #ifndef CSBOT_PATHFINDER_HPP
 #define CSBOT_PATHFINDER_HPP
 
-#include "MapData.hpp"
+#include "libs/PPSettings.hpp"
 #include "libs/CommonFunctions.hpp"
+#include "MapData.hpp"
+
 #include <utility>
 #include <vector>
 #include <algorithm>
@@ -10,11 +12,6 @@
 #include <queue>
 #include <cmath>
 
-/// The factor by what speed is reduced in swamps
-#define SWAMP_SPEED_PENALITY 10
-
-/// Standard radius of a path
-#define PATH_RADIUS 10
 
 /** A point in a 2D word used by Pathfinders
  *
@@ -109,15 +106,13 @@ private:
 	 *
 	 *  @note This variable could be constant and is not meant to change.
 	 *  However for usability reasons it's not constant.
-	 *
-	 *  @attention Maybe theres a better solution to this
 	*/
 	Field* Field_;
 
 	/** A vector that stores all visible neighbour nodes with their
 	 *  respective costs.
 	 *
-	 *  @details To optimise both speed and memory usage the A*Pathfinding
+	 *  @details To optimise speed the A*Pathfinding
 	 *  works on a precalculated environment. This vector keeps track of
 	 *  neighbours and distances/costs.
 	*/
