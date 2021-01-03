@@ -19,7 +19,7 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_
         loadedObjects_{0, 0, 0}, loadedObjectsNum_{0},
         collectingSince_{timer::now()}, depositingSince_{timer::now()}, aPos_{0, 0},
         lPos_{-1, -1}, lastPositionUpdate_{timer::now()}, map0_{_map0}, map1_{_map1},
-        nTarget_{-1, -1}, nTargetIsLast_{false}, chasingSuperObjNum_{0},
+        nTarget_{-1, -1}, nTargetIsLast_{false}, chasingSuperObjNum_{0}, currentlyFollowingPath_{{}, 10}
         pathfinder0_{*map0_, false}, pathfinder0T_{*map0_, true},
         pathfinder1_{*map1_, false}, pathfinder1T_{*map1_, true} {
 
@@ -426,6 +426,7 @@ void Robot::game0Loop() {
                     break;
                 default:
                     break;
+
             }
             *Robot::led = 0;
         }
@@ -448,15 +449,16 @@ void Robot::game1Loop() {
 
         // set normal coords to last coords and update with function
         *posX = static_cast<int>(round(aPos_.x)), *posY = static_cast<int>(round(aPos_.y));
-        updatePos();
 
     } else {
-        if (geometry::dist(aPos_, PVector(*posX, *posY)) > 2) {
+        if (geometry::dist(aPos_, PVector(*posX, *posY)) > 5) {
+            ERROR_MESSAGE("Calculated position is to far from actual position!")
             aPos_.set(*posX, *posY);
         }
 
-        updatePos();
+
     }
+    updatePos();
 
     // set last coords to normal coords (last coords wont get overwritten by the sim)
     lPos_.set(*posX, *posY);
@@ -468,20 +470,26 @@ void Robot::game1Loop() {
 
     // There's no path to follow
     if (completePath.empty()) {
+
         // get a path of points
         std::vector<PVector> pathOfCollectibles = map1_->getPointPath();
 
         // the first start point should be the current position of the robot
         PVector start = aPos_;
 
+        pathOfCollectibles = {{10,  10},
+                              {350, 260}};
+
         // calculate a path from one point to the next
         for (int i = 0; i < pathOfCollectibles.size(); i++) {
 
             auto end = pathOfCollectibles[i];
 
+            ERROR_MESSAGE("---------")
+
             // depending on the current number of objects traps should be avoided or ignored
             Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
-                                             : pathfinder1_.AStar(start, end);
+                                                         : pathfinder1_.AStar(start, end);
 
             if (!path.isEmpty()) {
                 // add the path to the complete path
@@ -492,35 +500,19 @@ void Robot::game1Loop() {
                 ERROR_MESSAGE("No Path found");
             }
 
+            ERROR_MESSAGE("-----------")
+
             //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
             start = end;
         }
     }
 
-
-
-        // get the next target
-    else {
-        if (nTarget_ == -1) {
-
-            // set nTarget_ to the last element of the first path in completePath
-            //      the paths in completePath are reversed; The end of the path is the first element
-
-            nTargetIsLast_ = completePath.front().length() == 1;
-            nTarget_ = completePath.front().getPoints().back();
-
-            //std::cout << "new target: " << str(nTarget_) << std::endl;
-
-            // if it's the last element remove the path entirely
-            if (nTargetIsLast_) {
-                completePath.erase(completePath.begin());
-            }
-                // Otherwise just remove it
-            else {
-                completePath.front().removeLast();//erase(completePath.front().begin());
-            }
-        }
+    // remove path if reached
+    if (geometry::dist(completePath.front().getPoints().front(), aPos_) < 5) {
+        completePath.erase(completePath.begin());
     }
+
+
     /*--------------------
      * Priority Structure
      * -------------------
@@ -530,6 +522,8 @@ void Robot::game1Loop() {
      * Pathfind using active collision avoidance
      *
      * */
+
+
 
 
     if (shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
@@ -555,15 +549,13 @@ void Robot::game1Loop() {
         }
 
     } else {
-        *led = 0;
-        moveToPosition(nTarget_, nTargetIsLast_);
-        ERROR_MESSAGE(PVector::str(nTarget_));
-        //std::cout << "Is at: " << str(*posX, *posY) << "\tmoving to: " << str(nTarget_) << std::endl;
 
-        // if the distance is very small the target has been reached
-        if (geometry::dist(PVector(*posX, *posY), nTarget_) < 5) {
-            //std::cout << "reached Object" << std::endl;
-            nTarget_ = {-1, -1};
+        *led = 0;
+        if (!completePath.empty()) {
+            if (!completePath.front().isOnPath(aPos_ + getVelocity(2000))) {
+                moveToPosition(completePath.front().getClosestNormalPoint(aPos_, 5),
+                               geometry::dist(completePath.front().getPoints().front(), aPos_) < 20);
+            }
         }
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded

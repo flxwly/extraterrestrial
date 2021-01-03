@@ -59,7 +59,7 @@ public:
 	 *  If this Node can't see the other Node the cost will be -1.
 	 *  Other wise the cost is calculated also taking swamps into account.
 	*/
-	double calculateCost(Node& node);
+	double calculateCost(const Node& node);
 
 	/** This Method checks if this Node can see a certain other Node
 	 *
@@ -67,7 +67,7 @@ public:
 	 *  @param ObstaclesStructs A vector containing all structures that are counted
 	 *  as Obstacles
 	*/
-	bool canSee(Node& node, const std::vector<Area>& ObstaclesStructs);
+	bool canSee(const Node& node, const std::vector<Area>& ObstaclesStructs);
 
 	/** This Method gets every neighbour and calculates the cost.
 	 *
@@ -79,7 +79,7 @@ public:
 	 *
 	 *  @note Every Node in %Nodes has to be initialized before executing this Method
 	*/
-	int findNeighbours(const std::vector<Node>& Nodes, const std::vector<Area>& ObstacleStructs);
+	int findNeighbours(std::vector<Node>& Nodes, const std::vector<Area>& ObstacleStructs);
 
 	/// Getter for Node::pos_
 	const PVector& getPos() const;
@@ -88,7 +88,13 @@ public:
 	Field* getField() const;
 
 	/// Getter for Node::neighbours_
-	const std::vector<std::pair<Node*, double>>& getNeighbours() const;
+	const std::vector<std::pair<Node*, double>>& getNeighbours();
+
+	/// Pushes a neighbour at the end of neighbours_
+	void addNeighbour(const std::pair<Node*, double> &neighbourNode);
+
+    /// Removes one neighbour if in neighbours_
+    bool removeNeighbour(Node* neighbour);
 
 private:
 
