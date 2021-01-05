@@ -74,7 +74,7 @@ private:
 
 	// === Robot vars ===
 
-	Field *map0_, *map1_;                                   ///< Field vars
+	Field *map0_, *map1_;                                   ///< field vars
 	Pathfinder pathfinder0_, pathfinder1_;                  ///< Pathfinders that ignore traps
 	Pathfinder pathfinder0T_, pathfinder1T_;                ///< Pathfinders that don't ignore traps
 
@@ -103,7 +103,7 @@ private:
 	double getBrakingDistance(double friction);
 
 	/// gets the current velocity for a certain change in time (in ms)
-	PVector getVelocity(long long int dt);
+	PVector getVelocity(long long int dt) const;
 
 
 	/// decides whether collecting a point is a good idea or not

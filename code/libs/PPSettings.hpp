@@ -9,7 +9,7 @@
 #define DEBUG
 
 /// define SFML to enable debugging via SFML
-// #define SFML
+//#define SFML
 
 #ifdef SFML
 #undef DEBUG
@@ -22,9 +22,6 @@
 #ifndef DEBUG
 #define ERROR_MESSAGE(message) {}
 #endif
-
-/// define USE_SFML_FOR_DEBUGGING to use SFML debugging (Doesn't work at the moment)
-//#define USE_SFML_FOR_DEBUGGING
 
 
 /// ----------------------------- ///

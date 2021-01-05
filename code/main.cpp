@@ -133,9 +133,9 @@ void Game1Debug() {
 
 	// Vars for drawing on map
 	sf::Vector2u size = CC->getSize();
-	sf::Vector2f scale = {static_cast<float>(size.posX) / static_cast<float>(GAME1->getSize().posX),
-	                      static_cast<float>(size.posY) / static_cast<float>(GAME1->getSize().posY)};
-	sf::RectangleShape block(sf::Vector2f(scale.posX, scale.posY));
+	sf::Vector2f scale = {static_cast<float>(size.x) / static_cast<float>(GAME1->getSize().x),
+	                      static_cast<float>(size.y) / static_cast<float>(GAME1->getSize().y)};
+	sf::RectangleShape block(sf::Vector2f(scale.x, scale.y));
 
 	//##########//
 	//  print   //
@@ -153,16 +153,16 @@ void Game1Debug() {
 	//GAME1.print(CC);
 
 	// Path
-	block.setSize(sf::Vector2f(scale.posX * 3, scale.posY * 3));
+	block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
 	block.setFillColor({80, 0, 255});        // purpleish
 	sf::VertexArray path_lines;
 	for (const auto &path : Bot->completePath) {
 		for (auto point : path.getPoints()) {
-			path_lines.append({sf::Vector2f(static_cast<float> (point.posX) * scale.posX,
-			                                static_cast<float> (GAME1->getSize().posY - 1 - point.posY) * scale.posY),
+			path_lines.append({sf::Vector2f(static_cast<float> (point.x) * scale.x,
+			                                static_cast<float> (GAME1->getSize().y - 1 - point.y) * scale.y),
 			                   sf::Color::Red});
-			block.setPosition(static_cast<float> (point.posX) * scale.posX,
-			                  static_cast<float> (GAME1->getSize().posY - 1 - point.posY) * scale.posY);
+			block.setPosition(static_cast<float> (point.x) * scale.y,
+			                  static_cast<float> (GAME1->getSize().x - 1 - point.y) * scale.y);
 			CC->draw(block);
 		}
 		block.setFillColor({160, 0, 255});       // purple
@@ -171,10 +171,10 @@ void Game1Debug() {
 	CC->draw(path_lines);
 
 	// Position
-	block.setSize(sf::Vector2f(scale.posX * 4, scale.posY * 4));
+	block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
 	block.setFillColor({ 140, 30, 0 });             // dark red / brown
-	block.setPosition(static_cast<float> (PositionX) * scale.posX,
-		static_cast<float> (GAME1->getSize().posY - 1 - PositionY) * scale.posY);
+	block.setPosition(static_cast<float> (PositionX) * scale.x,
+		static_cast<float> (GAME1->getSize().y - 1 - PositionY) * scale.y);
 	CC->draw(block);
 
 	CC->display();

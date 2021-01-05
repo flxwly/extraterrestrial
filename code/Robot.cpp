@@ -19,7 +19,7 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_
         loadedObjects_{0, 0, 0}, loadedObjectsNum_{0},
         collectingSince_{timer::now()}, depositingSince_{timer::now()}, aPos_{0, 0},
         lPos_{-1, -1}, lastPositionUpdate_{timer::now()}, map0_{_map0}, map1_{_map1},
-        nTarget_{-1, -1}, nTargetIsLast_{false}, chasingSuperObjNum_{0}, currentlyFollowingPath_{{}, 10}
+        nTarget_{-1, -1}, nTargetIsLast_{false}, chasingSuperObjNum_{0}, currentlyFollowingPath_{{}, 10},
         pathfinder0_{*map0_, false}, pathfinder0T_{*map0_, true},
         pathfinder1_{*map1_, false}, pathfinder1T_{*map1_, true} {
 
@@ -226,6 +226,8 @@ void Robot::wheels(int l, int r) {
 
 int Robot::moveToPosition(PVector p, bool safety) {
 
+    ERROR_MESSAGE("Moving to: " + PVector::str(p))
+
     double dist = geometry::dist(aPos_, p);
 
     // an angle should be created that represent the difference between the point to 0;
@@ -343,7 +345,7 @@ int Robot::checkUsSensors(int l, int f, int r) {
 void Robot::game0Loop() {
 
     // ====== Just for speed measure only works in second world ====== //     (leave it in for later)
-    if (true) {
+    if (false) {
 
         double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
                 timer::now() - lastPositionUpdate_).count();
@@ -455,8 +457,6 @@ void Robot::game1Loop() {
             ERROR_MESSAGE("Calculated position is to far from actual position!")
             aPos_.set(*posX, *posY);
         }
-
-
     }
     updatePos();
 
@@ -485,8 +485,6 @@ void Robot::game1Loop() {
 
             auto end = pathOfCollectibles[i];
 
-            ERROR_MESSAGE("---------")
-
             // depending on the current number of objects traps should be avoided or ignored
             Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
                                                          : pathfinder1_.AStar(start, end);
@@ -500,15 +498,13 @@ void Robot::game1Loop() {
                 ERROR_MESSAGE("No Path found");
             }
 
-            ERROR_MESSAGE("-----------")
-
             //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
             start = end;
         }
     }
 
     // remove path if reached
-    if (geometry::dist(completePath.front().getPoints().front(), aPos_) < 5) {
+    if (geometry::dist(completePath.front().points.front(), aPos_) < 5) {
         completePath.erase(completePath.begin());
     }
 
@@ -544,7 +540,7 @@ void Robot::game1Loop() {
 
             Collectible *collectible = map1_->getCollectible(aPos_, *compass, 2, color);
             if (collectible) {
-                collectible->setState(0);
+                collectible->state = 0;
             }
         }
 
@@ -552,10 +548,7 @@ void Robot::game1Loop() {
 
         *led = 0;
         if (!completePath.empty()) {
-            if (!completePath.front().isOnPath(aPos_ + getVelocity(2000))) {
-                moveToPosition(completePath.front().getClosestNormalPoint(aPos_, 5),
-                               geometry::dist(completePath.front().getPoints().front(), aPos_) < 20);
-            }
+            moveAlongPath(completePath.front());
         }
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded
@@ -576,7 +569,7 @@ double Robot::getBrakingDistance(double friction) {
     return static_cast<double>(*wheelLeft + *wheelRight) / 2;
 }
 
-PVector Robot::getVelocity(long long int dt) {
+PVector Robot::getVelocity(long long int dt) const {
 
     // For clarification on how this works see
     // https://math.stackexchange.com/questions/3962859/calculate-path-of-vehicle-with-two-wheels-parallel-to-each-other
@@ -598,9 +591,14 @@ PVector Robot::getVelocity(long long int dt) {
 }
 
 void Robot::moveAlongPath(Path &path) {
-    PVector futureLoc = PVector(*posX, *posY);
-    futureLoc += getVelocity(5000);
+    PVector futureLoc = aPos_ + getVelocity(5000);
+    ERROR_MESSAGE("Future loc: " + PVector::str(futureLoc))
 
-    PVector target = path.getClosestNormalPoint(futureLoc, 20);
-    moveToPosition(target, true);
+    if (!path.isOnPath(futureLoc)) {
+        ERROR_MESSAGE("Robot is not on Path!")
+        PVector target = path.getClosestNormalPoint(futureLoc, 3);
+        moveToPosition(target, true);
+    } else {
+        moveToPosition(geometry::angle2Vector(*compass) * 10, true);
+    }
 }

@@ -8,6 +8,7 @@
 #include <array>
 #include <cmath>
 
+
 /** Primarily represents a 2D Vector
  *
  *  @tparam x x-Position of the PVector.
@@ -15,58 +16,105 @@
 */
 class PVector {
 public:
-    PVector();
-    PVector(double _x, double _y);
+    PVector() = default;
+
+    PVector(double _x, double _y) : x(_x), y(_y) {};
 
     double x, y;
 
-    void set(double _x, double _y);
-
-    void set(PVector p);
-
-    double getMag() const;
-
-    void setMag(double mag);
-
-    /// counter-clockwise rotation
-    void rotate(double angle);
-
-    [[nodiscard]] PVector round() const;
-
-    friend bool operator==(const PVector &p1, const PVector &p2);
-
-    friend bool operator==(const PVector &p, const double &n);
-
-    friend bool operator!=(const PVector &p1, const PVector &p2);
-
-    friend bool operator!=(const PVector &p, const double &n);
-
-    PVector &operator+=(const PVector &rhs) {
-        x = x + rhs.x, y = y + rhs.y;
+    PVector set(double _x, double _y) {
+        x = _x, y = _y;
         return *this;
     };
 
-    friend PVector operator+(PVector &lhs, const PVector &rhs) {
-        return lhs += rhs;
+    double getMag() const {
+        return sqrt(x * x + y * y);
+    };
+
+    PVector setMag(double mag) {
+        mag *= getMag();
+        return set(x / mag, y / mag);
+    };
+
+    static PVector setMag(const PVector &pVector, double mag) {
+        mag *= pVector.getMag();
+        return {pVector.x / mag, pVector.y / mag};
+    };
+
+    /// counter-clockwise rotation
+    PVector rotate(double angle) {
+        return set(x * cos(angle) - y * sin(angle), x * sin(angle) + y * cos(angle));
+    };
+
+    PVector round() {
+        return set(std::round(x), std::round(y));
+    };
+
+    static PVector round(const PVector &pVector) {
+        return {std::round(pVector.x), std::round(pVector.y)};
+    }
+
+    bool operator==(const PVector &lhs) const {
+        return x == lhs.x && y == lhs.y;
+    };
+
+    bool operator==(const double &lhs) const {
+        return x == lhs && y == lhs;
+    };
+
+    bool operator!=(const PVector &lhs) const {
+        return x != lhs.x || y != lhs.y;
+    };
+
+    bool operator!=(const double &lhs) const {
+        return x != lhs || y != lhs;
+    };
+
+    PVector &operator+=(const PVector &rhs) {
+        x += rhs.x, y += rhs.y;
+        return *this;
+    };
+
+    PVector operator+(const PVector &rhs) {
+        return PVector(*this) += rhs;
     };
 
     PVector &operator-=(const PVector &rhs) {
-        x = x - rhs.x, y = y - rhs.y;
+        x -= rhs.x, y -= rhs.y;
         return *this;
     };
 
-    friend PVector operator-(const PVector &lhs, const PVector &rhs) {
-        return PVector(lhs.x - rhs.x, lhs.y - rhs.y);
+    PVector operator-(const PVector &rhs) {
+        return PVector(*this) -= rhs;
     };
 
-    friend PVector operator*(const PVector &p, const double &m);
+    PVector &operator*=(const double &m) {
+        x *= m, y *= m;
+        return *this;
+    };
 
-    friend PVector operator/(const PVector &p, const double &m);
+    PVector operator*(const double &m) {
+        return PVector(*this) *= m;
+    }
 
-    explicit operator bool() const;
+    PVector &operator/=(const double &m) {
+        if (m != 0) x /= m, y /= m;
+        return *this;
+    }
 
-    static std::string str(PVector pVector);
+    PVector operator /(const double &m) {
+        return PVector(*this) /= m;
+    }
+
+    explicit operator bool() const {
+        return x != 0 || y != 0;
+    };
+
+    static std::string str(PVector pVector) {
+        return std::to_string(pVector.x) + " | " + std::to_string(pVector.y);
+    };
 };
+
 
 /** A type of PVector that can be collected by a robot.
  *
@@ -89,18 +137,6 @@ public:
 
     Collectible(const PVector &p, const unsigned int &c);
 
-    /// Getter method for Collectible::pos_
-    const PVector &getPos() const;
-
-    /// Getter method for Collectible::color_
-    unsigned int getColor() const;
-
-    /// Getter method for Collectible::state_
-    unsigned int getState() const;
-
-    /// Setter method for Collectible::state_
-    void setState(unsigned int state);
-
     /** Checks if this collectible could be the seen one (position wise)
      *
      * <p>The color sensors of the robots aren't the same coords as the robot's
@@ -111,9 +147,7 @@ public:
      * @param angle the actual angle of the robot given by the simulator
      * @param uncertainty how imprecise the position and the angle is
      */
-    bool isCorrectCollectible(PVector robotPos, double angle, double uncertainty);
-
-private:
+    bool isCorrectCollectible(PVector robotPos, double angle, double uncertainty) const;
 
     /** Represents the state
      *
@@ -125,7 +159,7 @@ private:
      *
      * @note state = 0 => never seen; state = 1 => seen; state = 2 => collected
     */
-    unsigned int state_;
+    unsigned int state;
 
     /** Represents the color
      *
@@ -135,10 +169,10 @@ private:
      * In addition certain combinations of colors create bonus score. To track
      * maximize the score the robot needs to now which color each object.
      */
-    unsigned int color_;
+    unsigned int color;
 
     /// Represents the position
-    PVector pos_{};
+    PVector pos;
 };
 
 /** A Line in a 2D grid.
@@ -154,25 +188,11 @@ class Line {
 public:
     Line(const PVector &p1, const PVector &p2);
 
-    /// Getter method for Line::p1_
-    const PVector &getP1() const;
-
-    /// Getter method for Line::p2_
-    const PVector &getP2() const;
-
-    /// Setter method for Line::p1_
-    void setP1(const PVector &p_1);
-
-    /// Setter method for Line::p2_
-    void setP2(const PVector &p_2);
-
-private:
-
     /// One end of the line
-    PVector p1_{};
+    PVector p1;
 
     /// The other end of the line
-    PVector p2_{};
+    PVector p2;
 };
 
 /** A polygon in a 2D grid
@@ -330,6 +350,16 @@ namespace geometry {
 
     double dot(PVector p1, PVector p2);
 
+    /** Calculates normal point on a line to another point
+     *
+     * @param line The line
+     * @param point The point
+     *
+     * @details This function returns the intersection between the line
+     * and a line which goes through the point p and is orthogonal to the line
+     * This point however doesn't need to be on the line and can also lie on
+     * a extension of this line
+    */
     PVector getNormalPoint(Line line, PVector point);
 
     PVector angle2Vector(double a);

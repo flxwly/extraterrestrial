@@ -10,7 +10,7 @@ from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
 
 is_strip = False
-more_warnings = True
+more_warnings = False
 
 auto_update = False
 

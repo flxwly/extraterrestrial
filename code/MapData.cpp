@@ -1,73 +1,5 @@
 #include "MapData.hpp"
 
-/**     -----------     **/
-/**                     **/
-/**        PVector        **/
-/**                     **/
-/**     -----------     **/
-
-
-PVector::PVector() : x{0}, y{0} {}
-
-PVector::PVector(double _x, double _y) : x{_x}, y{_y} {}
-
-PVector PVector::round() const {
-    return {std::round(x), std::round(y)};
-}
-
-bool operator==(const PVector &p1, const PVector &p2) {
-    return p1.x == p2.x && p1.y == p2.y;
-}
-
-bool operator!=(const PVector &p1, const PVector &p2) {
-    return !(p1 == p2);
-}
-
-PVector::operator bool() const {
-    return x != 0 || y != 0;
-}
-
-PVector operator*(const PVector &p, const double &m) {
-    return {p.x * m, p.y * m};
-}
-
-PVector operator/(const PVector &p, const double &m) {
-    return {p.x / m, p.y / m};
-}
-
-void PVector::set(double _x, double _y) {
-    x = _x, y = _y;
-}
-
-void PVector::set(PVector p) {
-    set(p.x, p.y);
-}
-
-double PVector::getMag() const {
-    return sqrt(x * x + y * y);
-}
-
-void PVector::setMag(double mag) {
-    double oldMag = getMag();
-    set(x / oldMag * mag, y / oldMag * mag);
-}
-
-void PVector::rotate(double angle) {
-    set(x * cos(angle) - y * sin(angle), x * sin(angle) + y * cos(angle));
-}
-
-std::string PVector::str(PVector pVector) {
-    return std::to_string(pVector.x) + " | " + std::to_string(pVector.y);
-}
-
-bool operator==(const PVector &p, const double &n) {
-    return p.x == n && p.y == n;
-}
-
-bool operator!=(const PVector &p, const double &n) {
-    return p.x != n && p.y != n;
-}
-
 
 /**     -----------     **/
 /**                     **/
@@ -75,34 +7,18 @@ bool operator!=(const PVector &p, const double &n) {
 /**                     **/
 /**     -----------     **/
 
-Collectible::Collectible(const PVector &p, const unsigned int &c) : pos_{p}, color_{c}, state_{0} {}
+Collectible::Collectible(const PVector &p, const unsigned int &c) : pos{p}, color{c}, state{0} {}
 
-unsigned int Collectible::getColor() const {
-    return color_;
-}
-
-const PVector &Collectible::getPos() const {
-    return pos_;
-}
-
-void Collectible::setState(unsigned int state) {
-    state_ = state;
-}
-
-unsigned int Collectible::getState() const {
-    return state_;
-}
-
-bool Collectible::isCorrectCollectible(PVector robotPos, double angle, double uncertainty) {
+bool Collectible::isCorrectCollectible(PVector robotPos, double angle, double uncertainty) const {
 
     auto p = robotPos + (geometry::angle2Vector(angle + COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
 
-    if (geometry::dist(p, pos_) < uncertainty) {
+    if (geometry::dist(p, pos) < uncertainty) {
         return true;
     }
 
     p = robotPos + (geometry::angle2Vector(angle - COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
-    if (geometry::dist(p, pos_) < uncertainty) {
+    if (geometry::dist(p, pos) < uncertainty) {
         return true;
     }
     return false;
@@ -115,24 +31,7 @@ bool Collectible::isCorrectCollectible(PVector robotPos, double angle, double un
 /**                     **/
 /**     -----------     **/
 
-// Line::Line(): Constructor for Line Class
-Line::Line(const PVector &p1, const PVector &p2) : p1_{p1}, p2_{p2} {}
-
-const PVector &Line::getP1() const {
-    return p1_;
-}
-
-void Line::setP1(const PVector &p_1) {
-    p1_ = p_1;
-}
-
-const PVector &Line::getP2() const {
-    return p2_;
-}
-
-void Line::setP2(const PVector &p_2) {
-    p2_ = p_2;
-}
+Line::Line(const PVector &p1, const PVector &p2) : p1{p1}, p2{p2} {}
 
 /**     -----------     **/
 /**                     **/
@@ -145,23 +44,23 @@ Area::Area(const std::vector<PVector> &p_s) : min_{p_s.front()}, max_{0, 0}, Cor
 
     PVector last_p = p_s.back();
     for (PVector p : p_s) {
-        Area::Edges_.emplace_back(last_p, p);
+        Edges_.emplace_back(last_p, p);
         last_p = p;
 
         // Set boundary box posX
-        if (p.x < Area::min_.x) {
-            Area::min_.x = p.x;
+        if (p.x < min_.x) {
+            min_.x = p.x;
         }
-        if (p.x > Area::max_.x) {
-            Area::max_.x = p.x;
+        if (p.x > max_.x) {
+            max_.x = p.x;
         }
 
         // Set boundary box posY
-        if (p.y < Area::min_.y) {
-            Area::min_.y = p.y;
+        if (p.y < min_.y) {
+            min_.y = p.y;
         }
-        if (p.y > Area::max_.y) {
-            Area::max_.y = p.y;
+        if (p.y > max_.y) {
+            max_.y = p.y;
         }
     }
 }
@@ -201,20 +100,20 @@ Field::Field(const int &width, const int &height,
              const std::vector<Collectible> &collectibles) :
         size_{static_cast<double>(width), static_cast<double>(height)} {
 
-    // Field::(MapObjectName)_: Different MapObjects that can be displayed as areas.
+    // field::(MapObjectName)_: Different MapObjects that can be displayed as areas.
     Walls_ = walls;
     Traps_ = traps;
     Swamps_ = swamps;
     Waters_ = waters;
 
-    // Field::Deposits_: Deposit Areas of the Field
+    // field::deposits: Deposit Areas of the field
     Deposits_ = deposits;
     WallNodes_ = wallNodes;
     TrapNodes_ = trapNodes;
 
-    // Field::Collectibles: Collectible Points of the Field
+    // field::Collectibles: Collectible Points of the field
     for (auto collectible : collectibles) {
-        Collectibles_[collectible.getColor()].push_back(collectible);
+        Collectibles_[collectible.color].push_back(collectible);
     }
 }
 
@@ -223,70 +122,70 @@ PVector Field::getSize() {
 }
 
 std::vector<Area> Field::getMapObjects(const std::vector<unsigned int> &indices) {
-    std::vector<Area> return_vector = {};
+    std::vector<Area> returnVector = {};
     // return after all indices have been checked.
     for (unsigned int index : indices) {
         switch (index) {
             case 0:
-                return_vector.insert(std::end(return_vector), std::begin(Field::Walls_), std::end(Field::Walls_));
+                returnVector.insert(std::end(returnVector), std::begin(Walls_), std::end(Walls_));
                 break;
             case 1:
-                return_vector.insert(std::end(return_vector), std::begin(Field::Traps_), std::end(Field::Traps_));
+                returnVector.insert(std::end(returnVector), std::begin(Traps_), std::end(Traps_));
                 break;
             case 2:
-                return_vector.insert(std::end(return_vector), std::begin(Field::Swamps_), std::end(Field::Swamps_));
+                returnVector.insert(std::end(returnVector), std::begin(Swamps_), std::end(Swamps_));
                 break;
             case 3:
-                return_vector.insert(std::end(return_vector), std::begin(Field::Waters_), std::end(Field::Waters_));
+                returnVector.insert(std::end(returnVector), std::begin(Waters_), std::end(Waters_));
                 break;
             default: ERROR_MESSAGE("index out of range/invalid")
         }
     }
 
-    return return_vector;
+    return returnVector;
 }
 
 std::vector<PVector> Field::getMapNodes(const std::vector<unsigned int> &indices) {
-    std::vector<PVector> return_vector;
+    std::vector<PVector> returnVector = {};
 
     // return after all indices have been checked.
     for (unsigned int index : indices) {
         switch (index) {
             case 0:
-                return_vector.insert(return_vector.end(), Field::WallNodes_.begin(),
-                                     Field::WallNodes_.end());
+                returnVector.insert(returnVector.end(), WallNodes_.begin(),
+                                    WallNodes_.end());
                 break;
             case 1:
-                return_vector.insert(std::end(return_vector), std::begin(Field::TrapNodes_),
-                                     std::end(Field::TrapNodes_));
+                returnVector.insert(std::end(returnVector), std::begin(TrapNodes_),
+                                    std::end(TrapNodes_));
                 break;
             default: ERROR_MESSAGE("index out of range/invalid")
                 break;
         }
     }
 
-    ERROR_MESSAGE(return_vector.size())
-    return return_vector;
+    ERROR_MESSAGE(returnVector.size())
+    return returnVector;
 }
 
-/** Getter for Field::Collectibles_ **/
+/** Getter for field::collectibles **/
 std::vector<PVector> Field::getDeposits() {
     return Deposits_;
 }
 
-/** Getter for Field::Collectibles_ **/
+/** Getter for field::collectibles **/
 std::vector<Collectible> Field::getCollectibles(const std::vector<unsigned int> &colors) {
-    std::vector<Collectible> return_vector = {};
+    std::vector<Collectible> returnVector = {};
     // return after all indices have been checked.
     for (unsigned int index : colors) {
         if (index <= 2) {
-            return_vector.insert(std::end(return_vector), std::begin(Field::Collectibles_[index]),
-                                 std::end(Field::Collectibles_[index]));
+            returnVector.insert(std::end(returnVector), std::begin(Collectibles_[index]),
+                                std::end(Collectibles_[index]));
         } else {
             ERROR_MESSAGE("index out of range");
         }
     }
-    return return_vector;
+    return returnVector;
 }
 
 Collectible *Field::getCollectible(PVector robot_pos, double angle, double uncertainty, int color) {
@@ -296,9 +195,9 @@ Collectible *Field::getCollectible(PVector robot_pos, double angle, double uncer
         return nullptr;
     }
 
-    auto Collectibles = Collectibles_[color];
+    auto collectibles = Collectibles_[color];
 
-    for (auto &collectible : Collectibles) {
+    for (auto &collectible : collectibles) {
         if (collectible.isCorrectCollectible(robot_pos, angle, uncertainty)) {
             return &collectible;
         }
@@ -314,7 +213,7 @@ std::vector<PVector> Field::getPointPath() {
 
     c.reserve(6);
     for (int i = 0; i < 6; ++i) {
-        c.push_back(Collectibles_[0][i].getPos());
+        c.push_back(Collectibles_[0][i].pos);
     }
     return c;
 }
@@ -369,14 +268,14 @@ PVector geometry::isIntersecting(Line &l1, Line &l2) {
     // source: https://en.wikipedia.ord/wiki/Line%E2%%80%90line_intersection
 
     // determiant = x1 * y2- x2 * y1
-    double L1 = l1.getP1().x * l1.getP2().y - l1.getP2().x * l1.getP1().y;
-    double L2 = l2.getP1().x * l2.getP2().y - l2.getP2().x * l2.getP1().y;
+    double L1 = l1.p1.x * l1.p2.y - l1.p2.x * l1.p1.y;
+    double L2 = l2.p1.x * l2.p2.y - l2.p2.x * l2.p1.y;
 
     // difs
-    double L1xdif = l1.getP1().x - l1.getP2().x;
-    double L1ydif = l1.getP1().y - l1.getP2().y;
-    double L2xdif = l2.getP1().x - l2.getP2().x;
-    double L2ydif = l2.getP1().y - l2.getP2().y;
+    double L1xdif = l1.p1.x - l1.p2.x;
+    double L1ydif = l1.p1.y - l1.p2.y;
+    double L2xdif = l2.p1.x - l2.p2.x;
+    double L2ydif = l2.p1.y - l2.p2.y;
 
     // determiant a*d - b*c
     double xnom = L1 * L2xdif - L2 * L1xdif;
@@ -442,15 +341,17 @@ double geometry::dot(PVector p1, PVector p2) {
 }
 
 PVector geometry::getNormalPoint(Line line, PVector point) {
-    PVector ap = point - line.getP1();
-    PVector ab = line.getP2() - line.getP1();
+    PVector ap = point - line.p1;
+    PVector ab = line.p2 - line.p1;
 
     // normalize ab (set mag to 1)
     ab.setMag(1);
     ab = ab * geometry::dot(ap, ab);
 
+    PVector normalPoint = PVector(line.p1.x + ab.x, line.p1.y + ab.y);
+
     // normal point
-    return point + ab;
+    return normalPoint;
 }
 
 
