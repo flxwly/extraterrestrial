@@ -690,9 +690,9 @@ class MapData:
 
             print("\tConverting ImageArray...")
 
-            img_arr.expand_all(1, int(detail * 16))  # standard 16
-            img_arr.expand_all(2, int(detail * 16))
-            img_arr.expand_all(3, int(detail * 2))
+            img_arr.expand_all(1, int(detail * 24))  # standard 16
+            img_arr.expand_all(2, int(detail * 24))
+            img_arr.expand_all(3, int(detail * 4))
             img_arr.expand_all(5, int(detail * 2))
 
             temp_map_objects = [

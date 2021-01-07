@@ -119,20 +119,20 @@ bool Robot::shouldDeposit() {
     // only drive to the deposit area if it is fully loaded
 
     // basic points;
-    int treshhold = loadedObjects_[0] * 10 + loadedObjects_[1] * 15 + loadedObjects_[2] * 20;
+    int threshold = loadedObjects_[0] * 10 + loadedObjects_[1] * 15 + loadedObjects_[2] * 20;
 
     // one rgb-bonus
     if (loadedObjects_[0] > 0 && loadedObjects_[1] > 0 && loadedObjects_[2] > 0) {
-        treshhold += 90;
+        threshold += 90;
         // second rgb-bonus
         if (loadedObjects_[0] > 1 && loadedObjects_[1] > 1 && loadedObjects_[2] > 1) {
-            treshhold += 90;
+            threshold += 90;
 
         }
     }
 
     // 145 = 2 red + 1 cyan + 1 black | 20 + 15 + 20 + 90
-    return treshhold >= 145;
+    return threshold >= 145;
 }
 
 void Robot::deposit() {
@@ -193,26 +193,38 @@ void Robot::teleport() {
 }
 
 
-int Robot::avoidVoid() {
-    if (*posX >= 350 && *compass > 270 && *compass <= 360) {
-        return -1;
-    } else if (*posX >= 350 && *compass > 180 && *compass <= 270) {
-        return 1;
-        //Right END
-    } else if (*posX <= 10 && *compass > 0 && *compass <= 90) {
-        return 1;
-    } else if (*posX <= 10 && *compass > 90 && *compass <= 180) {
-        return -1;
-        //TOP END
-    } else if (*posY >= 260 && *compass > 270 && *compass <= 360) {
-        return 1;
-    } else if (*posY >= 260 && *compass >= 0 && *compass <= 90) {
-        return -1;
-        //BOTTOM END
-    } else if (*posY <= 10 && *compass > 180 && *compass <= 270) {
-        return -1;
-    } else if (*posY <= 10 && *compass < 180 && *compass >= 90) {
-        return 1;
+int Robot::avoidVoid() const {
+
+    //Right END
+    if (aPos_.x >= 350) {
+        if (*compass > 270 && *compass <= 360)
+            return -1;
+        else if (*compass > 180 && *compass <= 270)
+            return 1;
+    }
+
+    // LEFT END
+    if (aPos_.x <= 10) {
+        if (*compass > 0 && *compass <= 90)
+            return 1;
+        else if (*compass > 90 && *compass <= 180)
+            return -1;
+    }
+
+    //TOP END
+    if (aPos_.y >= 260) {
+        if (*compass > 270 && *compass <= 360)
+            return 1;
+        else if (*compass >= 0 && *compass <= 90)
+            return -1;
+    }
+
+    //BOTTOM END
+    if (aPos_.y <= 10) {
+        if (*compass > 180 && *compass <= 270)
+            return -1;
+        else if (*compass < 180 && *compass >= 90)
+            return 1;
     }
     return 0;
 }
@@ -220,32 +232,26 @@ int Robot::avoidVoid() {
 //====================================
 //          Public Functions
 //====================================
-void Robot::wheels(int l, int r) {
+void Robot::wheels(int l, int r) const {
     *wheelLeft = l, *wheelRight = r;
 }
 
 int Robot::moveToPosition(PVector p, bool safety) {
-
-    ERROR_MESSAGE("Moving to: " + PVector::str(p))
 
     double dist = geometry::dist(aPos_, p);
 
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
     double angle = toDegrees(geometry::vector2Angle(p - aPos_));
-    ERROR_MESSAGE("Angle: " + std::to_string(angle));
 
     // Difference between compass
-    ERROR_MESSAGE("Compass: " + std::to_string(*compass));
     angle -= *compass;
-    ERROR_MESSAGE("dif to Angle: " + std::to_string(angle));
 
     // If the angle is higher then 180 the point is on the other side
     if (fabs(angle) > 180) {
         //          -> get the same angle but with another prefix
         angle = fmod(angle + ((angle > 0) ? -360 : 360), 360);
     }
-    ERROR_MESSAGE("turning angle Angle: " + std::to_string(angle));
 
     switch (Robot::checkUsSensors(10, 8, 10)) {
         // case 0 means checkUsSensors has detected no near obstacles
@@ -477,7 +483,7 @@ void Robot::game1Loop() {
         // the first start point should be the current position of the robot
         PVector start = aPos_;
 
-        pathOfCollectibles = {{10,  10},
+        pathOfCollectibles = {{100,  10},
                               {350, 260}};
 
         // calculate a path from one point to the next
@@ -505,6 +511,7 @@ void Robot::game1Loop() {
 
     // remove path if reached
     if (geometry::dist(completePath.front().points.front(), aPos_) < 5) {
+        ERROR_MESSAGE("--- Reached path end! ---")
         completePath.erase(completePath.begin());
     }
 
@@ -514,12 +521,10 @@ void Robot::game1Loop() {
      * -------------------
      * Deposit
      * Collect
-     * dodge traps and out of bounds <- only for safety.
-     * Pathfind using active collision avoidance
+     * Dodge Traps and Void
+     * Pathfinding
      *
      * */
-
-
 
 
     if (shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
@@ -592,13 +597,11 @@ PVector Robot::getVelocity(long long int dt) const {
 
 void Robot::moveAlongPath(Path &path) {
     PVector futureLoc = aPos_ + getVelocity(5000);
-    ERROR_MESSAGE("Future loc: " + PVector::str(futureLoc))
 
+    PVector target = path.getClosestNormalPoint(futureLoc, 10);
+    moveToPosition(target, true);
+    ERROR_MESSAGE("Moving to: " + PVector::str(target))
     if (!path.isOnPath(futureLoc)) {
         ERROR_MESSAGE("Robot is not on Path!")
-        PVector target = path.getClosestNormalPoint(futureLoc, 3);
-        moveToPosition(target, true);
-    } else {
-        moveToPosition(geometry::angle2Vector(*compass) * 10, true);
     }
 }

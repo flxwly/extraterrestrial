@@ -55,7 +55,7 @@ public:
 	std::vector<Path> completePath;
 
 	/// controls the robots wheels
-	void wheels(int l, int r);
+	void wheels(int l, int r) const;
 
 	void moveAlongPath(Path &path);
 
@@ -125,7 +125,7 @@ private:
 	void teleport();
 
 	/// returns a turning direction if the robot is about to drive off map
-	int avoidVoid();
+	int avoidVoid() const;
 };
 
 
