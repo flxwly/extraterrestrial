@@ -483,7 +483,7 @@ void Robot::game1Loop() {
         // the first start point should be the current position of the robot
         PVector start = aPos_;
 
-        pathOfCollectibles = {{100,  10},
+        pathOfCollectibles = {{150, 125},
                               {350, 260}};
 
         // calculate a path from one point to the next
@@ -596,12 +596,15 @@ PVector Robot::getVelocity(long long int dt) const {
 }
 
 void Robot::moveAlongPath(Path &path) {
-    PVector futureLoc = aPos_ + getVelocity(5000);
+    PVector target = path.getClosestNormalPoint(aPos_, 10);
 
-    PVector target = path.getClosestNormalPoint(futureLoc, 10);
+    for (auto point : path.points) {
+        std::cout << "P: " << PVector::str(point) << std::endl;
+    }
+
     moveToPosition(target, true);
-    ERROR_MESSAGE("Moving to: " + PVector::str(target))
-    if (!path.isOnPath(futureLoc)) {
+    // ERROR_MESSAGE("Moving to: " + PVector::str(target))
+    if (!path.isOnPath(aPos_)) {
         ERROR_MESSAGE("Robot is not on Path!")
     }
 }
