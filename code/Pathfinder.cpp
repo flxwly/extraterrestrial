@@ -283,14 +283,12 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 
     // start = end ==> no real path
     if (begin == goal) {
-        ERROR_MESSAGE("begin is end")
         return Path({begin}, PATH_RADIUS);
     }
 
     std::vector<Node> end = {Node(goal, field)};
 
     Node start = Node(begin, field);
-    //Node end = Node(goal, field);
 
     std::vector<unsigned int> indices = {0};
 
@@ -298,26 +296,10 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
         indices.push_back(1);
     }
 
-    std::cout << "Start: " << PVector::str(start.pos) << std::endl;
-
     ERROR_MESSAGE("0")
-    //Pathfinder::map.push_back(end[0]);
-
-
-    std::cout << "Node: " << &end[0] << std::endl;
-
-    for (auto node : map) {
-        std::cout << "p " << PVector::str(node.pos) << std::endl;
-    }
 
     start.findNeighbours(Pathfinder::map, field->getMapObjects(indices));
     start.findNeighbours(end, field->getMapObjects(indices));
-
-
-    for (auto node : start.neighbours) {
-        std::cout << "P: " << PVector::str(node.first->pos) << std::endl;
-    }
-    //Pathfinder::map.pop_back();
 
     end[0].findNeighbours(Pathfinder::map, field->getMapObjects(indices));
     for (auto &neighbour : end[0].neighbours) {
@@ -342,9 +324,6 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 
     // loop until soultion is found or no solution possible
     while (!openList.empty()) {
-
-        ERROR_MESSAGE("OpenList.size: " + std::to_string(openList.size()))
-        ERROR_MESSAGE("Current: " + PVector::str(openList.top()->pos));
 
         // choose node with lowest f
         Node *cur = openList.top();
