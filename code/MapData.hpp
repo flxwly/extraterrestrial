@@ -33,7 +33,7 @@ public:
 
     PVector setMag(double mag) {
         mag *= getMag();
-        return set(x / mag, y / mag);
+        return (mag == 0) ? set(0, 0) : set(x / mag, y / mag);
     };
 
     static PVector setMag(const PVector &pVector, double mag) {

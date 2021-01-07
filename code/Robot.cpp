@@ -232,7 +232,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
 
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
-    double angle = geometry::vector2Angle(p - aPos_);
+    double angle = toDegrees(geometry::vector2Angle(p - aPos_));
     ERROR_MESSAGE("Angle: " + std::to_string(angle));
 
     // Difference between compass

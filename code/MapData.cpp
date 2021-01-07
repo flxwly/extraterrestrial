@@ -305,31 +305,9 @@ PVector geometry::angle2Vector(double a) {
 
 double geometry::vector2Angle(double x, double y) {
 
-    if (x == 0)
-        return (y >= 0) ? 0 : 180;
-    else if (y == 0)
-        return (x > 0) ? 90 : 270;
+    double angle = atan2(y, x);
 
-    double angle = atan(y / x);
-
-    // bottom left (90 - 180)
-    if (x < 0 && y < 0)
-        // angle is positive (180 location)
-        angle = M_PI / 2;
-        // top left (0 - 90)
-    else if (x < 0)
-        // angle is negative (90 positive) + (0 location)
-        angle += M_PI / 2;
-        // bottom right (180 - 270)
-    else if (y < 0)
-        // angle is negative (90 positive) + (180 location)
-        angle += 1.5 * M_PI;
-        // top right (270 - 360)
-    else {
-        angle += 1.5 * M_PI;
-        // angle is positive
-    }
-    return angle;
+    return (angle > 0) ? angle : 2 * M_PI + angle;
 }
 
 double geometry::vector2Angle(PVector v) {

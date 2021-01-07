@@ -144,17 +144,10 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
 
     for (unsigned int i = 0; i < points.size() - 1; ++i) {
 
-        ERROR_MESSAGE("Line from: " + PVector::str(points[i]) + " to " + PVector::str(points[i + 1]))
-        ERROR_MESSAGE("Point: " + PVector::str(p))
-
         PVector normalPoint = geometry::getNormalPoint(Line(points[i], points[i + 1]), p);
-
-        ERROR_MESSAGE("normal: " + PVector::str(normalPoint));
 
         // Test if this is the closest yet seen normalpoint
         if (geometry::dist(normalPoint, p) < dist) {
-
-            ERROR_MESSAGE("Normal is closest normal to normal Point")
 
             // Test if the normal Point is within the line segment
 
@@ -177,8 +170,8 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
 
                 if (i < points.size() - 2) {
                     PVector p0 = points[i + 1]
-                                 + (points[i] - points[i + 1]).setMag(1)
-                                 + (points[i + 2] - points[i + 1]).setMag(1);
+                                 + (points[i + 1] - points[i]).setMag(1)
+                                 + (points[i + 1] - points[i + 2]).setMag(1);
 
                     if (geometry::isLeft(points[i + 1], p0, points[i])) {
                         if (geometry::isLeft(points[i + 1], p0, normalPoint))
@@ -190,14 +183,14 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
                 } else {
                     liesOnLeftToRightSide = true;
                 }
-                if (i > 1) {
+                if (i > 0) {
                     // end point; only check whether the point is on the right side
 
                     PVector p0 = points[i]
-                                 + (points[i - 1] - points[i]).setMag(1)
-                                 + (points[i + 1] - points[i]).setMag(1);
+                                 + (points[i] - points[i - 1]).setMag(1)
+                                 + (points[i] - points[i + 1]).setMag(1);
 
-                    if (geometry::isLeft(points[i], p0, points[i + 1])) {
+                    if (geometry::isLeft(points[i], p0, points[i - 1])) {
                         if (geometry::isLeft(p0, points[i], normalPoint))
                             liesOnRightToLeftSide = true;
                     } else {
@@ -211,6 +204,7 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
 
             }
 
+
             if (liesOnRightToLeftSide && liesOnLeftToRightSide) {
                 dist = geometry::dist(normalPoint, p);
                 finalNormal = normalPoint;
@@ -220,9 +214,6 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
             }
         }
     }
-
-
-    ERROR_MESSAGE("final Normal: " + PVector::str(finalNormal));
     dir.setMag(d);
     return finalNormal + dir;
 }
