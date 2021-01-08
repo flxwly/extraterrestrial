@@ -153,6 +153,9 @@ public:
     /// Removes the last point of the path
     void removeLast();
 
+    /// Returns the last point of the path
+    PVector getLast();
+
     /// Checks whether the Path is empty
     bool isEmpty() { return points.empty(); };
 

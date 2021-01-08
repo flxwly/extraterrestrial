@@ -31,18 +31,24 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_
 //====================================
 
 PVector Robot::updatePos() {
-    // time difference between last known position and now
-    long long int time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
-            timer::now() - lastPositionUpdate_).count();
 
-    // total distance
-    PVector change = getVelocity(time_dif);
+    // check if robot is in signal lost zone
+    if (*posX == 0 && *posY == 0) {
 
-    // add change on actual position
-    aPos_ += change;
+        // set normal coords to last coords and update with function
+        *posX = static_cast<int>(round(aPos_.x)), *posY = static_cast<int>(round(aPos_.y));
+
+    } else {
+        if (geometry::dist(aPos_, PVector(*posX, *posY)) > 5) {
+            aPos_.set(*posX, *posY);
+        }
+    }
+
+    aPos_ += getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
+            timer::now() - lastPositionUpdate_).count());
 
     // return change
-    return change;
+    return aPos_ - lPos_;
 }
 
 //TODO: logic to should collect function
@@ -242,7 +248,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
 
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
-    double angle = toDegrees(geometry::vector2Angle(p - aPos_));
+    double angle = toDegrees(geometry::vector2Angle(p - aPos_)) - 90;
 
     // Difference between compass
     angle -= *compass;
@@ -451,22 +457,8 @@ void Robot::game1Loop() {
     ERROR_MESSAGE("Time for one cycle: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
             timer::now() - lastCycle_).count()));
 
-
-    // check if robot is in signal lost zone
-    if (*posX == 0 && *posY == 0) {
-
-        // set normal coords to last coords and update with function
-        *posX = static_cast<int>(round(aPos_.x)), *posY = static_cast<int>(round(aPos_.y));
-
-    } else {
-        if (geometry::dist(aPos_, PVector(*posX, *posY)) > 5) {
-            ERROR_MESSAGE("Calculated position is to far from actual position!")
-            aPos_.set(*posX, *posY);
-        }
-    }
-    updatePos();
-
     // set last coords to normal coords (last coords wont get overwritten by the sim)
+    updatePos();
     lPos_.set(*posX, *posY);
     lastPositionUpdate_ = timer::now();
 
@@ -536,7 +528,7 @@ void Robot::game1Loop() {
             wheels(0, 3);
         }
 
-    } else if (shouldCollect()) {
+    } else if (shouldCollect() && false) {
         int color = collect();
 
         // if the robot is collecting take some time
@@ -602,7 +594,7 @@ void Robot::moveAlongPath(Path &path) {
         std::cout << "P: " << PVector::str(point) << std::endl;
     }
 
-    moveToPosition(target, true);
+    moveToPosition(target, geometry::dist(path.getLast(), aPos_) < 10);
     // ERROR_MESSAGE("Moving to: " + PVector::str(target))
     if (!path.isOnPath(aPos_)) {
         ERROR_MESSAGE("Robot is not on Path!")

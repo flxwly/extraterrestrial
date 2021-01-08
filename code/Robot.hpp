@@ -59,6 +59,9 @@ public:
 
 	void moveAlongPath(Path &path);
 
+    /// updates the position of the robot mathematically and returns the change
+    PVector updatePos();
+
 	int moveToPosition(PVector p, bool safety);
 
 	/// checks if l, f or r is higher than the us-sensor vals. returns a binary-encoded value
@@ -95,9 +98,6 @@ private:
 
 	//               ___________
 	//______________/ functions \_____________
-
-	/// updates the position of the robot mathematically and returns the change
-	PVector updatePos();
 
 	/// calculates how long the breaking distance is
 	double getBrakingDistance(double friction);

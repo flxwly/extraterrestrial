@@ -144,6 +144,11 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
     PVector finalNormal = PVector(0, 0);
     PVector dir = PVector(0, 0);
 
+    if (points.size() <= 1) {
+        dir = points[0] - p;
+        finalNormal = p;
+    }
+
     for (unsigned int i = 0; i < points.size() - 1; ++i) {
 
         PVector normalPoint = geometry::getNormalPoint(Line(points[i], points[i + 1]), p);
@@ -216,6 +221,9 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
             }
         }
     }
+
+    ERROR_MESSAGE(PVector::str(finalNormal))
+
     dir.setMag(d);
     return finalNormal + dir;
 }
@@ -226,6 +234,10 @@ void Path::addPoint(PVector p) {
 
 void Path::removeLast() {
     points.pop_back();
+}
+
+PVector Path::getLast() {
+    return points.back();
 }
 
 bool Path::isOnPath(PVector p) {
@@ -252,25 +264,27 @@ bool Path::isOnPath(PVector p) {
 /**                     **/
 /**     -----------     **/
 
-Pathfinder::Pathfinder(Field &MAP, bool
-trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP} {
+Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP} {
 
-    ERROR_MESSAGE(" ----- Initializing Pathfinder ----- ")
+    // get map objects
+    std::vector<Area> mapObjects = {};
+    if (trap_sensitive) mapObjects = field->getMapObjects({0, 1});
+    else mapObjects = field->getMapObjects({0});
 
-    std::vector<unsigned int> indices = {0};
+    // get map nodes
+    std::vector<PVector> mapNodes = {};
+    if (trap_sensitive) mapNodes = field->getMapNodes({0, 1});
+    else mapNodes = field->getMapNodes({0});
 
-    if (trap_sensitive)
-        indices.push_back(1);
 
-
-    for (auto node : MAP.getMapNodes(indices)) {
-        // create & store Node
+    // create & store Node
+    for (auto node : mapNodes) {
         map.emplace_back(node, field);
     }
 
     // get neighbour Nodes
-    for (auto &node : Pathfinder::map) {
-        node.findNeighbours(Pathfinder::map, field->getMapObjects(indices));
+    for (auto &node : map) {
+        node.findNeighbours(map, mapObjects);
     }
 
 }
@@ -281,31 +295,28 @@ double Pathfinder::heuristic(const PVector &cur, const PVector &end) {
 
 Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 
-    // start = end ==> no real path
-    if (begin == goal) {
-        return Path({begin}, PATH_RADIUS);
-    }
-
-    std::vector<Node> end = {Node(goal, field)};
+    // If the begin is also the goal a path is just the goal
+    if (begin == goal)
+        return Path({goal}, PATH_RADIUS);
 
     Node start = Node(begin, field);
+    Node end = Node(goal, field);
 
-    std::vector<unsigned int> indices = {0};
+    // If the pathfinder is trap sensitive traps have to be taken into account
+    std::vector<Area> mapObjects = {};
+    if (trapSensitive) mapObjects = field->getMapObjects({0});
+    else mapObjects = field->getMapObjects({0, 1});
 
-    if (trapSensitive) {
-        indices.push_back(1);
-    }
 
-    ERROR_MESSAGE("0")
+    // Initialize the start and end nodes
+    start.findNeighbours(map, mapObjects);
+    if (start.canSee(end, mapObjects))
+        start.addNeighbour(&end, start.calculateCost(end));
 
-    start.findNeighbours(Pathfinder::map, field->getMapObjects(indices));
-    start.findNeighbours(end, field->getMapObjects(indices));
+    end.findNeighbours(map, mapObjects);
+    for (auto &neighbour : end.neighbours)
+        neighbour.first->addNeighbour(&end, neighbour.second);
 
-    end[0].findNeighbours(Pathfinder::map, field->getMapObjects(indices));
-    for (auto &neighbour : end[0].neighbours) {
-        neighbour.first->addNeighbour(&end[0], neighbour.second);
-    }
-    ERROR_MESSAGE("1")
 
     // init open- & closedList
     std::priority_queue<Node *, std::vector<Node *>, Pathfinder::PRIORITY> openList;
@@ -318,9 +329,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 
     // update start.g & start.f
     start.g = 0;
-    start.f = (start.g + heuristic(start.pos, end[0].pos));
-
-    ERROR_MESSAGE("2")
+    start.f = (start.g + heuristic(start.pos, end.pos));
 
     // loop until soultion is found or no solution possible
     while (!openList.empty()) {
@@ -329,21 +338,16 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
         Node *cur = openList.top();
 
         // if cur and end are the same, the path is found
-        if (cur == &end[0]) {
+        if (cur == &end) {
 
-            ERROR_MESSAGE("3")
+            Path path = Pathfinder::traverse(&end);
 
-            Path path = Pathfinder::traverse(&end[0]);
-
-            // resetting everything
-            for (auto &neighbour : end[0].neighbours) {
-                neighbour.first->removeNeighbour(&end[0]);
+            // remove end node from map nodes neighbour list
+            for (auto &neighbour : end.neighbours) {
+                neighbour.first->removeNeighbour(&end);
             }
 
-            for (auto &neighbour : start.neighbours) {
-                neighbour.first->removeNeighbour(&start);
-            }
-
+            // reset node booleans
             for (Node *element : closedList) {
                 element->isClosed = false;
             }
@@ -352,10 +356,9 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
                 openList.pop();
             }
 
-            ERROR_MESSAGE("+3")
-
             return path;
         }
+
             // continue loop
         else {
             // remove cur from openList & add cur to closedList
@@ -367,9 +370,10 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
                 if (neighbour.first->isClosed) {
                     continue;
                 }
+
                 // tempG = g cost over cur
-                tempG =
-                        cur->g + neighbour.second;
+                tempG = cur->g + neighbour.second;
+
                 // if neighbour is in openList just update | otherwise add and update
                 if (neighbour.first->isOpen) {
                     // only if path over cur is better
@@ -377,14 +381,14 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
                         //if(!pqContainsNode(openList, neighbour) || tempG < neighbour.g)
                         // update
                         neighbour.first->g = tempG;
-                        neighbour.first->f = tempG + heuristic(neighbour.first->pos, end[0].pos);
+                        neighbour.first->f = tempG + heuristic(neighbour.first->pos, end.pos);
                         neighbour.first->previous = cur;
                         //ERROR_MESSAGE(" - updated " + PVector::str(neighbour.first->pos) + " - ");
                     }
                 } else {
                     // add
                     neighbour.first->g = tempG;
-                    neighbour.first->f = tempG + heuristic(neighbour.first->pos, end[0].pos);
+                    neighbour.first->f = tempG + heuristic(neighbour.first->pos, end.pos);
                     neighbour.first->previous = cur;
                     openList.push(neighbour.first);
                     neighbour.first->isOpen = true;
@@ -397,11 +401,9 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
         }
     }
 
-    ERROR_MESSAGE("4")
-
     // resetting everything
-    for (auto &neighbour : end[0].neighbours) {
-        neighbour.first->removeNeighbour(&end[0]);
+    for (auto &neighbour : end.neighbours) {
+        neighbour.first->removeNeighbour(&end);
     }
 
     for (Node *element : closedList) {
@@ -412,33 +414,18 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
         openList.pop();
     }
 
-    ERROR_MESSAGE("+4")
-
     return Path({}, PATH_RADIUS);
 }
 
 Path Pathfinder::traverse(Node *end) {
-    // clear
-    std::vector<Node> tPath;
-    Node *tPtr;
+    std::vector<PVector> path;
 
     while (end->previous != nullptr) {
-        // add
-        tPath.push_back(*end);
-
-        // get next
-        tPtr = end->previous;
-        end->previous = nullptr;
-        end = tPtr;
+        path.push_back(end->pos);
+        end = end->previous;
     }
 
-    std::vector<PVector> pPath;
-    pPath.reserve(tPath.size());
-    for (const Node &n: tPath) {
-        pPath.emplace_back(n.pos);
-    }
-
-    return Path(pPath, PATH_RADIUS);
+    return Path(path, PATH_RADIUS);
 }
 
 
