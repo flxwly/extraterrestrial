@@ -25,7 +25,7 @@ double Node::calculateCost(const Node &node) {
     std::vector<std::pair<PVector, double>> intersections;
     for (auto &swamp : field->getMapObjects({2})) {
         for (auto bound : swamp.getEdges()) {
-            PVector intersection = geometry::isIntersecting(line, bound);
+            PVector intersection = geometry::intersection(line, bound);
 
             if (intersection) {
                 intersections.emplace_back(intersection, geometry::dist(intersection, pos));
@@ -77,12 +77,12 @@ double Node::calculateCost(const Node &node) {
 }
 
 bool Node::canSee(const Node &node, const std::vector<Area> &Obstacles) {
-    Line l1(pos, node.pos);
+    if (pos == node.pos)
+	    return false;
+	Line l1(pos, node.pos);
     for (const Area &Obstacle : Obstacles) {
         for (auto edge : Obstacle.getEdges()) {
-            PVector intersection = geometry::isIntersecting(l1, edge);
-            if (intersection == PVector(-1, -1)) {
-
+            if (geometry::isIntersecting(l1, edge)) {
                 return false;
             }
         }
@@ -96,8 +96,6 @@ int Node::findNeighbours(std::vector<Node> &Nodes, const std::vector<Area> &Obst
     for (auto &node : Nodes) {
 
         if (canSee(node, Obstacles)) {
-
-            //ERROR_MESSAGE(PVector::str(pos) + " can see " + PVector::str(node.pos))
 
             if (std::find_if(neighbours.begin(), neighbours.end(),
                              [&](std::pair<Node *, double> n) { return n.first == &node; })

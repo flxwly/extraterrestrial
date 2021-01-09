@@ -16,7 +16,7 @@
 */
 class PVector {
 public:
-    PVector() = default;
+    PVector() : x(NAN), y(NAN) {};
 
     PVector(double _x, double _y) : x(_x), y(_y) {};
 
@@ -107,7 +107,7 @@ public:
     }
 
     explicit operator bool() const {
-        return x != 0 || y != 0;
+        return !_isnan(x) && !_isnan(y);
     };
 
     static std::string str(PVector pVector) {
@@ -193,6 +193,10 @@ public:
 
     /// The other end of the line
     PVector p2;
+
+    static std::string str(Line &l) {
+	    return "from " + PVector::str(l.p1) + "to " + PVector::str(l.p2);
+    }
 };
 
 /** A polygon in a 2D grid
@@ -342,7 +346,9 @@ namespace geometry {
      * @param l2 another line
      * @return intersection point if existing. Otherwise (-1, -1)
     */
-    PVector isIntersecting(Line &l1, Line &l2);
+    PVector intersection(Line &l1, Line &l2);
+
+	bool isIntersecting(Line &l1, Line &l2);
 
     double sqDist(const PVector &p1, const PVector &p2);
 

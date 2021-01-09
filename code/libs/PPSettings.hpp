@@ -6,7 +6,7 @@
 /// ----------------------------- ///
 
 /// define DEBUG to enable debug messages
-#define DEBUG
+//#define DEBUG
 
 /// define SFML to enable debugging via SFML
 #define SFML

@@ -151,7 +151,7 @@ void Game1Debug() {
 	CC->draw(label);
 
 	// Pathfinder:
-	/*block.setSize(sf::Vector2f(scale.x * 5, scale.y * 5));
+	block.setSize(sf::Vector2f(scale.x * 2, scale.y * 2));
 	block.setFillColor({255, 0, 0});
 	for (auto &node : Bot->pathfinder1_.map) {
 		sf::Vector2f p1(static_cast<float>(node.pos.x * scale.x),
@@ -169,7 +169,7 @@ void Game1Debug() {
 
 
 		CC->draw(block);
-	}*/
+	}
 
 	// Map:
 	block.setSize({scale.x * 2, scale.y * 2});
@@ -191,15 +191,23 @@ void Game1Debug() {
 
 	// Path
 	block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
-	block.setFillColor({80, 0, 255});        // purpleish
-	sf::VertexArray path_lines;
-	for (const auto &path : Bot->completePath) {
+	sf::VertexArray path_lines(sf::Lines);
+	for (unsigned int i = 0; i < Bot->completePath.size(); i++) {
+
+		Path path = Bot->completePath[i];
+		sf::Uint8 rval = i * 80 + 80;
+		block.setFillColor({rval, 0, 255});
+
+
 		for (auto point : path.points) {
 			path_lines.append({sf::Vector2f(static_cast<float> (point.x) * scale.x,
-			                                static_cast<float> (GAME1->getSize().y - 1 - point.y) * scale.y),
+			                                static_cast<float> (point.y) * scale.y),
 			                   sf::Color::Red});
 			block.setPosition(static_cast<float> (point.x) * scale.y,
-			                  static_cast<float> (GAME1->getSize().x - 1 - point.y) * scale.y);
+			                  static_cast<float> (point.y) * scale.y);
+			if (point == path.points.back()) {
+				block.setOutlineColor({200, 100, 0});
+			}
 			CC->draw(block);
 		}
 		block.setFillColor({160, 0, 255});       // purple
@@ -211,7 +219,7 @@ void Game1Debug() {
 	block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
 	block.setFillColor({140, 30, 0});             // dark red / brown
 	block.setPosition(static_cast<float> (PositionX) * scale.x,
-	                  static_cast<float> (GAME1->getSize().y - 1 - PositionY) * scale.y);
+	                  static_cast<float> (PositionY) * scale.y);
 	CC->draw(block);
 
 	CC->display();
@@ -223,5 +231,6 @@ void Game1() {
 	updateHSL();
 
 	Bot->game1Loop();
+
 	Game1Debug();
 }

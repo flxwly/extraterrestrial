@@ -475,8 +475,7 @@ void Robot::game1Loop() {
         // the first start point should be the current position of the robot
         PVector start = aPos_;
 
-        pathOfCollectibles = {{150, 125},
-                              {350, 260}};
+        pathOfCollectibles = {{150, 125}};
 
         // calculate a path from one point to the next
         for (int i = 0; i < pathOfCollectibles.size(); i++) {
@@ -486,6 +485,8 @@ void Robot::game1Loop() {
             // depending on the current number of objects traps should be avoided or ignored
             Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
                                                          : pathfinder1_.AStar(start, end);
+
+            path = pathfinder1_.AStar(start, end);
 
             if (!path.isEmpty()) {
                 // add the path to the complete path
