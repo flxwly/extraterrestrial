@@ -9,7 +9,7 @@
 #define DEBUG
 
 /// define SFML to enable debugging via SFML
-//#define SFML
+#define SFML
 
 #ifdef SFML
 #undef DEBUG

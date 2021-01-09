@@ -73,14 +73,14 @@ public:
 	/// game loop for second map
 	void game1Loop();
 
-private:
+public:
 
 	// === Robot vars ===
 
 	Field *map0_, *map1_;                                   ///< field vars
 	Pathfinder pathfinder0_, pathfinder1_;                  ///< Pathfinders that ignore traps
 	Pathfinder pathfinder0T_, pathfinder1T_;                ///< Pathfinders that don't ignore traps
-
+private:
 	int loadedObjectsNum_;                                  ///< number of objects loaded
 	std::array<int, 3> loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
 

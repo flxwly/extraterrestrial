@@ -19,6 +19,7 @@
 
 
 #ifdef SFML
+
 #include <SFML/Graphics.hpp>
 
 sf::RenderWindow *CC = nullptr;
@@ -28,14 +29,14 @@ sf::Font *unbutton = nullptr;
 
 void updateHSL() {
 
-    hueR = rgb2h(CSRight_R, CSRight_G, CSRight_B);
-    hueL = rgb2h(CSLeft_R, CSLeft_G, CSLeft_B);
+	hueR = rgb2h(CSRight_R, CSRight_G, CSRight_B);
+	hueL = rgb2h(CSLeft_R, CSLeft_G, CSLeft_B);
 
-    satR = rgb2s(CSRight_R, CSRight_G, CSRight_B);
-    satL = rgb2s(CSLeft_R, CSLeft_G, CSLeft_B);
+	satR = rgb2s(CSRight_R, CSRight_G, CSRight_B);
+	satL = rgb2s(CSLeft_R, CSLeft_G, CSLeft_B);
 
-    lumR = rgb2l(CSRight_R, CSRight_G, CSRight_B);
-    lumL = rgb2l(CSLeft_R, CSLeft_G, CSLeft_B);
+	lumR = rgb2l(CSRight_R, CSRight_G, CSRight_B);
+	lumL = rgb2l(CSLeft_R, CSLeft_G, CSLeft_B);
 }
 
 Field *GAME0 = nullptr;
@@ -45,50 +46,48 @@ Field *GAME1 = nullptr;
 Robot *Bot = nullptr;
 
 void Setup() {
-    system("cls");
+	system("cls");
 
-    // ----------- Initialisation of static objects -------------------- //
+	// ----------- Initialisation of static objects -------------------- //
 
-    static Field Game0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS, GAME0WALLNODES,
-                       GAME0TRAPNODES,
-                       GAME0COLLECTIBLES);
-    GAME0 = &Game0;
+	static Field Game0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS, GAME0WALLNODES,
+	                   GAME0TRAPNODES,
+	                   GAME0COLLECTIBLES);
+	GAME0 = &Game0;
 
-    static Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS, GAME1WALLNODES,
-                       GAME1TRAPNODES,
-                       GAME1COLLECTIBLES);
-    GAME1 = &Game1;
+	static Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS, GAME1WALLNODES,
+	                   GAME1TRAPNODES,
+	                   GAME1COLLECTIBLES);
+	GAME1 = &Game1;
 
-    static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
-                     &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
-                     &US_Left, &US_Front, &US_Right,
-                     &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time, GAME0, GAME1);
-    Bot = &bot;
+	static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
+	                 &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
+	                 &US_Left, &US_Front, &US_Right,
+	                 &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time, GAME0, GAME1);
+	Bot = &bot;
 
 
 #ifdef SFML
-    static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
-    CC = &window;
-    CC->setFramerateLimit(10);
+	static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
+	CC = &window;
+	CC->setFramerateLimit(10);
 
-    static sf::Font font;
-    if (font.loadFromFile("../fonts/unbutton.ttf")) {
-        unbutton = &font;
-    }
-    else if (font.loadFromFile("unbutton.ttf")) {
-        unbutton = &font;
-    }
-    else if (font.loadFromFile(
-            "C:/Users/flxwly/Microsoft Robotics Dev Studio 4/CS.C/User/RSC/extraterrestrial/unbutton.ttf")) {
-        unbutton = &font;
-    }
+	static sf::Font font;
+	if (font.loadFromFile("../fonts/unbutton.ttf")) {
+		unbutton = &font;
+	} else if (font.loadFromFile("unbutton.ttf")) {
+		unbutton = &font;
+	} else if (font.loadFromFile(
+			"C:/Users/flxwly/Microsoft Robotics Dev Studio 4/CS.C/User/RSC/extraterrestrial/unbutton.ttf")) {
+		unbutton = &font;
+	}
 
-    if (unbutton != nullptr) {
-        std::cout << "loaded font" << std::endl;
-    }
+	if (unbutton != nullptr) {
+		std::cout << "loaded font" << std::endl;
+	}
 #endif
 
-    updateHSL();
+	updateHSL();
 
 }
 
@@ -99,8 +98,8 @@ void Setup() {
 */
 
 void Game0() {
-    updateHSL();
-    Bot->game0Loop();
+	updateHSL();
+	Bot->game0Loop();
 }
 
 /*
@@ -112,81 +111,117 @@ void Game0() {
 void Game1Debug() {
 
 #ifdef SFML
-    //##########//
-    //  Setup   //
-    //##########//
+	//##########//
+	//  Setup   //
+	//##########//
 
-    // check nullptr to prevent crash.
-    if (unbutton == nullptr || CC == nullptr) {
-        ERROR_MESSAGE("Something went wrong. Window or font is not initialized correctly.")
-        return;
-    }
+	// check nullptr to prevent crash.
+	if (unbutton == nullptr || CC == nullptr) {
+		ERROR_MESSAGE("Something went wrong. Window or font is not initialized correctly.")
+		return;
+	}
 
-    // Event handling
-    sf::Event event;
-    while (CC->pollEvent(event)) {
-        // "close requested" event: we close the window
-        if (event.type == sf::Event::Closed)
-            CC->close();
-    }
+	// Event handling
+	sf::Event event;
+	while (CC->pollEvent(event)) {
+		// "close requested" event: we close the window
+		if (event.type == sf::Event::Closed)
+			CC->close();
+	}
 
-    // clear screen
-    CC->clear(sf::Color::Black);
+	// clear screen
+	CC->clear(sf::Color::Black);
 
-    // Vars for drawing on map
-    sf::Vector2u size = CC->getSize();
-    sf::Vector2f scale = {static_cast<float>(size.x) / static_cast<float>(GAME1->getSize().x),
-                          static_cast<float>(size.y) / static_cast<float>(GAME1->getSize().y)};
-    sf::RectangleShape block(sf::Vector2f(scale.x, scale.y));
+	// Vars for drawing on map
+	sf::Vector2u size = CC->getSize();
+	sf::Vector2f scale = {static_cast<float>(size.x) / static_cast<float>(GAME1->getSize().x),
+	                      static_cast<float>(size.y) / static_cast<float>(GAME1->getSize().y)};
+	sf::RectangleShape block(sf::Vector2f(scale.x, scale.y));
 
-    //##########//
-    //  print   //
-    //##########//
+	//##########//
+	//  print   //
+	//##########//
 
-    // Map label
-    sf::Text label("Map", *unbutton);
-    label.setPosition(10, 5);
-    label.setCharacterSize(30);
-    label.setFillColor(sf::Color::Black);
-    label.setStyle(sf::Text::Regular);
-    CC->draw(label);
+	// Map label
+	sf::Text label("Map", *unbutton);
+	label.setPosition(10, 5);
+	label.setCharacterSize(30);
+	label.setFillColor(sf::Color::Black);
+	label.setStyle(sf::Text::Regular);
+	CC->draw(label);
 
-    // MapData
-    //GAME1.print(CC);
+	// Pathfinder:
+	/*block.setSize(sf::Vector2f(scale.x * 5, scale.y * 5));
+	block.setFillColor({255, 0, 0});
+	for (auto &node : Bot->pathfinder1_.map) {
+		sf::Vector2f p1(static_cast<float>(node.pos.x * scale.x),
+		                static_cast<float>(node.pos.y * scale.y));
+		block.setPosition(p1);
+		for (auto neighbour : node.neighbours) {
+			sf::Vector2f p2(static_cast<float>(neighbour.first->pos.x * scale.x),
+			                static_cast<float>(neighbour.first->pos.y * scale.y));
+			sf::Vertex line[] = {p1, p2};
 
-    // Path
-    block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
-    block.setFillColor({80, 0, 255});        // purpleish
-    sf::VertexArray path_lines;
-    for (const auto &path : Bot->completePath) {
-        for (auto point : path.getPoints()) {
-            path_lines.append({sf::Vector2f(static_cast<float> (point.x) * scale.x,
-                                            static_cast<float> (GAME1->getSize().y - 1 - point.y) * scale.y),
-                               sf::Color::Red});
-            block.setPosition(static_cast<float> (point.x) * scale.y,
-                              static_cast<float> (GAME1->getSize().x - 1 - point.y) * scale.y);
-            CC->draw(block);
-        }
-        block.setFillColor({160, 0, 255});       // purple
-    }
+			line->color = sf::Color(255, 255, 255, 40);
 
-    CC->draw(path_lines);
+			CC->draw(line, 2, sf::Lines);
+		}
 
-    // Position
-    block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
-    block.setFillColor({ 140, 30, 0 });             // dark red / brown
-    block.setPosition(static_cast<float> (PositionX) * scale.x,
-        static_cast<float> (GAME1->getSize().y - 1 - PositionY) * scale.y);
-    CC->draw(block);
 
-    CC->display();
+		CC->draw(block);
+	}*/
+
+	// Map:
+	block.setSize({scale.x * 2, scale.y * 2});
+	block.setFillColor({0, 255, 0});
+	for (auto &walls : Bot->map1_->getMapObjects({0})) {
+		for (auto &edge : walls.getEdges()) {
+			sf::Vector2f p1(static_cast<float>(edge.p1.x * scale.x),
+			                static_cast<float>(edge.p1.y * scale.y));
+			sf::Vector2f p2(static_cast<float>(edge.p2.x * scale.x),
+			                static_cast<float>(edge.p2.y * scale.y));
+
+			sf::Vertex area[] = {p1, p2};
+			area->color = sf::Color(0, 255, 0, 80);
+
+			CC->draw(area, 2, sf::Lines);
+		}
+	}
+
+
+	// Path
+	block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
+	block.setFillColor({80, 0, 255});        // purpleish
+	sf::VertexArray path_lines;
+	for (const auto &path : Bot->completePath) {
+		for (auto point : path.points) {
+			path_lines.append({sf::Vector2f(static_cast<float> (point.x) * scale.x,
+			                                static_cast<float> (GAME1->getSize().y - 1 - point.y) * scale.y),
+			                   sf::Color::Red});
+			block.setPosition(static_cast<float> (point.x) * scale.y,
+			                  static_cast<float> (GAME1->getSize().x - 1 - point.y) * scale.y);
+			CC->draw(block);
+		}
+		block.setFillColor({160, 0, 255});       // purple
+	}
+
+	CC->draw(path_lines);
+
+	// Position
+	block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
+	block.setFillColor({140, 30, 0});             // dark red / brown
+	block.setPosition(static_cast<float> (PositionX) * scale.x,
+	                  static_cast<float> (GAME1->getSize().y - 1 - PositionY) * scale.y);
+	CC->draw(block);
+
+	CC->display();
 #endif
 }
 
 
 void Game1() {
-    updateHSL();
+	updateHSL();
 
-    Bot->game1Loop();
-    //Game1Debug();
+	Bot->game1Loop();
+	Game1Debug();
 }

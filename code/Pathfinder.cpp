@@ -77,12 +77,12 @@ double Node::calculateCost(const Node &node) {
 }
 
 bool Node::canSee(const Node &node, const std::vector<Area> &Obstacles) {
-
     Line l1(pos, node.pos);
     for (const Area &Obstacle : Obstacles) {
         for (auto edge : Obstacle.getEdges()) {
             PVector intersection = geometry::isIntersecting(l1, edge);
             if (intersection == PVector(-1, -1)) {
+
                 return false;
             }
         }
