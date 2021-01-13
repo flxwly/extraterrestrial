@@ -14,6 +14,7 @@
 #include "Robot.hpp"
 
 #include <iostream>
+#include <fileapi.h>
 
 #endif
 
@@ -68,9 +69,9 @@ void Setup() {
 
 
 #ifdef SFML
-    static sf::RenderWindow window(sf::VideoMode(1080, 840), "Debug_Console");
+    static sf::RenderWindow window(sf::VideoMode(480, 360), "Debug_Console");
     CC = &window;
-    CC->setFramerateLimit(10);
+    CC->setFramerateLimit(60);
 
     static sf::Font font;
     if (font.loadFromFile("../fonts/arial.ttf")) {
@@ -81,6 +82,12 @@ void Setup() {
             "C:/Users/flxwl/Microsoft Robotics Dev Studio 4/CS/User/Rescue/CsBot/fonts/arial.ttf")) {
         unbutton = &font;
     }
+
+    // More paths have to be added here.
+    /*else if (font.loadFromFile(
+            "C:/Users/flxwl/Microsoft Robotics Dev Studio 4/CS/User/Rescue/CsBot/fonts/arial.ttf")) {
+        unbutton = &font;
+    }*/
 
     if (unbutton != nullptr) {
         std::cout << "loaded font" << std::endl;
@@ -127,16 +134,15 @@ void Game1Debug() {
         // "close requested" event: we close the window
         if (event.type == sf::Event::Closed)
             CC->close();
+
+        if (event.type == sf::Event::Resized)
+            CC->setActive();
     }
 
     // clear screen
     CC->clear(sf::Color::Black);
 
-    // Vars for drawing on map
-    sf::Vector2u size = CC->getSize();
-    sf::Vector2f scale = {static_cast<float>(size.x) / static_cast<float>(GAME1->getSize().x),
-                          static_cast<float>(size.y) / static_cast<float>(GAME1->getSize().y)};
-    sf::RectangleShape block(sf::Vector2f(scale.x, scale.y));
+    sf::RectangleShape block(sf::Vector2f(2, 2));
 
     //##########//
     //  print   //
@@ -150,65 +156,41 @@ void Game1Debug() {
     label.setStyle(sf::Text::Regular);
     CC->draw(label);
 
-    // Pathfinder:
+    // Pathfinder (Nodes):
     label.setCharacterSize(10);
-    block.setSize(sf::Vector2f(scale.x * 2, scale.y * 2));
-    block.setOrigin((block.getSize().x / 2), block.getSize().y / 2);
+    block.setSize(sf::Vector2f(4, 4));
+    block.setOrigin((2), 2);
     block.setFillColor({0, 255, 0});
     for (auto &node : Bot->pathfinder1_.map) {
-
-        sf::Vector2f p1(node.pos.x * scale.x,
-                        node.pos.y * scale.y);
+        sf::Vector2f p1(static_cast<float>(node.pos.x),
+                        static_cast<float>(node.pos.y));
         block.setPosition(p1);
 
         CC->draw(block);
     }
 
-    Node node = Bot->pathfinder1_.end;
-
-    sf::Vector2f p1(node.pos.x * scale.x,
-                    node.pos.y * scale.y);
-    block.setFillColor({100, 255, 0});
-    block.setPosition(p1);
-    for (auto neighbour : node.neighbours) {
-        sf::Vector2f p2(neighbour.first->pos.x * scale.x,
-                        neighbour.first->pos.y * scale.y);
-
-        sf::Vertex line[] = {p1, p2};
-
-        line->color = sf::Color(255, 255, 255, 40);
-
-        label.setPosition((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-        label.setString(std::to_string(neighbour.second));
-        std::cout << "Cost: " << neighbour.second <<  std::endl;
-
-        CC->draw(line, 2, sf::Lines);
-        CC->draw(label);
-    }
-    CC->draw(block);
-
     // Map:
-    block.setSize({scale.x * 2, scale.y * 2});
-    block.setOrigin((block.getSize().x / 2), block.getSize().y / 2);
+    block.setSize({4, 4});
+    block.setOrigin((2), 2);
     block.setFillColor({0, 255, 0});
     for (auto &walls : Bot->map1_->getMapObjects({0})) {
 
         sf::VertexArray area(sf::LineStrip);
 
         for (auto &corner : walls.getCorners()) {
-            area.append(sf::Vector2f(corner.x * scale.x,
-                                     corner.y * scale.x));
+            area.append(sf::Vector2f(static_cast<float>(corner.x),
+                                     static_cast<float>(corner.y)));
         }
-        area.append(sf::Vector2f(walls.getCorners()[0].x * scale.x,
-                                        walls.getCorners()[0].y * scale.y));
+        area.append(sf::Vector2f(static_cast<float>(walls.getCorners()[0].x),
+                                 static_cast<float>(walls.getCorners()[0].y)));
 
         CC->draw(area);
     }
 
 
     // Path
-    block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
-    block.setOrigin((block.getSize().x / 2), block.getSize().y / 2);
+    block.setSize(sf::Vector2f(6, 6));
+    block.setOrigin((3), 3);
     sf::VertexArray path_lines(sf::Lines);
     for (unsigned int i = 0; i < Bot->completePath.size(); i++) {
 
@@ -216,15 +198,13 @@ void Game1Debug() {
         sf::Uint8 rval = i * 80 + 80;
         block.setFillColor({rval, 0, 255});
 
-
         for (auto point : path.points) {
-            path_lines.append({sf::Vector2f(point.x * scale.x,
-                                            point.y * scale.y),
-                               sf::Color::Red});
-            block.setPosition(point.x * scale.x,
-                              point.y * scale.y);
-            if (point == path.points.back()) {
-                block.setOutlineColor({200, 100, 0});
+            path_lines.append({sf::Vector2f(static_cast<float>(point.x),
+                                            static_cast<float>(point.y)), sf::Color::Red});
+            block.setPosition(static_cast<float>(point.x),
+                              static_cast<float>(point.y));
+            if (point == path.getLast()) {
+                block.setFillColor({200, 100, 100});
             }
             CC->draw(block);
         }
@@ -234,11 +214,11 @@ void Game1Debug() {
     CC->draw(path_lines);
 
     // Position
-    block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
-    block.setOrigin((block.getSize().x / 2), block.getSize().y / 2);
+    block.setSize(sf::Vector2f(8, 8));
+    block.setOrigin((4), 4);
     block.setFillColor({140, 30, 0});             // dark red / brown
-    block.setPosition(PositionX * scale.x,
-                      PositionY * scale.y);
+    block.setPosition(static_cast<float>(PositionX),
+                      static_cast<float>(PositionY));
     CC->draw(block);
 
     CC->display();
