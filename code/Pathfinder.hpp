@@ -30,7 +30,7 @@
 class Node {
 
 public:
-    Node(PVector &pos, Field *field);
+    Node(PVector pos, Field *field);
 
     /** Booleans that indicate if this Node is in a special list
      *  used by the A*Pathfinding algorithm
@@ -192,6 +192,8 @@ public:
 
     /// Contains all nodes that are important to this Pathfinder
     std::vector<Node> map;
+
+    Node end;
 
     bool trapSensitive;
     Field *field;

@@ -7,11 +7,12 @@
 /**                     **/
 /**     -----------     **/
 
-Node::Node(PVector &pos, Field *field) : pos(pos), field(field),
+Node::Node(PVector pos, Field *field) : pos(pos), field(field),
                                          isClosed(false), isOpen(false),
                                          g(0), f(0), previous(nullptr), neighbours() {
     ERROR_MESSAGE("Constructed node")
 }
+
 
 double Node::calculateCost(const Node &node) {
 
@@ -93,9 +94,16 @@ bool Node::canSee(const Node &node, const std::vector<Area> &Obstacles) {
 
 int Node::findNeighbours(std::vector<Node> &Nodes, const std::vector<Area> &Obstacles) {
 
+    std::cout << Nodes.size() << " nodes" << std::endl;
+    std::cout << "checking: " + PVector::str(pos);
+
     for (auto &node : Nodes) {
 
+
         if (canSee(node, Obstacles)) {
+
+            std::cout << "\t+can see " << PVector::str(node.pos) << std::endl;
+
 
             if (std::find_if(neighbours.begin(), neighbours.end(),
                              [&](std::pair<Node *, double> n) { return n.first == &node; })
@@ -103,6 +111,8 @@ int Node::findNeighbours(std::vector<Node> &Nodes, const std::vector<Area> &Obst
 
                 neighbours.emplace_back(&node, calculateCost(node));
             }
+        } else {
+            std::cout << "\t-can't see " << PVector::str(node.pos) << std::endl;
         }
     }
     return neighbours.size();
@@ -262,7 +272,7 @@ bool Path::isOnPath(PVector p) {
 /**                     **/
 /**     -----------     **/
 
-Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP} {
+Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP}, end({0, 0}, &MAP) {
 
     // get map objects
     std::vector<Area> mapObjects = {};
@@ -298,7 +308,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
         return Path({goal}, PATH_RADIUS);
 
     Node start = Node(begin, field);
-    Node end = Node(goal, field);
+    end = Node(goal, field);
 
     // If the pathfinder is trap sensitive traps have to be taken into account
     std::vector<Area> mapObjects = {};
@@ -311,6 +321,8 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
     if (start.canSee(end, mapObjects))
         start.addNeighbour(&end, start.calculateCost(end));
 
+
+    std::cout << "finding neighbours for end: " << std::endl;
     end.findNeighbours(map, mapObjects);
     for (auto &neighbour : end.neighbours)
         neighbour.first->addNeighbour(&end, neighbour.second);
@@ -329,7 +341,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
     start.g = 0;
     start.f = (start.g + heuristic(start.pos, end.pos));
 
-    // loop until soultion is found or no solution possible
+    // loop until solution is found or no solution possible
     while (!openList.empty()) {
 
         // choose node with lowest f
