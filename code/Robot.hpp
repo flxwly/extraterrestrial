@@ -73,6 +73,8 @@ public:
 	/// game loop for second map
 	void game1Loop();
 
+    PVector nTarget_;                                       ///< pathfinder waypoint chasing
+
 public:
 
 	// === Robot vars ===
@@ -85,7 +87,7 @@ private:
 	std::array<int, 3> loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
 
 	Path currentlyFollowingPath_;                           ///< The Path the robot is currently trying to follow
-	PVector nTarget_;                                       ///< pathfinder waypoint chasing
+
 	bool nTargetIsLast_;                                    ///< is nTarget the last element of a path
 	int chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
 

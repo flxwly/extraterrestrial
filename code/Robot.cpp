@@ -259,7 +259,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
         angle = fmod(angle + ((angle > 0) ? -360 : 360), 360);
     }
 
-    switch (Robot::checkUsSensors(10, 8, 10)) {
+    switch (Robot::checkUsSensors(6, 5, 6)) {
         // case 0 means checkUsSensors has detected no near obstacles
         //      -> the robot can move freely
         case 0:
@@ -502,7 +502,7 @@ void Robot::game1Loop() {
     }
 
     // remove path if reached
-    if (geometry::dist(completePath.front().points.front(), aPos_) < 5) {
+    if (geometry::dist(completePath.front().getLast(), aPos_) < 5) {
         ERROR_MESSAGE("--- Reached path end! ---")
         completePath.erase(completePath.begin());
     }
@@ -590,7 +590,8 @@ PVector Robot::getVelocity(long long int dt) const {
 void Robot::moveAlongPath(Path &path) {
     PVector target = path.getClosestNormalPoint(aPos_, 10);
 
-    moveToPosition(target, geometry::dist(path.getLast(), aPos_) < 10);
+    nTarget_ = target;
+    moveToPosition(target, geometry::dist(path.getLast(), aPos_) >= 10);
     // ERROR_MESSAGE("Moving to: " + PVector::str(target))
     if (!path.isOnPath(aPos_)) {
         ERROR_MESSAGE("Robot is not on Path!")

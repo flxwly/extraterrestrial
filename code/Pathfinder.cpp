@@ -136,12 +136,11 @@ Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r
 }
 
 PVector Path::getClosestNormalPoint(PVector p, double d) {
-    double dist = 1000;
+    double dist = -1;
     PVector finalNormal = PVector(0, 0);
-    PVector dir = PVector(0, 0);
+    PVector dir = PVector(1, 1);
 
     if (points.size() <= 1) {
-        dir = points[0] - p;
         finalNormal = p;
     }
 
@@ -150,7 +149,7 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
         PVector normalPoint = geometry::getNormalPoint(Line(points[i], points[i + 1]), p);
 
         // Test if this is the closest yet seen normalpoint
-        if (geometry::dist(normalPoint, p) < dist) {
+        if (geometry::dist(normalPoint, p) < dist || dist == -1) {
 
             // Test if the normal Point is within the line segment
 
@@ -185,6 +184,7 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
                     }
                 } else {
                     liesOnLeftToRightSide = true;
+                    d = 0;
                 }
                 if (i > 0) {
                     // end point; only check whether the point is on the right side
@@ -221,6 +221,7 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
     ERROR_MESSAGE(PVector::str(finalNormal))
 
     dir.setMag(d);
+
     return finalNormal + dir;
 }
 
@@ -425,6 +426,7 @@ Path Pathfinder::traverse(Node *end) {
         path.push_back(end->pos);
         end = end->previous;
     }
+    std::reverse(path.begin(), path.end());
 
     return Path(path, PATH_RADIUS);
 }

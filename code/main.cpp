@@ -191,7 +191,8 @@ void Game1Debug() {
     // Path
     block.setSize(sf::Vector2f(6, 6));
     block.setOrigin((3), 3);
-    sf::VertexArray path_lines(sf::Lines);
+    sf::VertexArray path_lines(sf::LineStrip);
+    path_lines.append(sf::Vector2f(PositionX, PositionY));
     for (unsigned int i = 0; i < Bot->completePath.size(); i++) {
 
         Path path = Bot->completePath[i];
@@ -219,6 +220,14 @@ void Game1Debug() {
     block.setFillColor({140, 30, 0});             // dark red / brown
     block.setPosition(static_cast<float>(PositionX),
                       static_cast<float>(PositionY));
+    CC->draw(block);
+
+    // Position
+    block.setSize(sf::Vector2f(4, 4));
+    block.setOrigin(2, 2);
+    block.setFillColor({0, 200, 200});             // dark red / brown
+    block.setPosition(static_cast<float>(Bot->nTarget_.x),
+                      static_cast<float>(Bot->nTarget_.y));
     CC->draw(block);
 
     CC->display();
