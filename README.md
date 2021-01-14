@@ -2,30 +2,39 @@
 
 ## A quick overview about the folders
 
->code
+> code
+>> libs
+>>> ╠ CoSpaceFunctions.cpp & CoSpaceFunctions.hpp
+>>>
+>>> ╠ ColorRecognition.cpp & ColorRecognition.hpp
+>>>
+>>> ╠ CommonFunctions.cpp & CommonFunctions.hpp
+>>>
+>>> ╚ PPSettings.hpp
 >>
->>  ╠ CoSpaceFunctions.cpp & CoSpaceFunctions.hpp
+>> ╠ MapData.cpp & MapData.hpp
 >>
->>  ╠ ColorRecognition.cpp & ColorRecognition.hpp
+>> ╠ Pathfinding.cpp & Pathfinding.hpp
 >>
->>  ╠ CommonFunctions.cpp & CommonFunctions.hpp
+>> ╠ Robbot.cpp & Robbot.hpp
 >>
->>  ╠ MapData.cpp & MapData.hpp
->>
->>  ╠ Navigation.cpp & Navigation.hpp
->>
->>  ╠ Pathfinding.cpp & Pathfinding.hpp
->>
->>  ╚ main.cpp
+>> ╚ main.cpp
+>--------------
+> fonts
+>
+>> ╚ arial.ttf
+>
 >--------------
 > map_interpreter
+>> debugging
+>>> ╠ Map0.png
+>>>
+>>> ╚ Map1.png
 >>
->>  ╠ mapDataCPP
->>
->>  ╚ map_interpreter.py
+>> ╚ map_interpreter.py
 >--------------
->  extraterrestrial.dll
->  
+> extraterrestrial.dll
+>
 >  watch_for_update.py
 
 ## code
