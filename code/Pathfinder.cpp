@@ -138,10 +138,10 @@ Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r
 PVector Path::getClosestNormalPoint(PVector p, double d) {
     double dist = -1;
     PVector finalNormal = PVector(0, 0);
-    PVector dir = PVector(1, 1);
+    PVector dir = PVector(0, 0);
 
-    if (points.size() <= 1) {
-        finalNormal = p;
+    if (points.size() == 1) {
+        finalNormal = points[0];
     }
 
     for (unsigned int i = 0; i < points.size() - 1; ++i) {
@@ -184,7 +184,6 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
                     }
                 } else {
                     liesOnLeftToRightSide = true;
-                    d = 0;
                 }
                 if (i > 0) {
                     // end point; only check whether the point is on the right side

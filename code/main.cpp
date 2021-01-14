@@ -226,8 +226,8 @@ void Game1Debug() {
     block.setSize(sf::Vector2f(4, 4));
     block.setOrigin(2, 2);
     block.setFillColor({0, 200, 200});             // dark red / brown
-    block.setPosition(static_cast<float>(Bot->nTarget_.x),
-                      static_cast<float>(Bot->nTarget_.y));
+    block.setPosition(static_cast<float>(Bot->aPos_.x),
+                      static_cast<float>(Bot->aPos_.y));
     CC->draw(block);
 
     CC->display();

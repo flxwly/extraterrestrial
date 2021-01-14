@@ -470,12 +470,13 @@ void Robot::game1Loop() {
     if (completePath.empty()) {
 
         // get a path of points
-        std::vector<PVector> pathOfCollectibles = map1_->getPointPath();
+        std::vector<PVector> pathOfCollectibles = {map1_->getDeposits()[0]};
+        if (loadedObjectsNum_ <= 2) {
+            pathOfCollectibles = map1_->getPointPath();
+        }
 
         // the first start point should be the current position of the robot
         PVector start = aPos_;
-
-        pathOfCollectibles = {{150, 125}};
 
         // calculate a path from one point to the next
         for (int i = 0; i < pathOfCollectibles.size(); i++) {
@@ -484,7 +485,7 @@ void Robot::game1Loop() {
 
             // depending on the current number of objects traps should be avoided or ignored
             Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
-                    : pathfinder1_.AStar(start, end);
+                                                         : pathfinder1_.AStar(start, end);
 
 
             if (!path.isEmpty()) {
@@ -528,7 +529,8 @@ void Robot::game1Loop() {
             wheels(0, 3);
         }
 
-    } else if (shouldCollect() && false) {
+    } else if (shouldCollect()) {
+        if (loadedObjectsNum_ == 0) completePath.clear();
         int color = collect();
 
         // if the robot is collecting take some time
@@ -539,6 +541,8 @@ void Robot::game1Loop() {
             if (collectible) {
                 collectible->state = 0;
             }
+
+
         }
 
     } else {
@@ -550,11 +554,11 @@ void Robot::game1Loop() {
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded
         if (avoidVoid() == -1 || (isYellowRight() && loadedObjectsNum_ > 0)) {
-            wheels(0, 5);
+            wheels(0, 3);
         }
             // avoid the void by driving right || avoid trap on the left
         else if (avoidVoid() == 1 || (isYellowLeft() && loadedObjectsNum_ > 0)) {
-            wheels(5, 0);
+            wheels(3, 0);
         }
     }
 
