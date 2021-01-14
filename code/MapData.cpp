@@ -1,49 +1,5 @@
 #include "MapData.hpp"
 
-/**     -----------     **/
-/**                     **/
-/**        Point        **/
-/**                     **/
-/**     -----------     **/
-
-
-Point::Point(double _x, double _y) {
-	Point::x = _x;
-	Point::y = _y;
-}
-
-Point Point::round() const {
-	return Point(std::round(x), std::round(y));
-}
-
-bool operator==(const Point &p1, const Point &p2) {
-	return p1.x == p2.x && p1.y == p2.y;
-}
-
-bool operator!=(const Point &p1, const Point &p2) {
-	return !(p1 == p2);
-}
-
-Point::operator bool() const {
-	return x != 0 || y != 0;
-}
-
-Point operator*(const Point &p, const double &m) {
-	return Point(p.x * m, p.y * m);
-}
-
-Point operator/(const Point &p, const double &m) {
-	return Point(p.x / m, p.y / m);
-}
-
-void Point::set(double _x, double _y) {
-	x = _x, y = _y;
-}
-
-void Point::set(Point p) {
-	set(p.x, p.y);
-}
-
 
 /**     -----------     **/
 /**                     **/
@@ -51,38 +7,18 @@ void Point::set(Point p) {
 /**                     **/
 /**     -----------     **/
 
-Collectible::Collectible(const Point &p, const int &c) {
-	Collectible::pos_ = p;
-	Collectible::color_ = c;
-	Collectible::state_ = 0;
-}
+Collectible::Collectible(const PVector &p, const unsigned int &c) : pos{p}, color{c}, state{0} {}
 
-unsigned int Collectible::getColor() const {
-	return color_;
-}
+bool Collectible::isCorrectCollectible(PVector robotPos, double angle, double uncertainty) const {
 
-const Point &Collectible::getPos() const {
-	return pos_;
-}
+	auto p = robotPos + (geometry::angle2Vector(angle + COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
 
-unsigned int Collectible::getState() const {
-	return state_;
-}
-
-void Collectible::setState(unsigned int state) {
-	state_ = state;
-}
-
-bool Collectible::isCorrectCollectible(Point robot_pos, double angle, double uncertainty) {
-
-	auto p = robot_pos + (geometry::angle2Vector(angle + COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
-
-	if (geometry::dist(p, pos_) < uncertainty) {
+	if (geometry::dist(p, pos) < uncertainty) {
 		return true;
 	}
 
-	p = robot_pos + (geometry::angle2Vector(angle - COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
-	if (geometry::dist(p, pos_) < uncertainty) {
+	p = robotPos + (geometry::angle2Vector(angle - COLOR_SENSOR_ANGLE_OFFSET) * COLOR_SENSOR_DIST_TO_CORE);
+	if (geometry::dist(p, pos) < uncertainty) {
 		return true;
 	}
 	return false;
@@ -95,28 +31,7 @@ bool Collectible::isCorrectCollectible(Point robot_pos, double angle, double unc
 /**                     **/
 /**     -----------     **/
 
-// Line::Line(): Constructor for Line Class
-Line::Line(const Point &p1, const Point &p2) {
-	/** Set private vars **/
-	Line::p1_ = p1;
-	Line::p2_ = p2;
-}
-
-const Point &Line::getP1() const {
-	return p1_;
-}
-
-const Point &Line::getP2() const {
-	return p2_;
-}
-
-void Line::setP1(const Point &p_1) {
-	p1_ = p_1;
-}
-
-void Line::setP2(const Point &p_2) {
-	p2_ = p_2;
-}
+Line::Line(const PVector &p1, const PVector &p2) : p1{p1}, p2{p2} {}
 
 /**     -----------     **/
 /**                     **/
@@ -125,33 +40,32 @@ void Line::setP2(const Point &p_2) {
 /**     -----------     **/
 
 // Area::Area(): Constructor for Area class
-Area::Area(const std::vector<Point> &p_s) : min_{p_s.front()}, max_{0, 0} {
+Area::Area(const std::vector<PVector> &p_s) : min_{p_s.front()}, max_{0, 0}, Corners_{p_s} {
 
-	Area::Corners_ = p_s;
-	Point last_p = p_s.back();
-	for (Point p : p_s) {
-		Area::Edges_.emplace_back(last_p, p);
+	PVector last_p = p_s.back();
+	for (PVector p : p_s) {
+		Edges_.emplace_back(last_p, p);
 		last_p = p;
 
-		// Set boundary box x
-		if (p.x < Area::min_.x) {
-			Area::min_.x = p.x;
+		// Set boundary box posX
+		if (p.x < min_.x) {
+			min_.x = p.x;
 		}
-		if (p.x > Area::max_.x) {
-			Area::max_.x = p.x;
+		if (p.x > max_.x) {
+			max_.x = p.x;
 		}
 
-		// Set boundary box y
-		if (p.y < Area::min_.y) {
-			Area::min_.y = p.y;
+		// Set boundary box posY
+		if (p.y < min_.y) {
+			min_.y = p.y;
 		}
-		if (p.y > Area::max_.y) {
-			Area::max_.y = p.y;
+		if (p.y > max_.y) {
+			max_.y = p.y;
 		}
 	}
 }
 
-const std::vector<Point> &Area::getCorners() const {
+const std::vector<PVector> &Area::getCorners() const {
 	return Corners_;
 }
 
@@ -159,11 +73,11 @@ const std::vector<Line> &Area::getEdges() const {
 	return Edges_;
 }
 
-const Point &Area::getMin() const {
+const PVector &Area::getMin() const {
 	return min_;
 }
 
-const Point &Area::getMax() const {
+const PVector &Area::getMax() const {
 	return max_;
 }
 
@@ -180,105 +94,110 @@ Field::Field(const int &width, const int &height,
              const std::vector<Area> &traps,
              const std::vector<Area> &swamps,
              const std::vector<Area> &waters,
-             const std::vector<Point> &deposits,
-             const std::vector<Point> &wallNodes,
-             const std::vector<Point> &trapNodes,
+             const std::vector<PVector> &deposits,
+             const std::vector<PVector> &wallNodes,
+             const std::vector<PVector> &trapNodes,
              const std::vector<Collectible> &collectibles) :
 		size_{static_cast<double>(width), static_cast<double>(height)} {
 
-	// Field::(MapObjectName)_: Different MapObjects that can be displayed as areas.
+	// field::(MapObjectName)_: Different MapObjects that can be displayed as areas.
 	Walls_ = walls;
 	Traps_ = traps;
 	Swamps_ = swamps;
 	Waters_ = waters;
 
-	// Field::Deposits_: Deposit Areas of the Field
+	// field::deposits: Deposit Areas of the field
 	Deposits_ = deposits;
+	WallNodes_ = wallNodes;
+	TrapNodes_ = trapNodes;
 
-	// Field::Collectibles: Collectible Points of the Field
+	// field::Collectibles: Collectible Points of the field
 	for (auto collectible : collectibles) {
-		Collectibles_[collectible.getColor()].push_back(collectible);
+		Collectibles_[collectible.color].push_back(collectible);
 	}
 }
 
-Point Field::getSize() {
+PVector Field::getSize() {
 	return size_;
 }
 
-std::vector<Area> Field::getMapObjects(std::vector<unsigned int> indices) {
-	std::vector<Area> return_vector;
+std::vector<Area> Field::getMapObjects(const std::vector<unsigned int> &indices) {
+	std::vector<Area> returnVector = {};
 	// return after all indices have been checked.
-	while (!indices.empty()) {
-		unsigned int index = indices.back();
-		indices.pop_back();
+	for (unsigned int index : indices) {
 		switch (index) {
 			case 0:
-				return_vector.insert(std::end(return_vector), std::begin(Field::Walls_), std::end(Field::Walls_));
+				returnVector.insert(std::end(returnVector), std::begin(Walls_), std::end(Walls_));
+				break;
 			case 1:
-				return_vector.insert(std::end(return_vector), std::begin(Field::Traps_), std::end(Field::Traps_));
+				returnVector.insert(std::end(returnVector), std::begin(Traps_), std::end(Traps_));
+				break;
 			case 2:
-				return_vector.insert(std::end(return_vector), std::begin(Field::Swamps_), std::end(Field::Swamps_));
+				returnVector.insert(std::end(returnVector), std::begin(Swamps_), std::end(Swamps_));
+				break;
 			case 3:
-				return_vector.insert(std::end(return_vector), std::begin(Field::Waters_), std::end(Field::Waters_));
+				returnVector.insert(std::end(returnVector), std::begin(Waters_), std::end(Waters_));
+				break;
 			default: ERROR_MESSAGE("index out of range/invalid")
 		}
 	}
 
-	return return_vector;
+	return returnVector;
 }
 
-std::vector<Point> Field::getMapNodes(std::vector<unsigned int> indices) {
-	std::vector<Point> return_vector;
+std::vector<PVector> Field::getMapNodes(const std::vector<unsigned int> &indices) {
+	std::vector<PVector> returnVector = {};
+
 	// return after all indices have been checked.
-	while (!indices.empty()) {
-		unsigned int index = indices.back();
-		indices.pop_back();
+	for (unsigned int index : indices) {
 		switch (index) {
 			case 0:
-				return_vector.insert(std::end(return_vector), std::begin(Field::WallNodes_),
-				                     std::end(Field::WallNodes_));
+				returnVector.insert(returnVector.end(), WallNodes_.begin(),
+				                    WallNodes_.end());
+				break;
 			case 1:
-				return_vector.insert(std::end(return_vector), std::begin(Field::TrapNodes_),
-				                     std::end(Field::TrapNodes_));
+				returnVector.insert(std::end(returnVector), std::begin(TrapNodes_),
+				                    std::end(TrapNodes_));
+				break;
 			default: ERROR_MESSAGE("index out of range/invalid")
+				break;
 		}
 	}
 
-	return return_vector;
+	ERROR_MESSAGE(returnVector.size())
+	return returnVector;
 }
 
-/** Getter for Field::Collectibles_ **/
-std::vector<Point> Field::getDeposits() {
+/** Getter for field::collectibles **/
+std::vector<PVector> Field::getDeposits() {
 	return Deposits_;
 }
 
-/** Getter for Field::Collectibles_ **/
-std::vector<Collectible> Field::getCollectibles(std::vector<unsigned int> colors) {
-	std::vector<Collectible> return_vector;
+/** Getter for field::collectibles **/
+std::vector<Collectible> Field::getCollectibles(const std::vector<unsigned int> &colors) {
+	std::vector<Collectible> returnVector = {};
 	// return after all indices have been checked.
-	while (!colors.empty()) {
-		unsigned int index = colors.back();
-		colors.pop_back();
+	for (unsigned int index : colors) {
 		if (index <= 2) {
-			return_vector.insert(std::end(return_vector), std::begin(Field::Collectibles_[index]),
-			                     std::end(Field::Collectibles_[index]));
+			returnVector.insert(std::end(returnVector), std::begin(Collectibles_[index]),
+			                    std::end(Collectibles_[index]));
 		} else {
 			ERROR_MESSAGE("index out of range");
 		}
 	}
-	return return_vector;
+	return returnVector;
 }
 
-Collectible *Field::getCollectible(Point robot_pos, double angle, double uncertainty, int color) {
+Collectible *Field::getCollectible(PVector robot_pos, double angle, double uncertainty, int color) {
 
 	if (color < 0 || color > 3) {
-		ERROR_MESSAGE("color " + std::to_string(color) + " is not existing!")
+		ERROR_MESSAGE("color " << color << " is not existing!")
 		return nullptr;
 	}
 
-	auto Collectibles = Collectibles_[color];
+	auto collectibles = Collectibles_[color];
 
-	for (auto &collectible : Collectibles) {
+	for (auto &collectible : collectibles) {
 		if (collectible.isCorrectCollectible(robot_pos, angle, uncertainty)) {
 			return &collectible;
 		}
@@ -289,8 +208,14 @@ Collectible *Field::getCollectible(Point robot_pos, double angle, double uncerta
 }
 
 //TODO
-std::vector<Point> Field::getPointPath() {
-	return std::vector<Point>();
+std::vector<PVector> Field::getPointPath() {
+	std::vector<PVector> c;
+
+	c.reserve(6);
+	for (int i = 0; i < 6; ++i) {
+		c.push_back(Collectibles_[0][i].pos);
+	}
+	return c;
 }
 
 
@@ -302,34 +227,34 @@ std::vector<Point> Field::getPointPath() {
 
 
 // geometry::onSide():  Test if a point p2 is left/on/right a line through p0 and p1.
-//      Input:  Point p0, p1, p2
+//      Input:  PVector p0, p1, p2
 //      Return: >0 left; =0 on; <0 right
-bool geometry::isLeft(Point p0, Point p1, Point p2) {
+bool geometry::isLeft(PVector p0, PVector p1, PVector p2) {
 	return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y) > 0;
 }
 
 // geometry::isInside():  Test if a point p2 is left/on/right a line through p0 and p1.
-//      Input:  Point p0, p1, p2
+//      Input:  PVector p0, p1, p2
 //      Return: >0 left; =0 on; <0 right
-bool geometry::isInside(const Point &p, Area &area) {
-	// Point in Polygon(PIP) using the winding number algorithm:
+bool geometry::isInside(const PVector &p, Area &area) {
+	// PVector in Polygon(PIP) using the winding number algorithm:
 	// source: https://en.wikipedia.ord/wiki/Point_in_polygon
 
 	int wn = 0;    // the  winding number counter
 	unsigned int n = area.getCorners().size(); // The number of corners
 
-	std::vector<Point> poly = area.getCorners();      // vector with all corners + V[0] at V[n+1]
+	std::vector<PVector> poly = area.getCorners();      // vector with all corners + V[0] at V[n+1]
 	poly.push_back(poly.front());
 
 	// loop through all edges of the polygon
 	for (unsigned int i = 0; i < n; i++) {
 
 		// edge from poly[i] to  poly[i+1]
-		if (poly[i].y <= p.y) {                                 // start y <= P.y
+		if (poly[i].y <= p.y) {                                 // start posY <= P.posY
 			if (poly[i + 1].y > p.y)                            // an upward crossing
 				if (isLeft(poly[i], poly[i + 1], p))        // P left of  edge
 					++wn;                                       // have  a valid up intersect
-		} else {                                                // start y > P.y (no test needed)
+		} else {                                                // start posY > P.posY (no test needed)
 			if (poly[i + 1].y <= p.y)                           // a downward crossing
 				if (!isLeft(poly[i], poly[i + 1], p))        // P right of  edge
 					--wn;                                       // have  a valid down intersect
@@ -338,77 +263,72 @@ bool geometry::isInside(const Point &p, Area &area) {
 	return wn != 0;
 }
 
-Point geometry::isIntersecting(Line &l1, Line &l2) {
+PVector geometry::intersection(Line &l1, Line &l2) {
 	// line - line intersection using determinants:
 	// source: https://en.wikipedia.ord/wiki/Line%E2%%80%90line_intersection
 
-	// determiant = x1 * y2- x2 * y1
-	double L1 = l1.getP1().x * l1.getP2().y - l1.getP2().x * l1.getP1().y;
-	double L2 = l2.getP1().x * l2.getP2().y - l2.getP2().x * l2.getP1().y;
 
-	// difs
-	double L1xdif = l1.getP1().x - l1.getP2().x;
-	double L1ydif = l1.getP1().y - l1.getP2().y;
-	double L2xdif = l2.getP1().x - l2.getP2().x;
-	double L2ydif = l2.getP1().y - l2.getP2().y;
-
-	// determiant a*d - b*c
-	double xnom = L1 * L2xdif - L2 * L1xdif;
-	double ynom = L1 * L2ydif - L2 * L2ydif;
-	double denom = L1xdif * L2ydif - L2xdif * L1ydif;
-
-	// Lines don't cross
-	if (denom == 0) {
-		return {-1, -1};
+	const double den = (l1.p1.x - l1.p2.x) * (l2.p1.y - l2.p2.y) - (l1.p1.y - l1.p2.y) * (l2.p1.x - l2.p2.x);
+	// Lines are parallel and don't cross
+	if (den == 0) {
+		return {};
 	}
 
-	// return intersection
-	return {xnom / denom, ynom / denom};
+	const double t = ((l1.p1.x - l2.p1.x) * (l2.p1.y - l2.p2.y) - (l1.p1.y - l2.p1.y) * (l2.p1.x - l2.p2.x)) / den;
+	const double u = -((l1.p1.x - l1.p2.x) * (l1.p1.y - l2.p1.y) - (l1.p1.y - l1.p2.y) * (l1.p1.x - l2.p1.x)) / den;
+
+	if (0 <= t && t <= 1 && 0 <= u && u <= 1) {
+		return {l1.p1.x + t * (l1.p2.x - l1.p1.x),
+		        l1.p1.y + t * (l1.p2.y - l1.p1.y)};
+	}
+
+	// Lines don't cross
+	return {};
 }
 
-double geometry::sqDist(const Point &p1, const Point &p2) {
+bool geometry::isIntersecting(Line &l1, Line &l2) {
+	return static_cast<bool>(intersection(l1, l2));
+}
+
+double geometry::sqDist(const PVector &p1, const PVector &p2) {
 	return pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2);
 }
 
-double geometry::dist(const Point &p1, const Point &p2) {
+double geometry::dist(const PVector &p1, const PVector &p2) {
 	return sqrt(geometry::sqDist(p1, p2));
 }
 
-Point geometry::angle2Vector(double a) {
+PVector geometry::angle2Vector(double a) {
 	return {cos(a), sin(a)};
 }
 
 double geometry::vector2Angle(double x, double y) {
 
-	if (x == 0)
-		return (y >= 0) ? 0 : 180;
-	else if (y == 0)
-		return (x > 0) ? 90 : 270;
+	double angle = atan2(y, x);
 
-	double angle = atan(y / x);
-
-	// bottom left (90 - 180)
-	if (x < 0 && y < 0)
-		// angle is positive (180 location)
-		angle = M_PI / 2;
-		// top left (0 - 90)
-	else if (x < 0)
-		// angle is negative (90 positive) + (0 location)
-		angle += M_PI / 2;
-		// bottom right (180 - 270)
-	else if (y < 0)
-		// angle is negative (90 positive) + (180 location)
-		angle += 1.5 * M_PI;
-		// top right (270 - 360)
-	else {
-		angle += 1.5 * M_PI;
-		// angle is positive
-	}
-	return angle;
+	return (angle >= 0) ? angle : 2 * M_PI + angle;
 }
 
-double geometry::vector2Angle(Point v) {
+double geometry::vector2Angle(PVector v) {
 	return geometry::vector2Angle(v.x, v.y);
+}
+
+double geometry::dot(PVector p1, PVector p2) {
+	return p1.x * p2.x + p1.y * p2.y;
+}
+
+PVector geometry::getNormalPoint(Line line, PVector point) {
+	PVector ap = point - line.p1;
+	PVector ab = line.p2 - line.p1;
+
+	// normalize ab (set mag to 1)
+	ab.setMag(1);
+	ab = ab * geometry::dot(ap, ab);
+
+	PVector normalPoint = PVector(line.p1.x + ab.x, line.p1.y + ab.y);
+
+	// normal point
+	return normalPoint;
 }
 
 
@@ -426,846 +346,715 @@ double geometry::vector2Angle(Point v) {
 
 /*walls*/
 const std::vector<Area> GAME0WALLS = {
-		Area({{63,  154},
-		      {176, 154},
-		      {176, 136},
-		      {63,  136}}),
-		Area({{77,  95},
-		      {94,  95},
-		      {94,  94},
-		      {117, 72},
-		      {117, 71},
-		      {123, 71},
-		      {123, 72},
-		      {146, 94},
-		      {146, 95},
-		      {163, 95},
-		      {163, 94},
-		      {164, 94},
-		      {164, 78},
-		      {163, 78},
-		      {137, 51},
-		      {136, 51},
-		      {136, 43},
-		      {135, 43},
-		      {135, 41},
-		      {134, 41},
-		      {134, 40},
-		      {132, 40},
-		      {132, 39},
-		      {131, 39},
-		      {131, 38},
-		      {129, 38},
-		      {129, 1},
-		      {110, 1},
-		      {110, 38},
-		      {109, 38},
-		      {109, 39},
-		      {107, 39},
-		      {107, 40},
-		      {105, 42},
-		      {104, 42},
-		      {104, 45},
-		      {103, 45},
-		      {103, 51},
-		      {102, 51},
-		      {77,  77},
-		      {76,  77},
-		      {76,  94},
-		      {77,  94}}),
-		Area({{178, 52},
-		      {202, 52},
-		      {202, 28},
-		      {178, 28}}),
-		Area({{38, 51},
-		      {61, 51},
-		      {61, 28},
-		      {38, 28}})};
+		Area({{86,  168},
+		      {158, 168},
+		      {158, 141},
+		      {86,  141}}),
+		Area({{43, 132},
+		      {70, 132},
+		      {70, 60},
+		      {43, 60}}),
+		Area({{187, 132},
+		      {213, 132},
+		      {213, 60},
+		      {187, 60}}),
+		Area({{89,  35},
+		      {160, 35},
+		      {160, 9},
+		      {89,  9}})};
 /*traps*/
 const std::vector<Area> GAME0TRAPS = {
-		Area({{39, 138},
-		      {62, 138},
-		      {62, 135},
-		      {67, 135},
-		      {67, 110},
-		      {39, 110}}),
-		Area({{177, 138},
-		      {202, 138},
-		      {202, 110},
-		      {173, 110},
-		      {173, 135},
-		      {177, 135}})};
+		Area({{104, 117},
+		      {140, 117},
+		      {140, 81},
+		      {103, 81},
+		      {103, 109},
+		      {104, 109}})};
 /*swamps*/
 const std::vector<Area> GAME0SWAMPS = {};
 /*Water*/
 const std::vector<Area> GAME0WATERS = {
-		Area({{0,  60},
-		      {44, 60},
-		      {44, 52},
-		      {37, 52},
-		      {37, 27},
-		      {62, 27},
-		      {62, 35},
-		      {70, 35},
-		      {70, 1},
-		      {0,  1}}),
-		Area({{195, 60},
-		      {239, 60},
-		      {239, 1},
-		      {170, 1},
-		      {170, 35},
-		      {177, 35},
-		      {177, 27},
-		      {203, 27},
-		      {203, 53},
-		      {195, 53}})};
+		Area({{59,  151},
+		      {85,  151},
+		      {85,  140},
+		      {103, 140},
+		      {103, 110},
+		      {71,  110},
+		      {71,  133},
+		      {59,  133}})};
 /*deposit*/
-const std::vector<Point> GAME0DEPOSITS = {{60,  129},
-                                          {178, 128}};
+const std::vector<PVector> GAME0DEPOSITS = {{197, 27},
+                                            {38,  147}};
 
 //------ Nodes ------//
 /*wall_nodes*/
-const std::vector<Point> GAME0WALLNODES = {{62,  155},
-                                           {177, 155},
-                                           {177, 135},
-                                           {62,  135},
-                                           {76,  96},
-                                           {95,  96},
-                                           {95,  95},
-                                           {118, 73},
-                                           {118, 72},
-                                           {122, 72},
-                                           {122, 73},
-                                           {145, 95},
-                                           {145, 96},
-                                           {164, 96},
-                                           {164, 95},
-                                           {165, 95},
-                                           {165, 77},
-                                           {164, 77},
-                                           {138, 50},
-                                           {137, 50},
-                                           {137, 42},
-                                           {136, 42},
-                                           {136, 40},
-                                           {135, 40},
-                                           {135, 39},
-                                           {133, 39},
-                                           {133, 38},
-                                           {132, 38},
-                                           {132, 37},
-                                           {130, 37},
-                                           {109, 37},
-                                           {108, 37},
-                                           {108, 38},
-                                           {106, 38},
-                                           {106, 39},
-                                           {104, 41},
-                                           {103, 41},
-                                           {103, 44},
-                                           {102, 44},
-                                           {102, 50},
-                                           {101, 50},
-                                           {76,  76},
-                                           {75,  76},
-                                           {75,  95},
-                                           {76,  95},
-                                           {177, 53},
-                                           {203, 53},
-                                           {203, 27},
-                                           {177, 27},
-                                           {37,  52},
-                                           {62,  52},
-                                           {62,  27},
-                                           {37,  27}};
+const std::vector<PVector> GAME0WALLNODES = {{85,  169},
+                                             {159, 169},
+                                             {159, 140},
+                                             {85,  140},
+                                             {42,  133},
+                                             {71,  133},
+                                             {71,  59},
+                                             {42,  59},
+                                             {186, 133},
+                                             {214, 133},
+                                             {214, 59},
+                                             {186, 59},
+                                             {88,  36},
+                                             {161, 36},
+                                             {161, 8},
+                                             {88,  8}};
 /*trap_nodes*/
-const std::vector<Point> GAME0TRAPNODES = {{38,  139},
-                                           {63,  139},
-                                           {63,  136},
-                                           {68,  136},
-                                           {68,  109},
-                                           {38,  109},
-                                           {176, 139},
-                                           {203, 139},
-                                           {203, 109},
-                                           {172, 109},
-                                           {172, 136},
-                                           {176, 136}};
+const std::vector<PVector> GAME0TRAPNODES = {{103, 118},
+                                             {141, 118},
+                                             {141, 80},
+                                             {102, 80},
+                                             {102, 110},
+                                             {103, 110}};
 
 
 
 //------ Collectibles ------//
 /*collectibles*/
-const std::vector<Collectible> GAME0COLLECTIBLES = {{{93,  132}, 0},
-                                                    {{123, 172}, 0},
-                                                    {{138, 176}, 0},
-                                                    {{102, 168}, 0},
-                                                    {{51,  167}, 0},
-                                                    {{65,  168}, 0},
-                                                    {{45,  155}, 0},
-                                                    {{45,  175}, 0},
-                                                    {{160, 173}, 0},
-                                                    {{191, 154}, 0},
-                                                    {{179, 171}, 0},
-                                                    {{150, 106}, 0},
-                                                    {{127, 96},  0},
-                                                    {{138, 123}, 0},
-                                                    {{107, 104}, 0},
-                                                    {{108, 128}, 0},
-                                                    {{123, 133}, 0},
-                                                    {{91,  112}, 0},
-                                                    {{109, 81},  0},
-                                                    {{160, 157}, 0},
-                                                    {{149, 131}, 0},
-                                                    {{142, 95},  0},
-                                                    {{124, 83},  0},
-                                                    {{196, 171}, 0},
-                                                    {{77,  172}, 0},
-                                                    {{126, 159}, 0},
-                                                    {{20,  51},  1},
-                                                    {{30,  37},  1},
-                                                    {{180, 79},  1},
-                                                    {{5,   33},  1},
-                                                    {{217, 159}, 1},
-                                                    {{190, 75},  1},
-                                                    {{231, 165}, 1},
-                                                    {{210, 170}, 1},
-                                                    {{99,  43},  2},
-                                                    {{90,  29},  2},
-                                                    {{64,  65},  2},
-                                                    {{74,  75},  2},
-                                                    {{13,  77},  2},
-                                                    {{41,  68},  2},
-                                                    {{94,  55},  2},
-                                                    {{58,  71},  2},
-                                                    {{87,  65},  2},
-                                                    {{77,  56},  2},
-                                                    {{207, 99},  1},
-                                                    {{192, 87},  1},
-                                                    {{222, 104}, 1},
-                                                    {{230, 90},  1},
-                                                    {{223, 140}, 1},
-                                                    {{66,  96},  2},
-                                                    {{8,   93},  2},
-                                                    {{17,  167}, 2},
-                                                    {{31,  84},  2},
-                                                    {{78,  10},  2},
-                                                    {{102, 29},  2},
-                                                    {{95,  13},  2},
-                                                    {{215, 4},   2},
-                                                    {{77,  30},  2},
-                                                    {{189, 96},  1},
-                                                    {{142, 45},  1},
-                                                    {{64,  9},   1},
-                                                    {{134, 34},  1},
-                                                    {{45,  97},  2},
-                                                    {{85,  39},  2},
-                                                    {{106, 15},  2},
-                                                    {{215, 147}, 1},
-                                                    {{218, 74},  1},
-                                                    {{158, 30},  1},
-                                                    {{160, 46},  1},
-                                                    {{146, 29},  1},
-                                                    {{153, 58},  1},
-                                                    {{56,  29},  1},
-                                                    {{214, 83},  1},
-                                                    {{151, 65},  1},
-                                                    {{224, 122}, 1},
-                                                    {{187, 69},  1},
-                                                    {{145, 13},  1},
-                                                    {{139, 57},  1},
-                                                    {{175, 95},  1},
-                                                    {{155, 19},  1},
-                                                    {{47,  10},  1},
-                                                    {{206, 36},  2},
-                                                    {{216, 25},  2},
-                                                    {{227, 36},  2},
-                                                    {{203, 11},  2},
-                                                    {{188, 28},  2},
-                                                    {{191, 19},  2},
-                                                    {{208, 46},  2},
-                                                    {{177, 8},   2},
-                                                    {{173, 32},  2},
-                                                    {{27,  159}, 2},
-                                                    {{9,   158}, 2},
-                                                    {{21,  141}, 2},
-                                                    {{23,  125}, 2},
-                                                    {{30,  102}, 2},
-                                                    {{8,   129}, 2},
-                                                    {{19,  90},  2},
-                                                    {{45,  77},  2},
-                                                    {{18,  113}, 2},
-                                                    {{21,  19},  1},
-                                                    {{36,  33},  1},
-                                                    {{8,   14},  1}};
+const std::vector<Collectible> GAME0COLLECTIBLES = {{{157, 60},  2},
+                                                    {{175, 49},  2},
+                                                    {{173, 72},  2},
+                                                    {{141, 42},  2},
+                                                    {{137, 76},  2},
+                                                    {{125, 58},  2},
+                                                    {{138, 60},  2},
+                                                    {{119, 69},  2},
+                                                    {{105, 44},  2},
+                                                    {{109, 78},  2},
+                                                    {{165, 84},  2},
+                                                    {{184, 64},  2},
+                                                    {{155, 71},  2},
+                                                    {{152, 95},  2},
+                                                    {{167, 104}, 2},
+                                                    {{187, 86},  2},
+                                                    {{186, 125}, 2},
+                                                    {{152, 86},  2},
+                                                    {{154, 118}, 2},
+                                                    {{106, 60},  2},
+                                                    {{119, 47},  2},
+                                                    {{124, 74},  2},
+                                                    {{99,  51},  2},
+                                                    {{104, 70},  2},
+                                                    {{35,  148}, 0},
+                                                    {{49,  132}, 0},
+                                                    {{48,  166}, 0},
+                                                    {{21,  130}, 0},
+                                                    {{21,  160}, 0},
+                                                    {{49,  148}, 0},
+                                                    {{63,  168}, 0},
+                                                    {{77,  167}, 0},
+                                                    {{88,  163}, 0},
+                                                    {{36,  162}, 0},
+                                                    {{20,  53},  1},
+                                                    {{34,  118}, 0},
+                                                    {{38,  105}, 0},
+                                                    {{22,  116}, 0},
+                                                    {{11,  106}, 0},
+                                                    {{66,  138}, 0},
+                                                    {{81,  144}, 0},
+                                                    {{72,  124}, 0},
+                                                    {{84,  131}, 0},
+                                                    {{93,  141}, 0},
+                                                    {{96,  125}, 0},
+                                                    {{84,  117}, 0},
+                                                    {{219, 133}, 1},
+                                                    {{174, 165}, 1},
+                                                    {{171, 153}, 1},
+                                                    {{161, 162}, 1},
+                                                    {{160, 169}, 1},
+                                                    {{149, 165}, 1},
+                                                    {{158, 150}, 1},
+                                                    {{222, 159}, 1},
+                                                    {{223, 149}, 1},
+                                                    {{227, 140}, 1},
+                                                    {{235, 126}, 1},
+                                                    {{222, 120}, 1},
+                                                    {{230, 167}, 1},
+                                                    {{69,  24},  1},
+                                                    {{72,  36},  1},
+                                                    {{82,  24},  1},
+                                                    {{62,  33},  1},
+                                                    {{62,  21},  1},
+                                                    {{62,  48},  1},
+                                                    {{73,  46},  1},
+                                                    {{83,  38},  1},
+                                                    {{15,  39},  1},
+                                                    {{13,  30},  1},
+                                                    {{73,  56},  1},
+                                                    {{212, 117}, 1},
+                                                    {{207, 131}, 1},
+                                                    {{230, 107}, 1},
+                                                    {{214, 170}, 1},
+                                                    {{8,   124}, 0},
+                                                    {{12,  144}, 0},
+                                                    {{102, 169}, 0},
+                                                    {{173, 40},  2},
+                                                    {{194, 29},  2},
+                                                    {{185, 54},  2},
+                                                    {{155, 27},  2},
+                                                    {{160, 47},  2},
+                                                    {{173, 137}, 0},
+                                                    {{30,  60},  1},
+                                                    {{80,  72},  1}};
 
 //------------- Game1_Objects --------------//
 
 /*walls*/
 const std::vector<Area> GAME1WALLS = {
-		Area({{169, 240},
-		      {190, 240},
-		      {190, 239},
-		      {195, 239},
-		      {195, 238},
-		      {197, 238},
-		      {197, 237},
-		      {199, 237},
-		      {199, 236},
-		      {201, 236},
-		      {201, 235},
-		      {207, 229},
-		      {208, 229},
-		      {208, 226},
-		      {209, 226},
-		      {209, 224},
-		      {210, 224},
-		      {210, 221},
-		      {211, 221},
-		      {211, 196},
-		      {210, 196},
-		      {210, 192},
-		      {209, 192},
-		      {209, 190},
-		      {208, 190},
-		      {208, 188},
-		      {207, 188},
-		      {207, 187},
-		      {206, 187},
-		      {206, 185},
-		      {205, 185},
-		      {203, 183},
-		      {203, 182},
-		      {201, 182},
-		      {201, 181},
-		      {199, 180},
-		      {199, 179},
-		      {196, 179},
-		      {196, 178},
-		      {193, 178},
-		      {193, 177},
-		      {188, 177},
-		      {188, 176},
-		      {171, 176},
-		      {171, 177},
-		      {166, 177},
-		      {166, 178},
-		      {163, 178},
-		      {163, 179},
-		      {160, 179},
-		      {160, 180},
-		      {158, 181},
-		      {158, 182},
-		      {156, 182},
-		      {156, 183},
-		      {153, 186},
-		      {152, 186},
-		      {152, 188},
-		      {151, 188},
-		      {151, 190},
-		      {150, 190},
-		      {150, 192},
-		      {149, 192},
-		      {149, 196},
-		      {148, 196},
-		      {148, 221},
-		      {149, 221},
-		      {149, 224},
-		      {150, 224},
-		      {150, 226},
-		      {151, 226},
-		      {151, 228},
-		      {152, 228},
-		      {152, 230},
-		      {153, 230},
-		      {158, 235},
-		      {158, 236},
-		      {160, 236},
-		      {160, 237},
-		      {162, 237},
-		      {162, 238},
-		      {164, 238},
-		      {164, 239},
-		      {169, 239}}),
-		Area({{103, 174},
-		      {127, 174},
-		      {127, 120},
-		      {103, 120}}),
-		Area({{232, 174},
-		      {256, 174},
-		      {256, 121},
-		      {232, 121}}),
-		Area({{153, 94},
-		      {206, 94},
-		      {206, 71},
-		      {153, 71}})};
+		Area({{86,  242},
+		      {118, 242},
+		      {118, 241},
+		      {232, 241},
+		      {232, 242},
+		      {264, 242},
+		      {264, 146},
+		      {232, 146},
+		      {232, 209},
+		      {118, 209},
+		      {118, 146},
+		      {86,  146}}),
+		Area({{85,  137},
+		      {117, 137},
+		      {117, 71},
+		      {232, 71},
+		      {232, 137},
+		      {264, 137},
+		      {264, 39},
+		      {85,  39}}),
+		Area({{31, 63},
+		      {57, 63},
+		      {57, 62},
+		      {61, 62},
+		      {61, 61},
+		      {63, 61},
+		      {63, 60},
+		      {68, 55},
+		      {69, 55},
+		      {69, 51},
+		      {70, 51},
+		      {70, 21},
+		      {69, 21},
+		      {69, 18},
+		      {68, 18},
+		      {63, 13},
+		      {63, 12},
+		      {61, 12},
+		      {61, 11},
+		      {57, 11},
+		      {57, 10},
+		      {31, 10},
+		      {31, 11},
+		      {27, 11},
+		      {27, 12},
+		      {24, 12},
+		      {24, 13},
+		      {20, 17},
+		      {19, 17},
+		      {19, 20},
+		      {17, 20},
+		      {17, 44},
+		      {18, 44},
+		      {18, 52},
+		      {19, 52},
+		      {19, 56},
+		      {20, 56},
+		      {24, 60},
+		      {24, 61},
+		      {27, 61},
+		      {27, 62},
+		      {31, 62}})};
 /*traps*/
 const std::vector<Area> GAME1TRAPS = {
-		Area({{85,  201},
-		      {115, 201},
-		      {115, 175},
-		      {102, 175},
-		      {102, 171},
-		      {85,  171}}),
-		Area({{244, 201},
-		      {275, 201},
-		      {275, 171},
-		      {257, 171},
-		      {257, 175},
-		      {244, 175}}),
-		Area({{164, 34},
-		      {195, 34},
-		      {195, 4},
-		      {164, 4}})};
+		Area({{160, 162},
+		      {190, 162},
+		      {190, 161},
+		      {192, 161},
+		      {192, 160},
+		      {194, 158},
+		      {195, 158},
+		      {195, 155},
+		      {196, 155},
+		      {196, 128},
+		      {195, 128},
+		      {195, 125},
+		      {194, 125},
+		      {193, 124},
+		      {193, 123},
+		      {191, 123},
+		      {191, 122},
+		      {190, 122},
+		      {190, 121},
+		      {161, 121},
+		      {161, 122},
+		      {159, 122},
+		      {159, 123},
+		      {157, 125},
+		      {156, 125},
+		      {156, 127},
+		      {155, 127},
+		      {155, 157},
+		      {156, 157},
+		      {156, 159},
+		      {157, 159},
+		      {158, 160},
+		      {158, 161},
+		      {160, 161}})};
 /*swamps*/
 const std::vector<Area> GAME1SWAMPS = {
-		Area({{120, 208},
-		      {147, 208},
-		      {147, 195},
-		      {148, 195},
-		      {148, 191},
-		      {149, 191},
-		      {149, 189},
-		      {150, 189},
-		      {150, 187},
-		      {151, 187},
-		      {151, 185},
-		      {152, 185},
-		      {155, 182},
-		      {155, 181},
-		      {157, 181},
-		      {157, 180},
-		      {159, 179},
-		      {159, 178},
-		      {162, 178},
-		      {162, 177},
-		      {165, 177},
-		      {165, 176},
-		      {170, 176},
-		      {170, 175},
-		      {189, 175},
-		      {189, 176},
-		      {194, 176},
-		      {194, 177},
-		      {197, 177},
-		      {197, 178},
-		      {200, 178},
-		      {200, 179},
-		      {202, 180},
-		      {202, 181},
-		      {204, 181},
-		      {204, 182},
-		      {206, 184},
-		      {207, 184},
-		      {207, 186},
-		      {208, 186},
-		      {208, 187},
-		      {209, 187},
-		      {209, 189},
-		      {210, 189},
-		      {210, 191},
-		      {211, 191},
-		      {211, 195},
-		      {212, 195},
-		      {212, 208},
-		      {239, 208},
-		      {239, 175},
-		      {231, 175},
-		      {231, 168},
-		      {128, 168},
-		      {128, 175},
-		      {120, 175}})};
+		Area({{31, 190},
+		      {40, 190},
+		      {40, 189},
+		      {43, 189},
+		      {43, 188},
+		      {46, 188},
+		      {46, 187},
+		      {48, 187},
+		      {48, 186},
+		      {52, 182},
+		      {53, 182},
+		      {53, 180},
+		      {54, 180},
+		      {54, 178},
+		      {55, 178},
+		      {55, 173},
+		      {56, 173},
+		      {56, 167},
+		      {55, 167},
+		      {55, 164},
+		      {54, 164},
+		      {54, 161},
+		      {53, 161},
+		      {53, 160},
+		      {52, 160},
+		      {52, 157},
+		      {49, 157},
+		      {49, 156},
+		      {47, 155},
+		      {47, 154},
+		      {44, 154},
+		      {44, 153},
+		      {41, 153},
+		      {41, 152},
+		      {31, 152},
+		      {31, 153},
+		      {27, 153},
+		      {27, 154},
+		      {25, 154},
+		      {25, 155},
+		      {24, 155},
+		      {24, 156},
+		      {22, 156},
+		      {22, 157},
+		      {20, 159},
+		      {19, 159},
+		      {19, 161},
+		      {18, 161},
+		      {18, 162},
+		      {17, 162},
+		      {17, 166},
+		      {16, 166},
+		      {16, 176},
+		      {17, 176},
+		      {17, 179},
+		      {18, 179},
+		      {18, 181},
+		      {19, 181},
+		      {19, 182},
+		      {20, 182},
+		      {20, 184},
+		      {21, 184},
+		      {21, 185},
+		      {22, 185},
+		      {22, 187},
+		      {25, 187},
+		      {25, 188},
+		      {29, 188},
+		      {29, 189},
+		      {31, 189}}),
+		Area({{119, 190},
+		      {160, 190},
+		      {160, 177},
+		      {158, 177},
+		      {158, 176},
+		      {156, 176},
+		      {156, 175},
+		      {154, 175},
+		      {154, 174},
+		      {152, 173},
+		      {152, 172},
+		      {150, 172},
+		      {150, 171},
+		      {142, 163},
+		      {141, 163},
+		      {141, 161},
+		      {140, 161},
+		      {140, 160},
+		      {139, 160},
+		      {139, 158},
+		      {138, 158},
+		      {138, 156},
+		      {137, 156},
+		      {137, 155},
+		      {119, 155}}),
+		Area({{188, 190},
+		      {231, 190},
+		      {231, 156},
+		      {211, 156},
+		      {211, 158},
+		      {210, 158},
+		      {210, 160},
+		      {209, 160},
+		      {208, 162},
+		      {207, 162},
+		      {207, 164},
+		      {206, 164},
+		      {199, 171},
+		      {199, 172},
+		      {197, 172},
+		      {197, 174},
+		      {195, 174},
+		      {195, 175},
+		      {193, 175},
+		      {193, 176},
+		      {191, 176},
+		      {191, 177},
+		      {188, 177}}),
+		Area({{325, 128},
+		      {333, 128},
+		      {333, 127},
+		      {337, 127},
+		      {337, 126},
+		      {340, 126},
+		      {340, 125},
+		      {342, 125},
+		      {342, 124},
+		      {347, 119},
+		      {348, 119},
+		      {348, 116},
+		      {349, 116},
+		      {349, 111},
+		      {350, 111},
+		      {350, 107},
+		      {349, 107},
+		      {349, 102},
+		      {348, 102},
+		      {348, 100},
+		      {347, 100},
+		      {347, 98},
+		      {346, 98},
+		      {343, 95},
+		      {343, 94},
+		      {341, 94},
+		      {341, 93},
+		      {339, 93},
+		      {339, 92},
+		      {337, 92},
+		      {337, 91},
+		      {332, 91},
+		      {332, 90},
+		      {327, 90},
+		      {327, 91},
+		      {322, 91},
+		      {322, 92},
+		      {320, 92},
+		      {320, 93},
+		      {318, 93},
+		      {318, 94},
+		      {316, 94},
+		      {316, 95},
+		      {313, 98},
+		      {312, 98},
+		      {312, 100},
+		      {311, 100},
+		      {311, 103},
+		      {310, 103},
+		      {310, 114},
+		      {311, 114},
+		      {311, 118},
+		      {312, 118},
+		      {312, 120},
+		      {313, 120},
+		      {317, 124},
+		      {317, 125},
+		      {319, 125},
+		      {319, 126},
+		      {322, 126},
+		      {322, 127},
+		      {325, 127}}),
+		Area({{212, 126},
+		      {231, 126},
+		      {231, 89},
+		      {192, 89},
+		      {192, 104},
+		      {194, 104},
+		      {194, 105},
+		      {195, 105},
+		      {195, 106},
+		      {197, 106},
+		      {197, 107},
+		      {199, 107},
+		      {199, 108},
+		      {204, 113},
+		      {205, 113},
+		      {205, 115},
+		      {207, 115},
+		      {207, 117},
+		      {208, 117},
+		      {208, 118},
+		      {209, 118},
+		      {209, 120},
+		      {210, 120},
+		      {210, 121},
+		      {211, 121},
+		      {211, 123},
+		      {212, 123}}),
+		Area({{118, 125},
+		      {137, 125},
+		      {137, 124},
+		      {138, 124},
+		      {138, 122},
+		      {139, 122},
+		      {139, 120},
+		      {140, 120},
+		      {140, 118},
+		      {141, 118},
+		      {142, 117},
+		      {142, 116},
+		      {144, 116},
+		      {144, 113},
+		      {145, 113},
+		      {147, 111},
+		      {147, 110},
+		      {149, 110},
+		      {149, 109},
+		      {153, 106},
+		      {153, 105},
+		      {155, 105},
+		      {155, 104},
+		      {157, 104},
+		      {157, 103},
+		      {159, 103},
+		      {159, 102},
+		      {161, 102},
+		      {161, 101},
+		      {163, 101},
+		      {163, 89},
+		      {118, 89}})};
 /*Water*/
 const std::vector<Area> GAME1WATERS = {
-		Area({{128, 167},
-		      {231, 167},
-		      {231, 127},
-		      {199, 127},
-		      {199, 95},
-		      {160, 95},
-		      {160, 127},
-		      {128, 127}}),
-		Area({{0,  63},
-		      {31, 63},
-		      {31, 62},
-		      {37, 62},
-		      {37, 61},
-		      {40, 61},
-		      {40, 60},
-		      {44, 60},
-		      {44, 59},
-		      {46, 59},
-		      {46, 58},
-		      {48, 58},
-		      {48, 57},
-		      {50, 57},
-		      {50, 56},
-		      {52, 56},
-		      {52, 55},
-		      {54, 55},
-		      {54, 54},
-		      {55, 54},
-		      {55, 53},
-		      {57, 53},
-		      {57, 52},
-		      {59, 52},
-		      {59, 51},
-		      {62, 49},
-		      {62, 48},
-		      {64, 48},
-		      {64, 47},
-		      {68, 43},
-		      {69, 43},
-		      {69, 41},
-		      {70, 41},
-		      {72, 38},
-		      {73, 38},
-		      {73, 36},
-		      {74, 36},
-		      {74, 35},
-		      {75, 35},
-		      {75, 33},
-		      {76, 33},
-		      {76, 32},
-		      {77, 32},
-		      {77, 30},
-		      {78, 30},
-		      {78, 28},
-		      {79, 28},
-		      {79, 25},
-		      {80, 25},
-		      {80, 23},
-		      {81, 23},
-		      {81, 21},
-		      {82, 21},
-		      {82, 17},
-		      {83, 17},
-		      {83, 13},
-		      {84, 13},
-		      {84, 5},
-		      {85, 5},
-		      {85, 1},
-		      {0,  1}}),
-		Area({{329, 63},
-		      {359, 63},
-		      {359, 1},
-		      {275, 1},
-		      {275, 9},
-		      {276, 9},
-		      {276, 15},
-		      {277, 15},
-		      {277, 19},
-		      {278, 19},
-		      {278, 22},
-		      {279, 22},
-		      {279, 24},
-		      {280, 24},
-		      {280, 26},
-		      {281, 26},
-		      {281, 29},
-		      {282, 29},
-		      {282, 31},
-		      {283, 31},
-		      {283, 32},
-		      {284, 32},
-		      {284, 34},
-		      {285, 34},
-		      {285, 35},
-		      {286, 35},
-		      {286, 37},
-		      {287, 37},
-		      {287, 38},
-		      {288, 38},
-		      {288, 40},
-		      {289, 40},
-		      {297, 48},
-		      {297, 49},
-		      {299, 49},
-		      {299, 50},
-		      {301, 51},
-		      {301, 52},
-		      {303, 52},
-		      {303, 53},
-		      {304, 53},
-		      {304, 54},
-		      {306, 54},
-		      {306, 55},
-		      {307, 55},
-		      {307, 56},
-		      {309, 56},
-		      {309, 57},
-		      {312, 57},
-		      {312, 58},
-		      {314, 58},
-		      {314, 59},
-		      {316, 59},
-		      {316, 60},
-		      {319, 60},
-		      {319, 61},
-		      {323, 61},
-		      {323, 62},
-		      {329, 62}})};
+		Area({{103, 270},
+		      {251, 270},
+		      {251, 243},
+		      {103, 243}}),
+		Area({{104, 28},
+		      {252, 28},
+		      {252, 1},
+		      {104, 1}})};
 /*deposit*/
-const std::vector<Point> GAME1DEPOSITS = {{91,  118},
-                                          {267, 118},
-                                          {179, 214}};
+const std::vector<PVector> GAME1DEPOSITS = {{174, 70},
+                                            {178, 190}};
 
 //------ Nodes ------//
 /*wall_nodes*/
-const std::vector<Point> GAME1WALLNODES = {{168, 241},
-                                           {191, 241},
-                                           {191, 240},
-                                           {196, 240},
-                                           {196, 239},
-                                           {198, 239},
-                                           {198, 238},
-                                           {200, 238},
-                                           {200, 237},
-                                           {202, 237},
-                                           {202, 236},
-                                           {208, 230},
-                                           {209, 230},
-                                           {209, 227},
-                                           {210, 227},
-                                           {210, 225},
-                                           {211, 225},
-                                           {211, 222},
-                                           {212, 222},
-                                           {212, 195},
-                                           {211, 195},
-                                           {211, 191},
-                                           {210, 191},
-                                           {210, 189},
-                                           {209, 189},
-                                           {209, 187},
-                                           {208, 187},
-                                           {208, 186},
-                                           {207, 186},
-                                           {207, 184},
-                                           {206, 184},
-                                           {204, 182},
-                                           {204, 181},
-                                           {202, 181},
-                                           {202, 180},
-                                           {200, 179},
-                                           {200, 178},
-                                           {197, 178},
-                                           {197, 177},
-                                           {194, 177},
-                                           {194, 176},
-                                           {189, 176},
-                                           {189, 175},
-                                           {170, 175},
-                                           {170, 176},
-                                           {165, 176},
-                                           {165, 177},
-                                           {162, 177},
-                                           {162, 178},
-                                           {159, 178},
-                                           {159, 179},
-                                           {157, 180},
-                                           {157, 181},
-                                           {155, 181},
-                                           {155, 182},
-                                           {152, 185},
-                                           {151, 185},
-                                           {151, 187},
-                                           {150, 187},
-                                           {150, 189},
-                                           {149, 189},
-                                           {149, 191},
-                                           {148, 191},
-                                           {148, 195},
-                                           {147, 195},
-                                           {147, 222},
-                                           {148, 222},
-                                           {148, 225},
-                                           {149, 225},
-                                           {149, 227},
-                                           {150, 227},
-                                           {150, 229},
-                                           {151, 229},
-                                           {151, 231},
-                                           {152, 231},
-                                           {157, 236},
-                                           {157, 237},
-                                           {159, 237},
-                                           {159, 238},
-                                           {161, 238},
-                                           {161, 239},
-                                           {163, 239},
-                                           {163, 240},
-                                           {168, 240},
-                                           {102, 175},
-                                           {128, 175},
-                                           {128, 119},
-                                           {102, 119},
-                                           {231, 175},
-                                           {257, 175},
-                                           {257, 120},
-                                           {231, 120},
-                                           {152, 95},
-                                           {207, 95},
-                                           {207, 70},
-                                           {152, 70}};
+const std::vector<PVector> GAME1WALLNODES = {{85,  243},
+                                             {119, 243},
+                                             {119, 242},
+                                             {231, 242},
+                                             {231, 243},
+                                             {265, 243},
+                                             {265, 145},
+                                             {231, 145},
+                                             {231, 208},
+                                             {119, 208},
+                                             {119, 145},
+                                             {85,  145},
+                                             {84,  138},
+                                             {118, 138},
+                                             {118, 72},
+                                             {231, 72},
+                                             {231, 138},
+                                             {265, 138},
+                                             {265, 38},
+                                             {84,  38},
+                                             {30,  64},
+                                             {58,  64},
+                                             {58,  63},
+                                             {62,  63},
+                                             {62,  62},
+                                             {64,  62},
+                                             {64,  61},
+                                             {69,  56},
+                                             {70,  56},
+                                             {70,  52},
+                                             {71,  52},
+                                             {71,  20},
+                                             {70,  20},
+                                             {70,  17},
+                                             {69,  17},
+                                             {64,  12},
+                                             {64,  11},
+                                             {62,  11},
+                                             {62,  10},
+                                             {58,  10},
+                                             {58,  9},
+                                             {30,  9},
+                                             {30,  10},
+                                             {26,  10},
+                                             {26,  11},
+                                             {23,  11},
+                                             {23,  12},
+                                             {19,  16},
+                                             {18,  16},
+                                             {18,  19},
+                                             {16,  19},
+                                             {16,  45},
+                                             {17,  45},
+                                             {17,  53},
+                                             {18,  53},
+                                             {18,  57},
+                                             {19,  57},
+                                             {23,  61},
+                                             {23,  62},
+                                             {26,  62},
+                                             {26,  63},
+                                             {30,  63}};
 /*trap_nodes*/
-const std::vector<Point> GAME1TRAPNODES = {{84,  202},
-                                           {116, 202},
-                                           {116, 174},
-                                           {103, 174},
-                                           {103, 170},
-                                           {84,  170},
-                                           {243, 202},
-                                           {276, 202},
-                                           {276, 170},
-                                           {256, 170},
-                                           {256, 174},
-                                           {243, 174},
-                                           {163, 35},
-                                           {196, 35},
-                                           {196, 3},
-                                           {163, 3}};
+const std::vector<PVector> GAME1TRAPNODES = {{159, 163},
+                                             {191, 163},
+                                             {191, 162},
+                                             {193, 162},
+                                             {193, 161},
+                                             {195, 159},
+                                             {196, 159},
+                                             {196, 156},
+                                             {197, 156},
+                                             {197, 127},
+                                             {196, 127},
+                                             {196, 124},
+                                             {195, 124},
+                                             {194, 123},
+                                             {194, 122},
+                                             {192, 122},
+                                             {192, 121},
+                                             {191, 121},
+                                             {191, 120},
+                                             {160, 120},
+                                             {160, 121},
+                                             {158, 121},
+                                             {158, 122},
+                                             {156, 124},
+                                             {155, 124},
+                                             {155, 126},
+                                             {154, 126},
+                                             {154, 158},
+                                             {155, 158},
+                                             {155, 160},
+                                             {156, 160},
+                                             {157, 161},
+                                             {157, 162},
+                                             {159, 162}};
 
 
 
 //------ Collectibles ------//
 /*collectibles*/
-const std::vector<Collectible> GAME1COLLECTIBLES = {{{300, 220}, 2},
-                                                    {{255, 237}, 2},
-                                                    {{292, 255}, 2},
-                                                    {{281, 202}, 2},
-                                                    {{289, 236}, 2},
-                                                    {{158, 140}, 2},
-                                                    {{149, 143}, 2},
-                                                    {{42,  84},  2},
-                                                    {{180, 137}, 2},
-                                                    {{14,  86},  2},
-                                                    {{193, 130}, 1},
-                                                    {{220, 149}, 1},
-                                                    {{203, 151}, 1},
-                                                    {{165, 146}, 1},
-                                                    {{223, 140}, 1},
-                                                    {{335, 220}, 0},
-                                                    {{350, 201}, 0},
-                                                    {{351, 229}, 0},
-                                                    {{324, 210}, 0},
-                                                    {{321, 237}, 0},
-                                                    {{37,  226}, 1},
-                                                    {{55,  214}, 1},
-                                                    {{50,  241}, 1},
-                                                    {{25,  209}, 1},
-                                                    {{19,  241}, 1},
-                                                    {{175, 114}, 1},
-                                                    {{167, 129}, 1},
-                                                    {{209, 255}, 1},
-                                                    {{178, 144}, 1},
-                                                    {{200, 136}, 1},
-                                                    {{132, 147}, 2},
-                                                    {{128, 109}, 2},
-                                                    {{95,  113}, 2},
-                                                    {{52,  173}, 2},
-                                                    {{330, 246}, 2},
-                                                    {{193, 95},  2},
-                                                    {{327, 77},  0},
-                                                    {{345, 50},  0},
-                                                    {{337, 96},  0},
-                                                    {{307, 64},  0},
-                                                    {{313, 93},  0},
-                                                    {{228, 64},  0},
-                                                    {{221, 77},  0},
-                                                    {{19,  29},  0},
-                                                    {{243, 83},  0},
-                                                    {{31,  41},  0},
-                                                    {{31,  117}, 0},
-                                                    {{48,  102}, 0},
-                                                    {{50,  133}, 0},
-                                                    {{26,  153}, 0},
-                                                    {{10,  127}, 0},
-                                                    {{307, 153}, 1},
-                                                    {{336, 115}, 1},
-                                                    {{316, 168}, 1},
-                                                    {{341, 166}, 1},
-                                                    {{300, 177}, 1},
-                                                    {{26,  181}, 2},
-                                                    {{38,  169}, 2},
-                                                    {{38,  192}, 2},
-                                                    {{14,  169}, 2},
-                                                    {{15,  200}, 2},
-                                                    {{147, 245}, 2},
-                                                    {{167, 101}, 2},
-                                                    {{161, 256}, 2},
-                                                    {{129, 257}, 2},
-                                                    {{182, 124}, 2},
-                                                    {{96,  214}, 2},
-                                                    {{71,  168}, 2},
-                                                    {{72,  125}, 2},
-                                                    {{263, 73},  2},
-                                                    {{267, 11},  2},
-                                                    {{236, 40},  2},
-                                                    {{211, 12},  2},
-                                                    {{210, 38},  2},
-                                                    {{320, 197}, 2},
-                                                    {{179, 153}, 2},
-                                                    {{264, 219}, 2},
-                                                    {{181, 103}, 2},
-                                                    {{239, 245}, 2},
-                                                    {{84,  66},  2},
-                                                    {{97,  51},  2},
-                                                    {{134, 78},  2},
-                                                    {{63,  67},  2},
-                                                    {{74,  81},  2},
-                                                    {{92,  241}, 1},
-                                                    {{106, 228}, 1},
-                                                    {{103, 250}, 1},
-                                                    {{59,  256}, 1},
-                                                    {{76,  250}, 1},
-                                                    {{152, 92},  1},
-                                                    {{100, 27},  1},
-                                                    {{133, 56},  1},
-                                                    {{116, 63},  1},
-                                                    {{94,  39},  1},
-                                                    {{236, 21},  1},
-                                                    {{216, 136}, 1},
-                                                    {{105, 78},  1},
-                                                    {{288, 78},  1},
-                                                    {{175, 159}, 1},
-                                                    {{143, 158}, 1},
-                                                    {{191, 149}, 1},
-                                                    {{287, 128}, 1},
-                                                    {{297, 159}, 1},
-                                                    {{283, 169}, 1},
-                                                    {{227, 153}, 1},
-                                                    {{76,  227}, 1},
-                                                    {{41,  248}, 0},
-                                                    {{51,  231}, 0},
-                                                    {{47,  261}, 0},
-                                                    {{22,  231}, 0},
-                                                    {{31,  259}, 0},
-                                                    {{251, 98},  0},
-                                                    {{49,  23},  0},
-                                                    {{273, 105}, 0},
-                                                    {{50,  44},  0},
-                                                    {{79,  102}, 0},
-                                                    {{59,  17},  0},
-                                                    {{17,  53},  0},
-                                                    {{117, 95},  0},
-                                                    {{47,  155}, 0},
-                                                    {{334, 45},  0},
-                                                    {{350, 34},  0},
-                                                    {{339, 14},  0},
-                                                    {{320, 32},  0},
-                                                    {{272, 54},  0},
-                                                    {{313, 118}, 0},
-                                                    {{325, 107}, 0},
-                                                    {{343, 144}, 0},
-                                                    {{297, 98},  0},
-                                                    {{299, 137}, 0},
-                                                    {{29,  19},  0},
-                                                    {{46,  37},  0},
-                                                    {{16,  13},  0},
-                                                    {{17,  38},  0},
-                                                    {{303, 19},  0},
-                                                    {{313, 9},   0},
-                                                    {{309, 41},  0},
-                                                    {{291, 21},  0}};
+const std::vector<Collectible> GAME1COLLECTIBLES = {{{46,  215}, 0},
+                                                    {{64,  196}, 0},
+                                                    {{64,  217}, 0},
+                                                    {{35,  199}, 0},
+                                                    {{37,  234}, 0},
+                                                    {{100, 238}, 0},
+                                                    {{36,  257}, 0},
+                                                    {{113, 254}, 0},
+                                                    {{81,  222}, 0},
+                                                    {{80,  250}, 0},
+                                                    {{134, 240}, 0},
+                                                    {{168, 251}, 0},
+                                                    {{154, 259}, 0},
+                                                    {{207, 255}, 0},
+                                                    {{132, 260}, 0},
+                                                    {{264, 241}, 0},
+                                                    {{273, 229}, 0},
+                                                    {{282, 255}, 0},
+                                                    {{231, 252}, 0},
+                                                    {{238, 263}, 0},
+                                                    {{329, 208}, 0},
+                                                    {{341, 195}, 0},
+                                                    {{346, 223}, 0},
+                                                    {{316, 188}, 0},
+                                                    {{309, 223}, 0},
+                                                    {{318, 255}, 0},
+                                                    {{332, 244}, 0},
+                                                    {{272, 207}, 0},
+                                                    {{296, 211}, 0},
+                                                    {{67,  27},  1},
+                                                    {{62,  13},  1},
+                                                    {{73,  46},  1},
+                                                    {{13,  21},  1},
+                                                    {{15,  89},  1},
+                                                    {{79,  30},  1},
+                                                    {{132, 13},  1},
+                                                    {{124, 39},  1},
+                                                    {{97,  17},  1},
+                                                    {{97,  42},  1},
+                                                    {{181, 23},  1},
+                                                    {{192, 9},   1},
+                                                    {{200, 35},  1},
+                                                    {{166, 10},  1},
+                                                    {{157, 38},  1},
+                                                    {{263, 22},  1},
+                                                    {{278, 41},  1},
+                                                    {{248, 38},  1},
+                                                    {{308, 27},  1},
+                                                    {{322, 24},  1},
+                                                    {{222, 10},  1},
+                                                    {{238, 20},  1},
+                                                    {{297, 38},  1},
+                                                    {{293, 24},  1},
+                                                    {{265, 40},  1},
+                                                    {{325, 60},  1},
+                                                    {{341, 17},  1},
+                                                    {{279, 41},  1},
+                                                    {{9,   38},  1},
+                                                    {{39,  113}, 2},
+                                                    {{52,  98},  2},
+                                                    {{60,  129}, 2},
+                                                    {{27,  95},  2},
+                                                    {{28,  126}, 2},
+                                                    {{323, 148}, 2},
+                                                    {{329, 112}, 2},
+                                                    {{342, 163}, 2},
+                                                    {{313, 130}, 2},
+                                                    {{309, 159}, 2},
+                                                    {{66,  153}, 2},
+                                                    {{79,  138}, 2},
+                                                    {{78,  172}, 2},
+                                                    {{48,  141}, 2},
+                                                    {{287, 136}, 2},
+                                                    {{306, 90},  2},
+                                                    {{316, 79},  2},
+                                                    {{340, 137}, 2},
+                                                    {{295, 76},  2},
+                                                    {{289, 105}, 2},
+                                                    {{292, 178}, 2},
+                                                    {{290, 162}, 2},
+                                                    {{303, 198}, 2},
+                                                    {{273, 193}, 2},
+                                                    {{276, 125}, 2},
+                                                    {{271, 82},  2},
+                                                    {{271, 160}, 2},
+                                                    {{265, 110}, 2},
+                                                    {{262, 136}, 2},
+                                                    {{75,  88},  2},
+                                                    {{82,  104}, 2},
+                                                    {{72,  65},  2},
+                                                    {{69,  114}, 2},
+                                                    {{284, 66},  1},
+                                                    {{16,  209}, 1},
+                                                    {{58,  83},  1}};
 
