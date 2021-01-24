@@ -17,8 +17,9 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_
         wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, gameTime{_gameTime},
 
         loadedObjects_{0, 0, 0}, loadedObjectsNum_{0},
-        collectingSince_{timer::now()}, depositingSince_{timer::now()}, aPos_{0, 0},
-        lPos_{-1, -1}, lastPositionUpdate_{timer::now()}, map0_{_map0}, map1_{_map1},
+        collectingSince_{timer::now()}, depositingSince_{timer::now()},
+        aPos_{static_cast<double>(*_posX), static_cast<double> (*_posY)}, lPos_{-1, -1},
+        lastPositionUpdate_{timer::now()}, map0_{_map0}, map1_{_map1},
         nTarget_{-1, -1}, nTargetIsLast_{false}, chasingSuperObjNum_{0}, currentlyFollowingPath_{{}, 10},
         pathfinder0_{*map0_, false}, pathfinder0T_{*map0_, true},
         pathfinder1_{*map1_, false}, pathfinder1T_{*map1_, true} {
@@ -35,17 +36,24 @@ PVector Robot::updatePos() {
     // check if robot is in signal lost zone
     if (*posX == 0 && *posY == 0) {
 
+        aPos_ += getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
+                timer::now() - lastPositionUpdate_).count());
+
         // set normal coords to last coords and update with function
         *posX = static_cast<int>(round(aPos_.x)), *posY = static_cast<int>(round(aPos_.y));
 
     } else {
+
+        // The
         if (geometry::dist(aPos_, PVector(*posX, *posY)) > 5) {
             aPos_.set(*posX, *posY);
+        } else {
+            aPos_ = aPos_ + getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
+                    timer::now() - lastPositionUpdate_).count());
         }
     }
 
-    aPos_ += getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
-            timer::now() - lastPositionUpdate_).count());
+    lastPositionUpdate_ = timer::now();
 
     // return change
     return aPos_ - lPos_;
@@ -458,9 +466,8 @@ void Robot::game1Loop() {
             timer::now() - lastCycle_).count()));
 
     // set last coords to normal coords (last coords wont get overwritten by the sim)
-    updatePos();
     lPos_.set(*posX, *posY);
-    lastPositionUpdate_ = timer::now();
+    updatePos();
 
     //#####################
     //  TODO -- PATHFINDING --
@@ -470,9 +477,11 @@ void Robot::game1Loop() {
     if (completePath.empty()) {
 
         // get a path of points
-        std::vector<PVector> pathOfCollectibles = {map1_->getDeposits()[0]};
-        if (loadedObjectsNum_ <= 2) {
-            pathOfCollectibles = map1_->getPointPath();
+        std::vector<PVector> pathOfCollectibles = {{174, 70},
+                                                   {178, 190}};
+        if (loadedObjectsNum_ < 6)
+        {
+            pathOfCollectibles = map1_->getPointPath(aPos_, loadedObjects_, 2);
         }
 
         // the first start point should be the current position of the robot
@@ -554,14 +563,13 @@ void Robot::game1Loop() {
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded
         if (avoidVoid() == -1 || (isYellowRight() && loadedObjectsNum_ > 0)) {
-            wheels(0, 3);
+            //wheels(0, 3);
         }
             // avoid the void by driving right || avoid trap on the left
         else if (avoidVoid() == 1 || (isYellowLeft() && loadedObjectsNum_ > 0)) {
-            wheels(3, 0);
+            //wheels(3, 0);
         }
     }
-
 
     lastCycle_ = timer::now();
 }
@@ -579,7 +587,8 @@ PVector Robot::getVelocity(long long int dt) const {
     double v2 = *wheelRight * ROBOT_SPEED;
 
     if (v1 == v2) {
-        return (geometry::angle2Vector(*compass) * v1) * static_cast<double>(dt);
+
+        return geometry::angle2Vector(toRadians(*compass)) * v1 * static_cast<double>(dt);
     }
 
     double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));

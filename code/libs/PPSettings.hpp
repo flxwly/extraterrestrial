@@ -31,7 +31,7 @@
 // TODO measure predefined constants
 
 /// The speed of the robot in cm/ms for 20 % of maximum speed
-#define ROBOT_SPEED 0.000185185
+#define ROBOT_SPEED 0.01
 /// The distance between the two powered wheels in cm
 #define ROBOT_AXLE_LENGTH 12.6
 

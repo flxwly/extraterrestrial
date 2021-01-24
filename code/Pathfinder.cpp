@@ -137,7 +137,7 @@ Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r
 
 PVector Path::getClosestNormalPoint(PVector p, double d) {
     double dist = -1;
-    PVector finalNormal = PVector(0, 0);
+    PVector finalNormal = p;
     PVector dir = PVector(0, 0);
 
     if (points.size() == 1) {
@@ -172,8 +172,8 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
 
                 if (i < points.size() - 2) {
                     PVector p0 = points[i + 1]
-                                 + (points[i + 1] - points[i]).setMag(1)
-                                 + (points[i + 1] - points[i + 2]).setMag(1);
+                                 + (points[i + 1] - points[i]).normalize()
+                                 + (points[i + 1] - points[i + 2]).normalize();
 
                     if (geometry::isLeft(points[i + 1], p0, points[i])) {
                         if (geometry::isLeft(points[i + 1], p0, normalPoint))
@@ -189,8 +189,8 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
                     // end point; only check whether the point is on the right side
 
                     PVector p0 = points[i]
-                                 + (points[i] - points[i - 1]).setMag(1)
-                                 + (points[i] - points[i + 1]).setMag(1);
+                                 + (points[i] - points[i - 1]).normalize()
+                                 + (points[i] - points[i + 1]).normalize();
 
                     if (geometry::isLeft(points[i], p0, points[i - 1])) {
                         if (geometry::isLeft(p0, points[i], normalPoint))
@@ -208,16 +208,19 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
 
 
             if (liesOnRightToLeftSide && liesOnLeftToRightSide) {
+
                 dist = geometry::dist(normalPoint, p);
                 finalNormal = normalPoint;
 
                 // Vector from p[i] to p[i + 1]
-                dir = points[i + 1] - points[i];
+                if (i == points.size() - 2) {
+                    dir = points[i + 1] - p;
+                } else {
+                    dir = points[i + 1] - points[i];
+                }
             }
         }
     }
-
-    ERROR_MESSAGE(PVector::str(finalNormal))
 
     dir.setMag(d);
 

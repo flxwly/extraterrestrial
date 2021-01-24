@@ -95,7 +95,6 @@ void Setup() {
 #endif
 
     updateHSL();
-
 }
 
 /*

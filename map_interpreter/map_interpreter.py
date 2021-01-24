@@ -690,8 +690,8 @@ class MapData:
 
             print("\tConverting ImageArray...")
 
-            img_arr.expand_all(1, int(detail * 24))  # standard 16
-            img_arr.expand_all(2, int(detail * 24))
+            img_arr.expand_all(1, int(detail * 20))  # standard 16
+            img_arr.expand_all(2, int(detail * 20))
             img_arr.expand_all(3, int(detail * 4))
             img_arr.expand_all(5, int(detail * 2))
 
@@ -777,6 +777,12 @@ class MapData:
 
             # show the bonus_areas
             draw_polygons(draw, self.map_objects[i][4], scale, starting_hue=80, hue_dif=0)
+
+            for deposit in self.map_objects[i][3]:
+                coord = (
+                        deposit[0] * scale - scale / 2 + x_off, deposit[1] * scale - scale / 2 + y_off,
+                        deposit[0] * scale + scale / 2 + x_off, deposit[1] * scale + scale / 2 + y_off)
+                draw.rectangle(coord, (200, 100, 100), (0, 0, 100))
 
             im.show("Map%s" % i)
             im = im.convert(mode="RGB")

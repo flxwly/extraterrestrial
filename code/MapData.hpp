@@ -2,6 +2,7 @@
 #define CSBOT_MAPDATA_HPP
 
 #include "libs/PPSettings.hpp"
+#include "libs/CommonFunctions.hpp"
 
 #include <vector>
 #include <iostream>
@@ -298,7 +299,7 @@ public:
 
     Collectible *getCollectible(PVector robot_pos, double angle, double uncertainty, int color);
 
-    std::vector<PVector> getPointPath();
+    std::vector<PVector> getPointPath(PVector pos, std::array<int, 3> cur, int max);
 
 private:
     /// Contains all walls
