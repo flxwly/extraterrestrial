@@ -170,7 +170,9 @@ std::vector<PVector> Field::getMapNodes(const std::vector<unsigned int> &indices
 
 /** Getter for field::collectibles **/
 std::vector<PVector> Field::getDeposits() {
-    return Deposits_;
+    std::cout << PVector::str(Deposits_.front()) << std::endl;
+    std::vector<PVector> returnVector(Deposits_);
+    return returnVector;
 }
 
 /** Getter for field::collectibles **/

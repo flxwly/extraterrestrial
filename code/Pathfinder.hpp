@@ -68,7 +68,7 @@ public:
      *  @param ObstaclesStructs A vector containing all structures that are counted
      *  as Obstacles
     */
-    bool canSee(const Node &node, const std::vector<Area> &ObstaclesStructs);
+    bool canSee(const Node &node, const std::vector<Area> &ObstaclesStructs) const;
 
     /** This Method gets every neighbour and calculates the cost.
      *

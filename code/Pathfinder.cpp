@@ -16,9 +16,6 @@ Node::Node(PVector pos, Field *field) : pos(pos), field(field),
 
 double Node::calculateCost(const Node &node) {
 
-    // TODO: fix calculation including swamps
-    return geometry::dist(pos, node.pos);
-
     // Line from this.pos to node.pos
     Line line(pos, node.pos);
 
@@ -42,7 +39,7 @@ double Node::calculateCost(const Node &node) {
     // sort for distance
     std::sort(intersections.begin(), intersections.end(),
               [&](const std::pair<PVector, double> &a, const std::pair<PVector, double> &b)
-                      -> bool { return a.second < b.second; });
+                      -> bool { return a.second <= b.second; });
 
     // A Line either enters or exits a swamp. So the Swamp_speed_penality is toggled.
     int modifier = 1;
@@ -55,17 +52,12 @@ double Node::calculateCost(const Node &node) {
 
     intersections.insert(intersections.begin(), {pos, 0});
 
-    ERROR_MESSAGE("Cost from " + PVector::str(pos) + " to " + PVector::str(node.pos) + " is:");
-
     // The cost that is returned at the end
     double cost = 0;
     for (unsigned int i = 0; i < intersections.size() - 1; i++) {
 
-        double temp = cost;
         // add cost (modifier * distance)
         cost += modifier * (intersections[i + 1].second - intersections[i].second);
-
-        std::cout << "\tpart cost is: " << cost - temp << std::endl;
 
         // Toggle the modifier
         modifier = (modifier == SWAMP_SPEED_PENALITY) ? 1 : SWAMP_SPEED_PENALITY;
@@ -77,7 +69,7 @@ double Node::calculateCost(const Node &node) {
     return cost;
 }
 
-bool Node::canSee(const Node &node, const std::vector<Area> &Obstacles) {
+bool Node::canSee(const Node &node, const std::vector<Area> &Obstacles) const {
     if (pos == node.pos)
         return false;
     Line l1(pos, node.pos);

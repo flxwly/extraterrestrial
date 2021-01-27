@@ -477,37 +477,57 @@ void Robot::game1Loop() {
     if (completePath.empty()) {
 
         // get a path of points
-        std::vector<PVector> pathOfCollectibles = {{174, 70},
-                                                   {178, 190}};
-        if (loadedObjectsNum_ < 6)
-        {
-            pathOfCollectibles = map1_->getPointPath(aPos_, loadedObjects_, 2);
-        }
+        if (loadedObjectsNum_ < 6) {
+            // Get
+            std::vector<PVector> pathOfCollectibles = map1_->getPointPath(aPos_, loadedObjects_, 2);
 
-        // the first start point should be the current position of the robot
-        PVector start = aPos_;
+            // the first start point should be the current position of the robot
+            PVector start = aPos_;
 
-        // calculate a path from one point to the next
-        for (int i = 0; i < pathOfCollectibles.size(); i++) {
+            // calculate a path from one point to the next
+            for (int i = 0; i < pathOfCollectibles.size(); i++) {
 
-            auto end = pathOfCollectibles[i];
+                auto end = pathOfCollectibles[i];
 
-            // depending on the current number of objects traps should be avoided or ignored
-            Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
-                                                         : pathfinder1_.AStar(start, end);
+                // depending on the current number of objects traps should be avoided or ignored
+                Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
+                                                             : pathfinder1_.AStar(start, end);
 
 
-            if (!path.isEmpty()) {
-                // add the path to the complete path
-                // the first path is at the front of the vector
-                completePath.push_back(path);
+                if (!path.isEmpty()) {
+                    // add the path to the complete path
+                    // the first path is at the front of the vector
+                    completePath.push_back(path);
 
-            } else {
-                ERROR_MESSAGE("No Path found");
+                } else {
+                    ERROR_MESSAGE("No Path found");
+                }
+
+                //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
+                start = end;
+
+            }
+        } else {
+
+            std::vector<PVector> deposits = map1_->getDeposits();
+
+            if (deposits.empty()) {
+                std::cout << "NO DEPOSITS EXISTING!!!!" << std::endl;
+                return;
             }
 
-            //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
-            start = end;
+            Path path = pathfinder1T_.AStar(aPos_, deposits.front());
+
+            for (int i = 1; i < deposits.size(); i++) {
+                Path temp = pathfinder1T_.AStar(aPos_, deposits[i]);
+                if (path.length() < temp.length() && !temp.isEmpty()) {
+                    path = temp;
+                }
+
+            }
+
+            completePath.push_back(path);
+
         }
     }
 
@@ -546,7 +566,8 @@ void Robot::game1Loop() {
         if (color != -1) {
             // set state of collected collectible to 0
 
-            Collectible *collectible = map1_->getCollectible(aPos_, *compass, 2, color);
+            Collectible *collectible = map1_->getCollectible(aPos_, *compass, 5, color);
+            std::cout << "Collectible: " << collectible << std::endl;
             if (collectible) {
                 collectible->state = 0;
             }
@@ -583,11 +604,12 @@ PVector Robot::getVelocity(long long int dt) const {
     // For clarification on how this works see
     // https://math.stackexchange.com/questions/3962859/calculate-path-of-vehicle-with-two-wheels-parallel-to-each-other
 
-    double v1 = *wheelLeft * ROBOT_SPEED;
-    double v2 = *wheelRight * ROBOT_SPEED;
+    double penalty = isSwamp() ? SWAMP_SPEED_PENALITY : 1;
+
+    double v1 = *wheelLeft * ROBOT_SPEED / penalty;
+    double v2 = *wheelRight * ROBOT_SPEED / penalty;
 
     if (v1 == v2) {
-
         return geometry::angle2Vector(toRadians(*compass)) * v1 * static_cast<double>(dt);
     }
 
