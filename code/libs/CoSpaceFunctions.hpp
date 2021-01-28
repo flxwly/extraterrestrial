@@ -1,5 +1,5 @@
-#ifndef CSBOT_COSPACE_SETTINGS
-#define CSBOT_COSPACE_SETTINGS
+#ifndef COSPACE_SETTINGS
+#define COSPACE_SETTINGS
 
 #define _USE_MATH_DEFINES
 #include <bits/stdc++.h>
@@ -80,17 +80,17 @@ extern void Setup();
 
 DLL_EXPORT void SetGameID(int GameID);
 DLL_EXPORT int GetGameID();
-//Only Used by CsBot Dance Platform
+//Only Used by Extraterrestrial Dance Platform
 DLL_EXPORT int IsGameEnd();
 
 DLL_EXPORT char *GetDebugInfo();
 DLL_EXPORT char *GetTeamName();
 DLL_EXPORT int GetCurAction();
-//Only Used by CsBot Rescue Platform
+//Only Used by Extraterrestrial Rescue Platform
 DLL_EXPORT int GetTeleport();
-//Only Used by CsBot Rescue Platform
+//Only Used by Extraterrestrial Rescue Platform
 DLL_EXPORT void SetSuperObj(int X, int Y, int num);
-//Only Used by CsBot Rescue Platform
+//Only Used by Extraterrestrial Rescue Platform
 DLL_EXPORT void GetSuperObj(int *X, int *Y, int *num);
 
 DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN);

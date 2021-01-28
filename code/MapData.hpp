@@ -1,126 +1,14 @@
-#ifndef CSBOT_MAPDATA_HPP
-#define CSBOT_MAPDATA_HPP
+#ifndef MAPDATA_HPP
+#define MAPDATA_HPP
 
 #include "libs/PPSettings.hpp"
 #include "libs/CommonFunctions.hpp"
+#include "libs/PVector.hpp"
 
 #include <vector>
 #include <iostream>
 #include <array>
 #include <cmath>
-
-
-/** Primarily represents a 2D Vector
- *
- *  @tparam x x-Position of the PVector.
- *  @tparam y y-Position of the PVector.
-*/
-class PVector {
-public:
-    PVector() : x(NAN), y(NAN) {};
-
-    PVector(double _x, double _y) : x(_x), y(_y) {};
-
-    double x, y;
-
-    PVector set(double _x, double _y) {
-        x = _x, y = _y;
-        return *this;
-    };
-
-    PVector normalize() {
-        double mag = getMag();
-        return (mag == 0) ? *this : set(x / mag, y / mag);
-    }
-
-    double getMag() const {
-        return sqrt(x * x + y * y);
-    };
-
-    PVector setMag(double mag) {
-        normalize();
-        return set(x * mag, y * mag);
-    };
-
-    static PVector setMag(PVector &pVector, double mag) {
-        pVector.normalize();
-        return {pVector.x * mag, pVector.y * mag};
-    };
-
-    /// counter-clockwise rotation
-    PVector rotate(double angle) {
-        return set(x * cos(angle) - y * sin(angle), x * sin(angle) + y * cos(angle));
-    };
-
-    PVector round() {
-        return set(std::round(x), std::round(y));
-    };
-
-    static PVector round(const PVector &pVector) {
-        return {std::round(pVector.x), std::round(pVector.y)};
-    }
-
-    bool operator==(const PVector &lhs) const {
-        return x == lhs.x && y == lhs.y;
-    };
-
-    bool operator==(const double &lhs) const {
-        return x == lhs && y == lhs;
-    };
-
-    bool operator!=(const PVector &lhs) const {
-        return x != lhs.x || y != lhs.y;
-    };
-
-    bool operator!=(const double &lhs) const {
-        return x != lhs || y != lhs;
-    };
-
-    PVector &operator+=(const PVector &rhs) {
-        x += rhs.x, y += rhs.y;
-        return *this;
-    };
-
-    PVector operator+(const PVector &rhs) {
-        return PVector(*this) += rhs;
-    };
-
-    PVector &operator-=(const PVector &rhs) {
-        x -= rhs.x, y -= rhs.y;
-        return *this;
-    };
-
-    PVector operator-(const PVector &rhs) {
-        return PVector(*this) -= rhs;
-    };
-
-    PVector &operator*=(const double &m) {
-        x *= m, y *= m;
-        return *this;
-    };
-
-    PVector operator*(const double &m) {
-        return PVector(*this) *= m;
-    }
-
-    PVector &operator/=(const double &m) {
-        if (m != 0) x /= m, y /= m;
-        return *this;
-    }
-
-    PVector operator /(const double &m) {
-        return PVector(*this) /= m;
-    }
-
-    explicit operator bool() const {
-        return !_isnan(x) && !_isnan(y);
-    };
-
-    static std::string str(PVector pVector) {
-        return std::to_string(pVector.x) + " | " + std::to_string(pVector.y);
-    };
-};
-
 
 /** A type of PVector that can be collected by a robot.
  *
@@ -153,7 +41,7 @@ public:
      * @param angle the actual angle of the robot given by the simulator
      * @param uncertainty how imprecise the position and the angle is
      */
-    bool isCorrectCollectible(PVector robotPos, double angle, double uncertainty) const;
+    [[nodiscard]] bool isCorrectCollectible(PVector robotPos, double angle, double uncertainty) const;
 
     /** Represents the state
      *
@@ -274,6 +162,7 @@ public:
           const std::vector<PVector> &deposits,
           const std::vector<PVector> &wallNodes,
           const std::vector<PVector> &trapNodes,
+          const std::vector<PVector> &swampNodes,
           const std::vector<Collectible> &collectibles);
 
     /// Getter for the size
@@ -287,7 +176,7 @@ public:
 
     /**  Getter for map nodes
      *
-     * @param indices 0 -> walls; 1 -> traps;
+     * @param indices 0 -> walls; 1 -> traps; 2 -> swamps
      */
     std::vector<PVector> getMapNodes(const std::vector<unsigned int> &indices);
 
@@ -318,6 +207,8 @@ private:
     std::vector<PVector> WallNodes_;
     /// Contains all trap nodes
     std::vector<PVector> TrapNodes_;
+    /// Contains all trap nodes
+    std::vector<PVector> SwampNodes_;
 
     /** contains collectibles of all colors
      * They're ordered the following: index = 0 <=> Red; 1 <=> Cyan/Green; 2 <=> Black
@@ -355,6 +246,8 @@ namespace geometry {
     PVector intersection(Line &l1, Line &l2);
 
 	bool isIntersecting(Line &l1, Line &l2);
+
+	bool isIntersecting(Line l1, const std::vector<Area>& Obstacles);
 
     double sqDist(const PVector &p1, const PVector &p2);
 
@@ -396,6 +289,7 @@ extern const std::vector<PVector> GAME0DEPOSITS;
 
 extern const std::vector<PVector> GAME0WALLNODES;
 extern const std::vector<PVector> GAME0TRAPNODES;
+extern const std::vector<PVector> GAME0SWAMPNODES;
 
 extern const std::vector<Collectible> GAME0COLLECTIBLES;
 
@@ -407,7 +301,8 @@ extern const std::vector<PVector> GAME1DEPOSITS;
 
 extern const std::vector<PVector> GAME1WALLNODES;
 extern const std::vector<PVector> GAME1TRAPNODES;
+extern const std::vector<PVector> GAME1SWAMPNODES;
 
 extern const std::vector<Collectible> GAME1COLLECTIBLES;
 
-#endif // !CSBOT_MAPDATA_HPP
+#endif // !MAPDATA_HPP

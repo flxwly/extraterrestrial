@@ -706,6 +706,7 @@ class MapData:
             temp_map_objects_nodes = [
                 [],  # walls
                 [],  # traps
+                []   # swamps
             ]
 
             for j in range(img_arr.height):
@@ -733,7 +734,7 @@ class MapData:
                 else:
                     temp_map_objects[3] = [img_arr.avg(deposit) for deposit in temp_map_objects[3]]
 
-            for i in [0, 1]:
+            for i in [0, 1, 2]:
                 for obj in temp_map_objects[i]:
                     for c in obj:
                         if c.match[1].field:
@@ -800,6 +801,7 @@ class MapData:
             deposit_area_str = "const std::vector<PVector>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             wall_nodes_str = "const std::vector<PVector>GAME%sWALLNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             trap_nodes_str = "const std::vector<PVector>GAME%sTRAPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            swamp_nodes_str = "const std::vector<PVector>GAME%sSWAMPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             collectibles_str = "const std::vector<Collectible> GAME%sCOLLECTIBLES = " % i
 
             wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
@@ -811,6 +813,8 @@ class MapData:
             wall_nodes_str += str(self.map_objects_nodes[i][0]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                             "") + ";"
             trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
+                                                                                                            "") + ";"
+            swamp_nodes_str += str(self.map_objects_nodes[i][2]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                             "") + ";"
 
             collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
@@ -828,7 +832,8 @@ class MapData:
             file_content += "\n\n\t//------ Nodes ------//\n"
 
             file_content += "\t\t/*wall_nodes*/\n" + wall_nodes_str + \
-                            "\n\t\t/*trap_nodes*/\n" + trap_nodes_str + "\n\n"
+                            "\n\t\t/*trap_nodes*/\n" + trap_nodes_str + \
+                            "\n\t\t/*swamp_nodes*/\n" + swamp_nodes_str + "\n\n"
 
             file_content += "\n\n\t//------ Collectibles ------//\n"
 

@@ -1,5 +1,5 @@
-#ifndef CSBOT_PPSETTINGS_HPP
-#define CSBOT_PPSETTINGS_HPP
+#ifndef PPSETTINGS_HPP
+#define PPSETTINGS_HPP
 
 /// ----------------------------- ///
 ///       program settings
@@ -11,15 +11,20 @@
 /// define SFML to enable debugging via SFML
 #define SFML
 
+/// define COLOR_LOGGING to enable color logging to console
+//#define COLOR_LOGGING
+
 #ifdef SFML
 #undef DEBUG
 #endif
 
 #ifdef DEBUG
+/// DEBUG is defined so ERROR_MESSAGE prints out the function it is called in joined by a message
 #define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
 #endif
 
 #ifndef DEBUG
+/// DEBUG is not defined so ERROR_MESSAGE does nothing
 #define ERROR_MESSAGE(message) {}
 #endif
 
@@ -46,4 +51,4 @@
 #define PATH_RADIUS 10
 
 
-#endif //CSBOT_PPSETTINGS_HPP
+#endif //PPSETTINGS_HPP

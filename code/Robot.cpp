@@ -20,7 +20,7 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_
         collectingSince_{timer::now()}, depositingSince_{timer::now()},
         aPos_{static_cast<double>(*_posX), static_cast<double> (*_posY)}, lPos_{-1, -1},
         lastPositionUpdate_{timer::now()}, map0_{_map0}, map1_{_map1},
-        nTarget_{-1, -1}, nTargetIsLast_{false}, chasingSuperObjNum_{0}, currentlyFollowingPath_{{}, 10},
+        nTarget_{-1, -1}, nTargetIsLast_{false}, chasingSuperObjNum_{0},
         pathfinder0_{*map0_, false}, pathfinder0T_{*map0_, true},
         pathfinder1_{*map1_, false}, pathfinder1T_{*map1_, true} {
 
@@ -579,7 +579,7 @@ void Robot::game1Loop() {
 
         *led = 0;
         if (!completePath.empty()) {
-            moveAlongPath(completePath.front());
+            moveAlongPath(completePath.front(), loadedObjectsNum_ > 0);
         }
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded
@@ -622,8 +622,8 @@ PVector Robot::getVelocity(long long int dt) const {
     return vel;
 }
 
-void Robot::moveAlongPath(Path &path) {
-    PVector target = path.getClosestNormalPoint(aPos_, 10);
+void Robot::moveAlongPath(Path &path, bool trapSensitive) {
+    PVector target = path.getClosestNormalPoint(aPos_, 10, trapSensitive);
 
     nTarget_ = target;
     moveToPosition(target, geometry::dist(path.getLast(), aPos_) >= 10);

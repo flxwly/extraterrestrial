@@ -49,16 +49,15 @@ Robot *Bot = nullptr;
 void Setup() {
     system("cls");
 
+    // TODO: Move static objects back to static space so the objects get intialized upon load
     // ----------- Initialisation of static objects -------------------- //
 
-    static Field Game0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS, GAME0WALLNODES,
-                       GAME0TRAPNODES,
-                       GAME0COLLECTIBLES);
+    static Field Game0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
+                       GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES);
     GAME0 = &Game0;
 
-    static Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS, GAME1WALLNODES,
-                       GAME1TRAPNODES,
-                       GAME1COLLECTIBLES);
+    static Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
+                       GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
     GAME1 = &Game1;
 
     static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
@@ -97,6 +96,74 @@ void Setup() {
     updateHSL();
 }
 
+#ifdef COLOR_LOGGING
+void colorLogging() {
+
+    std::cout << "------ RGB -------" << std::endl;
+
+    std::cout << "\tLeft: " << CSLeft_R << ":" << CSLeft_G << ":" << CSLeft_B << std::endl;
+    std::cout << "\tRight: " << CSRight_R << ":" << CSRight_G << ":" << CSRight_B << std::endl;
+
+    std::cout << "------ HSL -------" << std::endl;
+
+    std::cout << "\tLeft: " << hueL << ":" << satL << ":" << lumL << std::endl;
+    std::cout << "\tRight: " << hueR << ":" << satR << ":" << lumR << std::endl;
+
+    std::cout << "------ matching colors ------" << std::endl;
+
+    std::cout << "\tLeft:";
+
+    if (isRedLeft()) {
+        std::cout << " Red";
+    }
+    if (isCyanLeft()) {
+        std::cout << " Cyan";
+    }
+    if (isBlackLeft()) {
+        std::cout << " Black";
+    }
+    if (isYellowLeft()) {
+        std::cout << " Yellow";
+    }
+    if (isOrangeLeft()) {
+        std::cout << " Orange";
+    }
+    if (isSwampLeft()) {
+        std::cout << " Swamp";
+    }
+    if (isSuperObjLeft()) {
+        std::cout << " Super Object";
+    }
+
+    std::cout << std::endl << "\tRight:";
+
+    if (isRedRight()) {
+        std::cout << " Red";
+    }
+    if (isCyanRight()) {
+        std::cout << " Cyan";
+    }
+    if (isBlackRight()) {
+        std::cout << " Black";
+    }
+    if (isYellowRight()) {
+        std::cout << " Yellow";
+    }
+    if (isOrangeRight()) {
+        std::cout << " Orange";
+    }
+    if (isSwampRight()) {
+        std::cout << " Swamp";
+    }
+    if (isSuperObjRight()) {
+        std::cout << " Super Object";
+    }
+
+    std::cout << std::endl;
+
+}
+#endif
+
 /*
  * ///_________________________________GAME0________________________________________///
  *
@@ -128,7 +195,7 @@ void Game1Debug() {
     }
 
     // Event handling
-    sf::Event event;
+    sf::Event event{};
     while (CC->pollEvent(event)) {
         // "close requested" event: we close the window
         if (event.type == sf::Event::Closed)
@@ -231,10 +298,17 @@ void Game1Debug() {
 
     CC->display();
 #endif
+
+#ifdef COLOR_LOGGING
+    colorLogging();
+#endif
+
 }
 
 
 void Game1() {
+
+
     updateHSL();
 
     Bot->game1Loop();

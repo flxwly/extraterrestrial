@@ -1,8 +1,9 @@
-#ifndef CSBOT_PATHFINDER_HPP
-#define CSBOT_PATHFINDER_HPP
+#ifndef PATHFINDER_HPP
+#define PATHFINDER_HPP
 
 #include "libs/PPSettings.hpp"
 #include "libs/CommonFunctions.hpp"
+
 #include "MapData.hpp"
 
 #include <utility>
@@ -145,7 +146,7 @@ public:
      * factor d on the path. (If d = 0 than the point is just a normal point
      * to p)
     */
-    PVector getClosestNormalPoint(PVector p, double d);
+    PVector getClosestNormalPoint(PVector p, double d, bool trapSensitive);
 
     /// Checks whether a point is inside the radius of the path
     bool isOnPath(PVector p);
@@ -196,9 +197,7 @@ public:
     /// Contains all nodes that are important to this Pathfinder
     std::vector<Node> map;
 
-    Node end;
-
-    bool trapSensitive;
+    const bool trapSensitive;
     Field *field;
 
 private:
@@ -214,7 +213,7 @@ private:
     static double heuristic(const PVector &cur, const PVector &end);
 
     /// Converts previous pointers of nodes to path
-    static Path traverse(Node *end);
+    static Path traverse(Node *end) ;
 };
 
-#endif // CSBOT_PATHFINDER_HPP
+#endif // PATHFINDER_HPP

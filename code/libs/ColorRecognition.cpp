@@ -15,14 +15,14 @@ bool isYellowRight() { return satR >= 75 && lumR >= 30 && isInRange(hueR, 58, 80
 bool isOrangeLeft() { return satL >= 75 && lumL >= 30 && isInRange(hueL, 35, 50); } // check
 bool isOrangeRight() { return satR >= 75 && lumR >= 30 && isInRange(hueR, 35, 50); }
 
-bool isSuperObjRight() { return satR >= 80 && lumR >= 55 && isInRange(hueR, 290, 310); }
-bool isSuperObjLeft() { return satR >= 80 && lumR >= 55 && isInRange(hueR, 290, 310); }
+bool isSuperObjLeft() { return satL >= 80 && lumL >= 30 && isInRange(hueL, 290, 310); }
+bool isSuperObjRight() { return satR >= 80 && lumR >= 30 && isInRange(hueR, 290, 310); }
 
 bool isWaterLeft() { return satL >= 75 && lumL >= 30 && isInRange(hueL, 175, 185); }
 bool isWaterRight() { return satR >= 75 && lumR >= 30 && isInRange(hueR, 175, 185); }
 
-bool isSwampRight() { return satR <= 40 && lumR > 20 && isInRange(hueR, 200, 240); }
-bool isSwampLeft() { return satL <= 40 && lumL > 20 && isInRange(hueL, 200, 240); }
+bool isSwampLeft() { return satL <= 40 && isInRange(lumL, 40, 60) && isInRange(hueL, 200, 240); }
+bool isSwampRight() { return satR <= 40 && isInRange(lumR, 40, 60) && isInRange(hueR, 200, 240); }
 
 bool isRed() { return isRedLeft() || isRedRight(); }
 bool isCyan() { return isCyanLeft() || isCyanRight(); }

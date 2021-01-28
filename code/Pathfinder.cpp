@@ -63,25 +63,13 @@ double Node::calculateCost(const Node &node) {
         modifier = (modifier == SWAMP_SPEED_PENALITY) ? 1 : SWAMP_SPEED_PENALITY;
     }
 
-
-    std::cout << intersections.data() << std::endl;
-
     return cost;
 }
 
 bool Node::canSee(const Node &node, const std::vector<Area> &Obstacles) const {
     if (pos == node.pos)
         return false;
-    Line l1(pos, node.pos);
-    for (const Area &Obstacle : Obstacles) {
-        for (auto edge : Obstacle.getEdges()) {
-            if (geometry::isIntersecting(l1, edge)) {
-                return false;
-            }
-        }
-    }
-
-    return true;
+    return !geometry::isIntersecting({pos, node.pos}, Obstacles);
 }
 
 int Node::findNeighbours(std::vector<Node> &Nodes, const std::vector<Area> &Obstacles) {
@@ -127,7 +115,7 @@ Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r
 
 }
 
-PVector Path::getClosestNormalPoint(PVector p, double d) {
+PVector Path::getClosestNormalPoint(PVector p, double d, bool trapSensitive) {
     double dist = -1;
     PVector finalNormal = p;
     PVector dir = PVector(0, 0);
@@ -255,8 +243,7 @@ bool Path::isOnPath(PVector p) {
 /**                     **/
 /**     -----------     **/
 
-Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP},
-                                                          end({0, 0}, &MAP) {
+Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP} {
 
     // get map objects
     std::vector<Area> mapObjects = {};
@@ -268,9 +255,9 @@ Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sen
     // get map nodes
     std::vector<PVector> mapNodes = {};
     if (trap_sensitive) {
-        mapNodes = field->getMapNodes({0, 1});
+        mapNodes = field->getMapNodes({0, 1, 2});
     } else {
-        mapNodes = field->getMapNodes({0});
+        mapNodes = field->getMapNodes({0, 2});
     }
 
     // create & store Node
@@ -296,7 +283,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
         return Path({goal}, PATH_RADIUS);
 
     Node start = Node(begin, field);
-    end = Node(goal, field);
+    Node end = Node(goal, field);
 
     // If the pathfinder is trap sensitive traps have to be taken into account
     std::vector<Area> mapObjects = {};

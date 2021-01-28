@@ -1,5 +1,5 @@
-#ifndef CSBOT_ROBOT_HPP
-#define CSBOT_ROBOT_HPP
+#ifndef ROBOT_HPP
+#define ROBOT_HPP
 
 #include "libs/PPSettings.hpp"
 #include "libs/CommonFunctions.hpp"
@@ -57,7 +57,7 @@ public:
 	/// controls the robots wheels
 	void wheels(int l, int r) const;
 
-	void moveAlongPath(Path &path);
+	void moveAlongPath(Path &path, bool trapSensitive);
 
     /// updates the position of the robot mathematically and returns the change
     PVector updatePos();
@@ -86,8 +86,6 @@ public:
 private:
 	int loadedObjectsNum_;                                  ///< number of objects loaded
 	std::array<int, 3> loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
-
-	Path currentlyFollowingPath_;                           ///< The Path the robot is currently trying to follow
 
 	bool nTargetIsLast_;                                    ///< is nTarget the last element of a path
 	int chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
@@ -132,4 +130,4 @@ private:
 };
 
 
-#endif //CSBOT_ROBOT_HPP
+#endif //ROBOT_HPP
