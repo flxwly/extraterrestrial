@@ -4,41 +4,32 @@
 #include "CoSpaceFunctions.hpp"
 #include "CommonFunctions.hpp"
 
-bool isRedLeft();
-bool isRedRight();
+struct RGBColor {
+    float r = 0;
+    float g = 0;
+    float b = 0;
+};
 
-bool isCyanLeft();
-bool isCyanRight();
+struct HSLColor {
+    float h = 0;
+    float s = 0;
+    float l = 0;
+};
 
-bool isBlackLeft();
-bool isBlackRight();
+bool isRed(HSLColor c);
+bool isCyan(HSLColor c);
+bool isBlack(HSLColor c);
+bool isYellow(HSLColor c);
+bool isOrange(HSLColor c);
+bool isSwamp(HSLColor c);
+bool isColor(HSLColor c);
+bool isSuperObj(HSLColor c);
 
-bool isYellowLeft();
-bool isYellowRight();
+float rgb2h(HSLColor c);
+float rgb2s(HSLColor c);
+float rgb2l(HSLColor c);
 
-bool isOrangeLeft();
-bool isOrangeRight();
 
-bool isSuperObjLeft();
-bool isSuperObjRight();
-
-bool isWaterLeft();
-bool isWaterRight();
-
-bool isSwampRight();
-bool isSwampLeft();
-
-bool isRed();
-bool isCyan();
-bool isBlack();
-bool isYellow();
-bool isOrange();
-bool isSwamp();
-bool isColor();
-bool isSuperObj();
-
-int rgb2h(int R, int G, int B);
-int rgb2s(int R, int G, int B);
-int rgb2l(int R, int G, int B);
+HSLColor rgb2hsl(RGBColor color);
 
 #endif //COLORRECOGNITION_HPP

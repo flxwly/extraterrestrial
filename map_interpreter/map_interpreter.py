@@ -42,6 +42,17 @@ def collectible_type_switch(obj_type):
     return switcher.get(obj_type, 0)
 
 
+def index_switch(index):
+    switcher = {
+        0: "walls",
+        1: "traps",
+        2: "swamps",
+        3: "deposits",
+        4: "waters"
+    }
+    return switcher.get(index, 0)
+
+
 def find_color_points(world, field):
     arr = []
 
@@ -692,7 +703,7 @@ class MapData:
 
             img_arr.expand_all(1, int(detail * 20))  # standard 16
             img_arr.expand_all(2, int(detail * 20))
-            img_arr.expand_all(3, int(detail * 4))
+            img_arr.expand_all(3, int(detail * 16))
             img_arr.expand_all(5, int(detail * 2))
 
             temp_map_objects = [
@@ -706,7 +717,7 @@ class MapData:
             temp_map_objects_nodes = [
                 [],  # walls
                 [],  # traps
-                []   # swamps
+                []  # swamps
             ]
 
             for j in range(img_arr.height):
@@ -742,6 +753,13 @@ class MapData:
 
             self.map_objects.append(temp_map_objects)
             self.map_objects_nodes.append(temp_map_objects_nodes)
+
+            for i in range(5):
+                if len(temp_map_objects[i]) == 0:
+                    print("WARNING... No " + index_switch(i) + " found")
+                if i < 3:
+                    if len(temp_map_objects_nodes[i]) == 0:
+                        print("WARNING... No " + index_switch(i) + " nodes found")
 
             print("\tfinished")
 
@@ -781,8 +799,8 @@ class MapData:
 
             for deposit in self.map_objects[i][3]:
                 coord = (
-                        deposit[0] * scale - scale / 2 + x_off, deposit[1] * scale - scale / 2 + y_off,
-                        deposit[0] * scale + scale / 2 + x_off, deposit[1] * scale + scale / 2 + y_off)
+                    deposit[0] * scale - scale / 2 + x_off, deposit[1] * scale - scale / 2 + y_off,
+                    deposit[0] * scale + scale / 2 + x_off, deposit[1] * scale + scale / 2 + y_off)
                 draw.rectangle(coord, (200, 100, 100), (0, 0, 100))
 
             im.show("Map%s" % i)
@@ -815,7 +833,7 @@ class MapData:
             trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                             "") + ";"
             swamp_nodes_str += str(self.map_objects_nodes[i][2]).replace("[", "{").replace("]", "}").replace(" ",
-                                                                                                            "") + ";"
+                                                                                                             "") + ";"
 
             collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
 

@@ -21,8 +21,6 @@
 class Robot {
 public:
 	Robot(int *_x, int *_y, int *_compass, int *_superObjectNum, int *_superObjectX, int *_superObjectY,
-	      int *_rightColorSensorRed, int *_rightColorSensorGreen, int *_rightColorSensorBlue,
-	      int *_leftColorSensorRed, int *_leftColorSensorGreen, int *_leftColorSensorBlue,
 	      int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
 	      int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime,
 	      Field *_map0, Field *_map1);
@@ -31,22 +29,17 @@ public:
 	//______________/ vars \_____________
 
 	// === Variable pointers to vars updated by the sim ===
-	int *posX, *posY;                                             ///< robots position
-	int *compass;                                           ///< compass
-	int *superObjectNum;                                    ///< super_object_num
-	int *superObjectX, *superObjectY;                                ///< last super_object_coords
-	std::array<int *, 3> rightColorSensors, leftColorSensors;        ///< color sensors
-	std::array<int *, 3> ultraSonicSensors;                            ///< ultrasonic sensors
-	int *wheelLeft, *wheelRight;                            ///< wheels
-	int *led;                                               ///< led for collect and deposit
-	int *tp;                                                ///< where to teleport
-	int *gameTime;                                          ///< the in-game time
-
-
-
-	std::vector<double> measures = {};
-
-
+	int *posX, *posY;
+	int *compass;
+	int *superObjectNum;
+	int *superObjectX, *superObjectY;
+	std::vector<PVector> superObjects;
+	HSLColor leftColor, rightColor;
+	std::array<int *, 3> ultraSonicSensors;
+	int *wheelLeft, *wheelRight;
+	int *led;
+	int *tp;
+	int *gameTime;
 
 	/// typedef for time (basically a macro)
 	typedef std::chrono::steady_clock timer;
@@ -66,6 +59,8 @@ public:
 
 	/// checks if l, f or r is higher than the us-sensor vals. returns a binary-encoded value
 	int checkUsSensors(int l, int f, int r);
+
+	void updateLoop();
 
 	/// game loop for first map
 	void game0Loop();
@@ -87,7 +82,6 @@ private:
 	int loadedObjectsNum_;                                  ///< number of objects loaded
 	std::array<int, 3> loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
 
-	bool nTargetIsLast_;                                    ///< is nTarget the last element of a path
 	int chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
 
 
@@ -100,11 +94,8 @@ private:
 	//               ___________
 	//______________/ functions \_____________
 
-	/// calculates how long the breaking distance is
-	double getBrakingDistance(double friction);
-
 	/// gets the current velocity for a certain change in time (in ms)
-	PVector getVelocity(long long int dt) const;
+	[[nodiscard]] PVector getVelocity(long long int dt) const;
 
 
 	/// decides whether collecting a point is a good idea or not
@@ -126,7 +117,7 @@ private:
 	void teleport();
 
 	/// returns a turning direction if the robot is about to drive off map
-	int avoidVoid() const;
+	[[nodiscard]] int avoidVoid() const;
 };
 
 

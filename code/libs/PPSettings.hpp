@@ -33,18 +33,32 @@
 ///         robot settings
 /// ----------------------------- ///
 
-// TODO measure predefined constants
-
 /// The speed of the robot in cm/ms for 20 % of maximum speed
-#define ROBOT_SPEED 0.01
+#define ROBOT_SPEED 0.01f
+
 /// The distance between the two powered wheels in cm
-#define ROBOT_AXLE_LENGTH 12.6
+#define ROBOT_AXLE_LENGTH 12.6f
+
+#define RCOLOR_X -3.6
+#define RCOLOR_Y 6
+
+#define LCOLOR_X 3.6
+#define LCOLOR_Y 6
+
+#define RWHEEL_X -6.3
+#define RWHEEL_Y -4.2
+#define RWHEEL_RADIUS 3
 
 
-#define COLOR_SENSOR_ANGLE_OFFSET 3.5
-#define COLOR_SENSOR_DIST_TO_CORE 5
+#define LWHEEL_X 6.3
+#define LWHEEL_Y -4.2
+#define LWHEEL_RADIUS 3
 
-/// The factor by what speed is reduced in swamps
+
+#define COLOR_SENSOR_ANGLE_OFFSET 49.13072561f
+#define COLOR_SENSOR_DIST_TO_CORE 6.99714227f
+
+/// The factor by what speed is reduced in swamps TODO
 #define SWAMP_SPEED_PENALITY 10
 
 /// Standard radius of a path in cm

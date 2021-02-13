@@ -9,6 +9,7 @@
 #include <iostream>
 #include <array>
 #include <cmath>
+#include <algorithm>
 
 /** A type of PVector that can be collected by a robot.
  *
@@ -168,15 +169,19 @@ public:
     /// Getter for the size
     PVector getSize();
 
-    /**  Getter for map objects
+    /** gets map objects based on their index
      *
-     * @param indices 0 -> walls; 1 -> traps; 2 -> swamps; 3 -> waters / bonus areas;
+     * @param indices the index of the wanted map objects 0 -> walls; 1 -> traps; 2 -> swamps; 3 -> bonus areas;
+     *
+     * @returns a vector containing all map object areas with the indices
      */
     std::vector<Area> getMapObjects(const std::vector<unsigned int> &indices);
 
-    /**  Getter for map nodes
+    /**  gets map nodes based on their index
      *
      * @param indices 0 -> walls; 1 -> traps; 2 -> swamps
+     *
+     * @returns a vector containing all map object areas with the indices
      */
     std::vector<PVector> getMapNodes(const std::vector<unsigned int> &indices);
 
@@ -186,7 +191,7 @@ public:
     /// Getter method for collectibles
     std::vector<Collectible> getCollectibles(const std::vector<unsigned int> &colors);
 
-    Collectible *getCollectible(PVector robot_pos, double angle, double uncertainty, int color);
+    Collectible *getCollectible(PVector robotPos, double angle, double uncertainty, int color);
 
     std::vector<PVector> getPointPath(PVector pos, std::array<int, 3> cur, int max);
 

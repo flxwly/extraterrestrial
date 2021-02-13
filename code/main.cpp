@@ -27,19 +27,6 @@ sf::RenderWindow *CC = nullptr;
 sf::Font *unbutton = nullptr;
 #endif
 
-
-void updateHSL() {
-
-    hueR = rgb2h(CSRight_R, CSRight_G, CSRight_B);
-    hueL = rgb2h(CSLeft_R, CSLeft_G, CSLeft_B);
-
-    satR = rgb2s(CSRight_R, CSRight_G, CSRight_B);
-    satL = rgb2s(CSLeft_R, CSLeft_G, CSLeft_B);
-
-    lumR = rgb2l(CSRight_R, CSRight_G, CSRight_B);
-    lumL = rgb2l(CSLeft_R, CSLeft_G, CSLeft_B);
-}
-
 Field *GAME0 = nullptr;
 
 Field *GAME1 = nullptr;
@@ -49,7 +36,7 @@ Robot *Bot = nullptr;
 void Setup() {
     system("cls");
 
-    // TODO: Move static objects back to static space so the objects get intialized upon load
+    // TODO: Move static objects back to static space so the objects get initialized upon load
     // ----------- Initialisation of static objects -------------------- //
 
     static Field Game0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
@@ -61,7 +48,6 @@ void Setup() {
     GAME1 = &Game1;
 
     static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
-                     &CSRight_R, &CSRight_G, &CSRight_B, &CSLeft_R, &CSLeft_G, &CSLeft_B,
                      &US_Left, &US_Front, &US_Right,
                      &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time, GAME0, GAME1);
     Bot = &bot;
@@ -73,27 +59,12 @@ void Setup() {
     CC->setFramerateLimit(60);
 
     static sf::Font font;
-    if (font.loadFromFile("../fonts/arial.ttf")) {
-        unbutton = &font;
-    } else if (font.loadFromFile("fonts/arial.ttf")) {
-        unbutton = &font;
-    } else if (font.loadFromFile(
+    if (font.loadFromFile(
             "C:/Users/flxwl/Microsoft Robotics Dev Studio 4/CS/User/Rescue/CsBot/fonts/arial.ttf")) {
         unbutton = &font;
     }
 
-    // More paths have to be added here.
-    /*else if (font.loadFromFile(
-            "C:/Users/flxwl/Microsoft Robotics Dev Studio 4/CS/User/Rescue/CsBot/fonts/arial.ttf")) {
-        unbutton = &font;
-    }*/
-
-    if (unbutton != nullptr) {
-        std::cout << "loaded font" << std::endl;
-    }
 #endif
-
-    updateHSL();
 }
 
 #ifdef COLOR_LOGGING
@@ -171,7 +142,7 @@ void colorLogging() {
 */
 
 void Game0() {
-    updateHSL();
+    Bot->updateLoop();
     Bot->game0Loop();
 }
 
@@ -307,10 +278,7 @@ void Game1Debug() {
 
 
 void Game1() {
-
-
-    updateHSL();
-
+    Bot->updateLoop();
     Bot->game1Loop();
 
     Game1Debug();
