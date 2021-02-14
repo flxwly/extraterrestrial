@@ -1,6 +1,5 @@
 #include "Pathfinder.hpp"
 
-
 /**     -----------     **/
 /**                     **/
 /**         Node        **/

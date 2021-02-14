@@ -12,7 +12,7 @@ Collectible::Collectible(const PVector &p, const unsigned int &c) : pos{p}, colo
 
 bool Collectible::isCorrectCollectible(PVector robotPos, double angle, double uncertainty) const {
     return geometry::dist(robotPos + (geometry::angle2Vector(toRadians(angle - COLOR_SENSOR_ANGLE_OFFSET)) * COLOR_SENSOR_DIST_TO_CORE), pos) < uncertainty
-    || geometry::dist(robotPos + (geometry::angle2Vector(toRadians(angle + COLOR_SENSOR_ANGLE_OFFSET))) * COLOR_SENSOR_DIST_TO_CORE)) < uncertainty;
+    || geometry::dist(robotPos + (geometry::angle2Vector(toRadians(angle + COLOR_SENSOR_ANGLE_OFFSET)) * COLOR_SENSOR_DIST_TO_CORE), pos) < uncertainty;
 }
 
 

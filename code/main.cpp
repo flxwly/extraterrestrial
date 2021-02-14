@@ -198,11 +198,20 @@ void Game1Debug() {
     block.setSize(sf::Vector2f(4, 4));
     block.setOrigin((2), 2);
     block.setFillColor({0, 255, 0});
-    for (auto &node : Bot->pathfinder1_.map) {
+    for (auto &node : Bot->pathfinder1.map) {
         sf::Vector2f p1(static_cast<float>(node.pos.x),
                         static_cast<float>(node.pos.y));
+
+        sf::VertexArray connectedNodes(sf::Lines);
+        for (auto neighbour : node.neighbours) {
+            sf::Vector2f p2(static_cast<float>(neighbour.first->pos.x),
+                            static_cast<float>(neighbour.first->pos.y));
+            connectedNodes.append(p1);
+            connectedNodes.append(p2);
+        }
         block.setPosition(p1);
 
+        CC->draw(connectedNodes);
         CC->draw(block);
     }
 
@@ -210,7 +219,7 @@ void Game1Debug() {
     block.setSize({4, 4});
     block.setOrigin((2), 2);
     block.setFillColor({0, 255, 0});
-    for (auto &walls : Bot->map1_->getMapObjects({0})) {
+    for (auto &walls : Bot->map1->getMapObjects({0})) {
 
         sf::VertexArray area(sf::LineStrip);
 
@@ -251,7 +260,7 @@ void Game1Debug() {
 
     CC->draw(path_lines);
 
-    // Position
+    // Position from Simulator
     block.setSize(sf::Vector2f(8, 8));
     block.setOrigin((4), 4);
     block.setFillColor({140, 30, 0});             // dark red / brown
@@ -259,14 +268,21 @@ void Game1Debug() {
                       static_cast<float>(PositionY));
     CC->draw(block);
 
-    // Position
+    // Position from calculation
     block.setSize(sf::Vector2f(4, 4));
     block.setOrigin(2, 2);
     block.setFillColor({0, 200, 200});             // dark red / brown
-    block.setPosition(static_cast<float>(Bot->aPos_.x),
-                      static_cast<float>(Bot->aPos_.y));
+    block.setPosition(static_cast<float>(Bot->pos.x),
+                      static_cast<float>(Bot->pos.y));
     CC->draw(block);
 
+    // Position from calculation
+    block.setSize(sf::Vector2f(4, 4));
+    block.setOrigin(2, 2);
+    block.setFillColor({200, 0, 200});             // dark red / brown
+    block.setPosition(static_cast<float>(Bot->nextTarget.x),
+                      static_cast<float>(Bot->nextTarget.y));
+    CC->draw(block);
     CC->display();
 #endif
 
@@ -276,8 +292,62 @@ void Game1Debug() {
 
 }
 
+bool liesInLineSegment(PVector p0_, PVector p1_, PVector p2_, PVector p3_, PVector point, bool isStart, bool isEnd) {
+    bool liesOnLeftToRightSide = false;
+    bool liesOnRightToLeftSide = false;
+
+    // TODO: special cases when a line segment is only defined by one such line
+    if (isStart && isEnd) {
+        // there are only start and end point
+        // every normal point lies in that segment
+
+        liesOnRightToLeftSide = true, liesOnLeftToRightSide = true;
+
+    } else {
+        // start point; only check whether the point is on the left side
+        // check for segment p[0] p[1] n p[1] p[2]
+
+        if (!isEnd) {
+            PVector p0 = p2_
+                         + (p2_ - p1_).normalize()
+                         + (p2_ - p3_).normalize();
+
+            if (geometry::isLeft(p2_, p0, p1_)) {
+                if (geometry::isLeft(p2_, p0, point))
+                    liesOnLeftToRightSide = true;
+            } else {
+                if (geometry::isLeft(p0, p2_, point))
+                    liesOnLeftToRightSide = true;
+            }
+        } else {
+            liesOnLeftToRightSide = true;
+        }
+        if (!isStart) {
+            // end point; only check whether the point is on the right side
+
+            PVector p0 = p1_
+                         + (p1_ - p0_).normalize()
+                         + (p1_ - p2_).normalize();
+
+            if (geometry::isLeft(p1_, p0, p0_)) {
+                if (geometry::isLeft(p0, p1_, point))
+                    liesOnRightToLeftSide = true;
+            } else {
+                if (geometry::isLeft(p1_, p0, point))
+                    liesOnRightToLeftSide = true;
+            }
+
+        } else {
+            liesOnRightToLeftSide = true;
+        }
+
+    }
+
+    return liesOnLeftToRightSide && liesOnRightToLeftSide;
+}
 
 void Game1() {
+
     Bot->updateLoop();
     Bot->game1Loop();
 

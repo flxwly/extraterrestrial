@@ -68,28 +68,26 @@ public:
 	/// game loop for second map
 	void game1Loop();
 
-    PVector nTarget_;                                       ///< pathfinder waypoint chasing
-    PVector aPos_;                                          ///< more accurate position of the robot
-
-public:
+    PVector nextTarget;                                       ///< pathfinder waypoint chasing
+    PVector pos;                                          ///< more accurate position of the robot
 
 	// === Robot vars ===
 
-	Field *map0_, *map1_;                                   ///< field vars
-	Pathfinder pathfinder0_, pathfinder1_;                  ///< Pathfinders that ignore traps
-	Pathfinder pathfinder0T_, pathfinder1T_;                ///< Pathfinders that don't ignore traps
-private:
-	int loadedObjectsNum_;                                  ///< number of objects loaded
-	std::array<int, 3> loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
+	Field *map0, *map1;                                   ///< field vars
+	Pathfinder pathfinder0, pathfinder1;                  ///< Pathfinders that ignore traps
+	Pathfinder pathfinder0T, pathfinder1T;                ///< Pathfinders that don't ignore traps
 
-	int chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
+	int loadedObjectsNum;                                  ///< number of objects loaded
+	std::array<int, 3> loadedObjects;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
+
+	int chasingSuperObjNum;                                ///< the super_objects_num that the robot chases in it's current path
 
 
-	PVector lPos_;                                          ///< last coordinates of the robot (for signal loss)
-	std::chrono::time_point<timer> lastCycle_;              ///< the time the last cycle was executed
-	std::chrono::time_point<timer> depositingSince_;        ///< the time last depositing has started
-	std::chrono::time_point<timer> collectingSince_;        ///< the time last collecting has started
-	std::chrono::time_point<timer> lastPositionUpdate_;     ///< the last time the position was updated
+	PVector lastPos;                                          ///< last coordinates of the robot (for signal loss)
+	std::chrono::time_point<timer> lastCycle;              ///< the time the last cycle was executed
+	std::chrono::time_point<timer> depositingSince;        ///< the time last depositing has started
+	std::chrono::time_point<timer> collectingSince;        ///< the time last collecting has started
+	std::chrono::time_point<timer> lastPositionUpdate;     ///< the last time the position was updated
 
 	//               ___________
 	//______________/ functions \_____________

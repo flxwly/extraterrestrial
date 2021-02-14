@@ -9,7 +9,7 @@
 //#define DEBUG
 
 /// define SFML to enable debugging via SFML
-#define SFML
+//#define SFML
 
 /// define COLOR_LOGGING to enable color logging to console
 //#define COLOR_LOGGING
@@ -35,6 +35,8 @@
 
 /// The speed of the robot in cm/ms for 20 % of maximum speed
 #define ROBOT_SPEED 0.01f
+
+#define RPOS_ERROR_MARGIN 3
 
 /// The distance between the two powered wheels in cm
 #define ROBOT_AXLE_LENGTH 12.6f

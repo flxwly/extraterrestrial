@@ -161,10 +161,10 @@ public:
     PVector getLast();
 
     /// Checks whether the Path is empty
-    bool isEmpty() { return points.empty(); };
+    [[nodiscard]] bool isEmpty() const { return points.empty(); };
 
     /// Returns the length of the Path
-    unsigned int length() { return points.size(); };
+    [[nodiscard]] unsigned int length() const { return points.size(); };
 
     /// Contains all points of the path in order so that p[0] -> p[1] -> p[2] represents the path
     std::vector<PVector> points;
