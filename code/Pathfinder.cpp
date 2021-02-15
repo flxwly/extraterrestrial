@@ -114,10 +114,9 @@ Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r
 
 }
 
-PVector Path::getClosestNormalPoint(PVector p, double d, bool trapSensitive) {
+PVector Path::getClosestNormalPoint(PVector p, double d) {
     double dist = -1;
-    PVector finalNormal = p;
-    PVector dir = PVector(0, 0);
+    PVector finalNormal = points.back();
 
     if (points.size() == 1) {
         finalNormal = points[0];
@@ -126,84 +125,26 @@ PVector Path::getClosestNormalPoint(PVector p, double d, bool trapSensitive) {
     for (unsigned int i = 0; i < points.size() - 1; ++i) {
 
         PVector normalPoint = geometry::getNormalPoint(Line(points[i], points[i + 1]), p);
+        normalPoint += (points[i + 1] - points[i]).setMag(d);
 
         // Test if this is the closest yet seen normalpoint
         if (geometry::dist(normalPoint, p) < dist || dist == -1) {
 
-            // Test if the normal Point is within the line segment
 
-            // TODO: Get a line that halves the angle between two line segments
-            //  Check whether the normal point lies on the correct side
+            // new idea: Test if normal point lies behind idk
+            // points i - > next point
 
-            bool liesOnLeftToRightSide = false;
-            bool liesOnRightToLeftSide = false;
+            double d0 = geometry::dist(normalPoint, points[i]);
+            double d1 = geometry::dist(normalPoint, points[i + 1]);
 
-            // TODO: special cases when a line segment is only defined by one such line
-            if (points.size() <= 2) {
-                // there are only start and end point
-                // every normal point lies in that segment
-
-                liesOnRightToLeftSide = true, liesOnLeftToRightSide = true;
-
-            } else {
-                // start point; only check whether the point is on the left side
-                // check for segment p[0] p[1] n p[1] p[2]
-
-                if (i < points.size() - 2) {
-                    PVector p0 = points[i + 1]
-                                 + (points[i + 1] - points[i]).normalize()
-                                 + (points[i + 1] - points[i + 2]).normalize();
-
-                    if (geometry::isLeft(points[i + 1], p0, points[i])) {
-                        if (geometry::isLeft(points[i + 1], p0, normalPoint))
-                            liesOnLeftToRightSide = true;
-                    } else {
-                        if (geometry::isLeft(p0, points[i + 1], normalPoint))
-                            liesOnLeftToRightSide = true;
-                    }
-                } else {
-                    liesOnLeftToRightSide = true;
-                }
-                if (i > 0) {
-                    // end point; only check whether the point is on the right side
-
-                    PVector p0 = points[i]
-                                 + (points[i] - points[i - 1]).normalize()
-                                 + (points[i] - points[i + 1]).normalize();
-
-                    if (geometry::isLeft(points[i], p0, points[i - 1])) {
-                        if (geometry::isLeft(p0, points[i], normalPoint))
-                            liesOnRightToLeftSide = true;
-                    } else {
-                        if (geometry::isLeft(points[i], p0, normalPoint))
-                            liesOnRightToLeftSide = true;
-                    }
-
-                } else {
-                    liesOnRightToLeftSide = true;
-                }
-
-            }
-
-
-            if (liesOnRightToLeftSide && liesOnLeftToRightSide) {
-
+            if (d0 + d1 <= geometry::dist(points[i], points[i + 1]) || d0 < d1) {
                 dist = geometry::dist(normalPoint, p);
                 finalNormal = normalPoint;
-
-                // Vector from p[i] to p[i + 1]
-                if (i == points.size() - 2) {
-                    dir = points[i + 1] - p;
-                } else {
-                    dir = points[i + 1] - points[i];
-                }
             }
         }
     }
 
-    dir.setMag(d);
-
-    return finalNormal + dir;
+    return finalNormal;
 }
 
 void Path::addPoint(PVector p) {
@@ -402,7 +343,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 Path Pathfinder::traverse(Node *end) {
     std::vector<PVector> path;
 
-    while (end->previous != nullptr) {
+    while (end != nullptr) {
         path.push_back(end->pos);
         end = end->previous;
     }

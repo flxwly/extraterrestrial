@@ -146,7 +146,7 @@ public:
      * factor d on the path. (If d = 0 than the point is just a normal point
      * to p)
     */
-    PVector getClosestNormalPoint(PVector p, double d, bool trapSensitive);
+    PVector getClosestNormalPoint(PVector p, double d);
 
     /// Checks whether a point is inside the radius of the path
     bool isOnPath(PVector p);

@@ -52,7 +52,6 @@ void Setup() {
                      &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time, GAME0, GAME1);
     Bot = &bot;
 
-
 #ifdef SFML
     static sf::RenderWindow window(sf::VideoMode(480, 360), "Debug_Console");
     CC = &window;
@@ -202,16 +201,16 @@ void Game1Debug() {
         sf::Vector2f p1(static_cast<float>(node.pos.x),
                         static_cast<float>(node.pos.y));
 
-        sf::VertexArray connectedNodes(sf::Lines);
+        /*sf::VertexArray connectedNodes(sf::Lines);
         for (auto neighbour : node.neighbours) {
             sf::Vector2f p2(static_cast<float>(neighbour.first->pos.x),
                             static_cast<float>(neighbour.first->pos.y));
             connectedNodes.append(p1);
             connectedNodes.append(p2);
         }
-        block.setPosition(p1);
-
         CC->draw(connectedNodes);
+        */
+        block.setPosition(p1);
         CC->draw(block);
     }
 
@@ -224,8 +223,8 @@ void Game1Debug() {
         sf::VertexArray area(sf::LineStrip);
 
         for (auto &corner : walls.getCorners()) {
-            area.append(sf::Vector2f(static_cast<float>(corner.x),
-                                     static_cast<float>(corner.y)));
+                area.append(sf::Vector2f(static_cast<float>(corner.x),
+                                         static_cast<float>(corner.y)));
         }
         area.append(sf::Vector2f(static_cast<float>(walls.getCorners()[0].x),
                                  static_cast<float>(walls.getCorners()[0].y)));
@@ -290,60 +289,6 @@ void Game1Debug() {
     colorLogging();
 #endif
 
-}
-
-bool liesInLineSegment(PVector p0_, PVector p1_, PVector p2_, PVector p3_, PVector point, bool isStart, bool isEnd) {
-    bool liesOnLeftToRightSide = false;
-    bool liesOnRightToLeftSide = false;
-
-    // TODO: special cases when a line segment is only defined by one such line
-    if (isStart && isEnd) {
-        // there are only start and end point
-        // every normal point lies in that segment
-
-        liesOnRightToLeftSide = true, liesOnLeftToRightSide = true;
-
-    } else {
-        // start point; only check whether the point is on the left side
-        // check for segment p[0] p[1] n p[1] p[2]
-
-        if (!isEnd) {
-            PVector p0 = p2_
-                         + (p2_ - p1_).normalize()
-                         + (p2_ - p3_).normalize();
-
-            if (geometry::isLeft(p2_, p0, p1_)) {
-                if (geometry::isLeft(p2_, p0, point))
-                    liesOnLeftToRightSide = true;
-            } else {
-                if (geometry::isLeft(p0, p2_, point))
-                    liesOnLeftToRightSide = true;
-            }
-        } else {
-            liesOnLeftToRightSide = true;
-        }
-        if (!isStart) {
-            // end point; only check whether the point is on the right side
-
-            PVector p0 = p1_
-                         + (p1_ - p0_).normalize()
-                         + (p1_ - p2_).normalize();
-
-            if (geometry::isLeft(p1_, p0, p0_)) {
-                if (geometry::isLeft(p0, p1_, point))
-                    liesOnRightToLeftSide = true;
-            } else {
-                if (geometry::isLeft(p1_, p0, point))
-                    liesOnRightToLeftSide = true;
-            }
-
-        } else {
-            liesOnRightToLeftSide = true;
-        }
-
-    }
-
-    return liesOnLeftToRightSide && liesOnRightToLeftSide;
 }
 
 void Game1() {

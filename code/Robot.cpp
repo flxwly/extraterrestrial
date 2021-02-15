@@ -272,6 +272,7 @@ void Robot::wheels(int l, int r) const {
 int Robot::moveToPosition(PVector p, bool safety) {
 
     double dist = geometry::dist(pos, p);
+    safety = true;
 
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
