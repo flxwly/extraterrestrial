@@ -370,7 +370,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
 }
 
 void Robot::moveAlongPath(Path &path, bool trapSensitive) {
-    PVector target = path.getClosestNormalPoint(pos, 10, trapSensitive);
+    PVector target = path.getClosestNormalPoint(pos, 10);
 
     nextTarget = target;
     moveToPosition(target, geometry::dist(path.getLast(), pos) >= 10);

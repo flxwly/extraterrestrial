@@ -115,7 +115,7 @@ Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r
 }
 
 PVector Path::getClosestNormalPoint(PVector p, double d) {
-    double dist = -1;
+    double dist = INFINITY;
     PVector finalNormal = points.back();
 
     if (points.size() == 1) {
@@ -125,11 +125,18 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
     for (unsigned int i = 0; i < points.size() - 1; ++i) {
 
         PVector normalPoint = geometry::getNormalPoint(Line(points[i], points[i + 1]), p);
-        normalPoint += (points[i + 1] - points[i]).setMag(d);
 
         // Test if this is the closest yet seen normalpoint
-        if (geometry::dist(normalPoint, p) < dist || dist == -1) {
+        if (geometry::dist(normalPoint, p) < dist) {
 
+            PVector line = points[i + 1] - points[i];
+            line.rotate(M_PI / 2);
+            if (geometry::isLeft(points[i + 1], points[i + 1] + line, normalPoint)) {
+                dist = geometry::dist(normalPoint, p);
+                finalNormal = normalPoint + (points[i + 1] - points[i]).setMag(d);
+            }
+
+            continue;
 
             // new idea: Test if normal point lies behind idk
             // points i - > next point
