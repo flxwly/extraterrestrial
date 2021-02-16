@@ -60,6 +60,9 @@
 #define COLOR_SENSOR_ANGLE_OFFSET 49.13072561f
 #define COLOR_SENSOR_DIST_TO_CORE 6.99714227f
 
+#define GAME0_TIME 180
+#define GAME1_TIME 300
+
 /// The factor by what speed is reduced in swamps TODO
 #define SWAMP_SPEED_PENALITY 10
 

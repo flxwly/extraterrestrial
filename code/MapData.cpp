@@ -204,39 +204,6 @@ Collectible *Field::getCollectible(PVector robotPos, double angle, double uncert
     return nullptr;
 }
 
-std::vector<PVector> Field::getPointPath(PVector pos, std::array<int, 3> cur, int max) {
-    std::vector<PVector> points = {};
-    PVector start = pos;
-    PVector end = pos;
-    int num = std::max(max - cur[0], 0) + std::max(max - cur[1], 0) + std::max(max - cur[2], 0);
-    int added = 0;
-
-    while (num > added) {
-        unsigned int color = 0;
-        double dist = -1;
-        for (int i = 0; i < 3; ++i) {
-            for (auto collectible : Collectibles_[i]) {
-                if ((geometry::dist(start, collectible.pos) < dist || dist == -1)
-                    && collectible.pos != start && cur[i] < max) {
-
-                    color = collectible.color;
-                    end = collectible.pos;
-                    dist = geometry::dist(start, end);
-                }
-            }
-        }
-        if (start != end) {
-            start = end;
-            points.push_back(end);
-            cur[color]++;
-        } else {
-            return points;
-        }
-        added++;
-    }
-    return points;
-}
-
 
 /**     -----------     **/
 /**                     **/

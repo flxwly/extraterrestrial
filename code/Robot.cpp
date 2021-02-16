@@ -10,7 +10,7 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_
         posX{_posX}, posY{_posY}, compass{_compass}, superObjectNum{_superObjectNum},
         superObjectX{_superObjectX}, superObjectY{_superObjectY},
         ultraSonicSensors{_ultraSonicSensorLeft, _ultraSonicSensorFront, _ultraSonicSensorRight},
-        wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, gameTime{_gameTime},
+        wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, level{1}, gameTime{_gameTime},
 
         loadedObjects{0, 0, 0}, loadedObjectsNum{0},
         collectingSince{timer::now()}, depositingSince{timer::now()},
@@ -201,14 +201,14 @@ bool Robot::shouldTeleport() {
 
     // earliest possible teleport after 3min (180sec)
     //      only teleport if it has nothing to lose -> no objects loaded
-    if (*gameTime > 180) {
+    if (remainingMapTime < 0) {
         if (loadedObjectsNum == 0) {
             return true;
         }
     }
     // next possible teleport after 3min and 20sec (200sec)
     //      only teleport if points are more valuable then 145 points
-    if (*gameTime > 200) {
+    if (remainingMapTime < -20) {
         if (!shouldDeposit()) {
             return true;
         }
@@ -216,7 +216,7 @@ bool Robot::shouldTeleport() {
 
     // last possible teleport after 4min (240sec)
     //      teleport in any case
-    return *gameTime > 240;
+    return remainingMapTime < -60;
 }
 
 void Robot::teleport() {
@@ -224,6 +224,7 @@ void Robot::teleport() {
     loadedObjects = {0, 0, 0};
 
     *tp = 1;
+    level = 1;
 }
 
 //====================================
@@ -395,12 +396,70 @@ int Robot::checkUsSensors(int l, int f, int r) {
     return sum;
 }
 
+std::vector<PVector> Robot::getPointPath(int max) {
+
+    Field *field = (level == 0) ? map0 : map1;
+
+    std::vector<PVector> points = {};
+    PVector start = pos;
+    PVector end = pos;
+    int num = std::max(max - loadedObjects[0], 0) + std::max(max - loadedObjects[1], 0) + std::max(max - loadedObjects[2], 0);
+    int added = 0;
+
+    std::array<int, 3> _loadedObjects = loadedObjects;
+
+    while (num > added) {
+        unsigned int color = 0;
+        double dist = INFINITY;
+        for (unsigned int i = 0; i < 3; ++i) {
+            for (auto collectible : field->getCollectibles({i})) {
+                if ((geometry::dist(start, collectible.pos) < dist)
+                    && collectible.pos != start && _loadedObjects[i] < max) {
+
+                    color = collectible.color;
+                    end = collectible.pos;
+                    dist = geometry::dist(start, end);
+                }
+            }
+
+
+        }
+
+        for (auto superObj : superObjects) {
+            if ((geometry::dist(start, superObj) * 1.5 < dist || remainingMapTime < 60)
+                && superObj != start && _loadedObjects[0] < max) {
+
+                color = 0;
+                end = superObj;
+                dist = geometry::dist(start, end);
+            }
+        }
+
+        if (start != end) {
+            start = end;
+            points.push_back(end);
+            _loadedObjects[color]++;
+        } else {
+            return points;
+        }
+        added++;
+    }
+    return points;
+}
+
 //====================================
 //          loop Methods
 //====================================
 void Robot::updateLoop() {
     leftColor = rgb2hsl({static_cast<float>(CSLeft_R), static_cast<float>(CSLeft_G), static_cast<float>(CSLeft_B)});
     rightColor = rgb2hsl({static_cast<float>(CSRight_R), static_cast<float>(CSRight_G), static_cast<float>(CSRight_B)});
+
+    remainingMapTime = GAME0_TIME - Time + ((level == 1) ? GAME1_TIME : 0);
+
+    if (*superObjectX != 0 || *superObjectY != 0) {
+        superObjects.emplace_back(*superObjectX, *superObjectY);
+        *superObjectX = 0, *superObjectY = 0;
+    }
 }
 
 void Robot::game0Loop() {
@@ -482,7 +541,7 @@ void Robot::game1Loop() {
     if (completePath.empty()) {
         if (loadedObjectsNum < 6) {
             // get a path of points
-            std::vector<PVector> pathOfCollectibles = map1->getPointPath(pos, loadedObjects, 2);
+            std::vector<PVector> pathOfCollectibles = getPointPath(2);
 
             // the first start point should be the current position of the robot
             PVector start = pos;

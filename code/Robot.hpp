@@ -39,7 +39,9 @@ public:
 	int *wheelLeft, *wheelRight;
 	int *led;
 	int *tp;
+	unsigned short level;
 	int *gameTime;
+	int remainingMapTime;
 
 	/// typedef for time (basically a macro)
 	typedef std::chrono::steady_clock timer;
@@ -116,6 +118,8 @@ public:
 
 	/// returns a turning direction if the robot is about to drive off map
 	[[nodiscard]] int avoidVoid() const;
+
+    std::vector<PVector> getPointPath(int max);
 };
 
 
