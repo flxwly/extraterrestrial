@@ -34,12 +34,12 @@
 /// ----------------------------- ///
 
 /// The speed of the robot in cm/ms for 20 % of maximum speed
-#define ROBOT_SPEED 0.01f
+#define ROBOT_SPEED 0.01
 
 #define RPOS_ERROR_MARGIN 3
 
 /// The distance between the two powered wheels in cm
-#define ROBOT_AXLE_LENGTH 12.6f
+#define ROBOT_AXLE_LENGTH 12.6
 
 #define RCOLOR_X -3.6
 #define RCOLOR_Y 6
@@ -57,8 +57,8 @@
 #define LWHEEL_RADIUS 3
 
 
-#define COLOR_SENSOR_ANGLE_OFFSET 49.13072561f
-#define COLOR_SENSOR_DIST_TO_CORE 6.99714227f
+#define COLOR_SENSOR_ANGLE_OFFSET 49.13072561
+#define COLOR_SENSOR_DIST_TO_CORE 6.99714227
 
 #define GAME0_TIME 180
 #define GAME1_TIME 300

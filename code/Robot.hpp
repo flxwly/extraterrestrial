@@ -52,7 +52,7 @@ public:
 	/// controls the robots wheels
 	void wheels(int l, int r) const;
 
-	void moveAlongPath(Path &path, bool trapSensitive);
+	void moveAlongPath(Path &path);
 
     /// updates the position of the robot mathematically and returns the change
     PVector updatePos();

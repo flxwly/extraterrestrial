@@ -31,20 +31,21 @@ PVector Robot::getVelocity(long long int dt) const {
     // For clarification on how this works see
     // https://math.stackexchange.com/questions/3962859/calculate-path-of-vehicle-with-two-wheels-parallel-to-each-other
 
-    float penalty = (isSwamp(leftColor) || isSwamp(rightColor)) ? SWAMP_SPEED_PENALITY : 1;
+    double penalty = (isSwamp(leftColor) || isSwamp(rightColor)) ? SWAMP_SPEED_PENALITY : 1;
 
-    float v1 = static_cast<float>(*wheelLeft) * ROBOT_SPEED / penalty;
-    float v2 = static_cast<float>(*wheelRight) * ROBOT_SPEED / penalty;
-
-    if (v1 == v2) {
-        return geometry::angle2Vector(toRadians(*compass)) * v1 * static_cast<double>(dt);
+    if (*wheelLeft == *wheelRight) {
+        return geometry::angle2Vector(toRadians(*compass+ 90)) *
+                (static_cast<double>(*wheelLeft) * ROBOT_SPEED / penalty) * static_cast<double>(dt);
     }
+
+    double v1 = static_cast<double>(*wheelLeft) * ROBOT_SPEED / penalty;
+    double v2 = static_cast<double>(*wheelRight) * ROBOT_SPEED / penalty;
 
     double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
 
     PVector vel(s * cos(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)) - s,
                 s * sin(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)));
-    vel.rotate(toRadians(*compass));
+    vel.rotate(toRadians(*compass + 90));
 
     return vel;
 }
@@ -370,7 +371,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
     }
 }
 
-void Robot::moveAlongPath(Path &path, bool trapSensitive) {
+void Robot::moveAlongPath(Path &path) {
     PVector target = path.getClosestNormalPoint(pos, 10);
 
     nextTarget = target;
@@ -451,15 +452,26 @@ std::vector<PVector> Robot::getPointPath(int max) {
 //          loop Methods
 //====================================
 void Robot::updateLoop() {
+    // --------- Color Sensors ---------
     leftColor = rgb2hsl({static_cast<float>(CSLeft_R), static_cast<float>(CSLeft_G), static_cast<float>(CSLeft_B)});
     rightColor = rgb2hsl({static_cast<float>(CSRight_R), static_cast<float>(CSRight_G), static_cast<float>(CSRight_B)});
 
+    // --------- Time ----------
     remainingMapTime = GAME0_TIME - Time + ((level == 1) ? GAME1_TIME : 0);
 
+    ERROR_MESSAGE("Time for one cycle: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
+            timer::now() - lastCycle).count()));
+
+    // ---------- superObjects -----------
     if (*superObjectX != 0 || *superObjectY != 0) {
         superObjects.emplace_back(*superObjectX, *superObjectY);
         *superObjectX = 0, *superObjectY = 0;
     }
+
+    // ---------- Position -------------
+    // set last coords to normal coords (last coords wont get overwritten by the sim)
+    lastPos.set(*posX, *posY);
+    updatePos();
 }
 
 void Robot::game0Loop() {
@@ -526,14 +538,6 @@ void Robot::game0Loop() {
 }
 
 void Robot::game1Loop() {
-
-
-    ERROR_MESSAGE("Time for one cycle: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
-            timer::now() - lastCycle).count()));
-
-    // set last coords to normal coords (last coords wont get overwritten by the sim)
-    lastPos.set(*posX, *posY);
-    updatePos();
 
     // -------------------- //
     //    Get a new Path    //
@@ -633,7 +637,7 @@ void Robot::game1Loop() {
 
         *led = 0;
         if (!completePath.empty()) {
-            moveAlongPath(completePath.front(), loadedObjectsNum > 0);
+            moveAlongPath(completePath.front());
         }
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded

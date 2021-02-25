@@ -76,56 +76,56 @@ void colorLogging() {
 
     std::cout << "------ HSL -------" << std::endl;
 
-    std::cout << "\tLeft: " << hueL << ":" << satL << ":" << lumL << std::endl;
-    std::cout << "\tRight: " << hueR << ":" << satR << ":" << lumR << std::endl;
+    std::cout << "\tLeft: " << Bot->leftColor.h << ":" << Bot->leftColor.s << ":" << Bot->leftColor.l << std::endl;
+    std::cout << "\tRight: " << Bot->rightColor.h << ":" << Bot->rightColor.s << ":" << Bot->rightColor.l << std::endl;
 
     std::cout << "------ matching colors ------" << std::endl;
 
     std::cout << "\tLeft:";
 
-    if (isRedLeft()) {
+    if (isRed(Bot->leftColor)) {
         std::cout << " Red";
     }
-    if (isCyanLeft()) {
+    if (isCyan(Bot->leftColor)) {
         std::cout << " Cyan";
     }
-    if (isBlackLeft()) {
+    if (isBlack(Bot->leftColor)) {
         std::cout << " Black";
     }
-    if (isYellowLeft()) {
+    if (isYellow(Bot->leftColor)) {
         std::cout << " Yellow";
     }
-    if (isOrangeLeft()) {
+    if (isOrange(Bot->leftColor)) {
         std::cout << " Orange";
     }
-    if (isSwampLeft()) {
+    if (isSwamp(Bot->leftColor)) {
         std::cout << " Swamp";
     }
-    if (isSuperObjLeft()) {
+    if (isSuperObj(Bot->leftColor)) {
         std::cout << " Super Object";
     }
 
     std::cout << std::endl << "\tRight:";
 
-    if (isRedRight()) {
+    if (isRed(Bot->rightColor)) {
         std::cout << " Red";
     }
-    if (isCyanRight()) {
+    if (isCyan(Bot->rightColor)) {
         std::cout << " Cyan";
     }
-    if (isBlackRight()) {
+    if (isBlack(Bot->rightColor)) {
         std::cout << " Black";
     }
-    if (isYellowRight()) {
+    if (isYellow(Bot->rightColor)) {
         std::cout << " Yellow";
     }
-    if (isOrangeRight()) {
+    if (isOrange(Bot->rightColor)) {
         std::cout << " Orange";
     }
-    if (isSwampRight()) {
+    if (isSwamp(Bot->rightColor)) {
         std::cout << " Swamp";
     }
-    if (isSuperObjRight()) {
+    if (isSuperObj(Bot->rightColor)) {
         std::cout << " Super Object";
     }
 
@@ -192,7 +192,7 @@ void Game1Debug() {
     label.setStyle(sf::Text::Regular);
     CC->draw(label);
 
-    // Pathfinder (Nodes):
+    /*// Pathfinder (Nodes):
     label.setCharacterSize(10);
     block.setSize(sf::Vector2f(4, 4));
     block.setOrigin((2), 2);
@@ -201,7 +201,7 @@ void Game1Debug() {
         sf::Vector2f p1(static_cast<float>(node.pos.x),
                         static_cast<float>(node.pos.y));
 
-        /*sf::VertexArray connectedNodes(sf::Lines);
+        *//*sf::VertexArray connectedNodes(sf::Lines);
         for (auto neighbour : node.neighbours) {
             sf::Vector2f p2(static_cast<float>(neighbour.first->pos.x),
                             static_cast<float>(neighbour.first->pos.y));
@@ -209,10 +209,10 @@ void Game1Debug() {
             connectedNodes.append(p2);
         }
         CC->draw(connectedNodes);
-        */
+        *//*
         block.setPosition(p1);
         CC->draw(block);
-    }
+    }*/
 
     // Map:
     block.setSize({4, 4});
@@ -223,8 +223,8 @@ void Game1Debug() {
         sf::VertexArray area(sf::LineStrip);
 
         for (auto &corner : walls.getCorners()) {
-                area.append(sf::Vector2f(static_cast<float>(corner.x),
-                                         static_cast<float>(corner.y)));
+            area.append(sf::Vector2f(static_cast<float>(corner.x),
+                                     static_cast<float>(corner.y)));
         }
         area.append(sf::Vector2f(static_cast<float>(walls.getCorners()[0].x),
                                  static_cast<float>(walls.getCorners()[0].y)));
@@ -233,7 +233,7 @@ void Game1Debug() {
     }
 
 
-    // Path
+    /*// Path
     block.setSize(sf::Vector2f(6, 6));
     block.setOrigin((3), 3);
     sf::VertexArray path_lines(sf::LineStrip);
@@ -257,7 +257,7 @@ void Game1Debug() {
         block.setFillColor({160, 0, 255});       // purple
     }
 
-    CC->draw(path_lines);
+    CC->draw(path_lines);*/
 
     // Position from Simulator
     block.setSize(sf::Vector2f(8, 8));
@@ -267,6 +267,11 @@ void Game1Debug() {
                       static_cast<float>(PositionY));
     CC->draw(block);
 
+    PVector newPos = Bot->pos + Bot->getVelocity(1000);
+
+    sf::Vertex line[] = {sf::Vertex(block.getPosition()), sf::Vertex(sf::Vector2f(newPos.x, newPos.y))};
+    CC->draw(line, 2, sf::Lines);
+
     // Position from calculation
     block.setSize(sf::Vector2f(4, 4));
     block.setOrigin(2, 2);
@@ -275,13 +280,13 @@ void Game1Debug() {
                       static_cast<float>(Bot->pos.y));
     CC->draw(block);
 
-    // Position from calculation
+    /*// Position from calculation
     block.setSize(sf::Vector2f(4, 4));
     block.setOrigin(2, 2);
     block.setFillColor({200, 0, 200});             // dark red / brown
     block.setPosition(static_cast<float>(Bot->nextTarget.x),
                       static_cast<float>(Bot->nextTarget.y));
-    CC->draw(block);
+    CC->draw(block);*/
     CC->display();
 #endif
 

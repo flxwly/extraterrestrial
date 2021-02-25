@@ -50,7 +50,7 @@ public:
      * @returns magnitude of the PVector
      *
     */
-    double getMag() const;
+    [[nodiscard]] double getMag() const;
 
     /** sets the magnitude of the PVector
      *

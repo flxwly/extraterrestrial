@@ -5,7 +5,7 @@ bool isCyan(HSLColor c) { return c.s >= 75 && c.l >= 30 && isInRange(c.h, 175, 1
 bool isBlack(HSLColor c) { return c.l <= 20; }
 bool isYellow(HSLColor c) { return c.s >= 75 && c.l >= 30 && isInRange(c.h, 58, 80); }
 bool isOrange(HSLColor c) { return c.s >= 75 && c.l >= 30 && isInRange(c.h, 35, 50); }
-bool isSwamp(HSLColor c) { return c.s <= 40 && isInRange(c.l, 40, 60) && isInRange(c.h, 200, 240); }
+bool isSwamp(HSLColor c) { return c.s <= 60 && isInRange(c.l, 40, 80) && isInRange(c.h, 200, 240); }
 bool isSuperObj(HSLColor c) { return c.s >= 80 && c.l >= 30 && isInRange(c.h, 290, 310); }
 bool isColor(HSLColor c) { return isBlack(c) || isRed(c), isCyan(c), isSuperObj(c); }
 
