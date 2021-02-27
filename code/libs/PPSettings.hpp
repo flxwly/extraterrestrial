@@ -9,7 +9,7 @@
 //#define DEBUG
 
 /// define SFML to enable debugging via SFML
-#define SFML
+//#define SFML
 
 /// define COLOR_LOGGING to enable color logging to console
 //#define COLOR_LOGGING

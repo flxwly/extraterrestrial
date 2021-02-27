@@ -3,11 +3,11 @@
 //====================================
 //          Constructor
 //====================================
-Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_superObjectX, int *_superObjectY,
+Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectX, int *_superObjectY,
              int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
              int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime, Field *_map0, Field *_map1) :
 
-        posX{_posX}, posY{_posY}, compass{_compass}, superObjectNum{_superObjectNum},
+        posX{_posX}, posY{_posY}, compass{_compass},
         superObjectX{_superObjectX}, superObjectY{_superObjectY},
         ultraSonicSensors{_ultraSonicSensorLeft, _ultraSonicSensorFront, _ultraSonicSensorRight},
         wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, level{1}, gameTime{_gameTime},
@@ -16,9 +16,9 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_
         collectingSince{timer::now()}, depositingSince{timer::now()},
         pos{static_cast<double>(*_posX), static_cast<double> (*_posY)}, lastPos{-1, -1},
         lastPositionUpdate{timer::now()}, map0{_map0}, map1{_map1},
-        nextTarget{-1, -1}, chasingSuperObjNum{0},
-        pathfinder0{*map0, false}, pathfinder0T{*map0, true},
-        pathfinder1{*map1, false}, pathfinder1T{*map1, true} {
+        huntingSuperObj{false}, remainingMapTime(0),
+        pathfinder0{*_map0, false}, pathfinder0T{*_map0, true},
+        pathfinder1{*_map1, false}, pathfinder1T{*_map1, true} {
 
     ERROR_MESSAGE("constructed Bot-Object")
 }
@@ -34,8 +34,8 @@ PVector Robot::getVelocity(long long int dt) const {
     double penalty = (isSwamp(leftColor) || isSwamp(rightColor)) ? SWAMP_SPEED_PENALITY : 1;
 
     if (*wheelLeft == *wheelRight) {
-        return geometry::angle2Vector(toRadians(*compass+ 90)) *
-                (static_cast<double>(*wheelLeft) * ROBOT_SPEED / penalty) * static_cast<double>(dt);
+        return geometry::angle2Vector(toRadians(*compass + 90)) *
+               (static_cast<double>(*wheelLeft) * ROBOT_SPEED / penalty) * static_cast<double>(dt);
     }
 
     double v1 = static_cast<double>(*wheelLeft) * ROBOT_SPEED / penalty;
@@ -89,19 +89,19 @@ bool Robot::shouldCollect() {
     if (loadedObjectsNum >= 6)
         return false;
 
-    // The objects color is Red
-    if (isRed(leftColor) || isRed(rightColor)) {
-        // Since super objects count as red objects.
-        // Only collect red objects if there's space including the chasing super objects
-        return chasingSuperObjNum + loadedObjects[0] < 2;
 
-
+    if (isSuperObj(leftColor) || isSuperObj(rightColor)) {
+        return huntingSuperObj;
+    }
+        // The objects color is Red
+    else if (isRed(leftColor) || isRed(rightColor)) {
+        return (huntingSuperObj) ? loadedObjects[0] < 1 : loadedObjects[0] < 2;
     } else if (isCyan(leftColor) || isCyan(rightColor)) {
         // nothin' special here
-        return loadedObjects[1] < 2;
+        return (huntingSuperObj) ? loadedObjects[1] < 1 : loadedObjects[1] < 2;
     } else if (isBlack(leftColor) || isBlack(rightColor)) {
         // nothin' special here
-        return loadedObjects[2] < 2;
+        return (huntingSuperObj) ? loadedObjects[2] < 1 : loadedObjects[2] < 2;
     }
     // if there's no object beneath the robot, don't try to collect anything
     return false;
@@ -121,10 +121,13 @@ int Robot::collect() {
         // set collectingSince to now
         collectingSince = Robot::timer::now();
 
-        if (isRed(leftColor) || isRed(rightColor) || isSuperObj(leftColor) || isSuperObj(rightColor)) {
+        if (isRed(leftColor) || isRed(rightColor)) {
             loadedObjectsNum++;
             loadedObjects[0]++;
             return 0;
+        } else if (isSuperObj(leftColor) || isSuperObj(rightColor)) {
+            loadedObjectsNum++;
+            return 4;
         } else if (isCyan(leftColor) || isCyan(rightColor)) {
             loadedObjectsNum++;
             loadedObjects[1]++;
@@ -274,7 +277,6 @@ void Robot::wheels(int l, int r) const {
 int Robot::moveToPosition(PVector p, bool safety) {
 
     double dist = geometry::dist(pos, p);
-    safety = true;
 
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
@@ -296,7 +298,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
             // the angle to posX, posY is small so there's no correction of it needed
             //      -> drive straight
             if (fabs(angle) < 10) {
-                if (!safety || dist < 15) {
+                if (!safety && dist < 15) {
                     wheels(1, 1);
                 } else {
                     wheels(4, 4);
@@ -305,13 +307,13 @@ int Robot::moveToPosition(PVector p, bool safety) {
                 // the angle is a bit bigger so the robot needs to make a small correction
             else if (fabs(angle) < 20) {
                 if (angle < 0) {
-                    if (!safety || dist < 15) {
+                    if (!safety && dist < 15) {
                         wheels(2, 1);
                     } else {
                         wheels(5, 4);
                     }
                 } else {
-                    if (!safety || dist < 15) {
+                    if (!safety && dist < 15) {
                         wheels(1, 2);
                     } else {
                         wheels(4, 5);
@@ -321,13 +323,13 @@ int Robot::moveToPosition(PVector p, bool safety) {
                 // the angle is quite big; now a bigger correction is needed
             else if (fabs(angle) < 60) {
                 if (angle < 0) {
-                    if (!safety || dist < 15) {
+                    if (!safety && dist < 15) {
                         wheels(2, -1);
                     } else {
                         wheels(5, 2);
                     }
                 } else {
-                    if (!safety || dist < 15) {
+                    if (!safety && dist < 15) {
                         wheels(-1, 2);
                     } else {
                         wheels(2, 5);
@@ -337,10 +339,19 @@ int Robot::moveToPosition(PVector p, bool safety) {
                 // the angle is very big; a huge correction is needed
                 //      -> no forward momentum; spinning
             else {
+
                 if (angle < 0) {
-                    wheels(3, -3);
+                    if (dist < 10) {
+                        wheels(-3, -3);
+                    } else {
+                        wheels(3, -3);
+                    }
                 } else {
-                    wheels(-3, 3);
+                    if (dist < 10) {
+                        wheels(-3, -3);
+                    } else {
+                        wheels(-3, 3);
+                    }
                 }
             }
             return 0;
@@ -372,10 +383,8 @@ int Robot::moveToPosition(PVector p, bool safety) {
 }
 
 void Robot::moveAlongPath(Path &path) {
-    PVector target = path.getClosestNormalPoint(pos, 10);
 
-    nextTarget = target;
-    moveToPosition(target, geometry::dist(path.getLast(), pos) >= 10);
+    moveToPosition(path.getClosestNormalPoint(pos, 10), geometry::dist(path.getLast(), pos) >= 10);
     // ERROR_MESSAGE("Moving to: " + PVector::str(target))
     if (!path.isOnPath(pos)) {
         ERROR_MESSAGE("Robot is not on Path!")
@@ -404,10 +413,11 @@ std::vector<PVector> Robot::getPointPath(int max) {
     std::vector<PVector> points = {};
     PVector start = pos;
     PVector end = pos;
-    int num = std::max(max - loadedObjects[0], 0) + std::max(max - loadedObjects[1], 0) + std::max(max - loadedObjects[2], 0);
+    int num = std::max(max - loadedObjects[0], 0) + std::max(max - loadedObjects[1], 0) +
+              std::max(max - loadedObjects[2], 0);
     int added = 0;
 
-    std::array<int, 3> _loadedObjects = loadedObjects;
+    auto _loadedObjects = loadedObjects;
 
     while (num > added) {
         unsigned int color = 0;
@@ -421,18 +431,6 @@ std::vector<PVector> Robot::getPointPath(int max) {
                     end = collectible.pos;
                     dist = geometry::dist(start, end);
                 }
-            }
-
-
-        }
-
-        for (auto superObj : superObjects) {
-            if ((geometry::dist(start, superObj) * 1.5 < dist || remainingMapTime < 60)
-                && superObj != start && _loadedObjects[0] < max) {
-
-                color = 0;
-                end = superObj;
-                dist = geometry::dist(start, end);
             }
         }
 
@@ -459,8 +457,11 @@ void Robot::updateLoop() {
     // --------- Time ----------
     remainingMapTime = GAME0_TIME - Time + ((level == 1) ? GAME1_TIME : 0);
 
-    ERROR_MESSAGE("Time for one cycle: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
-            timer::now() - lastCycle).count()));
+    ERROR_MESSAGE("Time for one cycle: " + std::to_string(
+            std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - lastCycle).count()));
+
+    // --------- Should start super obj hunting ----------
+    huntingSuperObj = remainingMapTime < 60 || superObjects.size() >= 3;
 
     // ---------- superObjects -----------
     if (*superObjectX != 0 || *superObjectY != 0) {
@@ -543,9 +544,14 @@ void Robot::game1Loop() {
     //    Get a new Path    //
     // -------------------- //
     if (completePath.empty()) {
-        if (loadedObjectsNum < 6) {
+        if (loadedObjectsNum < 6 && remainingMapTime > 30) {
             // get a path of points
-            std::vector<PVector> pathOfCollectibles = getPointPath(2);
+            std::vector<PVector> pathOfCollectibles;
+            if (huntingSuperObj) {
+                pathOfCollectibles = getPointPath(1);
+            } else {
+                pathOfCollectibles = getPointPath(2);
+            }
 
             // the first start point should be the current position of the robot
             PVector start = pos;
@@ -596,6 +602,11 @@ void Robot::game1Loop() {
     // remove path if point reached
     if (geometry::dist(completePath.front().getLast(), pos) < 5) {
         completePath.erase(completePath.begin());
+        Collectible *collectible = map1->getCollectible(pos, *compass, 5, -1);
+        std::cout << "Set Collectible: " << collectible << " to zero because: reached point" <<std::endl;
+        if (collectible) {
+            collectible->state = 0;
+        }
     }
 
 
@@ -625,10 +636,26 @@ void Robot::game1Loop() {
 
         if (color != -1) {
 
-            Collectible *collectible = map1->getCollectible(pos, *compass, 5, color);
-            std::cout << "Collectible: " << collectible << std::endl;
-            if (collectible) {
-                collectible->state = 0;
+            // Super obj
+            if (color == 3) {
+
+                unsigned int index = 0;
+                for (unsigned int i = 0; i < superObjects.size(); i++) {
+                    if (geometry::dist(superObjects[i], pos) <= geometry::dist(superObjects[index], pos)) {
+                        index = i;
+                    }
+                }
+                superObjects.erase(superObjects.begin() + index);
+
+            // normal obj
+            } else {
+
+                Collectible *collectible = map1->getCollectible(pos, *compass, 5, color);
+                std::cout << "Set Collectible: " << collectible << " to zero because: found point" << std::endl;
+                if (collectible) {
+                    collectible->state = 0;
+                }
+
             }
 
         }

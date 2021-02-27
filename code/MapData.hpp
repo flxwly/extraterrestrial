@@ -81,7 +81,7 @@ public:
 */
 class Line {
 public:
-    Line(const PVector &p1, const PVector &p2);
+    Line(const PVector &_p1, const PVector &_p2);
 
     /// One end of the line
     PVector p1;

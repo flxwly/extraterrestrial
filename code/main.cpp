@@ -47,7 +47,7 @@ void Setup() {
                        GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
     GAME1 = &Game1;
 
-    static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_Num, &SuperObj_X, &SuperObj_Y,
+    static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_X, &SuperObj_Y,
                      &US_Left, &US_Front, &US_Right,
                      &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time, GAME0, GAME1);
     Bot = &bot;
@@ -269,7 +269,8 @@ void Game1Debug() {
 
     PVector newPos = Bot->pos + Bot->getVelocity(1000);
 
-    sf::Vertex line[] = {sf::Vertex(block.getPosition()), sf::Vertex(sf::Vector2f(newPos.x, newPos.y))};
+    sf::Vertex line[] = {sf::Vertex(block.getPosition()), sf::Vertex(sf::Vector2f(
+            static_cast<float>(newPos.x), static_cast<float>(newPos.y)))};
     CC->draw(line, 2, sf::Lines);
 
     // Position from calculation

@@ -6,9 +6,9 @@
 /**                     **/
 /**     -----------     **/
 
-Node::Node(PVector pos, Field *field) : pos(pos), field(field),
-                                        isClosed(false), isOpen(false),
-                                        g(0), f(0), previous(nullptr), neighbours() {
+Node::Node(PVector _pos, Field *_field) : pos(_pos), field(_field),
+                                          isClosed(false), isOpen(false),
+                                          g(0), f(0), previous(nullptr), neighbours() {
     ERROR_MESSAGE("Constructed node")
 }
 
@@ -92,7 +92,7 @@ void Node::addNeighbour(Node *neighbour, const double &cost) {
 
 bool Node::removeNeighbour(Node *neighbour) {
 
-    for (int i = 0; i < neighbours.size(); ++i) {
+    for (unsigned int i = 0; i < neighbours.size(); ++i) {
         if (neighbours[i].first == neighbour) {
             neighbours.erase(neighbours.begin() + i);
             return true;
@@ -110,7 +110,7 @@ bool Node::removeNeighbour(Node *neighbour) {
 /**     -----------     **/
 
 
-Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r(r) {
+Path::Path(std::vector<PVector> points, double _r) : points(std::move(points)), r(_r) {
 
 }
 

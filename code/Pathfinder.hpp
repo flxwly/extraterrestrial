@@ -31,7 +31,7 @@
 class Node {
 
 public:
-    Node(PVector pos, Field *field);
+    Node(PVector _pos, Field *_field);
 
     /** Booleans that indicate if this Node is in a special list
      *  used by the A*Pathfinding algorithm
@@ -134,7 +134,7 @@ public:
 */
 class Path {
 public:
-    Path(std::vector<PVector> points, double r);
+    Path(std::vector<PVector> points, double _r);
 
     /** Calculates the closest normal point to a point that is extended by the factor d
      *

@@ -22,7 +22,7 @@ bool Collectible::isCorrectCollectible(PVector robotPos, double angle, double un
 /**                     **/
 /**     -----------     **/
 
-Line::Line(const PVector &p1, const PVector &p2) : p1{p1}, p2{p2} {}
+Line::Line(const PVector &_p1, const PVector &_p2) : p1{_p1}, p2{_p2} {}
 
 /**     -----------     **/
 /**                     **/
@@ -187,18 +187,20 @@ std::vector<Collectible> Field::getCollectibles(const std::vector<unsigned int> 
 
 Collectible *Field::getCollectible(PVector robotPos, double angle, double uncertainty, int color) {
 
-    if (color < 0 || color > 3) {
-        ERROR_MESSAGE("color " << color << " is not existing!")
-        return nullptr;
-    }
+    std::vector<Collectible> collectibles;
 
-    auto collectibles = Collectibles_[color];
+    if (color == -1) {
+        collectibles = getCollectibles({0, 1, 2});
+    } else if (color >= 0 && color < 3) {
+        collectibles = Collectibles_[color];
+    }
 
     for (auto &collectible : collectibles) {
         if (collectible.isCorrectCollectible(robotPos, angle, uncertainty)) {
             return &collectible;
         }
     }
+
 
     ERROR_MESSAGE("no valid collectible found")
     return nullptr;

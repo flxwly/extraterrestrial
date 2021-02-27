@@ -20,7 +20,7 @@
 */
 class Robot {
 public:
-	Robot(int *_x, int *_y, int *_compass, int *_superObjectNum, int *_superObjectX, int *_superObjectY,
+	Robot(int *_x, int *_y, int *_compass, int *_superObjectX, int *_superObjectY,
 	      int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
 	      int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime,
 	      Field *_map0, Field *_map1);
@@ -31,7 +31,6 @@ public:
 	// === Variable pointers to vars updated by the sim ===
 	int *posX, *posY;
 	int *compass;
-	int *superObjectNum;
 	int *superObjectX, *superObjectY;
 	std::vector<PVector> superObjects;
 	HSLColor leftColor, rightColor;
@@ -70,22 +69,20 @@ public:
 	/// game loop for second map
 	void game1Loop();
 
-    PVector nextTarget;                                       ///< pathfinder waypoint chasing
-    PVector pos;                                          ///< more accurate position of the robot
+    PVector pos;
+    PVector lastPos;
 
 	// === Robot vars ===
 
-	Field *map0, *map1;                                   ///< field vars
-	Pathfinder pathfinder0, pathfinder1;                  ///< Pathfinders that ignore traps
-	Pathfinder pathfinder0T, pathfinder1T;                ///< Pathfinders that don't ignore traps
+	Field *map0, *map1;
+	Pathfinder pathfinder0, pathfinder1;
+	Pathfinder pathfinder0T, pathfinder1T;
 
-	int loadedObjectsNum;                                  ///< number of objects loaded
-	std::array<int, 3> loadedObjects;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
+	int loadedObjectsNum;
+	std::array<int, 4> loadedObjects;
 
-	int chasingSuperObjNum;                                ///< the super_objects_num that the robot chases in it's current path
+	bool huntingSuperObj;
 
-
-	PVector lastPos;                                          ///< last coordinates of the robot (for signal loss)
 	std::chrono::time_point<timer> lastCycle;              ///< the time the last cycle was executed
 	std::chrono::time_point<timer> depositingSince;        ///< the time last depositing has started
 	std::chrono::time_point<timer> collectingSince;        ///< the time last collecting has started
