@@ -457,8 +457,7 @@ void Robot::updateLoop() {
     // --------- Time ----------
     remainingMapTime = GAME0_TIME - Time + ((level == 1) ? GAME1_TIME : 0);
 
-    ERROR_MESSAGE("Time for one cycle: " + std::to_string(
-            std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - lastCycle).count()));
+    ERROR_MESSAGE("Time for one cycle: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - lastCycle).count()))
 
     // --------- Should start super obj hunting ----------
     huntingSuperObj = remainingMapTime < 60 || superObjects.size() >= 3;
@@ -568,7 +567,7 @@ void Robot::game1Loop() {
                 if (!path.isEmpty()) {
                     completePath.push_back(path);
                 } else {
-                    ERROR_MESSAGE("No Path found");
+                    ERROR_MESSAGE("No Path found")
                 }
 
                 //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
