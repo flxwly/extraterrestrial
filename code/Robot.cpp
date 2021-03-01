@@ -12,7 +12,7 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectX, int *_su
         ultraSonicSensors{_ultraSonicSensorLeft, _ultraSonicSensorFront, _ultraSonicSensorRight},
         wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, level{1}, gameTime{_gameTime},
 
-        loadedObjects{0, 0, 0}, loadedObjectsNum{0},
+        loadedObjects{0, 0, 0, 0}, loadedObjectsNum{0},
         collectingSince{timer::now()}, depositingSince{timer::now()},
         pos{static_cast<double>(*_posX), static_cast<double> (*_posY)}, lastPos{-1, -1},
         lastPositionUpdate{timer::now()}, map0{_map0}, map1{_map1},
@@ -127,7 +127,8 @@ int Robot::collect() {
             return 0;
         } else if (isSuperObj(leftColor) || isSuperObj(rightColor)) {
             loadedObjectsNum++;
-            return 4;
+            loadedObjects[3]++;
+            return 3;
         } else if (isCyan(leftColor) || isCyan(rightColor)) {
             loadedObjectsNum++;
             loadedObjects[1]++;
@@ -150,8 +151,8 @@ bool Robot::shouldDeposit() {
     if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - depositingSince).count() <= 4000)
         return true;
 
-    // the robot uses a treshhold to determine if it has enough points so that it is worth it to deposit
-    // This treshhold should actually not really matter since the robot is supposed to
+    // the robot uses a threshold to determine if it has enough points so that it is worth it to deposit
+    // This threshold should actually not really matter since the robot is supposed to
     // only drive to the deposit area if it is fully loaded
 
     // basic points;
@@ -168,7 +169,7 @@ bool Robot::shouldDeposit() {
     }
 
     // 145 = 2 red + 1 cyan + 1 black | 20 + 15 + 20 + 90
-    return threshold >= 145;
+    return threshold >= 145 || remainingMapTime < 60 || loadedObjectsNum >= 6;
 }
 
 void Robot::deposit() {
@@ -185,7 +186,7 @@ void Robot::deposit() {
         depositingSince = timer::now();
 
         // update the loadedObjects vars
-        loadedObjects = {0, 0, 0};
+        loadedObjects = {0, 0, 0, 0};
         loadedObjectsNum = 0;
 
         wheels(0, 0);
@@ -225,7 +226,7 @@ bool Robot::shouldTeleport() {
 
 void Robot::teleport() {
     loadedObjectsNum = 0;
-    loadedObjects = {0, 0, 0};
+    loadedObjects = {0, 0, 0, 0};
 
     *tp = 1;
     level = 1;
@@ -298,11 +299,21 @@ int Robot::moveToPosition(PVector p, bool safety) {
             // the angle to posX, posY is small so there's no correction of it needed
             //      -> drive straight
             if (fabs(angle) < 10) {
-                if (!safety && dist < 15) {
-                    wheels(1, 1);
+
+                if (angle < 0) {
+                    if (!safety && dist < 15) {
+                        wheels(2, 1);
+                    } else {
+                        wheels(4, 4);
+                    }
                 } else {
-                    wheels(4, 4);
+                    if (!safety && dist < 15) {
+                        wheels(1, 2);
+                    } else {
+                        wheels(4, 4);
+                    }
                 }
+
             }
                 // the angle is a bit bigger so the robot needs to make a small correction
             else if (fabs(angle) < 20) {
@@ -385,10 +396,6 @@ int Robot::moveToPosition(PVector p, bool safety) {
 void Robot::moveAlongPath(Path &path) {
 
     moveToPosition(path.getClosestNormalPoint(pos, 10), geometry::dist(path.getLast(), pos) >= 10);
-    // ERROR_MESSAGE("Moving to: " + PVector::str(target))
-    if (!path.isOnPath(pos)) {
-        ERROR_MESSAGE("Robot is not on Path!")
-    }
 }
 
 //====================================
@@ -406,42 +413,65 @@ int Robot::checkUsSensors(int l, int f, int r) {
     return sum;
 }
 
-std::vector<PVector> Robot::getPointPath(int max) {
+std::vector<PVector> Robot::getPointPath(std::array<int, 4> max) {
 
+    // the field currently operating on
     Field *field = (level == 0) ? map0 : map1;
 
+    // the point path
     std::vector<PVector> points = {};
-    PVector start = pos;
-    PVector end = pos;
-    int num = std::max(max - loadedObjects[0], 0) + std::max(max - loadedObjects[1], 0) +
-              std::max(max - loadedObjects[2], 0);
-    int added = 0;
 
-    auto _loadedObjects = loadedObjects;
+    // start and end position of one point path segment
+    PVector start, end = pos;
 
-    while (num > added) {
+    // number of objects that need to be added to the point path
+    int num = 0;
+    for (unsigned int i = 0; i < max.size(); i++) {
+        num += std::max(max[i] - loadedObjects[i], 0);
+    }
+
+    // copy of loaded objects array that can be modified
+    auto tLoadedObjects = loadedObjects;
+
+    // add a certain number of objects and super objects to the point path
+    for (unsigned int iter = 0; iter < num; iter++) {
         unsigned int color = 0;
         double dist = INFINITY;
-        for (unsigned int i = 0; i < 3; ++i) {
-            for (auto collectible : field->getCollectibles({i})) {
-                if ((geometry::dist(start, collectible.pos) < dist)
-                    && collectible.pos != start && _loadedObjects[i] < max) {
 
-                    color = collectible.color;
-                    end = collectible.pos;
+        // ------------- normal objects --------------------
+        for (unsigned int i = 0; i < 3; ++i) {
+            if (tLoadedObjects[i] < max[i]) {
+                for (auto collectible : field->getCollectibles({i})) {
+                    if ((geometry::dist(start, collectible.pos) < dist) && collectible.pos != start && collectible.state != 2) {
+
+                        color = collectible.color;
+                        end = collectible.pos;
+                        dist = geometry::dist(start, end);
+                    }
+                }
+            }
+        }
+
+        // -------------- super objects ----------------------
+        if (tLoadedObjects[3] < max[3]) {
+            for (auto superObj : superObjects) {
+                if (geometry::dist(start, superObj) < dist) {
+                    color = 3;
+                    end = superObj;
                     dist = geometry::dist(start, end);
                 }
             }
         }
 
+        // -------------- add object / super object to point path ----------------
         if (start != end) {
             start = end;
             points.push_back(end);
-            _loadedObjects[color]++;
+            tLoadedObjects[color]++;
         } else {
             return points;
         }
-        added++;
+
     }
     return points;
 }
@@ -457,10 +487,11 @@ void Robot::updateLoop() {
     // --------- Time ----------
     remainingMapTime = GAME0_TIME - Time + ((level == 1) ? GAME1_TIME : 0);
 
-    ERROR_MESSAGE("Time for one cycle: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - lastCycle).count()))
+    ERROR_MESSAGE("Time for one cycle: " + std::to_string(
+            std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - lastCycle).count()))
 
     // --------- Should start super obj hunting ----------
-    huntingSuperObj = remainingMapTime < 60 || superObjects.size() >= 3;
+    huntingSuperObj = (remainingMapTime < 60 || superObjects.size() >= 3 || huntingSuperObj) && !superObjects.empty();
 
     // ---------- superObjects -----------
     if (*superObjectX != 0 || *superObjectY != 0) {
@@ -547,9 +578,9 @@ void Robot::game1Loop() {
             // get a path of points
             std::vector<PVector> pathOfCollectibles;
             if (huntingSuperObj) {
-                pathOfCollectibles = getPointPath(1);
+                pathOfCollectibles = getPointPath({1, 1, 1, 3});
             } else {
-                pathOfCollectibles = getPointPath(2);
+                pathOfCollectibles = getPointPath({2, 2, 2, 0});
             }
 
             // the first start point should be the current position of the robot
@@ -602,9 +633,16 @@ void Robot::game1Loop() {
     if (geometry::dist(completePath.front().getLast(), pos) < 5) {
         completePath.erase(completePath.begin());
         Collectible *collectible = map1->getCollectible(pos, *compass, 5, -1);
-        std::cout << "Set Collectible: " << collectible << " to zero because: reached point" <<std::endl;
         if (collectible) {
-            collectible->state = 0;
+
+            if (collectible->visited > 3) {
+
+                // mark the collectible as collected since it seems to be missing
+                collectible->state = 2;
+
+                std::cout << "Mark Collectible: " << collectible << " as not existing." << std::endl;
+            }
+            collectible->visited++;
         }
     }
 
@@ -629,7 +667,7 @@ void Robot::game1Loop() {
         }
 
     } else if (shouldCollect()) {
-        // 1. color will be non -1.
+        // 1. color will be != -1.
         // Afterwards, until collecting has finished, it will be -1
         int color = collect();
 
@@ -638,21 +676,24 @@ void Robot::game1Loop() {
             // Super obj
             if (color == 3) {
 
-                unsigned int index = 0;
-                for (unsigned int i = 0; i < superObjects.size(); i++) {
-                    if (geometry::dist(superObjects[i], pos) <= geometry::dist(superObjects[index], pos)) {
-                        index = i;
-                    }
-                }
-                superObjects.erase(superObjects.begin() + index);
+                if (!superObjects.empty()) {
 
-            // normal obj
+                    unsigned int index = 0;
+                    for (unsigned int i = 0; i < superObjects.size(); i++) {
+                        if (geometry::dist(superObjects[i], pos) <= geometry::dist(superObjects[index], pos)) {
+                            index = i;
+                        }
+                    }
+                    superObjects.erase(superObjects.begin() + index);
+                }
+
+                // normal obj
             } else {
 
                 Collectible *collectible = map1->getCollectible(pos, *compass, 5, color);
-                std::cout << "Set Collectible: " << collectible << " to zero because: found point" << std::endl;
+                std::cout << "Mark Collectible: " << collectible << " as collected" << std::endl;
                 if (collectible) {
-                    collectible->state = 0;
+                    collectible->state = 2;
                 }
 
             }

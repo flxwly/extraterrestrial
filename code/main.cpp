@@ -233,7 +233,7 @@ void Game1Debug() {
     }
 
 
-    /*// Path
+    // Path
     block.setSize(sf::Vector2f(6, 6));
     block.setOrigin((3), 3);
     sf::VertexArray path_lines(sf::LineStrip);
@@ -257,7 +257,7 @@ void Game1Debug() {
         block.setFillColor({160, 0, 255});       // purple
     }
 
-    CC->draw(path_lines);*/
+    CC->draw(path_lines);
 
     // Position from Simulator
     block.setSize(sf::Vector2f(8, 8));

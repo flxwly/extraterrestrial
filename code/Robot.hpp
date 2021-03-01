@@ -116,7 +116,7 @@ public:
 	/// returns a turning direction if the robot is about to drive off map
 	[[nodiscard]] int avoidVoid() const;
 
-    std::vector<PVector> getPointPath(int max);
+    std::vector<PVector> getPointPath(std::array<int, 4> max);
 };
 
 

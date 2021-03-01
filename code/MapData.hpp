@@ -56,6 +56,14 @@ public:
     */
     unsigned int state;
 
+    /** Represents the number a collectible has been visited
+     *
+     * <p>Everytime the robot passes by this collectible, this variable
+     * should be counted upwards. This allows to only mark collectibles as missing
+     * if the robot has visited them a certain number of times
+    */
+    unsigned int visited;
+
     /** Represents the color
      *
      * <p>Normally a collectible can have either of the 3 colors (red, cyan, black,
