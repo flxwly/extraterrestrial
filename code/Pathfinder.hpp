@@ -30,8 +30,7 @@
 class Node {
 
 public:
-	explicit Node(Field *field);
-	Node(PVector &pos, Field *field);
+    Node(PVector pos, Field *field);
 
     /** Booleans that indicate if this Node is in a special list
      *  used by the A*Pathfinding algorithm
@@ -138,6 +137,9 @@ public:
 
     /** Calculates the closest normal point to a point that is extended by the factor d
      *
+     * @param p a point the normal should be calculated to
+     * @param d the amount by which the point should lie ahead on the path.
+     *
      * @details This method calculates a point that lies on the path
      * or an extension of one of it's lines. This point is moved by the
      * factor d on the path. (If d = 0 than the point is just a normal point
@@ -194,10 +196,10 @@ public:
     /// Contains all nodes that are important to this Pathfinder
     std::vector<Node> map;
 
+    Node end;
+
     bool trapSensitive;
     Field *field;
-
-	Node end;
 
 private:
 

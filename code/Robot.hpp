@@ -73,6 +73,9 @@ public:
 	/// game loop for second map
 	void game1Loop();
 
+    PVector nTarget_;                                       ///< pathfinder waypoint chasing
+    PVector aPos_;                                          ///< more accurate position of the robot
+
 public:
 
 	// === Robot vars ===
@@ -85,11 +88,11 @@ private:
 	std::array<int, 3> loadedObjects_;                      ///< complete inventory of robot; 0 - rot, 1 - cyan, 2 - black
 
 	Path currentlyFollowingPath_;                           ///< The Path the robot is currently trying to follow
-	PVector nTarget_;                                       ///< pathfinder waypoint chasing
+
 	bool nTargetIsLast_;                                    ///< is nTarget the last element of a path
 	int chasingSuperObjNum_;                                ///< the super_objects_num that the robot chases in it's current path
 
-	PVector aPos_;                                          ///< more accurate position of the robot
+
 	PVector lPos_;                                          ///< last coordinates of the robot (for signal loss)
 	std::chrono::time_point<timer> lastCycle_;              ///< the time the last cycle was executed
 	std::chrono::time_point<timer> depositingSince_;        ///< the time last depositing has started

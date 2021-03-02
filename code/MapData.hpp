@@ -27,18 +27,23 @@ public:
         return *this;
     };
 
+    PVector normalize() {
+        double mag = getMag();
+        return (mag == 0) ? *this : set(x / mag, y / mag);
+    }
+
     double getMag() const {
         return sqrt(x * x + y * y);
     };
 
     PVector setMag(double mag) {
-        mag *= getMag();
-        return (mag == 0) ? set(0, 0) : set(x / mag, y / mag);
+        normalize();
+        return set(x * mag, y * mag);
     };
 
-    static PVector setMag(const PVector &pVector, double mag) {
-        mag *= pVector.getMag();
-        return {pVector.x / mag, pVector.y / mag};
+    static PVector setMag(PVector &pVector, double mag) {
+        pVector.normalize();
+        return {pVector.x * mag, pVector.y * mag};
     };
 
     /// counter-clockwise rotation
