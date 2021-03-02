@@ -14,6 +14,8 @@ public:
 
 	Robot *Bot;
 
+	void updateLoop();
+
 	void startDebugging(Field *map);
 	void stopDebugging(unsigned int ID);
 

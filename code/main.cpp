@@ -34,29 +34,30 @@ Field *GAME1 = nullptr;
 Robot *Bot = nullptr;
 
 void Setup() {
-    system("cls");
+	system("cls");
 
-    // TODO: Move static objects back to static space so the objects get initialized upon load
-    // ----------- Initialisation of static objects -------------------- //
+	// TODO: Move static objects back to static space so the objects get initialized upon load
+	// ----------- Initialisation of static objects -------------------- //
 
-    static Field Game0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
-                       GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES);
-    GAME0 = &Game0;
+	static Field Game0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
+	                   GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES);
+	GAME0 = &Game0;
 
-    static Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
-                       GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
-    GAME1 = &Game1;
+	static Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
+	                   GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
+	GAME1 = &Game1;
 
-    static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_X, &SuperObj_Y,
-                     &US_Left, &US_Front, &US_Right,
-                     &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time, GAME0, GAME1);
-    Bot = &bot;
+	static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_X, &SuperObj_Y,
+	                 &US_Left, &US_Front, &US_Right,
+	                 &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time, GAME0, GAME1);
+	Bot = &bot;
 
 #ifdef SFML
 	static DebugWindow window(Bot);
 	window.startDebugging(GAME1);
 	debugWindow = &window;
 #endif
+}
 
 /*
  * ///_________________________________GAME0________________________________________///

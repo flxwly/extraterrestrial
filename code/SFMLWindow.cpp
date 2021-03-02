@@ -21,9 +21,11 @@ void DebugWindow::GameDebug(unsigned int ID) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			// "close requested" event: we close the window
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed) {
 				window.close();
-			return;
+				isRunning[ID] = false;
+				return;
+			}
 		}
 
 		// clear screen
@@ -137,4 +139,20 @@ void DebugWindow::stopDebugging(unsigned int ID) {
 		runningWindows.erase(runningWindows.begin() + index);
 		isRunning.erase(isRunning.begin() + index);
 	}
+}
+
+void DebugWindow::updateLoop() {
+
+	std::vector<unsigned int> canBeDeleted;
+
+	for (unsigned int i = 0; i < IDs.size(); i++) {
+		if (!isRunning[i]) {
+			canBeDeleted.push_back(IDs[i]);
+		}
+	}
+
+	for (auto ID : canBeDeleted) {
+		stopDebugging(ID);
+	}
+
 }
