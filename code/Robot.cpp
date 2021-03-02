@@ -298,7 +298,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
         case 0:
             // the angle to posX, posY is small so there's no correction of it needed
             //      -> drive straight
-            if (fabs(angle) < 10) {
+            if (fabs(angle) < 5) {
 
                 if (angle < 0) {
                     if (!safety && dist < 15) {
@@ -316,7 +316,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
 
             }
                 // the angle is a bit bigger so the robot needs to make a small correction
-            else if (fabs(angle) < 20) {
+            else if (fabs(angle) < 15) {
                 if (angle < 0) {
                     if (!safety && dist < 15) {
                         wheels(2, 1);
@@ -332,7 +332,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
                 }
             }
                 // the angle is quite big; now a bigger correction is needed
-            else if (fabs(angle) < 60) {
+            else if (fabs(angle) < 45) {
                 if (angle < 0) {
                     if (!safety && dist < 15) {
                         wheels(2, -1);
