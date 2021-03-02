@@ -59,13 +59,44 @@ void DebugWindow::GameDebug(unsigned int ID) {
 				sf::Vector2f p2(static_cast<float>(edge.p2.x * scale.x),
 				                static_cast<float>(edge.p2.y * scale.y));
 
-				sf::Vertex area[] = {p1, p2};
-				area->color = sf::Color(0, 255, 0, 80);
+				sf::Vertex area[] = {{p1, sf::Color(0, 255, 0, 80)},
+				                     {p2, sf::Color(0, 255, 0, 80)}};
 
 				window.draw(area, 2, sf::Lines);
 			}
 		}
 
+
+		// Pathfinder:
+		block.setSize(sf::Vector2f(scale.x * 2, scale.y * 2));
+		block.setOrigin(scale.x, scale.y);
+		block.setFillColor({255, 0, 0});
+		unsigned int num = 0;
+		for (auto & node : Bot->pathfinder1T.map) {
+			num ++;
+			if (num != 7) {
+				continue;
+			}
+
+
+				sf::Vector2f p1(static_cast<float>(node.pos.x * scale.x),
+			                static_cast<float>(node.pos.y * scale.y));
+			block.setPosition(p1);
+			for (auto neighbour : node.neighbours) {
+
+				sf::Vector2f p2(static_cast<float>(neighbour.first->pos.x * scale.x),
+								static_cast<float>(neighbour.first->pos.y * scale.y));
+
+				sf::Color color = sf::Color((neighbour.second / 1000) * 255, 255, (neighbour.second > 1000) ? 255 : 0);
+
+				sf::Vertex line[] = {{p1, color}, {p2, color}};
+
+				window.draw(line, 2, sf::Lines);
+			}
+
+
+			window.draw(block);
+		}
 
 		// Path
 		block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
@@ -153,6 +184,7 @@ void DebugWindow::updateLoop() {
 
 	for (auto ID : canBeDeleted) {
 		stopDebugging(ID);
+
 	}
 
 }

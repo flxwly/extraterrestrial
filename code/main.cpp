@@ -68,6 +68,7 @@ void Setup() {
 void Game0() {
     Bot->updateLoop();
     Bot->game0Loop();
+	debugWindow->updateLoop();
 }
 
 /*
@@ -83,5 +84,6 @@ void Game1() {
 
     Bot->updateLoop();
     Bot->game1Loop();
+    debugWindow->updateLoop();
 
 }
