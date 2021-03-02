@@ -483,10 +483,10 @@ void Robot::game1Loop() {
             auto end = pathOfCollectibles[i];
 
             // depending on the current number of objects traps should be avoided or ignored
-            Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
+            /*Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
                                                          : pathfinder1_.AStar(start, end);
-
-            path = pathfinder1_.AStar(start, end);
+*/
+            Path path = pathfinder1_.AStar(start, end);
 
             if (!path.isEmpty()) {
                 // add the path to the complete path

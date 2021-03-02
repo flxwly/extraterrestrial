@@ -30,7 +30,8 @@
 class Node {
 
 public:
-    Node(PVector &pos, Field *field);
+	explicit Node(Field *field);
+	Node(PVector &pos, Field *field);
 
     /** Booleans that indicate if this Node is in a special list
      *  used by the A*Pathfinding algorithm
@@ -195,6 +196,8 @@ public:
 
     bool trapSensitive;
     Field *field;
+
+	Node end;
 
 private:
 

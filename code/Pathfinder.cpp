@@ -13,6 +13,12 @@ Node::Node(PVector &pos, Field *field) : pos(pos), field(field),
     ERROR_MESSAGE("Constructed node")
 }
 
+Node::Node(Field *field) : pos({0, 0}), field(field),
+                                         isClosed(false), isOpen(false),
+                                         g(0), f(0), previous(nullptr), neighbours() {
+	ERROR_MESSAGE("Constructed node")
+}
+
 double Node::calculateCost(const Node &node) {
 
     // TODO: fix calculation including swamps
@@ -133,9 +139,7 @@ bool Node::removeNeighbour(Node *neighbour) {
 /**     -----------     **/
 
 
-Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r(r) {
-
-}
+Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r(r) {}
 
 PVector Path::getClosestNormalPoint(PVector p, double d) {
     double dist = 1000;
@@ -262,29 +266,28 @@ bool Path::isOnPath(PVector p) {
 /**                     **/
 /**     -----------     **/
 
-Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP} {
+Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP}, end(&MAP) {
 
-    // get map objects
-    std::vector<Area> mapObjects = {};
-    if (trap_sensitive) mapObjects = field->getMapObjects({0, 1});
-    else mapObjects = field->getMapObjects({0});
+	// get map objects
+	std::vector<Area> mapObjects = {};
+	if (trap_sensitive) mapObjects = field->getMapObjects({0, 1});
+	else mapObjects = field->getMapObjects({0});
 
-    // get map nodes
-    std::vector<PVector> mapNodes = {};
-    if (trap_sensitive) mapNodes = field->getMapNodes({0, 1});
-    else mapNodes = field->getMapNodes({0});
+	// get map nodes
+	std::vector<PVector> mapNodes = {};
+	if (trap_sensitive) mapNodes = field->getMapNodes({0, 1});
+	else mapNodes = field->getMapNodes({0});
 
 
-    // create & store Node
-    for (auto node : mapNodes) {
-        map.emplace_back(node, field);
-    }
+	// create & store Node
+	for (auto node : mapNodes) {
+		map.emplace_back(node, field);
+	}
 
-    // get neighbour Nodes
-    for (auto &node : map) {
-        node.findNeighbours(map, mapObjects);
-    }
-
+	// get neighbour Nodes
+	for (auto &node : map) {
+		node.findNeighbours(map, mapObjects);
+	}
 }
 
 double Pathfinder::heuristic(const PVector &cur, const PVector &end) {
@@ -298,7 +301,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
         return Path({goal}, PATH_RADIUS);
 
     Node start = Node(begin, field);
-    Node end = Node(goal, field);
+    end = Node(goal, field);
 
     // If the pathfinder is trap sensitive traps have to be taken into account
     std::vector<Area> mapObjects = {};
