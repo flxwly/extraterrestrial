@@ -3,78 +3,105 @@
 //====================================
 //          Constructor
 //====================================
-Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectNum, int *_superObjectX, int *_superObjectY,
-             int *_rightColorSensorRed, int *_rightColorSensorGreen, int *_rightColorSensorBlue,
-             int *_leftColorSensorRed, int *_leftColorSensorGreen, int *_leftColorSensorBlue,
+Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectX, int *_superObjectY,
              int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
              int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime, Field *_map0, Field *_map1) :
 
-        posX{_posX}, posY{_posY}, compass{_compass}, superObjectNum{_superObjectNum},
+        posX{_posX}, posY{_posY}, compass{_compass},
         superObjectX{_superObjectX}, superObjectY{_superObjectY},
-        rightColorSensors{_rightColorSensorRed, _rightColorSensorGreen, _rightColorSensorBlue},
-        leftColorSensors{_leftColorSensorRed, _leftColorSensorGreen, _leftColorSensorBlue},
         ultraSonicSensors{_ultraSonicSensorLeft, _ultraSonicSensorFront, _ultraSonicSensorRight},
-        wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, gameTime{_gameTime},
+        wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, level{1}, gameTime{_gameTime},
 
-        loadedObjects_{0, 0, 0}, loadedObjectsNum_{0},
-        collectingSince_{timer::now()}, depositingSince_{timer::now()}, aPos_{0, 0},
-        lPos_{-1, -1}, lastPositionUpdate_{timer::now()}, map0_{_map0}, map1_{_map1},
-        nTarget_{-1, -1}, nTargetIsLast_{false}, chasingSuperObjNum_{0}, currentlyFollowingPath_{{}, 10},
-        pathfinder0_{*map0_, false}, pathfinder0T_{*map0_, true},
-        pathfinder1_{*map1_, false}, pathfinder1T_{*map1_, true} {
+        loadedObjects{0, 0, 0, 0}, loadedObjectsNum{0},
+        collectingSince{timer::now()}, depositingSince{timer::now()},
+        pos{static_cast<double>(*_posX), static_cast<double> (*_posY)}, lastPos{-1, -1},
+        lastPositionUpdate{timer::now()}, map0{_map0}, map1{_map1},
+        huntingSuperObj{false}, remainingMapTime(0),
+        pathfinder0{*_map0, false}, pathfinder0T{*_map0, true},
+        pathfinder1{*_map1, false}, pathfinder1T{*_map1, true} {
 
     ERROR_MESSAGE("constructed Bot-Object")
 }
 
 //====================================
-//          Private Functions
+//     position/update Methods
 //====================================
+PVector Robot::getVelocity(long long int dt) const {
+
+    // For clarification on how this works see
+    // https://math.stackexchange.com/questions/3962859/calculate-path-of-vehicle-with-two-wheels-parallel-to-each-other
+
+    double penalty = (isSwamp(leftColor) || isSwamp(rightColor)) ? SWAMP_SPEED_PENALITY : 1;
+
+    if (*wheelLeft == *wheelRight) {
+        return geometry::angle2Vector(toRadians(*compass + 90)) *
+               (static_cast<double>(*wheelLeft) * ROBOT_SPEED / penalty) * static_cast<double>(dt);
+    }
+
+    double v1 = static_cast<double>(*wheelLeft) * ROBOT_SPEED / penalty;
+    double v2 = static_cast<double>(*wheelRight) * ROBOT_SPEED / penalty;
+
+    double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
+
+    PVector vel(s * cos(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)) - s,
+                s * sin(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)));
+    vel.rotate(toRadians(*compass + 90));
+
+    return vel;
+}
 
 PVector Robot::updatePos() {
 
     // check if robot is in signal lost zone
     if (*posX == 0 && *posY == 0) {
 
-        // set normal coords to last coords and update with function
-        *posX = static_cast<int>(round(aPos_.x)), *posY = static_cast<int>(round(aPos_.y));
+        pos += getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
+                timer::now() - lastPositionUpdate).count());
+
+        *posX = static_cast<int>(round(pos.x)), *posY = static_cast<int>(round(pos.y));
 
     } else {
-        if (geometry::dist(aPos_, PVector(*posX, *posY)) > 5) {
-            aPos_.set(*posX, *posY);
+
+        if (geometry::dist(pos, PVector(*posX, *posY)) > RPOS_ERROR_MARGIN) {
+            pos.set(*posX, *posY);
+        } else {
+            pos = pos + getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
+                    timer::now() - lastPositionUpdate).count());
         }
     }
 
-    aPos_ += getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
-            timer::now() - lastPositionUpdate_).count());
+    lastPositionUpdate = timer::now();
 
     // return change
-    return aPos_ - lPos_;
+    return pos - lastPos;
 }
 
-//TODO: logic to should collect function
+//====================================
+//        collect Methods
+//====================================
 bool Robot::shouldCollect() {
 
     // if the difference is less or equal to 3.5 seconds the robot is still collecting;
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - collectingSince_).count() <= 3500)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - collectingSince).count() <= 3500)
         return true;
 
     // The robot is full; the robot cant collect items anyway
-    if (loadedObjectsNum_ >= 6)
+    if (loadedObjectsNum >= 6)
         return false;
 
-    // The objects color is Red
-    if (isRed()) {
-        // Since super objects count as red objects.
-        // Only collect red objects if there's space including the chasing super objects
-        return chasingSuperObjNum_ + loadedObjects_[0] < 2;
 
-
-    } else if (isCyan()) {
+    if (isSuperObj(leftColor) || isSuperObj(rightColor)) {
+        return huntingSuperObj;
+    }
+        // The objects color is Red
+    else if (isRed(leftColor) || isRed(rightColor)) {
+        return (huntingSuperObj) ? loadedObjects[0] < 1 : loadedObjects[0] < 2;
+    } else if (isCyan(leftColor) || isCyan(rightColor)) {
         // nothin' special here
-        return loadedObjects_[1] < 2;
-    } else if (isBlack()) {
+        return (huntingSuperObj) ? loadedObjects[1] < 1 : loadedObjects[1] < 2;
+    } else if (isBlack(leftColor) || isBlack(rightColor)) {
         // nothin' special here
-        return loadedObjects_[2] < 2;
+        return (huntingSuperObj) ? loadedObjects[2] < 1 : loadedObjects[2] < 2;
     }
     // if there's no object beneath the robot, don't try to collect anything
     return false;
@@ -83,7 +110,7 @@ bool Robot::shouldCollect() {
 int Robot::collect() {
 
     // the robot is already collecting
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - collectingSince_).count() <= 4000) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - collectingSince).count() <= 4000) {
         // This is to prevent the robot from moving
         wheels(0, 0);
         *led = 1;
@@ -92,58 +119,62 @@ int Robot::collect() {
         // the robot begins to collect
     else {
         // set collectingSince to now
-        collectingSince_ = Robot::timer::now();
-        wheels(0, 0);
-        *led = 1;
+        collectingSince = Robot::timer::now();
 
-        // update the loadedObjects vars
-        Robot::loadedObjectsNum_++;
-
-        if (isRed() || isSuperObj()) {
-            loadedObjects_[0]++;
+        if (isRed(leftColor) || isRed(rightColor)) {
+            loadedObjectsNum++;
+            loadedObjects[0]++;
             return 0;
-        } else if (isCyan()) {
-            loadedObjects_[1]++;
+        } else if (isSuperObj(leftColor) || isSuperObj(rightColor)) {
+            loadedObjectsNum++;
+            loadedObjects[3]++;
+            return 3;
+        } else if (isCyan(leftColor) || isCyan(rightColor)) {
+            loadedObjectsNum++;
+            loadedObjects[1]++;
             return 1;
-        } else if (isBlack()) {
-            loadedObjects_[2]++;
+        } else if (isBlack(leftColor) || isBlack(rightColor)) {
+            loadedObjectsNum++;
+            loadedObjects[2]++;
             return 2;
         }
     }
     return -1;
 }
 
-// TODO: logic to should deposit function
+//====================================
+//        deposit Methods
+//====================================
 bool Robot::shouldDeposit() {
 
     // while timer - depositingSince < 6the robot is still depositting
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - depositingSince_).count() <= 4000)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - depositingSince).count() <= 4000)
         return true;
 
-    // the robot uses a treshhold to determine if it has enough points so that it is worth it to deposit
-    // This treshhold should actually not really matter since the robot is supposed to
+    // the robot uses a threshold to determine if it has enough points so that it is worth it to deposit
+    // This threshold should actually not really matter since the robot is supposed to
     // only drive to the deposit area if it is fully loaded
 
     // basic points;
-    int threshold = loadedObjects_[0] * 10 + loadedObjects_[1] * 15 + loadedObjects_[2] * 20;
+    int threshold = loadedObjects[0] * 10 + loadedObjects[1] * 15 + loadedObjects[2] * 20;
 
     // one rgb-bonus
-    if (loadedObjects_[0] > 0 && loadedObjects_[1] > 0 && loadedObjects_[2] > 0) {
+    if (loadedObjects[0] > 0 && loadedObjects[1] > 0 && loadedObjects[2] > 0) {
         threshold += 90;
         // second rgb-bonus
-        if (loadedObjects_[0] > 1 && loadedObjects_[1] > 1 && loadedObjects_[2] > 1) {
+        if (loadedObjects[0] > 1 && loadedObjects[1] > 1 && loadedObjects[2] > 1) {
             threshold += 90;
 
         }
     }
 
     // 145 = 2 red + 1 cyan + 1 black | 20 + 15 + 20 + 90
-    return threshold >= 145;
+    return threshold >= 145 || remainingMapTime < 60 || loadedObjectsNum >= 6;
 }
 
 void Robot::deposit() {
     // the robot is already depositing
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - depositingSince_).count() <= 5000) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - depositingSince).count() <= 5000) {
         // This is to prevent the robot from moving
         wheels(0, 0);
         *led = 2;
@@ -152,35 +183,37 @@ void Robot::deposit() {
         // the robot begins to deposit
     else {
         // set deposit_since to now
-        depositingSince_ = timer::now();
+        depositingSince = timer::now();
 
         // update the loadedObjects vars
-        loadedObjects_ = {0, 0, 0};
-        loadedObjectsNum_ = 0;
+        loadedObjects = {0, 0, 0, 0};
+        loadedObjectsNum = 0;
 
         wheels(0, 0);
         *led = 2;
     }
 }
 
-// teleport functions
+//====================================
+//       teleport Methods
+//====================================
 bool Robot::shouldTeleport() {
     // for ICool Challange because there's only one world
     // while in deposit_area don't teleport
-    if (isOrange()) {
+    if (isOrange(leftColor) && isOrange(rightColor)) {
         return false;
     }
 
     // earliest possible teleport after 3min (180sec)
     //      only teleport if it has nothing to lose -> no objects loaded
-    if (*gameTime > 180) {
-        if (loadedObjectsNum_ == 0) {
+    if (remainingMapTime < 0) {
+        if (loadedObjectsNum == 0) {
             return true;
         }
     }
     // next possible teleport after 3min and 20sec (200sec)
     //      only teleport if points are more valuable then 145 points
-    if (*gameTime > 200) {
+    if (remainingMapTime < -20) {
         if (!shouldDeposit()) {
             return true;
         }
@@ -188,21 +221,24 @@ bool Robot::shouldTeleport() {
 
     // last possible teleport after 4min (240sec)
     //      teleport in any case
-    return *gameTime > 240;
+    return remainingMapTime < -60;
 }
 
 void Robot::teleport() {
-    loadedObjectsNum_ = 0;
-    loadedObjects_ = {0, 0, 0};
+    loadedObjectsNum = 0;
+    loadedObjects = {0, 0, 0, 0};
 
     *tp = 1;
+    level = 1;
 }
 
-
+//====================================
+//       movement Methods
+//====================================
 int Robot::avoidVoid() const {
 
     //Right END
-    if (aPos_.x >= 350) {
+    if (pos.x >= 350) {
         if (*compass > 270 && *compass <= 360)
             return -1;
         else if (*compass > 180 && *compass <= 270)
@@ -210,7 +246,7 @@ int Robot::avoidVoid() const {
     }
 
     // LEFT END
-    if (aPos_.x <= 10) {
+    if (pos.x <= 10) {
         if (*compass > 0 && *compass <= 90)
             return 1;
         else if (*compass > 90 && *compass <= 180)
@@ -218,7 +254,7 @@ int Robot::avoidVoid() const {
     }
 
     //TOP END
-    if (aPos_.y >= 260) {
+    if (pos.y >= 260) {
         if (*compass > 270 && *compass <= 360)
             return 1;
         else if (*compass >= 0 && *compass <= 90)
@@ -226,7 +262,7 @@ int Robot::avoidVoid() const {
     }
 
     //BOTTOM END
-    if (aPos_.y <= 10) {
+    if (pos.y <= 10) {
         if (*compass > 180 && *compass <= 270)
             return -1;
         else if (*compass < 180 && *compass >= 90)
@@ -235,20 +271,17 @@ int Robot::avoidVoid() const {
     return 0;
 }
 
-//====================================
-//          Public Functions
-//====================================
 void Robot::wheels(int l, int r) const {
     *wheelLeft = l, *wheelRight = r;
 }
 
 int Robot::moveToPosition(PVector p, bool safety) {
 
-    double dist = geometry::dist(aPos_, p);
+    double dist = geometry::dist(pos, p);
 
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
-    double angle = toDegrees(geometry::vector2Angle(p - aPos_)) - 90;
+    double angle = toDegrees(geometry::vector2Angle(p - pos)) - 90;
 
     // Difference between compass
     angle -= *compass;
@@ -266,22 +299,32 @@ int Robot::moveToPosition(PVector p, bool safety) {
             // the angle to posX, posY is small so there's no correction of it needed
             //      -> drive straight
             if (fabs(angle) < 10) {
-                if (!safety || dist < 15) {
-                    wheels(1, 1);
+
+                if (angle < 0) {
+                    if (!safety && dist < 15) {
+                        wheels(2, 1);
+                    } else {
+                        wheels(4, 4);
+                    }
                 } else {
-                    wheels(4, 4);
+                    if (!safety && dist < 15) {
+                        wheels(1, 2);
+                    } else {
+                        wheels(4, 4);
+                    }
                 }
+
             }
                 // the angle is a bit bigger so the robot needs to make a small correction
             else if (fabs(angle) < 20) {
                 if (angle < 0) {
-                    if (!safety || dist < 15) {
+                    if (!safety && dist < 15) {
                         wheels(2, 1);
                     } else {
                         wheels(5, 4);
                     }
                 } else {
-                    if (!safety || dist < 15) {
+                    if (!safety && dist < 15) {
                         wheels(1, 2);
                     } else {
                         wheels(4, 5);
@@ -291,13 +334,13 @@ int Robot::moveToPosition(PVector p, bool safety) {
                 // the angle is quite big; now a bigger correction is needed
             else if (fabs(angle) < 60) {
                 if (angle < 0) {
-                    if (!safety || dist < 15) {
+                    if (!safety && dist < 15) {
                         wheels(2, -1);
                     } else {
                         wheels(5, 2);
                     }
                 } else {
-                    if (!safety || dist < 15) {
+                    if (!safety && dist < 15) {
                         wheels(-1, 2);
                     } else {
                         wheels(2, 5);
@@ -307,10 +350,19 @@ int Robot::moveToPosition(PVector p, bool safety) {
                 // the angle is very big; a huge correction is needed
                 //      -> no forward momentum; spinning
             else {
+
                 if (angle < 0) {
-                    wheels(3, -3);
+                    if (dist < 10) {
+                        wheels(-3, -3);
+                    } else {
+                        wheels(3, -3);
+                    }
                 } else {
-                    wheels(-3, 3);
+                    if (dist < 10) {
+                        wheels(-3, -3);
+                    } else {
+                        wheels(-3, 3);
+                    }
                 }
             }
             return 0;
@@ -341,6 +393,14 @@ int Robot::moveToPosition(PVector p, bool safety) {
     }
 }
 
+void Robot::moveAlongPath(Path &path) {
+
+    moveToPosition(path.getClosestNormalPoint(pos, 10), geometry::dist(path.getLast(), pos) >= 10);
+}
+
+//====================================
+//        Sensor Methods
+//====================================
 int Robot::checkUsSensors(int l, int f, int r) {
     int sum = 0;
 
@@ -353,62 +413,119 @@ int Robot::checkUsSensors(int l, int f, int r) {
     return sum;
 }
 
+std::vector<PVector> Robot::getPointPath(std::array<int, 4> max) {
+
+    // the field currently operating on
+    Field *field = (level == 0) ? map0 : map1;
+
+    // the point path
+    std::vector<PVector> points = {};
+
+    // start and end position of one point path segment
+    PVector start, end = pos;
+
+    // number of objects that need to be added to the point path
+    int num = 0;
+    for (unsigned int i = 0; i < max.size(); i++) {
+        num += std::max(max[i] - loadedObjects[i], 0);
+    }
+
+    // copy of loaded objects array that can be modified
+    auto tLoadedObjects = loadedObjects;
+
+    // add a certain number of objects and super objects to the point path
+    for (unsigned int iter = 0; iter < num; iter++) {
+        unsigned int color = 0;
+        double dist = INFINITY;
+
+        // ------------- normal objects --------------------
+        for (unsigned int i = 0; i < 3; ++i) {
+            if (tLoadedObjects[i] < max[i]) {
+                for (auto collectible : field->getCollectibles({i})) {
+                    if ((geometry::dist(start, collectible.pos) < dist) && collectible.pos != start && collectible.state != 2) {
+
+                        color = collectible.color;
+                        end = collectible.pos;
+                        dist = geometry::dist(start, end);
+                    }
+                }
+            }
+        }
+
+        // -------------- super objects ----------------------
+        if (tLoadedObjects[3] < max[3]) {
+            for (auto superObj : superObjects) {
+                if (geometry::dist(start, superObj) < dist) {
+                    color = 3;
+                    end = superObj;
+                    dist = geometry::dist(start, end);
+                }
+            }
+        }
+
+        // -------------- add object / super object to point path ----------------
+        if (start != end) {
+            start = end;
+            points.push_back(end);
+            tLoadedObjects[color]++;
+        } else {
+            return points;
+        }
+
+    }
+    return points;
+}
+
+//====================================
+//          loop Methods
+//====================================
+void Robot::updateLoop() {
+    // --------- Color Sensors ---------
+    leftColor = rgb2hsl({static_cast<float>(CSLeft_R), static_cast<float>(CSLeft_G), static_cast<float>(CSLeft_B)});
+    rightColor = rgb2hsl({static_cast<float>(CSRight_R), static_cast<float>(CSRight_G), static_cast<float>(CSRight_B)});
+
+    // --------- Time ----------
+    remainingMapTime = GAME0_TIME - Time + ((level == 1) ? GAME1_TIME : 0);
+
+    ERROR_MESSAGE("Time for one cycle: " + std::to_string(
+            std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - lastCycle).count()))
+
+    // --------- Should start super obj hunting ----------
+    huntingSuperObj = (remainingMapTime < 60 || superObjects.size() >= 3 || huntingSuperObj) && !superObjects.empty();
+
+    // ---------- superObjects -----------
+    if (*superObjectX != 0 || *superObjectY != 0) {
+        superObjects.emplace_back(*superObjectX, *superObjectY);
+        *superObjectX = 0, *superObjectY = 0;
+    }
+
+    // ---------- Position -------------
+    // set last coords to normal coords (last coords wont get overwritten by the sim)
+    lastPos.set(*posX, *posY);
+    updatePos();
+}
 
 void Robot::game0Loop() {
 
-    // ====== Just for speed measure only works in second world ====== //     (leave it in for later)
-    if (false) {
 
-        double time_dif = std::chrono::duration_cast<std::chrono::milliseconds>(
-                timer::now() - lastPositionUpdate_).count();
-
-        double distance = geometry::dist(PVector(*posX, *posY), lPos_);
-
-        double calculated = Robot::getVelocity(time_dif).getMag();
-
-        if (measures.size() > 100) {
-            measures.erase(measures.begin());
-        }
-
-        measures.push_back(calculated - distance / time_dif);
-
-        std::cout << "time dif between measures: " << time_dif << std::endl;
-        std::cout << "expected vel: " << distance / time_dif << std::endl;
-        std::cout << "calculated vel: " << calculated << std::endl;
-
-        double error = 0;
-        for (double err : measures) {
-            error += err;
-        }
-        error = error / measures.size();
-
-        std::cout << "error: " << error << std::endl;
-
-
-        // set last coords to normal coords (last coords wont get overwritten by the sim)
-        lPos_.set(*posX, *posY);
-        lastPositionUpdate_ = timer::now();
-    }
-
-
-    if (Robot::shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
-        if (isOrange()) {
+    if (Robot::shouldDeposit() && (isOrange(leftColor) || isOrange(rightColor))) {
+        if (isOrange(leftColor) && isOrange(rightColor)) {
             Robot::deposit();
-        } else if (isOrangeRight()) {
-            Robot::wheels(3, 0);
-        } else {
+        } else if (isOrange(leftColor)) {
             Robot::wheels(0, 3);
+        } else {
+            Robot::wheels(3, 0);
         }
 
     } else if (Robot::shouldCollect()) {
         //Robot::collect();
     } else {
         // avoid trap on the right if objects are loaded
-        if (isYellowRight() && Robot::loadedObjectsNum_ > 0) {
+        if (isYellow(rightColor) && Robot::loadedObjectsNum > 0) {
             wheels(0, 5);
         }
             // avoid trap on the left
-        else if (isYellowLeft() && Robot::loadedObjectsNum_ > 0) {
+        else if (isYellow(leftColor) && Robot::loadedObjectsNum > 0) {
             wheels(5, 0);
         } else {
             switch (Robot::checkUsSensors(8, 12, 8)) {
@@ -453,95 +570,133 @@ void Robot::game0Loop() {
 
 void Robot::game1Loop() {
 
-
-    ERROR_MESSAGE("Time for one cycle: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(
-            timer::now() - lastCycle_).count()));
-
-    // set last coords to normal coords (last coords wont get overwritten by the sim)
-    updatePos();
-    lPos_.set(*posX, *posY);
-    lastPositionUpdate_ = timer::now();
-
-    //#####################
-    //  TODO -- PATHFINDING --
-    //#####################
-
-    // There's no path to follow
+    // -------------------- //
+    //    Get a new Path    //
+    // -------------------- //
     if (completePath.empty()) {
-
-        // get a path of points
-        std::vector<PVector> pathOfCollectibles = {map1_->getDeposits()[0]};
-        if (loadedObjectsNum_ <= 2) {
-            pathOfCollectibles = map1_->getPointPath();
-        }
-
-        // the first start point should be the current position of the robot
-        PVector start = aPos_;
-
-        // calculate a path from one point to the next
-        for (int i = 0; i < pathOfCollectibles.size(); i++) {
-
-            auto end = pathOfCollectibles[i];
-
-            // depending on the current number of objects traps should be avoided or ignored
-            Path path = (loadedObjectsNum_ > 0 || i > 0) ? pathfinder1T_.AStar(start, end)
-                                                         : pathfinder1_.AStar(start, end);
-
-
-            if (!path.isEmpty()) {
-                // add the path to the complete path
-                // the first path is at the front of the vector
-                completePath.push_back(path);
-
+        if (loadedObjectsNum < 6 && remainingMapTime > 30) {
+            // get a path of points
+            std::vector<PVector> pathOfCollectibles;
+            if (huntingSuperObj) {
+                pathOfCollectibles = getPointPath({1, 1, 1, 3});
             } else {
-                ERROR_MESSAGE("No Path found");
+                pathOfCollectibles = getPointPath({2, 2, 2, 0});
             }
 
-            //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
-            start = end;
+            // the first start point should be the current position of the robot
+            PVector start = pos;
+
+            // calculate a path from one point to the next
+            for (unsigned int i = 0; i < pathOfCollectibles.size(); i++) {
+
+                auto end = pathOfCollectibles[i];
+
+                // depending on the current number of objects traps should be avoided or ignored
+                Path path = (loadedObjectsNum > 0 || i > 0) ? pathfinder1T.AStar(start, end)
+                                                            : pathfinder1.AStar(start, end);
+
+                if (!path.isEmpty()) {
+                    completePath.push_back(path);
+                } else {
+                    ERROR_MESSAGE("No Path found")
+                }
+
+                //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
+                start = end;
+
+            }
+        } else {
+
+            std::vector<PVector> deposits = map1->getDeposits();
+
+            if (deposits.empty()) {
+                std::cout << "NO DEPOSITS EXISTING!!!!" << std::endl;
+                return;
+            }
+
+            Path path = pathfinder1T.AStar(pos, deposits.front());
+
+            for (unsigned int i = 1; i < deposits.size(); i++) {
+                Path temp = pathfinder1T.AStar(pos, deposits[i]);
+                if (path.length() < temp.length() && !temp.isEmpty()) {
+                    path = temp;
+                }
+
+            }
+
+            completePath.push_back(path);
+
         }
     }
 
-    // remove path if reached
-    if (geometry::dist(completePath.front().getLast(), aPos_) < 5) {
-        ERROR_MESSAGE("--- Reached path end! ---")
+    // remove path if point reached
+    if (geometry::dist(completePath.front().getLast(), pos) < 5) {
         completePath.erase(completePath.begin());
+        Collectible *collectible = map1->getCollectible(pos, *compass, 5, -1);
+        if (collectible) {
+
+            if (collectible->visited > 3) {
+
+                // mark the collectible as collected since it seems to be missing
+                collectible->state = 2;
+
+                std::cout << "Mark Collectible: " << collectible << " as not existing." << std::endl;
+            }
+            collectible->visited++;
+        }
     }
 
 
-    /*--------------------
+    /* --------------------
      * Priority Structure
-     * -------------------
-     * Deposit
-     * Collect
-     * Dodge Traps and Void
+     * --------------------
+     * Deposit (When inventory full)
+     * Collect (When matching collectible is found)
      * Pathfinding
      *
-     * */
+     * -------------------- */
 
 
-    if (shouldDeposit() && (isOrangeLeft() || isOrangeRight())) {
-        if (isOrange()) {
+    if (shouldDeposit() && (isOrange(leftColor) || isOrange(rightColor))) {
+        if (isOrange(leftColor) && isOrange(rightColor)) {
             deposit();
-        } else if (isOrangeRight()) {
-            wheels(3, 0);
-        } else {
+        } else if (isOrange(leftColor)) {
             wheels(0, 3);
+        } else {
+            wheels(3, 0);
         }
 
     } else if (shouldCollect()) {
-        if (loadedObjectsNum_ == 0) completePath.clear();
+        // 1. color will be != -1.
+        // Afterwards, until collecting has finished, it will be -1
         int color = collect();
 
-        // if the robot is collecting take some time
         if (color != -1) {
-            // set state of collected collectible to 0
 
-            Collectible *collectible = map1_->getCollectible(aPos_, *compass, 2, color);
-            if (collectible) {
-                collectible->state = 0;
+            // Super obj
+            if (color == 3) {
+
+                if (!superObjects.empty()) {
+
+                    unsigned int index = 0;
+                    for (unsigned int i = 0; i < superObjects.size(); i++) {
+                        if (geometry::dist(superObjects[i], pos) <= geometry::dist(superObjects[index], pos)) {
+                            index = i;
+                        }
+                    }
+                    superObjects.erase(superObjects.begin() + index);
+                }
+
+                // normal obj
+            } else {
+
+                Collectible *collectible = map1->getCollectible(pos, *compass, 5, color);
+                std::cout << "Mark Collectible: " << collectible << " as collected" << std::endl;
+                if (collectible) {
+                    collectible->state = 2;
+                }
+
             }
-
 
         }
 
@@ -553,51 +708,14 @@ void Robot::game1Loop() {
         }
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded
-        if (avoidVoid() == -1 || (isYellowRight() && loadedObjectsNum_ > 0)) {
+        if (avoidVoid() == -1 || (isYellow(rightColor) && loadedObjectsNum > 0)) {
             wheels(0, 3);
         }
             // avoid the void by driving right || avoid trap on the left
-        else if (avoidVoid() == 1 || (isYellowLeft() && loadedObjectsNum_ > 0)) {
+        else if (avoidVoid() == 1 || (isYellow(leftColor) && loadedObjectsNum > 0)) {
             wheels(3, 0);
         }
     }
 
-
-    lastCycle_ = timer::now();
-}
-
-double Robot::getBrakingDistance(double friction) {
-    return static_cast<double>(*wheelLeft + *wheelRight) / 2;
-}
-
-PVector Robot::getVelocity(long long int dt) const {
-
-    // For clarification on how this works see
-    // https://math.stackexchange.com/questions/3962859/calculate-path-of-vehicle-with-two-wheels-parallel-to-each-other
-
-    double v1 = *wheelLeft * ROBOT_SPEED;
-    double v2 = *wheelRight * ROBOT_SPEED;
-
-    if (v1 == v2) {
-        return (geometry::angle2Vector(*compass) * v1) * static_cast<double>(dt);
-    }
-
-    double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
-
-    PVector vel(s * cos(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)) - s,
-                s * sin(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)));
-    vel.rotate(toRadians(*compass));
-
-    return vel;
-}
-
-void Robot::moveAlongPath(Path &path) {
-    PVector target = path.getClosestNormalPoint(aPos_, 10);
-
-    nTarget_ = target;
-    moveToPosition(target, geometry::dist(path.getLast(), aPos_) >= 10);
-    // ERROR_MESSAGE("Moving to: " + PVector::str(target))
-    if (!path.isOnPath(aPos_)) {
-        ERROR_MESSAGE("Robot is not on Path!")
-    }
+    lastCycle = timer::now();
 }

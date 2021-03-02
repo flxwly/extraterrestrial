@@ -1,8 +1,9 @@
-#ifndef CSBOT_PATHFINDER_HPP
-#define CSBOT_PATHFINDER_HPP
+#ifndef PATHFINDER_HPP
+#define PATHFINDER_HPP
 
 #include "libs/PPSettings.hpp"
 #include "libs/CommonFunctions.hpp"
+
 #include "MapData.hpp"
 
 #include <utility>
@@ -30,7 +31,7 @@
 class Node {
 
 public:
-    Node(PVector pos, Field *field);
+    Node(PVector _pos, Field *_field);
 
     /** Booleans that indicate if this Node is in a special list
      *  used by the A*Pathfinding algorithm
@@ -68,7 +69,7 @@ public:
      *  @param ObstaclesStructs A vector containing all structures that are counted
      *  as Obstacles
     */
-    bool canSee(const Node &node, const std::vector<Area> &ObstaclesStructs);
+    bool canSee(const Node &node, const std::vector<Area> &ObstaclesStructs) const;
 
     /** This Method gets every neighbour and calculates the cost.
      *
@@ -133,7 +134,7 @@ public:
 */
 class Path {
 public:
-    Path(std::vector<PVector> points, double r);
+    Path(std::vector<PVector> points, double _r);
 
     /** Calculates the closest normal point to a point that is extended by the factor d
      *
@@ -160,10 +161,10 @@ public:
     PVector getLast();
 
     /// Checks whether the Path is empty
-    bool isEmpty() { return points.empty(); };
+    [[nodiscard]] bool isEmpty() const { return points.empty(); };
 
     /// Returns the length of the Path
-    unsigned int length() { return points.size(); };
+    [[nodiscard]] unsigned int length() const { return points.size(); };
 
     /// Contains all points of the path in order so that p[0] -> p[1] -> p[2] represents the path
     std::vector<PVector> points;
@@ -196,9 +197,7 @@ public:
     /// Contains all nodes that are important to this Pathfinder
     std::vector<Node> map;
 
-    Node end;
-
-    bool trapSensitive;
+    const bool trapSensitive;
     Field *field;
 
 private:
@@ -214,7 +213,7 @@ private:
     static double heuristic(const PVector &cur, const PVector &end);
 
     /// Converts previous pointers of nodes to path
-    static Path traverse(Node *end);
+    static Path traverse(Node *end) ;
 };
 
-#endif // CSBOT_PATHFINDER_HPP
+#endif // PATHFINDER_HPP

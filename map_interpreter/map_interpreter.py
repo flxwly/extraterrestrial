@@ -42,6 +42,17 @@ def collectible_type_switch(obj_type):
     return switcher.get(obj_type, 0)
 
 
+def index_switch(index):
+    switcher = {
+        0: "walls",
+        1: "traps",
+        2: "swamps",
+        3: "deposits",
+        4: "waters"
+    }
+    return switcher.get(index, 0)
+
+
 def find_color_points(world, field):
     arr = []
 
@@ -690,9 +701,9 @@ class MapData:
 
             print("\tConverting ImageArray...")
 
-            img_arr.expand_all(1, int(detail * 24))  # standard 16
-            img_arr.expand_all(2, int(detail * 24))
-            img_arr.expand_all(3, int(detail * 4))
+            img_arr.expand_all(1, int(detail * 20))  # standard 16
+            img_arr.expand_all(2, int(detail * 20))
+            img_arr.expand_all(3, int(detail * 16))
             img_arr.expand_all(5, int(detail * 2))
 
             temp_map_objects = [
@@ -706,6 +717,7 @@ class MapData:
             temp_map_objects_nodes = [
                 [],  # walls
                 [],  # traps
+                []  # swamps
             ]
 
             for j in range(img_arr.height):
@@ -733,7 +745,7 @@ class MapData:
                 else:
                     temp_map_objects[3] = [img_arr.avg(deposit) for deposit in temp_map_objects[3]]
 
-            for i in [0, 1]:
+            for i in [0, 1, 2]:
                 for obj in temp_map_objects[i]:
                     for c in obj:
                         if c.match[1].field:
@@ -741,6 +753,13 @@ class MapData:
 
             self.map_objects.append(temp_map_objects)
             self.map_objects_nodes.append(temp_map_objects_nodes)
+
+            for i in range(5):
+                if len(temp_map_objects[i]) == 0:
+                    print("WARNING... No " + index_switch(i) + " found")
+                if i < 3:
+                    if len(temp_map_objects_nodes[i]) == 0:
+                        print("WARNING... No " + index_switch(i) + " nodes found")
 
             print("\tfinished")
 
@@ -778,6 +797,12 @@ class MapData:
             # show the bonus_areas
             draw_polygons(draw, self.map_objects[i][4], scale, starting_hue=80, hue_dif=0)
 
+            for deposit in self.map_objects[i][3]:
+                coord = (
+                    deposit[0] * scale - scale / 2 + x_off, deposit[1] * scale - scale / 2 + y_off,
+                    deposit[0] * scale + scale / 2 + x_off, deposit[1] * scale + scale / 2 + y_off)
+                draw.rectangle(coord, (200, 100, 100), (0, 0, 100))
+
             im.show("Map%s" % i)
             im = im.convert(mode="RGB")
             im.save("debugging/Map%s.png" % i, "png")
@@ -794,6 +819,7 @@ class MapData:
             deposit_area_str = "const std::vector<PVector>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             wall_nodes_str = "const std::vector<PVector>GAME%sWALLNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             trap_nodes_str = "const std::vector<PVector>GAME%sTRAPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
+            swamp_nodes_str = "const std::vector<PVector>GAME%sSWAMPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             collectibles_str = "const std::vector<Collectible> GAME%sCOLLECTIBLES = " % i
 
             wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
@@ -806,6 +832,8 @@ class MapData:
                                                                                                             "") + ";"
             trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                             "") + ";"
+            swamp_nodes_str += str(self.map_objects_nodes[i][2]).replace("[", "{").replace("]", "}").replace(" ",
+                                                                                                             "") + ";"
 
             collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
 
@@ -822,7 +850,8 @@ class MapData:
             file_content += "\n\n\t//------ Nodes ------//\n"
 
             file_content += "\t\t/*wall_nodes*/\n" + wall_nodes_str + \
-                            "\n\t\t/*trap_nodes*/\n" + trap_nodes_str + "\n\n"
+                            "\n\t\t/*trap_nodes*/\n" + trap_nodes_str + \
+                            "\n\t\t/*swamp_nodes*/\n" + swamp_nodes_str + "\n\n"
 
             file_content += "\n\n\t//------ Collectibles ------//\n"
 

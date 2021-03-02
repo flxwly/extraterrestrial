@@ -1,23 +1,19 @@
 #include "Pathfinder.hpp"
 
-
 /**     -----------     **/
 /**                     **/
 /**         Node        **/
 /**                     **/
 /**     -----------     **/
 
-Node::Node(PVector pos, Field *field) : pos(pos), field(field),
-                                        isClosed(false), isOpen(false),
-                                        g(0), f(0), previous(nullptr), neighbours() {
+Node::Node(PVector _pos, Field *_field) : pos(_pos), field(_field),
+                                          isClosed(false), isOpen(false),
+                                          g(0), f(0), previous(nullptr), neighbours() {
     ERROR_MESSAGE("Constructed node")
 }
 
 
 double Node::calculateCost(const Node &node) {
-
-    // TODO: fix calculation including swamps
-    return geometry::dist(pos, node.pos);
 
     // Line from this.pos to node.pos
     Line line(pos, node.pos);
@@ -42,7 +38,7 @@ double Node::calculateCost(const Node &node) {
     // sort for distance
     std::sort(intersections.begin(), intersections.end(),
               [&](const std::pair<PVector, double> &a, const std::pair<PVector, double> &b)
-                      -> bool { return a.second < b.second; });
+                      -> bool { return a.second <= b.second; });
 
     // A Line either enters or exits a swamp. So the Swamp_speed_penality is toggled.
     int modifier = 1;
@@ -55,41 +51,24 @@ double Node::calculateCost(const Node &node) {
 
     intersections.insert(intersections.begin(), {pos, 0});
 
-    ERROR_MESSAGE("Cost from " + PVector::str(pos) + " to " + PVector::str(node.pos) + " is:");
-
     // The cost that is returned at the end
     double cost = 0;
     for (unsigned int i = 0; i < intersections.size() - 1; i++) {
 
-        double temp = cost;
         // add cost (modifier * distance)
         cost += modifier * (intersections[i + 1].second - intersections[i].second);
-
-        std::cout << "\tpart cost is: " << cost - temp << std::endl;
 
         // Toggle the modifier
         modifier = (modifier == SWAMP_SPEED_PENALITY) ? 1 : SWAMP_SPEED_PENALITY;
     }
 
-
-    std::cout << intersections.data() << std::endl;
-
     return cost;
 }
 
-bool Node::canSee(const Node &node, const std::vector<Area> &Obstacles) {
+bool Node::canSee(const Node &node, const std::vector<Area> &Obstacles) const {
     if (pos == node.pos)
         return false;
-    Line l1(pos, node.pos);
-    for (const Area &Obstacle : Obstacles) {
-        for (auto edge : Obstacle.getEdges()) {
-            if (geometry::isIntersecting(l1, edge)) {
-                return false;
-            }
-        }
-    }
-
-    return true;
+    return !geometry::isIntersecting({pos, node.pos}, Obstacles);
 }
 
 int Node::findNeighbours(std::vector<Node> &Nodes, const std::vector<Area> &Obstacles) {
@@ -113,7 +92,7 @@ void Node::addNeighbour(Node *neighbour, const double &cost) {
 
 bool Node::removeNeighbour(Node *neighbour) {
 
-    for (int i = 0; i < neighbours.size(); ++i) {
+    for (unsigned int i = 0; i < neighbours.size(); ++i) {
         if (neighbours[i].first == neighbour) {
             neighbours.erase(neighbours.begin() + i);
             return true;
@@ -131,14 +110,13 @@ bool Node::removeNeighbour(Node *neighbour) {
 /**     -----------     **/
 
 
-Path::Path(std::vector<PVector> points, double r) : points(std::move(points)), r(r) {
+Path::Path(std::vector<PVector> points, double _r) : points(std::move(points)), r(_r) {
 
 }
 
 PVector Path::getClosestNormalPoint(PVector p, double d) {
-    double dist = -1;
-    PVector finalNormal = PVector(0, 0);
-    PVector dir = PVector(0, 0);
+    double dist = INFINITY;
+    PVector finalNormal = points.back();
 
     if (points.size() == 1) {
         finalNormal = points[0];
@@ -149,79 +127,31 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
         PVector normalPoint = geometry::getNormalPoint(Line(points[i], points[i + 1]), p);
 
         // Test if this is the closest yet seen normalpoint
-        if (geometry::dist(normalPoint, p) < dist || dist == -1) {
+        if (geometry::dist(normalPoint, p) < dist) {
 
-            // Test if the normal Point is within the line segment
-
-            // TODO: Get a line that halves the angle between two line segments
-            //  Check whether the normal point lies on the correct side
-
-            bool liesOnLeftToRightSide = false;
-            bool liesOnRightToLeftSide = false;
-
-            // TODO: special cases when a line segment is only defined by one such line
-            if (points.size() <= 2) {
-                // there are only start and end point
-                // every normal point lies in that segment
-
-                liesOnRightToLeftSide = true, liesOnLeftToRightSide = true;
-
-            } else {
-                // start point; only check whether the point is on the left side
-                // check for segment p[0] p[1] n p[1] p[2]
-
-                if (i < points.size() - 2) {
-                    PVector p0 = points[i + 1]
-                                 + (points[i + 1] - points[i]).setMag(1)
-                                 + (points[i + 1] - points[i + 2]).setMag(1);
-
-                    if (geometry::isLeft(points[i + 1], p0, points[i])) {
-                        if (geometry::isLeft(points[i + 1], p0, normalPoint))
-                            liesOnLeftToRightSide = true;
-                    } else {
-                        if (geometry::isLeft(p0, points[i + 1], normalPoint))
-                            liesOnLeftToRightSide = true;
-                    }
-                } else {
-                    liesOnLeftToRightSide = true;
-                }
-                if (i > 0) {
-                    // end point; only check whether the point is on the right side
-
-                    PVector p0 = points[i]
-                                 + (points[i] - points[i - 1]).setMag(1)
-                                 + (points[i] - points[i + 1]).setMag(1);
-
-                    if (geometry::isLeft(points[i], p0, points[i - 1])) {
-                        if (geometry::isLeft(p0, points[i], normalPoint))
-                            liesOnRightToLeftSide = true;
-                    } else {
-                        if (geometry::isLeft(points[i], p0, normalPoint))
-                            liesOnRightToLeftSide = true;
-                    }
-
-                } else {
-                    liesOnRightToLeftSide = true;
-                }
-
+            PVector line = points[i + 1] - points[i];
+            line.rotate(M_PI / 2);
+            if (geometry::isLeft(points[i + 1], points[i + 1] + line, normalPoint)) {
+                dist = geometry::dist(normalPoint, p);
+                finalNormal = normalPoint + (points[i + 1] - points[i]).setMag(d);
             }
 
+            continue;
 
-            if (liesOnRightToLeftSide && liesOnLeftToRightSide) {
+            // new idea: Test if normal point lies behind idk
+            // points i - > next point
+
+            double d0 = geometry::dist(normalPoint, points[i]);
+            double d1 = geometry::dist(normalPoint, points[i + 1]);
+
+            if (d0 + d1 <= geometry::dist(points[i], points[i + 1]) || d0 < d1) {
                 dist = geometry::dist(normalPoint, p);
                 finalNormal = normalPoint;
-
-                // Vector from p[i] to p[i + 1]
-                dir = points[i + 1] - points[i];
             }
         }
     }
 
-    ERROR_MESSAGE(PVector::str(finalNormal))
-
-    dir.setMag(d);
-
-    return finalNormal + dir;
+    return finalNormal;
 }
 
 void Path::addPoint(PVector p) {
@@ -260,8 +190,7 @@ bool Path::isOnPath(PVector p) {
 /**                     **/
 /**     -----------     **/
 
-Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP},
-                                                          end({0, 0}, &MAP) {
+Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sensitive}, field{&MAP} {
 
     // get map objects
     std::vector<Area> mapObjects = {};
@@ -273,9 +202,9 @@ Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sen
     // get map nodes
     std::vector<PVector> mapNodes = {};
     if (trap_sensitive) {
-        mapNodes = field->getMapNodes({0, 1});
+        mapNodes = field->getMapNodes({0, 1, 2});
     } else {
-        mapNodes = field->getMapNodes({0});
+        mapNodes = field->getMapNodes({0, 2});
     }
 
     // create & store Node
@@ -301,7 +230,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
         return Path({goal}, PATH_RADIUS);
 
     Node start = Node(begin, field);
-    end = Node(goal, field);
+    Node end = Node(goal, field);
 
     // If the pathfinder is trap sensitive traps have to be taken into account
     std::vector<Area> mapObjects = {};
@@ -421,7 +350,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 Path Pathfinder::traverse(Node *end) {
     std::vector<PVector> path;
 
-    while (end->previous != nullptr) {
+    while (end != nullptr) {
         path.push_back(end->pos);
         end = end->previous;
     }

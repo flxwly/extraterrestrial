@@ -21,7 +21,7 @@ SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -ls
 
 # for new CoSpace Versions
 out_path = "./"
-file_name = "extraterrestrial2.dll"
+file_name = "extraterrestrial.dll"
 
 cospace_version = "2.6.2"
 

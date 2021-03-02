@@ -1,93 +1,97 @@
 #include "ColorRecognition.hpp"
 
-bool isRedLeft() { return satL >= 75 && lumL >= 30 && isInRange(hueL, 340, 361); } // check
-bool isRedRight() { return satR >= 75 && lumR >= 30 && isInRange(hueR, 340, 361); }
-
-bool isCyanLeft() { return satL >= 75 && lumL >= 30 && isInRange(hueL, 175, 185); }     // check
-bool isCyanRight() { return satR >= 75 && lumR >= 30 && isInRange(hueR, 175, 185); }
-
-bool isBlackLeft() { return lumL <= 20; }   // check
-bool isBlackRight() { return lumR <= 20; }
-
-bool isYellowLeft() { return satL >= 75 && lumL >= 30 && isInRange(hueL, 58, 80); } // check
-bool isYellowRight() { return satR >= 75 && lumR >= 30 && isInRange(hueR, 58, 80); }    // check
-
-bool isOrangeLeft() { return satL >= 75 && lumL >= 30 && isInRange(hueL, 35, 50); } // check
-bool isOrangeRight() { return satR >= 75 && lumR >= 30 && isInRange(hueR, 35, 50); }
-
-bool isSuperObjRight() { return satR >= 80 && lumR >= 55 && isInRange(hueR, 290, 310); }
-bool isSuperObjLeft() { return satR >= 80 && lumR >= 55 && isInRange(hueR, 290, 310); }
-
-bool isWaterLeft() { return satL >= 75 && lumL >= 30 && isInRange(hueL, 175, 185); }
-bool isWaterRight() { return satR >= 75 && lumR >= 30 && isInRange(hueR, 175, 185); }
-
-bool isSwampRight() { return satR <= 40 && lumR > 20 && isInRange(hueR, 200, 240); }
-bool isSwampLeft() { return satL <= 40 && lumL > 20 && isInRange(hueL, 200, 240); }
-
-bool isRed() { return isRedLeft() || isRedRight(); }
-bool isCyan() { return isCyanLeft() || isCyanRight(); }
-bool isBlack() { return isBlackLeft() || isBlackRight(); }
-bool isYellow() { return isYellowLeft() || isYellowRight(); }
-bool isOrange() { return isOrangeLeft() && isOrangeRight(); }
-bool isSwamp() { return isSwampLeft() || isSwampRight(); }
-bool isSuperObj() { return isSuperObjLeft() || isSuperObjRight(); }
-bool isColor() { return isBlack() || isRed(), isCyan(), isSuperObj(); }
+bool isRed(HSLColor c) { return c.s >= 75 && c.l >= 30 && isInRange(c.h, 340, 361); }
+bool isCyan(HSLColor c) { return c.s >= 75 && c.l >= 30 && isInRange(c.h, 175, 185); }
+bool isBlack(HSLColor c) { return c.l <= 20; }
+bool isYellow(HSLColor c) { return c.s >= 75 && c.l >= 30 && isInRange(c.h, 58, 80); }
+bool isOrange(HSLColor c) { return c.s >= 75 && c.l >= 30 && isInRange(c.h, 35, 50); }
+bool isSwamp(HSLColor c) { return c.s <= 60 && isInRange(c.l, 40, 80) && isInRange(c.h, 200, 240); }
+bool isSuperObj(HSLColor c) { return c.s >= 80 && c.l >= 30 && isInRange(c.h, 290, 310); }
+bool isColor(HSLColor c) { return isBlack(c) || isRed(c), isCyan(c), isSuperObj(c); }
 
 
-int rgb2h(int R, int G, int B) {
+float rgb2h(RGBColor c) {
 
     // map the r, g, b values to a minimum of 0 and a max of 1
-    double r = static_cast<double>(R) / 255;
-    double g = static_cast<double>(G) / 255;
-    double b = static_cast<double>(B) / 255;
+    c.r /= 255;
+    c.g /= 255;
+    c.b /= 255;
 
-    double cmax = max(r, max(g, b));
-    double cmin = min(r, min(g, b));
+    float cmax = std::max(c.r, std::max(c.g, c.b));
+    float cmin = std::min(c.r, std::min(c.g, c.b));
 
-    double hue = 0;
-    double c = cmax - cmin; // chroma
-    if (c == 0) return 0;
-    if (cmax == r) {
-        hue = (g - b) / c;
-
-    } else if (cmax == g) {
-        hue = (b - r) / c + 2;
-
-    } else if (cmax == b) {
-        hue = (r - g) / c + 4;
-
+    float hue = 0;
+    float chroma = cmax - cmin; // chroma
+    if (chroma == 0) {
+        return 0;
+    } else if (cmax == c.r) {
+        hue = (c.g - c.b) / chroma * 60;
+    } else if (cmax == c.g) {
+        hue = ((c.b - c.r) / chroma + 2) * 60;
+    } else if (cmax == c.b) {
+        hue = ((c.r - c.g) / chroma + 4) * 60;
     }
-    return static_cast<int>(round((hue * 60 > 0) ? hue * 60 : hue * 60 + 360));
+    return (hue > 0) ? hue : hue + 360;
 }
 
-int rgb2s(int R, int G, int B) {
+float rgb2s(RGBColor c) {
 
     // map the r, g, b values to a minimum of 0 and a max of 1
-    double r = static_cast<double>(R) / 255;
-    double g = static_cast<double>(G) / 255;
-    double b = static_cast<double>(B) / 255;
+    c.r /= 255;
+    c.g /= 255;
+    c.b /= 255;
 
-    // get the min and max of r, g, b
-    double cmax = max(r, max(g, b));
-    double cmin = min(r, min(g, b));
+    float cmax = std::max(c.r, std::max(c.g, c.b));
+    float cmin = std::min(c.r, std::min(c.g, c.b));
 
     // chroma is the difference between max and min.
-    double chroma = cmax - cmin;
+    float chroma = cmax - cmin;
 
-    return (cmax != 0) ? static_cast<int>(round(chroma / cmax * 100)) : 0;
+    return (cmax != 0) ? (chroma / cmax * 100) : 0;
 }
 
-int rgb2l(int R, int G, int B) {
+float rgb2l(RGBColor c) {
 
-    // mapping rgb values to 0-1
-    double r = static_cast<double>(R) / 255;
-    double g = static_cast<double>(G) / 255;
-    double b = static_cast<double>(B) / 255;
+    // map the r, g, b values to a minimum of 0 and a max of 1
+    c.r /= 255;
+    c.g /= 255;
+    c.b /= 255;
 
-    // get the min and max of r, g, b
-    double cmax = max(r, max(g, b));
-    double cmin = min(r, min(g, b));
+    float cmax = std::max(c.r, std::max(c.g, c.b));
+    float cmin = std::min(c.r, std::min(c.g, c.b));
 
     // lightness is the average of the largest and smallest color components
-    return static_cast<int>(round((cmax + cmin)) / 0.02);
+    return (cmax + cmin) / 0.02f;
+}
+
+HSLColor rgb2hsl(RGBColor rgb) {
+
+    HSLColor color;
+
+    // map the r, g, b values to a minimum of 0 and a max of 1
+    rgb.r /= 255;
+    rgb.g /= 255;
+    rgb.b /= 255;
+
+    float cmax = std::max(rgb.r, std::max(rgb.g, rgb.b));
+    float cmin = std::min(rgb.r, std::min(rgb.g, rgb.b));
+
+    float c = cmax - cmin; // chroma
+
+    color.s = (cmax != 0) ? (c / cmax * 100) : 0;
+    color.l = (cmax + cmin) / 0.02f;
+
+    if (c == 0) {
+        return color;
+    } else if (cmax == rgb.r) {
+        color.h = (rgb.g - rgb.b) / c * 60;
+    } else if (cmax == rgb.g) {
+        color.h = ((rgb.b - rgb.r) / c + 2) * 60;
+    } else if (cmax == rgb.b) {
+        color.h = ((rgb.r - rgb.g) / c + 4) * 60;
+    }
+
+    color.h += (color.h > 0) ? 0 : 360;
+
+    return color;
 }
