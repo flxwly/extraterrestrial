@@ -232,10 +232,41 @@ void Game1Debug() {
         CC->draw(area);
     }
 
+    // Collectibles
+    block.setSize(sf::Vector2f(4, 4));
+    block.setOrigin(2, 2);
+    for (auto &collecible : Bot->map1->getCollectibles({0, 1, 2})) {
+
+        if (collecible.state != 2) {
+            block.setPosition(static_cast<float>(collecible.pos.x), static_cast<float>(collecible.pos.y));
+
+            switch (collecible.state) {
+                case 0:
+                    block.setOutlineColor(sf::Color::Magenta);
+                case 1:
+                    block.setOutlineColor(sf::Color::Yellow);
+            }
+
+            switch (collecible.color) {
+                case 0:
+                    block.setFillColor(sf::Color::Red);
+                    break;
+                case 1:
+                    block.setFillColor(sf::Color::Cyan);
+                    break;
+                default:
+                    block.setFillColor(sf::Color::White);
+                    break;
+            }
+
+            CC->draw(block);
+        }
+    }
+
 
     // Path
     block.setSize(sf::Vector2f(6, 6));
-    block.setOrigin((3), 3);
+    block.setOrigin(3, 3);
     sf::VertexArray path_lines(sf::LineStrip);
     path_lines.append(sf::Vector2f(PositionX, PositionY));
     for (unsigned int i = 0; i < Bot->completePath.size(); i++) {
