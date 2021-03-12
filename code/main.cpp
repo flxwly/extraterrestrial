@@ -81,9 +81,7 @@ void Game0() {
 
 
 void Game1() {
-
     Bot->updateLoop();
     Bot->game1Loop();
     debugWindow->updateLoop();
-
 }

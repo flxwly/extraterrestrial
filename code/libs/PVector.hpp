@@ -11,6 +11,7 @@
 */
 class PVector {
 public:
+
     /// creates a 2D Point-Vector at (NAN | NAN)
     PVector() : x(NAN), y(NAN) {};
 

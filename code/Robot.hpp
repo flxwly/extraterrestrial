@@ -56,9 +56,9 @@ public:
     /// updates the position of the robot mathematically and returns the change
     PVector updatePos();
 
-	int moveToPosition(PVector p, bool safety);
+	int moveToPosition(PVector p);
 
-	/// checks if l, f or r is higher than the us-sensor vals. returns a binary-encoded value
+	/// checks if l, f or r is higher than the us-sensor values. returns a binary-encoded value
 	int checkUsSensors(int l, int f, int r);
 
 	void updateLoop();

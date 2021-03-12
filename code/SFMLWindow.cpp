@@ -52,7 +52,7 @@ void DebugWindow::GameDebug(unsigned int ID) {
 		// Map:
 		block.setSize({scale.x * 2, scale.y * 2});
 		block.setFillColor({0, 255, 0});
-		for (auto &walls : map->getMapObjects({0})) {
+		for (auto &walls : map->getMapObjects({0, 1, 2})) {
 			for (auto &edge : walls.getEdges()) {
 				sf::Vector2f p1(static_cast<float>(edge.p1.x * scale.x),
 				                static_cast<float>(edge.p1.y * scale.y));
@@ -74,12 +74,9 @@ void DebugWindow::GameDebug(unsigned int ID) {
 		unsigned int num = 0;
 		for (auto & node : Bot->pathfinder1T.map) {
 			num ++;
-			if (num != 7) {
-				continue;
-			}
 
 
-				sf::Vector2f p1(static_cast<float>(node.pos.x * scale.x),
+			sf::Vector2f p1(static_cast<float>(node.pos.x * scale.x),
 			                static_cast<float>(node.pos.y * scale.y));
 			block.setPosition(p1);
 			for (auto neighbour : node.neighbours) {
@@ -101,7 +98,7 @@ void DebugWindow::GameDebug(unsigned int ID) {
 		// Path
 		block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
 		block.setOrigin(scale.x * 1.5f, scale.y * 1.5f);
-		sf::VertexArray path_lines(sf::Lines);
+		sf::VertexArray path_lines(sf::LineStrip);
 		for (unsigned int i = 0; i < Bot->completePath.size(); i++) {
 
 			Path path = Bot->completePath[i];

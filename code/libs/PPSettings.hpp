@@ -64,7 +64,7 @@
 #define GAME1_TIME 300
 
 /// The factor by what speed is reduced in swamps TODO
-#define SWAMP_SPEED_PENALITY 10
+#define SWAMP_SPEED_PENALITY 100
 
 /// Standard radius of a path in cm
 #define PATH_RADIUS 10

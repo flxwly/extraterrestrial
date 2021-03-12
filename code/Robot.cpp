@@ -43,8 +43,13 @@ PVector Robot::getVelocity(long long int dt) const {
 
     double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
 
-    PVector vel(s * cos(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)) - s,
-                s * sin(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)));
+    PVector vel = (v1 != 0) ?
+                  PVector(s * cos(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)) - s,
+                          s * sin(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s))) :
+
+                  PVector(s * cos(v2 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 - s)) - s,
+                          s * sin(v2 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 - s)));
+
     vel.rotate(toRadians(*compass + 90));
 
     return vel;
@@ -53,7 +58,7 @@ PVector Robot::getVelocity(long long int dt) const {
 PVector Robot::updatePos() {
 
     // check if robot is in signal lost zone
-    if (*posX == 0 && *posY == 0) {
+    if (*posX <= 0 && *posY <= 0) {
 
         pos += getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
                 timer::now() - lastPositionUpdate).count());
@@ -275,16 +280,24 @@ void Robot::wheels(int l, int r) const {
     *wheelLeft = l, *wheelRight = r;
 }
 
-int Robot::moveToPosition(PVector p, bool safety) {
+int Robot::moveToPosition(PVector p) {
 
     double dist = geometry::dist(pos, p);
+
+    std::cout << "target: " << PVector::str(p) << std::endl;
+    std::cout << "pos: " << PVector::str(pos) << std::endl;
 
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
     double angle = toDegrees(geometry::vector2Angle(p - pos)) - 90;
 
+    std::cout << "0: " << angle << std::endl;
+
     // Difference between compass
     angle -= *compass;
+
+
+    std::cout << "1: " << angle << std::endl;
 
     // If the angle is higher then 180 the point is on the other side
     if (fabs(angle) > 180) {
@@ -292,23 +305,25 @@ int Robot::moveToPosition(PVector p, bool safety) {
         angle = fmod(angle + ((angle > 0) ? -360 : 360), 360);
     }
 
-    switch (Robot::checkUsSensors(6, 5, 6)) {
+    std::cout << "2: " << angle << std::endl;
+
+    switch (Robot::checkUsSensors(10, 8, 10)) {
         // case 0 means checkUsSensors has detected no near obstacles
         //      -> the robot can move freely
         case 0:
             // the angle to posX, posY is small so there's no correction of it needed
             //      -> drive straight
-            if (fabs(angle) < 5) {
+            if (fabs(angle) < 8) {
 
                 if (angle < 0) {
-                    if (!safety && dist < 15) {
-                        wheels(2, 1);
+                    if (dist < 8) {
+                        wheels(1, 0);
                     } else {
                         wheels(4, 4);
                     }
                 } else {
-                    if (!safety && dist < 15) {
-                        wheels(1, 2);
+                    if (dist < 8) {
+                        wheels(0, 1);
                     } else {
                         wheels(4, 4);
                     }
@@ -316,15 +331,15 @@ int Robot::moveToPosition(PVector p, bool safety) {
 
             }
                 // the angle is a bit bigger so the robot needs to make a small correction
-            else if (fabs(angle) < 15) {
+            else if (fabs(angle) < 20) {
                 if (angle < 0) {
-                    if (!safety && dist < 15) {
+                    if (dist < 8) {
                         wheels(2, 1);
                     } else {
                         wheels(5, 4);
                     }
                 } else {
-                    if (!safety && dist < 15) {
+                    if (dist < 8) {
                         wheels(1, 2);
                     } else {
                         wheels(4, 5);
@@ -332,16 +347,16 @@ int Robot::moveToPosition(PVector p, bool safety) {
                 }
             }
                 // the angle is quite big; now a bigger correction is needed
-            else if (fabs(angle) < 45) {
+            else if (fabs(angle) < 60) {
                 if (angle < 0) {
-                    if (!safety && dist < 15) {
-                        wheels(2, -1);
+                    if (dist < 8) {
+                        wheels(2, -2);
                     } else {
                         wheels(5, 2);
                     }
                 } else {
-                    if (!safety && dist < 15) {
-                        wheels(-1, 2);
+                    if (dist < 8) {
+                        wheels(-2, 2);
                     } else {
                         wheels(2, 5);
                     }
@@ -352,14 +367,14 @@ int Robot::moveToPosition(PVector p, bool safety) {
             else {
 
                 if (angle < 0) {
-                    if (dist < 10) {
-                        wheels(-3, -3);
+                    if (dist < 8) {
+                        wheels(-2, -2);
                     } else {
                         wheels(3, -3);
                     }
                 } else {
-                    if (dist < 10) {
-                        wheels(-3, -3);
+                    if (dist < 8) {
+                        wheels(-2, -2);
                     } else {
                         wheels(-3, 3);
                     }
@@ -386,7 +401,7 @@ int Robot::moveToPosition(PVector p, bool safety) {
             wheels(-5, -2);
             return 6;
         case 7: // all sensors see an obstacle -> dead end; Just spinn
-            wheels(-5, 5);
+            wheels(-5, 4);
             return 7;
         default:
             return -1;
@@ -395,7 +410,12 @@ int Robot::moveToPosition(PVector p, bool safety) {
 
 void Robot::moveAlongPath(Path &path) {
 
-    moveToPosition(path.getClosestNormalPoint(pos, 10), geometry::dist(path.getLast(), pos) >= 10);
+    int movement = moveToPosition(path.getClosestNormalPoint(pos, 10));
+
+    if (movement == -1) {
+        std::cout << "No valid motion found" << std::endl;
+    }
+
 }
 
 //====================================
@@ -442,7 +462,8 @@ std::vector<PVector> Robot::getPointPath(std::array<int, 4> max) {
         for (unsigned int i = 0; i < 3; ++i) {
             if (tLoadedObjects[i] < max[i]) {
                 for (auto collectible : field->getCollectibles({i})) {
-                    if ((geometry::dist(start, collectible.pos) < dist) && collectible.pos != start && collectible.state != 2) {
+                    if ((geometry::dist(start, collectible.pos) < dist) && collectible.pos != start &&
+                        collectible.state != 2) {
 
                         color = collectible.color;
                         end = collectible.pos;
@@ -495,6 +516,7 @@ void Robot::updateLoop() {
 
     // ---------- superObjects -----------
     if (*superObjectX != 0 || *superObjectY != 0) {
+        superObjects.emplace_back(*superObjectX, *superObjectY);
         superObjects.emplace_back(*superObjectX, *superObjectY);
         *superObjectX = 0, *superObjectY = 0;
     }
