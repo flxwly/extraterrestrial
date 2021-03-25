@@ -5,14 +5,29 @@
 ///       program settings
 /// ----------------------------- ///
 
+
+/// define COLOR_LOGGING to enable color logging to console
+//#define COLOR_LOGGING
+
 /// define DEBUG to enable debug messages
 //#define DEBUG
+
+/// ---------------------------------
+///         SFML settings
+/// ---------------------------------
 
 /// define SFML to enable debugging via SFML
 #define SFML
 
-/// define COLOR_LOGGING to enable color logging to console
-//#define COLOR_LOGGING
+/// define DebugPathfinderNodes
+//#define DebugPathfinderNodes
+
+
+
+
+/// ----------------------------- ///
+///       some debug logic
+/// ----------------------------- ///
 
 #ifdef SFML
 #undef DEBUG
@@ -64,10 +79,14 @@
 #define GAME1_TIME 300
 
 /// The factor by what speed is reduced in swamps TODO
-#define SWAMP_SPEED_PENALITY 100
+#define SWAMP_SPEED_PENALITY 10
 
 /// Standard radius of a path in cm
 #define PATH_RADIUS 10
 
+
+/// ----------------------------- ///
+///      CoSpace constants
+/// ----------------------------- ///
 
 #endif //PPSETTINGS_HPP

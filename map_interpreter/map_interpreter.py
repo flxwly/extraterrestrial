@@ -25,6 +25,33 @@ if cospace_version == "2.6.2":
     FieldFD = "../../../../../store/media/CS.C/RSC/Map/Design"
 
 
+def is_left(p0, p1, p2):
+    return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y) > 0
+
+
+def is_in_area(p_, area):
+    p = Point(p_.field, p_.virtual_x, p_.virtual_y)
+
+    print(p)
+
+    wn = 0
+    n = len(area)
+
+    poly = area
+    poly.append(area[0])
+
+    for i in range(n):
+        if poly[i].y <= p.y:
+            if poly[i + 1].y > p.y:
+                if is_left(poly[i], poly[i + 1], p):
+                    wn += 1
+        else:
+            if poly[i + 1].y <= p.y:
+                if not is_left(poly[i], poly[i + 1], p):
+                    wn -= 1
+    return wn != 0
+
+
 def convert_arr_to_area_vector_string(arr):
     if len(arr) == 0:
         return "{};"
@@ -306,16 +333,15 @@ class Boundary(Point):
                         match.x * scale + x_off, match.y * scale + + y_off)
                     draw.line(coord, fill=(boundary_hue, 255, 255, 100))
 
+    def __str__(self):
+        """Returns corner as coord including how many other corners this corner can see. For Debugging"""
 
-def __str__(self):
-    """Returns corner as coord including how many other corners this corner can see. For Debugging"""
-
-    return "Boundary at [%s | %s]" % (self.x, self.field.height - self.y)
+        return "Boundary at [%s | %s]" % (self.x, self.field.height - self.y)
 
 
 class Collectible(Point):
     def __init__(self, t, x, y, field):
-        super().__init__(float(x), float(y), field)
+        super().__init__(field, float(x), float(y))
         """A type of Point to represent Collectible points"""
 
         # x and y are real coordinates in the simulator. Not the coordinates used by the robot
@@ -327,13 +353,15 @@ class Collectible(Point):
         #  The color (red = 0; cyan/green = 1; black = 2)
         self.t = t
 
+        self.is_worth_double = False
+
     def __str__(self):
         """Returns Collectible as coord including it's color. For Debugging"""
         return "Collectible at [%s | %s] with color %s" % (self.x, self.y, self.t)
 
     def __repr__(self):
         """Returns Collectible as typical C++ pair coord"""
-        return "{{%s,%s},%s}" % (self.virtual_x, self.virtual_y, self.t)
+        return "{{%s,%s},%s,%s}" % (self.virtual_x, self.virtual_y, self.t, self.is_worth_double)
 
 
 ###########################
@@ -771,9 +799,16 @@ class MapData:
             self.collectibles.append(find_color_points(w1, self.img_arrs[0]))
             self.collectibles.append(find_color_points(w2, self.img_arrs[1]))
 
-            # print(self.collectibles)
-        else:
-            print("File: " + fd_dir + "/Field.FD not found")
+            for i in range(2):
+                for collectible in self.collectibles[i]:
+                    for water in self.map_objects[i][4]:
+                        if is_in_area(collectible, water):
+                            collectible.is_worth_double = True
+                            break
+
+                            # print(self.collectibles)
+            else:
+                print("File: " + fd_dir + "/Field.FD not found")
 
     def show(self, scale):
 
@@ -802,6 +837,15 @@ class MapData:
                     deposit[0] * scale - scale / 2 + x_off, deposit[1] * scale - scale / 2 + y_off,
                     deposit[0] * scale + scale / 2 + x_off, deposit[1] * scale + scale / 2 + y_off)
                 draw.rectangle(coord, (200, 100, 100), (0, 0, 100))
+
+            for collectible in self.collectibles[i]:
+                coord = (
+                    collectible.virtual_x * scale - scale / 2 + x_off, collectible.virtual_y * scale - scale / 2 + y_off,
+                    collectible.virtual_x * scale + scale / 2 + x_off, collectible.virtual_y * scale + scale / 2 + y_off)
+                if collectible.is_worth_double:
+                    draw.rectangle(coord, (100, 100, 100), (100, 100, 100))
+                else:
+                    draw.rectangle(coord, (0, 100, 100), (0, 100, 100))
 
             im.show("Map%s" % i)
             im = im.convert(mode="RGB")
@@ -836,6 +880,7 @@ class MapData:
                                                                                                              "") + ";"
 
             collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+            collectibles_str = collectibles_str.replace("False", "false").replace("True", "true")
 
             # TODO -- ONLY TEMP FOR DEBUGGING -- REMOVELATER
 
@@ -869,7 +914,10 @@ def main():
     mapData = MapData(img_dirs=[FieldA, FieldB], fd_dir=FieldFD)
     # mapData.show(10)
 
+    print(str(mapData))
+
     mapData.show(10)
+    return
 
     begin = "\n\n\n" \
             "///   _______                _____          __\n" \

@@ -19,14 +19,6 @@ bool isInRange(double value, double min, double max) {
     return value >= min && value <= max;
 }
 
-double max(double n, double m) {
-    return (n > m) ? n : m;
-}
-
-double min(double n, double m) {
-    return (n < m) ? n : m;
-}
-
 double map(double Mmin, double Mmax, double Imin, double Imax, double input) {
     if (Mmin > Mmax) {
         double temp = Mmin;

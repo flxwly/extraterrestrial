@@ -1,5 +1,130 @@
 #include "Robot.hpp"
 
+#include <utility>
+
+
+/* ====================================================================================================================
+ *
+ *
+ *   ,ad8888ba,    88              88                                   88                                             88
+ *  d8"'    `"8b   88              ""                            ,d     88                                             88
+ * d8'        `8b  88                                            88     88                                             88
+ * 88          88  88,dPPYba,      88   ,adPPYba,   ,adPPYba,  MM88MMM  88            ,adPPYba,   ,adPPYYba,   ,adPPYb,88
+ * 88          88  88P'    "8a     88  a8P_____88  a8"     ""    88     88           a8"     "8a  ""     `Y8  a8"    `Y88
+ * Y8,        ,8P  88       d8     88  8PP"""""""  8b            88     88           8b       d8  ,adPPPPP88  8b       88
+ *  Y8a.    .a8P   88b,   ,a8"     88  "8b,   ,aa  "8a,   ,aa    88,    88           "8a,   ,a8"  88,    ,88  "8a,   ,d88
+ *   `"Y8888Y"'    8Y"Ybbd8"'      88   `"Ybbd8"'   `"Ybbd8"'    "Y888  88888888888   `"YbbdP"'   `"8bbdP"Y8   `"8bbdP"Y8
+ *                                ,88
+ *                              888P"
+ *
+ * ==================================================================================================================== */
+
+// Parameterless constructor
+ObjectLoad::ObjectLoad() : num_(0), loadedObjects_() {}
+
+ObjectLoad::ObjectLoad(const std::vector<Collectible *> &objects) : num_(objects.size()) {
+    for (auto object : objects) {
+        loadedObjects_[object->color].push_back(object);
+    }
+}
+
+void ObjectLoad::addObject(Collectible *object) {
+    loadedObjects_[object->color].push_back(object);
+    num_++;
+}
+
+bool ObjectLoad::removeObject(Collectible *object) {
+    auto it = find(loadedObjects_[object->color].begin(), loadedObjects_[object->color].end(), object);
+    if (it != loadedObjects_[object->color].end()) {
+        loadedObjects_[object->color].erase(it);
+        num_--;
+        return true;
+    }
+
+    return false;
+}
+
+void ObjectLoad::setLoad(const std::vector<Collectible *> &objects) {
+    loadedObjects_ = {};
+    for (auto object : objects) {
+        addObject(object);
+    }
+}
+
+void ObjectLoad::clearLoad() {
+    loadedObjects_ = {};
+    num_ = 0;
+}
+
+unsigned int ObjectLoad::rgb() {
+    return std::min(red(), std::min(cyan(), black()));
+}
+
+unsigned int ObjectLoad::getValue() {
+    unsigned int value = 0;
+
+    for (auto red : loadedObjects_[0]) {
+        value += (red->isWorthDouble) ? 20 : 10;
+    }
+
+    for (auto cyan : loadedObjects_[1]) {
+        value += (cyan->isWorthDouble) ? 30 : 15;
+    }
+
+    for (auto black : loadedObjects_[2]) {
+        value += (black->isWorthDouble) ? 40 : 20;
+    }
+
+    for (auto super : loadedObjects_[3]) {
+        value += (super->isWorthDouble) ? 180 : 90;
+    }
+
+    value += rgb() * 90;
+
+    return value;
+}
+
+unsigned int ObjectLoad::red() {
+    return loadedObjects_[0].size();
+}
+
+unsigned int ObjectLoad::cyan() {
+    return loadedObjects_[1].size();
+}
+
+unsigned int ObjectLoad::black() {
+    return loadedObjects_[2].size();
+}
+
+unsigned int ObjectLoad::super() {
+    return loadedObjects_[3].size();
+}
+
+std::array<unsigned int, 4> ObjectLoad::all() {
+    return {red(), cyan(), black(), super()};
+}
+
+const std::array<std::vector<Collectible *>, 4> &ObjectLoad::loadedObjects() {
+    return loadedObjects_;
+}
+
+unsigned int ObjectLoad::num() const {
+    return num_;
+}
+
+/* =============================================================
+ *
+ * 88888888ba               88
+ * 88      "8b              88                         ,d
+ * 88      ,8P              88                         88
+ * 88aaaaaa8P'  ,adPPYba,   88,dPPYba,    ,adPPYba,  MM88MMM
+ * 88""""88'   a8"     "8a  88P'    "8a  a8"     "8a   88
+ * 88    `8b   8b       d8  88       d8  8b       d8   88
+ * 88     `8b  "8a,   ,a8"  88b,   ,a8"  "8a,   ,a8"   88,
+ * 88      `8b  `"YbbdP"'   8Y"Ybbd8"'    `"YbbdP"'    "Y888
+ *
+ * ============================================================= */
+
 //====================================
 //          Constructor
 //====================================
@@ -12,7 +137,6 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectX, int *_su
         ultraSonicSensors{_ultraSonicSensorLeft, _ultraSonicSensorFront, _ultraSonicSensorRight},
         wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, level{1}, gameTime{_gameTime},
 
-        loadedObjects{0, 0, 0, 0}, loadedObjectsNum{0},
         collectingSince{timer::now()}, depositingSince{timer::now()},
         pos{static_cast<double>(*_posX), static_cast<double> (*_posY)}, lastPos{-1, -1},
         lastPositionUpdate{timer::now()}, map0{_map0}, map1{_map1},
@@ -26,6 +150,7 @@ Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectX, int *_su
 //====================================
 //     position/update Methods
 //====================================
+
 PVector Robot::getVelocity(long long int dt) const {
 
     // For clarification on how this works see
@@ -91,22 +216,20 @@ bool Robot::shouldCollect() {
         return true;
 
     // The robot is full; the robot cant collect items anyway
-    if (loadedObjectsNum >= 6)
+    if (loadedObjects.num() >= 6)
         return false;
 
-
-    if (isSuperObj(leftColor) || isSuperObj(rightColor)) {
-        return huntingSuperObj;
-    }
-        // The objects color is Red
-    else if (isRed(leftColor) || isRed(rightColor)) {
-        return (huntingSuperObj) ? loadedObjects[0] < 1 : loadedObjects[0] < 2;
+    // The objects color is Red
+    if (isRed(leftColor) || isRed(rightColor)) {
+        return loadedObjects.red() < getDesiredLoad()[0];
     } else if (isCyan(leftColor) || isCyan(rightColor)) {
         // nothin' special here
-        return (huntingSuperObj) ? loadedObjects[1] < 1 : loadedObjects[1] < 2;
+        return loadedObjects.cyan() < getDesiredLoad()[1];
     } else if (isBlack(leftColor) || isBlack(rightColor)) {
         // nothin' special here
-        return (huntingSuperObj) ? loadedObjects[2] < 1 : loadedObjects[2] < 2;
+        return loadedObjects.black() < getDesiredLoad()[2];
+    } else if (isSuperObj(leftColor) || isSuperObj(rightColor)) {
+        return loadedObjects.super() < getDesiredLoad()[3];
     }
     // if there's no object beneath the robot, don't try to collect anything
     return false;
@@ -127,21 +250,13 @@ int Robot::collect() {
         collectingSince = Robot::timer::now();
 
         if (isRed(leftColor) || isRed(rightColor)) {
-            loadedObjectsNum++;
-            loadedObjects[0]++;
             return 0;
-        } else if (isSuperObj(leftColor) || isSuperObj(rightColor)) {
-            loadedObjectsNum++;
-            loadedObjects[3]++;
-            return 3;
         } else if (isCyan(leftColor) || isCyan(rightColor)) {
-            loadedObjectsNum++;
-            loadedObjects[1]++;
             return 1;
         } else if (isBlack(leftColor) || isBlack(rightColor)) {
-            loadedObjectsNum++;
-            loadedObjects[2]++;
             return 2;
+        } else if (isSuperObj(leftColor) || isSuperObj(rightColor)) {
+            return 3;
         }
     }
     return -1;
@@ -156,25 +271,8 @@ bool Robot::shouldDeposit() {
     if (std::chrono::duration_cast<std::chrono::milliseconds>(timer::now() - depositingSince).count() <= 4000)
         return true;
 
-    // the robot uses a threshold to determine if it has enough points so that it is worth it to deposit
-    // This threshold should actually not really matter since the robot is supposed to
-    // only drive to the deposit area if it is fully loaded
-
-    // basic points;
-    int threshold = loadedObjects[0] * 10 + loadedObjects[1] * 15 + loadedObjects[2] * 20;
-
-    // one rgb-bonus
-    if (loadedObjects[0] > 0 && loadedObjects[1] > 0 && loadedObjects[2] > 0) {
-        threshold += 90;
-        // second rgb-bonus
-        if (loadedObjects[0] > 1 && loadedObjects[1] > 1 && loadedObjects[2] > 1) {
-            threshold += 90;
-
-        }
-    }
-
     // 145 = 2 red + 1 cyan + 1 black | 20 + 15 + 20 + 90
-    return threshold >= 145 || remainingMapTime < 60 || loadedObjectsNum >= 6;
+    return loadedObjects.getValue() >= 145 || remainingMapTime < 60 || loadedObjects.num() >= 6;
 }
 
 void Robot::deposit() {
@@ -191,8 +289,8 @@ void Robot::deposit() {
         depositingSince = timer::now();
 
         // update the loadedObjects vars
-        loadedObjects = {0, 0, 0, 0};
-        loadedObjectsNum = 0;
+        lastRGBBonus = loadedObjects.rgb();
+        loadedObjects.clearLoad();
 
         wheels(0, 0);
         *led = 2;
@@ -212,7 +310,7 @@ bool Robot::shouldTeleport() {
     // earliest possible teleport after 3min (180sec)
     //      only teleport if it has nothing to lose -> no objects loaded
     if (remainingMapTime < 0) {
-        if (loadedObjectsNum == 0) {
+        if (loadedObjects.num() == 0) {
             return true;
         }
     }
@@ -230,8 +328,7 @@ bool Robot::shouldTeleport() {
 }
 
 void Robot::teleport() {
-    loadedObjectsNum = 0;
-    loadedObjects = {0, 0, 0, 0};
+    loadedObjects.clearLoad();
 
     *tp = 1;
     level = 1;
@@ -284,28 +381,18 @@ int Robot::moveToPosition(PVector p) {
 
     double dist = geometry::dist(pos, p);
 
-    std::cout << "target: " << PVector::str(p) << std::endl;
-    std::cout << "pos: " << PVector::str(pos) << std::endl;
-
     // an angle should be created that represent the difference between the point to 0;
     // It should range from -180 to 180 instead of 0 tp 360;
     double angle = toDegrees(geometry::vector2Angle(p - pos)) - 90;
 
-    std::cout << "0: " << angle << std::endl;
-
     // Difference between compass
     angle -= *compass;
-
-
-    std::cout << "1: " << angle << std::endl;
 
     // If the angle is higher then 180 the point is on the other side
     if (fabs(angle) > 180) {
         //          -> get the same angle but with another prefix
         angle = fmod(angle + ((angle > 0) ? -360 : 360), 360);
     }
-
-    std::cout << "2: " << angle << std::endl;
 
     switch (Robot::checkUsSensors(10, 8, 10)) {
         // case 0 means checkUsSensors has detected no near obstacles
@@ -433,6 +520,18 @@ int Robot::checkUsSensors(int l, int f, int r) {
     return sum;
 }
 
+
+std::array<int, 4> Robot::getDesiredLoad() const {
+    if (huntingSuperObj) {
+        return {1, 1, 1, 3};
+    } else if (remainingMapTime > 60) {
+        return {2, 2, 2, 0};
+    } else {
+        return {0, 0,
+                static_cast<int>(6 - superObjects.size()), static_cast<int>(superObjects.size())};
+    }
+}
+
 std::vector<PVector> Robot::getPointPath(std::array<int, 4> max) {
 
     // the field currently operating on
@@ -445,13 +544,13 @@ std::vector<PVector> Robot::getPointPath(std::array<int, 4> max) {
     PVector start, end = pos;
 
     // number of objects that need to be added to the point path
-    int num = 0;
-    for (unsigned int i = 0; i < max.size(); i++) {
-        num += std::max(max[i] - loadedObjects[i], 0);
+    int num = -static_cast<int> (loadedObjects.num());
+    for (int i : max) {
+        num += i;
     }
 
     // copy of loaded objects array that can be modified
-    auto tLoadedObjects = loadedObjects;
+    auto tLoadedObjects = loadedObjects.all();
 
     // add a certain number of objects and super objects to the point path
     for (unsigned int iter = 0; iter < num; iter++) {
@@ -476,9 +575,9 @@ std::vector<PVector> Robot::getPointPath(std::array<int, 4> max) {
         // -------------- super objects ----------------------
         if (tLoadedObjects[3] < max[3]) {
             for (auto superObj : superObjects) {
-                if (geometry::dist(start, superObj) < dist) {
+                if (geometry::dist(start, superObj->pos) < dist) {
                     color = 3;
-                    end = superObj;
+                    end = superObj->pos;
                     dist = geometry::dist(start, end);
                 }
             }
@@ -516,8 +615,11 @@ void Robot::updateLoop() {
 
     // ---------- superObjects -----------
     if (*superObjectX != 0 || *superObjectY != 0) {
-        superObjects.emplace_back(*superObjectX, *superObjectY);
-        superObjects.emplace_back(*superObjectX, *superObjectY);
+
+        Collectible *newSuperObject = map1->addCollectible(
+                Collectible({static_cast<double>(*superObjectX), static_cast<double>(*superObjectY)},
+                            3, lastRGBBonus == 2));
+        superObjects.emplace_back(newSuperObject);
         *superObjectX = 0, *superObjectY = 0;
     }
 
@@ -543,11 +645,11 @@ void Robot::game0Loop() {
         //Robot::collect();
     } else {
         // avoid trap on the right if objects are loaded
-        if (isYellow(rightColor) && Robot::loadedObjectsNum > 0) {
+        if (isYellow(rightColor) && loadedObjects.num() > 0) {
             wheels(0, 5);
         }
             // avoid trap on the left
-        else if (isYellow(leftColor) && Robot::loadedObjectsNum > 0) {
+        else if (isYellow(leftColor) && loadedObjects.num() > 0) {
             wheels(5, 0);
         } else {
             switch (Robot::checkUsSensors(8, 12, 8)) {
@@ -596,14 +698,10 @@ void Robot::game1Loop() {
     //    Get a new Path    //
     // -------------------- //
     if (completePath.empty()) {
-        if (loadedObjectsNum < 6 && remainingMapTime > 30) {
+        if (loadedObjects.num() < 6 && remainingMapTime > 30) {
+
             // get a path of points
-            std::vector<PVector> pathOfCollectibles;
-            if (huntingSuperObj) {
-                pathOfCollectibles = getPointPath({1, 1, 1, 3});
-            } else {
-                pathOfCollectibles = getPointPath({2, 2, 2, 0});
-            }
+            std::vector<PVector> pathOfCollectibles = getPointPath(getDesiredLoad());
 
             // the first start point should be the current position of the robot
             PVector start = pos;
@@ -614,8 +712,8 @@ void Robot::game1Loop() {
                 auto end = pathOfCollectibles[i];
 
                 // depending on the current number of objects traps should be avoided or ignored
-                Path path = (loadedObjectsNum > 0 || i > 0) ? pathfinder1T.AStar(start, end)
-                                                            : pathfinder1.AStar(start, end);
+                Path path = (loadedObjects.num() > 0 || i > 0) ? pathfinder1T.AStar(start, end)
+                                                               : pathfinder1.AStar(start, end);
 
                 if (!path.isEmpty()) {
                     completePath.push_back(path);
@@ -695,29 +793,16 @@ void Robot::game1Loop() {
 
         if (color != -1) {
 
-            // Super obj
-            if (color == 3) {
+            Collectible *collectible = map1->getCollectible(pos, *compass, 10, color);
+            std::cout << "Mark Collectible: " << collectible << " as collected" << std::endl;
+            if (collectible) {
+                collectible->state = 2;
+                loadedObjects.addObject(collectible);
 
-                if (!superObjects.empty()) {
-
-                    unsigned int index = 0;
-                    for (unsigned int i = 0; i < superObjects.size(); i++) {
-                        if (geometry::dist(superObjects[i], pos) <= geometry::dist(superObjects[index], pos)) {
-                            index = i;
-                        }
-                    }
-                    superObjects.erase(superObjects.begin() + index);
+                if (color == 3) {
+                    superObjects.erase(std::remove(superObjects.begin(), superObjects.end(), collectible),
+                                       superObjects.end());
                 }
-
-                // normal obj
-            } else {
-
-                Collectible *collectible = map1->getCollectible(pos, *compass, 5, color);
-                std::cout << "Mark Collectible: " << collectible << " as collected" << std::endl;
-                if (collectible) {
-                    collectible->state = 2;
-                }
-
             }
 
         }
@@ -730,11 +815,11 @@ void Robot::game1Loop() {
         }
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded
-        if (avoidVoid() == -1 || (isYellow(rightColor) && loadedObjectsNum > 0)) {
+        if (avoidVoid() == -1 || (isYellow(rightColor) && loadedObjects.num() > 0)) {
             wheels(0, 3);
         }
             // avoid the void by driving right || avoid trap on the left
-        else if (avoidVoid() == 1 || (isYellow(leftColor) && loadedObjectsNum > 0)) {
+        else if (avoidVoid() == 1 || (isYellow(leftColor) && loadedObjects.num() > 0)) {
             wheels(3, 0);
         }
     }

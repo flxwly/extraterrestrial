@@ -12,11 +12,6 @@ double reverseAngle(double angle);
 
 bool isInRange(double value, double min, double max);
 
-double max(double n, double m);
-
-double min(double n, double m);
-
-
 double map(double Mmin, double Mmax, double Imin, double Imax, double input);
 
 // Any 2D coord to string

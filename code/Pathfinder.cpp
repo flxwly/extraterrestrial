@@ -18,38 +18,34 @@ double Node::calculateCost(const Node &node) {
     // Line from this.pos to node.pos
     Line line(pos, node.pos);
 
+    // A Line either enters or exits a swamp. So the Swamp_speed_penality is toggled.
+    int modifier = 1;
+
     // Get all swamp intersections.
-    std::vector<std::pair<PVector, double>> intersections;
+    std::vector<std::pair<PVector, double>> intersections = {{pos, 0}};
     for (auto &swamp : field->getMapObjects({2})) {
         for (auto bound : swamp.getEdges()) {
-            PVector intersection = geometry::intersection(line, bound);
+            std::pair<PVector, double> intersection = {geometry::intersection(line, bound), 0};
+            if (!intersection.first)
+                continue;
 
-            if (intersection) {
-                intersections.emplace_back(intersection, geometry::dist(intersection, pos));
+            intersection.second = geometry::dist(intersection.first, pos);
+
+            if (intersections.back().second > intersection.second) {
+                std::swap(intersections.back(), intersection);
             }
+
+            intersections.push_back(intersection);
+        }
+
+        if (modifier == 1 && geometry::isInside(pos, swamp)) {
+            modifier = SWAMP_SPEED_PENALITY;
         }
     }
 
     // interrupt everything if no intersections were found
     if (intersections.empty())
         return geometry::dist(pos, node.pos);
-
-
-    // sort for distance
-    std::sort(intersections.begin(), intersections.end(),
-              [&](const std::pair<PVector, double> &a, const std::pair<PVector, double> &b)
-                      -> bool { return a.second <= b.second; });
-
-    // A Line either enters or exits a swamp. So the Swamp_speed_penality is toggled.
-    int modifier = 1;
-    for (auto &swamp : field->getMapObjects({2})) {
-        if (geometry::isInside(pos, swamp)) {
-            modifier = SWAMP_SPEED_PENALITY;
-            break;
-        }
-    }
-
-    intersections.insert(intersections.begin(), {pos, 0});
 
     // The cost that is returned at the end
     double cost = 0;
@@ -119,7 +115,7 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
     PVector finalNormal = points.back();
 
     if (points.size() == 1) {
-        finalNormal = points[0];
+        finalNormal = points.back();
     }
 
     for (unsigned int i = 0; i < points.size() - 1; ++i) {
@@ -134,19 +130,6 @@ PVector Path::getClosestNormalPoint(PVector p, double d) {
             if (geometry::isLeft(points[i + 1], points[i + 1] + line, normalPoint)) {
                 dist = geometry::dist(normalPoint, p);
                 finalNormal = normalPoint + (points[i + 1] - points[i]).setMag(d);
-            }
-
-            continue;
-
-            // new idea: Test if normal point lies behind idk
-            // points i - > next point
-
-            double d0 = geometry::dist(normalPoint, points[i]);
-            double d1 = geometry::dist(normalPoint, points[i + 1]);
-
-            if (d0 + d1 <= geometry::dist(points[i], points[i + 1]) || d0 < d1) {
-                dist = geometry::dist(normalPoint, p);
-                finalNormal = normalPoint;
             }
         }
     }

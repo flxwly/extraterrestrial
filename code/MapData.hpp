@@ -29,8 +29,7 @@
 */
 class Collectible {
 public:
-
-    Collectible(const PVector &p, const unsigned int &c);
+    Collectible(const PVector &p, const unsigned int &c, bool worthDouble);
 
     /** Checks if this collectible could be the seen one (position wise)
      *
@@ -73,6 +72,10 @@ public:
      * maximize the score the robot needs to now which color each object.
      */
     unsigned int color;
+
+    bool isWorthDouble;
+
+    bool operator==(const Collectible &lhs) const;
 
     /// Represents the position
     PVector pos;
@@ -174,6 +177,13 @@ public:
           const std::vector<PVector> &swampNodes,
           const std::vector<Collectible> &collectibles);
 
+
+    Collectible* addCollectible(Collectible collectible);
+    bool removeCollectible(Collectible collectible);
+
+    Collectible *getCollectible(PVector pos, double angle, double uncertainty, int color);
+
+
     /// Getter for the size
     PVector getSize();
 
@@ -199,10 +209,6 @@ public:
     /// Getter method for collectibles
     std::vector<Collectible> getCollectibles(const std::vector<unsigned int> &colors);
 
-    Collectible *getCollectible(PVector robotPos, double angle, double uncertainty, int color);
-
-    std::vector<PVector> getPointPath(PVector pos, std::array<int, 3> cur, int max);
-
 private:
     /// Contains all walls
     std::vector<Area> Walls_;
@@ -224,11 +230,9 @@ private:
     std::vector<PVector> SwampNodes_;
 
     /** contains collectibles of all colors
-     * They're ordered the following: index = 0 <=> Red; 1 <=> Cyan/Green; 2 <=> Black
-     *
-     * @Note It doesn't contain super-objects
+     * They're ordered the following: index = 0 <=> Red; 1 <=> Cyan/Green; 2 <=> Black; 3 <=> SuperObject
     */
-    std::array<std::vector<Collectible>, 3> Collectibles_;
+    std::array<std::vector<Collectible>, 4> Collectibles_;
 
     /** represents the size in cm of the field object
      *
