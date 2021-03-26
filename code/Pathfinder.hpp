@@ -163,8 +163,10 @@ public:
     /// Checks whether the Path is empty
     [[nodiscard]] bool isEmpty() const { return points.empty(); };
 
-    /// Returns the length of the Path
-    [[nodiscard]] unsigned int length() const { return points.size(); };
+    /// Returns the size of the Path vector
+    [[nodiscard]] unsigned int size() const { return points.size(); };
+
+    double length();
 
     /// Contains all points of the path in order so that p[0] -> p[1] -> p[2] represents the path
     std::vector<PVector> points;

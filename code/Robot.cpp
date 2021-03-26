@@ -751,11 +751,10 @@ void Robot::game1Loop() {
 
     // remove path if point reached
     if (geometry::dist(completePath.front().getLast(), pos) < 5) {
-        completePath.erase(completePath.begin());
-        Collectible *collectible = map1->getCollectible(pos, *compass, 5, -1);
-        if (collectible) {
+        Collectible *collectible = map1->getCollectible(completePath.front().getLast(), *compass, 2, -1);
 
-            if (collectible->visited > 3) {
+        if (collectible) {
+            if (collectible->visited >= 3) {
 
                 // mark the collectible as collected since it seems to be missing
                 collectible->state = 2;
@@ -764,6 +763,8 @@ void Robot::game1Loop() {
             }
             collectible->visited++;
         }
+
+        completePath.erase(completePath.begin());
     }
 
 

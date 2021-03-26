@@ -167,6 +167,16 @@ bool Path::isOnPath(PVector p) {
     return false;
 }
 
+double Path::length() {
+    double length = 0;
+    for (int i = 0; i < points.size()-1; i++)
+        length += geometry::dist(points[i], points[i+1]);
+
+    return length;
+}
+
+
+
 /**     -----------     **/
 /**                     **/
 /**     Pathfinder      **/
