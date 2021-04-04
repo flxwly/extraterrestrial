@@ -74,9 +74,9 @@ void DebugWindow::GameDebug(unsigned int ID) {
         block.setSize(sf::Vector2f(scale.x * 2, scale.y * 2));
         block.setOrigin(scale.x, scale.y);
         block.setFillColor({255, 0, 0});
-        unsigned int num_ = 0;
+        unsigned int m_count = 0;
         for (auto &node : Bot->pathfinder1T.map) {
-            num_++;
+            m_count++;
 
 
             sf::Vector2f p1(static_cast<float>(node.pos.x * scale.x),

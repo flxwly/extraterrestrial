@@ -14,41 +14,41 @@
 #include <chrono>
 #include <array>
 
-
 class ObjectLoad {
 private:
-    std::array<std::vector<Collectible *>, 4> loadedObjects_;
-    unsigned int num_;
+	std::array<std::vector<Collectible *>, 4> m_loadedCollectibles;
+	unsigned int m_count;
 
 public:
-    ObjectLoad();
-    explicit ObjectLoad(const std::vector<Collectible *>&  objects);
+	ObjectLoad();
 
-    void addObject(Collectible *object);
+	explicit ObjectLoad(const std::vector<Collectible *> &collectibles);
 
-    bool removeObject(Collectible *object);
+	void addObject(Collectible *collectible);
 
-    void setLoad(const std::vector<Collectible *>& objects);
+	bool removeObject(Collectible *collectible);
 
-    void clearLoad();
+	void setLoad(const std::vector<Collectible *> &collectible);
 
-    unsigned int getValue();
+	void clearLoad();
 
-    unsigned int rgb();
+	unsigned int getValue();
 
-    unsigned int red();
+	unsigned int rgb();
 
-    unsigned int cyan();
+	unsigned int red();
 
-    unsigned int black();
+	unsigned int cyan();
 
-    unsigned int super();
+	unsigned int black();
 
-    std::array<unsigned int, 4> all();
+	unsigned int super();
 
-    const std::array<std::vector<Collectible *>, 4> &loadedObjects();
+	std::array<unsigned int, 4> all();
 
-    [[nodiscard]] unsigned int num() const;
+	const std::array<std::vector<Collectible *>, 4> &loadedObjects();
+
+	[[nodiscard]] unsigned int num() const;
 };
 
 
@@ -56,106 +56,134 @@ public:
  *
 */
 class Robot {
+
+#pragma region Pointers to Simulator Variables
+private:
+
+	// Input (read)
+	const int *m_posX, *m_posY;
+	int *m_compass;
+	int *m_superObjectX, *m_superObjectY;
+	std::array<int *, 3> m_leftColorSensor, m_rightColorSensor;
+	std::array<int *, 3> m_ultraSonicSensors;
+	int *m_gameTime;
+
+	//TODO: 
+	// Output (write)
+	int *m_wheelLeft, *m_wheelRight;
+	int *m_led;
+	int *m_tp;
+
+#pragma endregion
+
+#pragma region Public Robot Variables
+
 public:
-    Robot(int *_x, int *_y, int *_compass, int *_superObjectX, int *_superObjectY,
-          int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
-          int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime,
-          Field *_map0, Field *_map1);
+	unsigned short level;
 
-    //               ______
-    //______________/ vars \_____________
+	PVector pos;
+	int compass;
+	PVector lastPos;
 
-    // === Variable pointers to vars updated by the sim ===
-    int *posX, *posY;
-    int *compass;
-    int *superObjectX, *superObjectY;
-    std::vector<Collectible *> superObjects;
-    HSLColor leftColor, rightColor;
-    std::array<int *, 3> ultraSonicSensors;
-    int *wheelLeft, *wheelRight;
-    int *led;
-    int *tp;
-    unsigned short level;
-    int *gameTime;
-    int remainingMapTime;
+	std::vector<Path> completePath;
+	Field *map0, *map1;
+	Pathfinder pathfinder0, pathfinder1;
+	Pathfinder pathfinder0T, pathfinder1T;
 
-    /// typedef for time (basically a macro)
-    typedef std::chrono::steady_clock timer;
+	std::array<int, 3> ultraSonic;
+	HSLColor leftColor, rightColor;
+	ObjectLoad loadedObjects;
 
-    /// the complete path (contains sub-paths from point to point)
-    std::vector<Path> completePath;
+	unsigned int lastRGBBonus;
+	bool huntingSuperObj;
+	std::vector<Collectible *> superObjects;
 
-    /// controls the robots wheels
-    void wheels(int l, int r) const;
+	int remainingMapTime;
+	typedef std::chrono::steady_clock Timer;
+	std::chrono::time_point<Timer> lastProgramCycle;
+	std::chrono::time_point<Timer> depositingSince;
+	std::chrono::time_point<Timer> collectingSince;
+	std::chrono::time_point<Timer> lastPositionUpdate;
 
-    void moveAlongPath(Path &path);
+#pragma endregion
 
-    /// updates the position of the robot mathematically and returns the change
-    PVector updatePos();
+#pragma region Constructor
 
-    int moveToPosition(PVector p);
+public:
+	Robot(const int *x, const int *y, int *compass, int *superObjectX, int *superObjectY,
+	      int *leftColorSensorR, int *leftColorSensorG, int *leftColorSensorB,
+	      int *rightColorSensorR, int *rightColorSensorG, int *rightColorSensorB,
+	      int *ultraSonicSensorLeft, int *ultraSonicSensorFront, int *ultraSonicSensorRight,
+	      int *wheelLeft, int *wheelRight, int *led, int *tp, int *gameTime,
 
-    /// checks if l, f or r is higher than the us-sensor values. returns a binary-encoded value
-    int checkUsSensors(int l, int f, int r);
+	      Field *map0, Field *map1) :
 
-    void updateLoop();
-
-    /// game loop for first map
-    void game0Loop();
-
-    /// game loop for second map
-    void game1Loop();
-
-    PVector pos;
-    PVector lastPos;
-
-    // === Robot vars ===
-
-    Field *map0, *map1;
-    Pathfinder pathfinder0, pathfinder1;
-    Pathfinder pathfinder0T, pathfinder1T;
-
-    ObjectLoad loadedObjects;
-    unsigned int lastRGBBonus;
-
-    bool huntingSuperObj;
-
-    std::chrono::time_point<timer> lastCycle;              ///< the time the last cycle was executed
-    std::chrono::time_point<timer> depositingSince;        ///< the time last depositing has started
-    std::chrono::time_point<timer> collectingSince;        ///< the time last collecting has started
-    std::chrono::time_point<timer> lastPositionUpdate;     ///< the last time the position was updated
-
-    //               ___________
-    //______________/ functions \_____________
-
-    /// gets the current velocity for a certain change in time (in ms)
-    [[nodiscard]] PVector getVelocity(long long int dt) const;
+	      m_posX(x), m_posY(y), m_compass(compass),
+	      m_superObjectX(superObjectX), m_superObjectY(superObjectY),
+	      m_leftColorSensor{leftColorSensorR, leftColorSensorG, leftColorSensorB},
+	      m_rightColorSensor{rightColorSensorR, rightColorSensorG, rightColorSensorB},
+	      m_ultraSonicSensors{ultraSonicSensorLeft, ultraSonicSensorFront, ultraSonicSensorRight},
+	      m_wheelLeft(wheelLeft), m_wheelRight(wheelRight),
+	      m_led(led), m_tp(tp), m_gameTime(gameTime)
 
 
-    /// decides whether collecting a point is a good idea or not
-    bool shouldCollect();
 
-    /// collects a point
-    int collect();
 
-    /// decides whether depositing is a good idea or not
-    bool shouldDeposit();
 
-    /// deposits
-    void deposit();
+	      {};
 
-    /// decides whether teleporting is a good idea or not
-    bool shouldTeleport();
+#pragma endregion
 
-    /// teleports
-    void teleport();
+	/// controls the robots wheels
+	void wheels(int l, int r) const;
 
-    /// returns a turning direction if the robot is about to drive off map
-    [[nodiscard]] int avoidVoid() const;
+	void moveAlongPath(Path &path);
 
-    [[nodiscard]] std::array<int, 4> getDesiredLoad() const;
+	/// updates the position of the robot mathematically and returns the change
+	PVector updatePos();
 
-    std::vector<PVector> getPointPath(std::array<int, 4> desiredLoad);
+	int moveToPosition(PVector p);
+
+	/// checks if l, f or r is higher than the us-sensor values. returns a binary-encoded value
+	int checkUsSensors(int l, int f, int r);
+
+	void updateLoop();
+
+	/// game loop for first map
+	void game0Loop();
+
+	/// game loop for second map
+	void game1Loop();
+
+
+	/// gets the current velocity for a certain change in time (in ms)
+	[[nodiscard]] PVector getVelocity(long long int dt) const;
+
+
+	/// decides whether collecting a point is a good idea or not
+	bool shouldCollect();
+
+	/// collects a point
+	int collect();
+
+	/// decides whether depositing is a good idea or not
+	bool shouldDeposit();
+
+	/// deposits
+	void deposit();
+
+	/// decides whether teleporting is a good idea or not
+	bool shouldTeleport();
+
+	/// teleports
+	void teleport();
+
+	/// returns a turning direction if the robot is about to drive off map
+	[[nodiscard]] int avoidVoid() const;
+
+	[[nodiscard]] std::array<int, 4> getDesiredLoad() const;
+
+	std::vector<PVector> getPointPath(std::array<int, 4> desiredLoad);
 };
 
 

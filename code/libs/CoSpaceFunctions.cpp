@@ -30,6 +30,7 @@ int WheelLeft = 0;
 int WheelRight = 0;
 int LED_1 = 0;
 int MyState = 0;
+unsigned int cycle = 0;
 int AI_SensorNum = 13;
 int OtherRob_PositionX;//The X coordinate of the other robot.
 int OtherRob_PositionY;//The Y coordinate of the other robot.
@@ -87,6 +88,8 @@ DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN) {
 
     int sum = 0;
 
+    std::cout << packet << std::endl;
+
     US_Front = AI_IN[0]; packet[0] = US_Front; sum += US_Front;
     US_Left = AI_IN[1]; packet[1] = US_Left; sum += US_Left;
     US_Right = AI_IN[2]; packet[2] = US_Right; sum += US_Right;
@@ -111,10 +114,9 @@ DLL_EXPORT void GetCommand(int *AI_OUT) {
     AI_OUT[3] = MyState;
 }
 
-int cycles = 0;
 DLL_EXPORT void OnTimer() {
 
-    if (cycles == 0) {
+    if (cycle == 0) {
         Setup();
     } else if (CurGame == 0) {
         Game0();
@@ -123,5 +125,5 @@ DLL_EXPORT void OnTimer() {
     }
 
 
-    cycles++;
+    cycle++;
 }

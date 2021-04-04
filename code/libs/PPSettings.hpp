@@ -84,7 +84,6 @@
 /// Standard radius of a path in cm
 #define PATH_RADIUS 10
 
-
 /// ----------------------------- ///
 ///      CoSpace constants
 /// ----------------------------- ///
