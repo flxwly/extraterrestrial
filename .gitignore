@@ -1,6 +1,6 @@
 cmake-build-debug
+__pycache__/
+
+.vscode
 .idea
 map_interpreter/.idea
-.vscode
-extraterrestrial.dll
-__pycache__/
