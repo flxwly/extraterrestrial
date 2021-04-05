@@ -1,6 +1,9 @@
 #include "CoSpaceFunctions.hpp"
 #include "CommonFunctions.hpp"
 
+volatile int *INPUT = nullptr;
+volatile int *OUTPUT = nullptr;
+
 char AI_MyID[2] = {'0', '2'};
 int Duration = 0;
 int SuperDuration = 0;
@@ -86,32 +89,22 @@ DLL_EXPORT void GetSuperObj(int *X, int *Y, int *num) {
 }
 DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN) {
 
-    int sum = 0;
+    packet[14] = 0;
 
-    std::cout << packet << std::endl;
+	for (int i = 0; i < 14; ++i) {
+		packet[i] = AI_IN[i];
+		packet[14] += packet[i];
+	}
 
-    US_Front = AI_IN[0]; packet[0] = US_Front; sum += US_Front;
-    US_Left = AI_IN[1]; packet[1] = US_Left; sum += US_Left;
-    US_Right = AI_IN[2]; packet[2] = US_Right; sum += US_Right;
-    CSLeft_R = AI_IN[3]; packet[3] = CSLeft_R; sum += CSLeft_R;
-    CSLeft_G = AI_IN[4]; packet[4] = CSLeft_G; sum += CSLeft_G;
-    CSLeft_B = AI_IN[5]; packet[5] = CSLeft_B; sum += CSLeft_B;
-    CSRight_R = AI_IN[6]; packet[6] = CSRight_R; sum += CSRight_R;
-    CSRight_G = AI_IN[7]; packet[7] = CSRight_G; sum += CSRight_G;
-    CSRight_B = AI_IN[8]; packet[8] = CSRight_B; sum += CSRight_B;
-    PositionX = AI_IN[9]; packet[9] = PositionX; sum += PositionX;
-    PositionY = AI_IN[10]; packet[10] = PositionY; sum += PositionY;
-    TM_State = AI_IN[11]; packet[11] = TM_State; sum += TM_State;
-    Compass = AI_IN[12]; packet[12] = Compass; sum += Compass;
-    Time = AI_IN[13]; packet[13] = Time; sum += Time;
-    packet[14] = sum;
-
+	INPUT = AI_IN;
 }
 DLL_EXPORT void GetCommand(int *AI_OUT) {
     AI_OUT[0] = WheelLeft;
     AI_OUT[1] = WheelRight;
     AI_OUT[2] = LED_1;
     AI_OUT[3] = MyState;
+
+    OUTPUT = AI_OUT;
 }
 
 DLL_EXPORT void OnTimer() {

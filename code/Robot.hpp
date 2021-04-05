@@ -60,19 +60,27 @@ class Robot {
 #pragma region Pointers to Simulator Variables
 private:
 
-	// Input (read)
-	const int *m_posX, *m_posY;
-	int *m_compass;
-	int *m_superObjectX, *m_superObjectY;
-	std::array<int *, 3> m_leftColorSensor, m_rightColorSensor;
-	std::array<int *, 3> m_ultraSonicSensors;
-	int *m_gameTime;
+	// Direct Input/Output to the Sim
+	volatile int *AI_IN{nullptr}, *AI_OUT{nullptr};
+	std::array<int *, 3> SUPER_OBJECT{nullptr, nullptr, nullptr};
 
-	//TODO: 
+	bool setIN(volatile int *IN);
+	bool setOUT(volatile int *OUT);
+	void updateSimVars();
+
+	// Input (read)
+	PVector simPos;
+	int compass{0};
+	PVector superObject{0, 0};
+	int superObjectNum{0};
+	HSLColor leftColor{0, 0, 0}, rightColor{0, 0, 0};
+	std::array<int, 3> ultraSonic{0, 0, 0};
+	int gameTime{0};
+
 	// Output (write)
-	int *m_wheelLeft, *m_wheelRight;
-	int *m_led;
-	int *m_tp;
+	int wheelLeft{0}, wheelRight{0};
+	int led{0};
+	int tp{0};
 
 #pragma endregion
 
@@ -82,7 +90,6 @@ public:
 	unsigned short level;
 
 	PVector pos;
-	int compass;
 	PVector lastPos;
 
 	std::vector<Path> completePath;
@@ -90,8 +97,6 @@ public:
 	Pathfinder pathfinder0, pathfinder1;
 	Pathfinder pathfinder0T, pathfinder1T;
 
-	std::array<int, 3> ultraSonic;
-	HSLColor leftColor, rightColor;
 	ObjectLoad loadedObjects;
 
 	unsigned int lastRGBBonus;
@@ -110,32 +115,13 @@ public:
 #pragma region Constructor
 
 public:
-	Robot(const int *x, const int *y, int *compass, int *superObjectX, int *superObjectY,
-	      int *leftColorSensorR, int *leftColorSensorG, int *leftColorSensorB,
-	      int *rightColorSensorR, int *rightColorSensorG, int *rightColorSensorB,
-	      int *ultraSonicSensorLeft, int *ultraSonicSensorFront, int *ultraSonicSensorRight,
-	      int *wheelLeft, int *wheelRight, int *led, int *tp, int *gameTime,
 
-	      Field *map0, Field *map1) :
-
-	      m_posX(x), m_posY(y), m_compass(compass),
-	      m_superObjectX(superObjectX), m_superObjectY(superObjectY),
-	      m_leftColorSensor{leftColorSensorR, leftColorSensorG, leftColorSensorB},
-	      m_rightColorSensor{rightColorSensorR, rightColorSensorG, rightColorSensorB},
-	      m_ultraSonicSensors{ultraSonicSensorLeft, ultraSonicSensorFront, ultraSonicSensorRight},
-	      m_wheelLeft(wheelLeft), m_wheelRight(wheelRight),
-	      m_led(led), m_tp(tp), m_gameTime(gameTime)
-
-
-
-
-
-	      {};
+	Robot(volatile int *IN, volatile int *OUT, std::array<int *, 3> superObject, Field *map0, Field *map1);
 
 #pragma endregion
 
 	/// controls the robots wheels
-	void wheels(int l, int r) const;
+	void wheels(int l, int r);
 
 	void moveAlongPath(Path &path);
 

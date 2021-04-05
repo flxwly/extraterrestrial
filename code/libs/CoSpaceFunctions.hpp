@@ -14,6 +14,9 @@
 #define ENABLE_C4996
 #endif
 
+extern volatile int *INPUT;
+extern volatile int *OUTPUT;
+
 extern char AI_MyID[2];
 extern int Duration;
 extern int SuperDuration;

@@ -47,9 +47,7 @@ void Setup() {
 	                   GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
 	GAME1 = &Game1;
 
-	static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_X, &SuperObj_Y,
-	                 &US_Left, &US_Front, &US_Right,
-	                 &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time, GAME0, GAME1);
+	static Robot bot(INPUT, OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, GAME0, GAME1);
 	Bot = &bot;
 
 #ifdef SFML

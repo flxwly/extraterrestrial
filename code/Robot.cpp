@@ -135,33 +135,66 @@ unsigned int ObjectLoad::num() const {
 //====================================
 //          Constructor
 //====================================
-Robot::Robot(int *_posX, int *_posY, int *_compass, int *_superObjectX, int *_superObjectY,
-             int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront, int *_ultraSonicSensorRight,
-             int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime, Field *_map0, Field *_map1) :
 
-		posX{_posX}, posY{_posY}, compass{_compass},
-		superObjectX{_superObjectX}, superObjectY{_superObjectY},
-		ultraSonicSensors{_ultraSonicSensorLeft, _ultraSonicSensorFront, _ultraSonicSensorRight},
-		wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, level{1}, gameTime{_gameTime},
 
-		collectingSince{Timer::now()}, depositingSince{Timer::now()},
-		pos{static_cast<double>(*_posX), static_cast<double> (*_posY)}, lastPos{-1, -1},
-		lastPositionUpdate{Timer::now()}, map0{_map0}, map1{_map1},
-		huntingSuperObj{false}, remainingMapTime(0),
-		pathfinder0{*_map0, false}, pathfinder0T{*_map0, true},
-		pathfinder1{*_map1, false}, pathfinder1T{*_map1, true} {}
+Robot::Robot(volatile int *IN, volatile int *OUT, std::array<int *, 3> superObject, Field *map0, Field *map1) :
+		pathfinder0(*map0, false), pathfinder1(*map1, false),
+		pathfinder0T(*map0, true), pathfinder1T(*map1, true) {
 
-Robot::Robot(int *_x, int *_y, int *_compass, int *_superObjectX, int *_superObjectY, int *_leftColorSensorR,
-             int *_leftColorSensorG, int *_leftColorSensorB, int *_rightColorSensorR, int *_rightColorSensorG,
-             int *_rightColorSensorB, int *_ultraSonicSensorLeft, int *_ultraSonicSensorFront,
-             int *_ultraSonicSensorRight, int *_wheelLeft, int *_wheelRight, int *_led, int *_tp, int *_gameTime,
-             Field *_map0, Field *_map1) :
+	setIN(IN);
+	setOUT(OUT);
+	SUPER_OBJECT = superObject;
+}
 
-		posX{_x}, posY{_x}, compass{_compass},
-		superObjectX{_superObjectX}, superObjectY{_superObjectY},
-		ultraSonicSensors{_ultraSonicSensorLeft, _ultraSonicSensorFront, _ultraSonicSensorRight},
-		wheelLeft{_wheelLeft}, wheelRight{_wheelRight}, led{_led}, tp{_tp}, level{1}, gameTime{_gameTime}, {
 
+bool Robot::setIN(volatile int *IN) {
+	if (IN) {
+		AI_IN = IN;
+		return true;
+	} else {
+		ERROR_MESSAGE("Input pointer is nullptr")
+		return false;
+	}
+}
+
+bool Robot::setOUT(volatile int *OUT) {
+	if (OUT) {
+		AI_OUT = OUT;
+		return true;
+	} else {
+		ERROR_MESSAGE("Output pointer is nullptr")
+		return false;
+	}
+}
+
+void Robot::updateSimVars() {
+
+	// Input vars
+	simPos.set(
+			(AI_IN[9] != 0) ? static_cast<float>(AI_IN[9]) : NAN,
+			(AI_IN[10] != 0) ? static_cast<float>(AI_IN[10]) : NAN);
+
+	compass = AI_IN[12];
+	superObject.set(*SUPER_OBJECT[0], *SUPER_OBJECT[1]);
+	superObjectNum = *SUPER_OBJECT[2];
+
+	leftColor = rgb2hsl({
+		static_cast<float>(AI_IN[3]),
+		static_cast<float>(AI_IN[4]),
+		static_cast<float>(AI_IN[5])});
+
+	rightColor = rgb2hsl({
+		static_cast<float>(AI_IN[6]),
+		static_cast<float>(AI_IN[7]),
+		static_cast<float>(AI_IN[8])});
+
+	ultraSonic[0] = AI_IN[0], ultraSonic[1] = AI_IN[1], ultraSonic[2] = AI_IN[2];
+	gameTime = AI_IN[12];
+
+	// Output vars
+	AI_OUT[0] = wheelLeft, AI_OUT[1] = wheelRight;
+	AI_OUT[2] = led;
+	AI_OUT[3] = tp;
 }
 
 //====================================
@@ -175,13 +208,13 @@ PVector Robot::getVelocity(long long int dt) const {
 
 	double penalty = (isSwamp(leftColor) || isSwamp(rightColor)) ? SWAMP_SPEED_PENALITY : 1;
 
-	if (*wheelLeft == *wheelRight) {
-		return geometry::angle2Vector(toRadians(*compass + 90)) *
-		       (static_cast<double>(*wheelLeft) * ROBOT_SPEED / penalty) * static_cast<double>(dt);
+	if (wheelLeft == wheelRight) {
+		return geometry::angle2Vector(toRadians(compass + 90)) *
+		       (static_cast<double>(wheelLeft) * ROBOT_SPEED / penalty) * static_cast<double>(dt);
 	}
 
-	double v1 = static_cast<double>(*wheelLeft) * ROBOT_SPEED / penalty;
-	double v2 = static_cast<double>(*wheelRight) * ROBOT_SPEED / penalty;
+	double v1 = static_cast<double>(wheelLeft) * ROBOT_SPEED / penalty;
+	double v2 = static_cast<double>(wheelRight) * ROBOT_SPEED / penalty;
 
 	double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
 
@@ -192,7 +225,7 @@ PVector Robot::getVelocity(long long int dt) const {
 	              PVector(s * cos(v2 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 - s)) - s,
 	                      s * sin(v2 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 - s)));
 
-	vel.rotate(toRadians(*compass + 90));
+	vel.rotate(toRadians(compass + 90));
 
 	return vel;
 }
@@ -200,17 +233,17 @@ PVector Robot::getVelocity(long long int dt) const {
 PVector Robot::updatePos() {
 
 	// check if robot is in signal lost zone
-	if (*posX <= 0 && *posY <= 0) {
+	if (simPos) {
 
 		pos += getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
 				Timer::now() - lastPositionUpdate).count());
 
-		*posX = static_cast<int>(round(pos.x)), *posY = static_cast<int>(round(pos.y));
+		simPos = pos;
 
 	} else {
 
-		if (geometry::dist(pos, PVector(*posX, *posY)) > RPOS_ERROR_MARGIN) {
-			pos.set(*posX, *posY);
+		if (geometry::dist(pos, simPos) > RPOS_ERROR_MARGIN) {
+			pos = simPos;
 		} else {
 			pos = pos + getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
 					Timer::now() - lastPositionUpdate).count());
@@ -258,7 +291,7 @@ int Robot::collect() {
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - collectingSince).count() <= 4000) {
 		// This is to prevent the robot from moving
 		wheels(0, 0);
-		*led = 1;
+		led = 1;
 		return -1;
 	}
 		// the robot begins to collect
@@ -297,7 +330,7 @@ void Robot::deposit() {
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - depositingSince).count() <= 5000) {
 		// This is to prevent the robot from moving
 		wheels(0, 0);
-		*led = 2;
+		led = 2;
 
 	}
 		// the robot begins to deposit
@@ -310,7 +343,7 @@ void Robot::deposit() {
 		loadedObjects.clearLoad();
 
 		wheels(0, 0);
-		*led = 2;
+		led = 2;
 	}
 }
 
@@ -347,7 +380,7 @@ bool Robot::shouldTeleport() {
 void Robot::teleport() {
 	loadedObjects.clearLoad();
 
-	*tp = 1;
+	tp = 1;
 	level = 1;
 }
 
@@ -358,40 +391,40 @@ int Robot::avoidVoid() const {
 
 	//Right END
 	if (pos.x >= 350) {
-		if (*compass > 270 && *compass <= 360)
+		if (compass > 270 && compass <= 360)
 			return -1;
-		else if (*compass > 180 && *compass <= 270)
+		else if (compass > 180 && compass <= 270)
 			return 1;
 	}
 
 	// LEFT END
 	if (pos.x <= 10) {
-		if (*compass > 0 && *compass <= 90)
+		if (compass > 0 && compass <= 90)
 			return 1;
-		else if (*compass > 90 && *compass <= 180)
+		else if (compass > 90 && compass <= 180)
 			return -1;
 	}
 
 	//TOP END
 	if (pos.y >= 260) {
-		if (*compass > 270 && *compass <= 360)
+		if (compass > 270 && compass <= 360)
 			return 1;
-		else if (*compass >= 0 && *compass <= 90)
+		else if (compass >= 0 && compass <= 90)
 			return -1;
 	}
 
 	//BOTTOM END
 	if (pos.y <= 10) {
-		if (*compass > 180 && *compass <= 270)
+		if (compass > 180 && compass <= 270)
 			return -1;
-		else if (*compass < 180 && *compass >= 90)
+		else if (compass < 180 && compass >= 90)
 			return 1;
 	}
 	return 0;
 }
 
-void Robot::wheels(int l, int r) const {
-	*wheelLeft = l, *wheelRight = r;
+void Robot::wheels(int l, int r) {
+	wheelLeft = l; wheelRight = r;
 }
 
 int Robot::moveToPosition(PVector p) {
@@ -403,7 +436,7 @@ int Robot::moveToPosition(PVector p) {
 	double angle = toDegrees(geometry::vector2Angle(p - pos)) - 90;
 
 	// Difference between compass
-	angle -= *compass;
+	angle -= compass;
 
 	// If the angle is higher then 180 the point is on the other side
 	if (fabs(angle) > 180) {
@@ -411,7 +444,7 @@ int Robot::moveToPosition(PVector p) {
 		angle = fmod(angle + ((angle > 0) ? -360 : 360), 360);
 	}
 
-	switch (Robot::checkUsSensors(10, 8, 10)) {
+	switch (checkUsSensors(10, 8, 10)) {
 		// case 0 means checkUsSensors has detected no near obstacles
 		//      -> the robot can move freely
 		case 0:
@@ -528,11 +561,11 @@ void Robot::moveAlongPath(Path &path) {
 int Robot::checkUsSensors(int l, int f, int r) {
 	int sum = 0;
 
-	if (*ultraSonicSensors[0] < l)
+	if (ultraSonic[0] < l)
 		sum += 1;
-	if (*ultraSonicSensors[1] < f)
+	if (ultraSonic[1] < f)
 		sum += 2;
-	if (*ultraSonicSensors[2] < r)
+	if (ultraSonic[2] < r)
 		sum += 4;
 	return sum;
 }
@@ -617,12 +650,6 @@ std::vector<PVector> Robot::getPointPath(std::array<int, 4> max) {
 //          loop Methods
 //====================================
 void Robot::updateLoop() {
-	// --------- Color Sensors ---------
-	leftColor = rgb2hsl({static_cast<float>(*leftColorSensor[0]), static_cast<float>(*leftColorSensor[1]),
-	                     static_cast<float>(*leftColorSensor[2])});
-	rightColor = rgb2hsl({static_cast<float>(*rightColorSensor[0]), static_cast<float>(*rightColorSensor[1]),
-	                      static_cast<float>(*rightColorSensor[1])});
-
 	// --------- Time ----------
 	remainingMapTime = GAME0_TIME - Time + ((level == 1) ? GAME1_TIME : 0);
 
@@ -633,35 +660,34 @@ void Robot::updateLoop() {
 	huntingSuperObj = (remainingMapTime < 60 || superObjects.size() >= 3 || huntingSuperObj) && !superObjects.empty();
 
 	// ---------- superObjects -----------
-	if (*superObjectX != 0 || *superObjectY != 0) {
+	if (superObject) {
 
 		Collectible *newSuperObject = map1->addCollectible(
-				Collectible({static_cast<double>(*superObjectX), static_cast<double>(*superObjectY)},
-				            3, lastRGBBonus == 2));
+				Collectible(superObject,3, lastRGBBonus == 2));
 		superObjects.emplace_back(newSuperObject);
-		*superObjectX = 0, *superObjectY = 0;
+		superObject.set(NAN, NAN);
 	}
 
 	// ---------- Position -------------
 	// set last coords to normal coords (last coords wont get overwritten by the sim)
-	lastPos.set(*posX, *posY);
+	lastPos = simPos;
 	updatePos();
 }
 
 void Robot::game0Loop() {
 
 
-	if (Robot::shouldDeposit() && (isOrange(leftColor) || isOrange(rightColor))) {
+	if (shouldDeposit() && (isOrange(leftColor) || isOrange(rightColor))) {
 		if (isOrange(leftColor) && isOrange(rightColor)) {
-			Robot::deposit();
+			deposit();
 		} else if (isOrange(leftColor)) {
-			Robot::wheels(0, 3);
+			wheels(0, 3);
 		} else {
-			Robot::wheels(3, 0);
+			wheels(3, 0);
 		}
 
-	} else if (Robot::shouldCollect()) {
-		//Robot::collect();
+	} else if (shouldCollect()) {
+		//collect();
 	} else {
 		// avoid trap on the right if objects are loaded
 		if (isYellow(rightColor) && loadedObjects.num() > 0) {
@@ -671,7 +697,7 @@ void Robot::game0Loop() {
 		else if (isYellow(leftColor) && loadedObjects.num() > 0) {
 			wheels(5, 0);
 		} else {
-			switch (Robot::checkUsSensors(8, 12, 8)) {
+			switch (checkUsSensors(8, 12, 8)) {
 				// no obstacle
 				case 0:
 					// 4 | 4 is standard movement speed in w1
@@ -702,12 +728,12 @@ void Robot::game0Loop() {
 					break;
 
 			}
-			*Robot::led = 0;
+			led = 0;
 		}
 	}
 	// Teleport
-	if (Robot::shouldTeleport()) {
-		Robot::teleport();
+	if (shouldTeleport()) {
+		teleport();
 	}
 }
 
@@ -771,7 +797,7 @@ void Robot::game1Loop() {
 	// remove path if point reached
 	if (geometry::dist(completePath.front().getLast(), pos) < 5) {
 		completePath.erase(completePath.begin());
-		Collectible *collectible = map1->getCollectible(pos, *compass, 5, -1);
+		Collectible *collectible = map1->getCollectible(pos, compass, 5, -1);
 		if (collectible) {
 
 			if (collectible->visited > 3) {
@@ -812,7 +838,7 @@ void Robot::game1Loop() {
 
 		if (color != -1) {
 
-			Collectible *collectible = map1->getCollectible(pos, *compass, 10, color);
+			Collectible *collectible = map1->getCollectible(pos, compass, 10, color);
 			std::cout << "Mark Collectible: " << collectible << " as collected" << std::endl;
 			if (collectible) {
 				collectible->state = 2;
@@ -828,7 +854,7 @@ void Robot::game1Loop() {
 
 	} else {
 
-		*led = 0;
+		led = 0;
 		if (!completePath.empty()) {
 			moveAlongPath(completePath.front());
 		}
@@ -845,5 +871,6 @@ void Robot::game1Loop() {
 
 	lastProgramCycle = Timer::now();
 }
+
 
 #pragma endregion
