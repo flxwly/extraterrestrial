@@ -1,10 +1,10 @@
 import random
 import xml.etree.ElementTree as ET
 from os import path
-from sys import setrecursionlimit
+from sys import setrecursionlimit, exit
 
-from cv2 import resize, imread, INTER_NEAREST
 from PIL import Image, ImageDraw
+from cv2 import resize, imread, INTER_NEAREST
 
 setrecursionlimit(10000)
 
@@ -12,17 +12,9 @@ setrecursionlimit(10000)
 detail = 0.5
 
 # for old CoSpace Versions
-FieldA = "../../../../../store/media/Rescue/Map/Sec/Design/FieldA"
-FieldB = "../../../../../store/media/Rescue/Map/Sec/Design/FieldB"
-FieldFD = "../../../../../store/media/Rescue/Map/Sec/Design"
-
-cospace_version = "4.0.9"  # "2.6.2" #
-
-# for CoSpace 2.6.2+
-if cospace_version == "2.6.2":
-    FieldA = "../../../../../store/media/CS.C/RSC/Map/Design/FieldA"
-    FieldB = "../../../../../store/media/CS.C/RSC/Map/Design/FieldB"
-    FieldFD = "../../../../../store/media/CS.C/RSC/Map/Design"
+FieldA = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldA"
+FieldB = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldB"
+FieldFD = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field"
 
 
 def is_left(p0, p1, p2):
@@ -807,8 +799,8 @@ class MapData:
                             break
 
                             # print(self.collectibles)
-            else:
-                print("File: " + fd_dir + "/Field.FD not found")
+        else:
+            print("File: " + fd_dir + "/Field.FD not found")
 
     def show(self, scale):
 
@@ -914,10 +906,7 @@ def main():
     mapData = MapData(img_dirs=[FieldA, FieldB], fd_dir=FieldFD)
     # mapData.show(10)
 
-    print(str(mapData))
-
     mapData.show(10)
-    return
 
     begin = "\n\n\n" \
             "///   _______                _____          __\n" \
@@ -944,3 +933,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    exit()

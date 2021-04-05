@@ -10,30 +10,13 @@ from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
 
 is_strip = False
-more_warnings = False
-
-auto_update = False
-
-optimisation_level = 3
 
 # SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 
-# for new CoSpace Versions
-out_path = "./"
-file_name = "extraterrestrial.dll"
-
-cospace_version = "2.6.2"
-
-# for CoSpace 2.6.2
-if cospace_version == "2.6.2":
-    out_path = "./"
-
-
-def compile_code():
+def compile_code(out_path, file_name, optimisation_level, more_warnings):
     system('cls')
     code_path = "./code/"
-    global out_path
 
     file_list = glob.glob(code_path + "**/*.cpp", recursive=True)
 
@@ -55,43 +38,80 @@ def compile_code():
         command += " " + file_path
     command += " -o " + "\"" + out_path + file_name + "\"" + SFML
 
-    # command = command + " & REM 2> errors.txt strip --strip-unneeded \"" + out_path + "extraterrestrial.dll\" pause"]
-
-    if is_strip:
-        command += " &  strip --strip-unneeded \"" + out_path + file_name + "\""
     print("\n" + command + "\n")
-    print("compiling...")
-    subprocess.call(command, shell=True)
-    print("finished")
-    print("Output: " + str(out_path) + file_name)
+    subprocess.run(command, shell=True)
+    print("\nOutput: " + str(out_path) + file_name)
     sys.stdout.flush()
 
 
 class Event(PatternMatchingEventHandler):
 
-    def __init__(self, patterns=None):
+    def __init__(self, command_line_args, patterns=None):
         super(Event, self).__init__(patterns=patterns)
         self.last_modified = datetime.now()
+        self.command_line_args = command_line_args
 
     def on_any_event(self, event):
         if datetime.now() - self.last_modified > timedelta(seconds=5):
-            clear = lambda: system('cls')
-            clear()
-            compile_code()
+            system('cls')
+            compile_code(
+                self.command_line_args[0],
+                self.command_line_args[1],
+                self.command_line_args[2],
+                self.command_line_args[3])
             self.last_modified = datetime.now()
 
 
+def handle_arguments(command_line_args):
+    out_path = "./"
+    file_name = "ai.dll"
+    auto_update = True if "-A" in sys.argv else False
+    more_warnings = True if "-M" in sys.argv else False
+    optimisation_level = 0
+
+    if "-o" in command_line_args:
+        i = command_line_args.index("-o") + 1
+        if len(command_line_args) <= i:
+            print("No out path found. Please provide an out path after using -op")
+            exit()
+        else:
+            out_path = command_line_args[i]
+    else:
+        print("Please provide a out path. Use -o [out path]")
+
+    if "-f" in command_line_args:
+        i = command_line_args.index("-f") + 1
+        if len(command_line_args) <= i:
+            print("No filename found. Please provide a filename after using -fn")
+            exit()
+        else:
+            file_name = command_line_args[i]
+    else:
+        print("Please provide a filename. Use -f [Filename]")
+
+    if "-O" in command_line_args:
+        i = command_line_args.index("-O") + 1
+        if len(command_line_args) <= i:
+            print("No optimisation level found. Please provide an optimisation level after using -ol")
+            exit()
+        else:
+            optimisation_level = command_line_args[i]
+
+    return [out_path, file_name, optimisation_level, more_warnings, auto_update]
+
+
 if __name__ == "__main__":
+
+    args = handle_arguments(sys.argv)
+
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    path = sys.argv[1] if len(sys.argv) > 1 else '.'
-    event_handler = Event(patterns=["*.cpp", "*.hpp"])
-    compile_code()
+    event_handler = Event(command_line_args=args, patterns=["*.cpp", "*.hpp"])
 
-    if auto_update:
+    if args[4]:
         observer = Observer()
-        observer.schedule(event_handler, path, recursive=True)
+        observer.schedule(event_handler, ".", recursive=True)
         observer.start()
 
         try:
@@ -100,3 +120,9 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             observer.stop()
         observer.join()
+    else:
+        compile_code(
+            args[0],
+            args[1],
+            args[2],
+            args[3])

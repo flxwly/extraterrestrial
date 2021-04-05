@@ -35,6 +35,7 @@ Robot *Bot = nullptr;
 
 void Setup() {
 	system("cls");
+	std::cout << "Setup... ";
 
 	// TODO: Move static objects back to static space so the objects get initialized upon load
 	// ----------- Initialisation of static objects -------------------- //
@@ -55,6 +56,7 @@ void Setup() {
 	window.startDebugging(GAME1);
 	debugWindow = &window;
 #endif
+	std::cout << "done" << std::endl;
 }
 
 /*
@@ -64,9 +66,13 @@ void Setup() {
 */
 
 void Game0() {
-    Bot->updateLoop();
+	std::cout << "Game0Loop... ";
+    //Bot->updateLoop();
     Bot->game0Loop();
 	debugWindow->updateLoop();
+	std::cout << "done" << std::endl;
+
+
 }
 
 /*
@@ -79,7 +85,9 @@ void Game0() {
 
 
 void Game1() {
+	std::cout << "Game1Loop... ";
     Bot->updateLoop();
     Bot->game1Loop();
     debugWindow->updateLoop();
+	std::cout << "done" << std::endl;
 }
