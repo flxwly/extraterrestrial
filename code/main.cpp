@@ -35,6 +35,7 @@ Robot *Bot = nullptr;
 
 void Setup() {
 	system("cls");
+	std::cout << "Setup... ";
 
 	// TODO: Move static objects back to static space so the objects get initialized upon load
 	// ----------- Initialisation of static objects -------------------- //
@@ -47,9 +48,7 @@ void Setup() {
 	                   GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
 	GAME1 = &Game1;
 
-	static Robot bot(&PositionX, &PositionY, &Compass, &SuperObj_X, &SuperObj_Y,
-	                 &US_Left, &US_Front, &US_Right,
-	                 &WheelLeft, &WheelRight, &LED_1, &Teleport, &Time, GAME0, GAME1);
+	static Robot bot(INPUT, OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, GAME0, GAME1);
 	Bot = &bot;
 
 #ifdef SFML
@@ -57,6 +56,7 @@ void Setup() {
 	window.startDebugging(GAME1);
 	debugWindow = &window;
 #endif
+	std::cout << "done" << std::endl;
 }
 
 /*
@@ -66,9 +66,13 @@ void Setup() {
 */
 
 void Game0() {
-    Bot->updateLoop();
+	std::cout << "Game0Loop... ";
+    //Bot->updateLoop();
     Bot->game0Loop();
 	debugWindow->updateLoop();
+	std::cout << "done" << std::endl;
+
+
 }
 
 /*
@@ -81,7 +85,9 @@ void Game0() {
 
 
 void Game1() {
+	std::cout << "Game1Loop... ";
     Bot->updateLoop();
     Bot->game1Loop();
     debugWindow->updateLoop();
+	std::cout << "done" << std::endl;
 }

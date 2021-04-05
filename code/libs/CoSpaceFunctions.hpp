@@ -6,19 +6,6 @@
 
 #define DLL_EXPORT extern "C" __declspec(dllexport)
 
-#define USFYOffset 12.375
-#define USRXOffset 3            //3.874
-#define USRYOffset 11.045
-#define USLXOffset -3           //-3.874
-#define USLYOffset 11.045
-
-#define CSXOffset 3.618
-#define CSYOffset 10.125
-
-#define wall 1
-#define trap 2
-
-
 #ifdef _MSC_VER
 #define DISABLE_C4996 __pragma(warning(push)) __pragma(warning(disable : 4996))
 #define ENABLE_C4996 __pragma(warning(pop))
@@ -26,6 +13,9 @@
 #define DISABLE_C4996
 #define ENABLE_C4996
 #endif
+
+extern volatile int *INPUT;
+extern volatile int *OUTPUT;
 
 extern char AI_MyID[2];
 extern int Duration;
@@ -56,6 +46,7 @@ extern int WheelLeft;
 extern int WheelRight;
 extern int LED_1;
 extern int MyState;
+extern unsigned int cycle;
 extern int AI_SensorNum;
 extern int OtherRob_PositionX;//The X coordinate of the other robot.
 extern int OtherRob_PositionY;//The Y coordinate of the other robot.
@@ -69,7 +60,6 @@ extern int ObjDuration; //The duration(seconds) of the object maintains the curr
 
 extern void Game0();
 extern void Game1();
-extern int cycles;
 extern void Setup();
 
 DLL_EXPORT void SetGameID(int GameID);
