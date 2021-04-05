@@ -69,7 +69,9 @@ void Game0() {
 	std::cout << "Game0Loop... ";
     //Bot->updateLoop();
     Bot->game0Loop();
+#ifdef SFML
 	debugWindow->updateLoop();
+#endif
 	std::cout << "done" << std::endl;
 
 
@@ -88,6 +90,8 @@ void Game1() {
 	std::cout << "Game1Loop... ";
     Bot->updateLoop();
     Bot->game1Loop();
+#ifdef SFML
     debugWindow->updateLoop();
+#endif
 	std::cout << "done" << std::endl;
 }
