@@ -24,12 +24,10 @@ def is_left(p0, p1, p2):
 def is_in_area(p_, area):
     p = Point(p_.field, p_.virtual_x, p_.virtual_y)
 
-    print(p)
-
     wn = 0
     n = len(area)
 
-    poly = area
+    poly = area.copy()
     poly.append(area[0])
 
     for i in range(n):
@@ -874,8 +872,6 @@ class MapData:
             collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
             collectibles_str = collectibles_str.replace("False", "false").replace("True", "true")
 
-            # TODO -- ONLY TEMP FOR DEBUGGING -- REMOVELATER
-
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
             file_content += "\t\t/*walls*/\n" + wall_str + \
@@ -905,8 +901,6 @@ def main():
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
     mapData = MapData(img_dirs=[FieldA, FieldB], fd_dir=FieldFD)
     # mapData.show(10)
-
-    mapData.show(10)
 
     begin = "\n\n\n" \
             "///   _______                _____          __\n" \
