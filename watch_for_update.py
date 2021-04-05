@@ -14,6 +14,7 @@ is_strip = False
 # SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 SFML = " -I\"%SFML32_HOME%/include\" -L\"%SFML32_HOME%/lib\" -lsfml-graphics -lsfml-window -lsfml-system"
 
+
 def compile_code(out_path, file_name, optimisation_level, more_warnings):
     system('cls')
     code_path = "./code/"
@@ -66,7 +67,7 @@ def handle_arguments(command_line_args):
     out_path = "./"
     file_name = "ai.dll"
     auto_update = True if "-A" in sys.argv else False
-    more_warnings = True if "-M" in sys.argv else False
+    more_warnings = True if "-W" in sys.argv else False
     optimisation_level = 0
 
     if "-o" in command_line_args:
@@ -95,7 +96,7 @@ def handle_arguments(command_line_args):
             print("No optimisation level found. Please provide an optimisation level after using -ol")
             exit()
         else:
-            optimisation_level = command_line_args[i]
+            optimisation_level = int(command_line_args[i])
 
     return [out_path, file_name, optimisation_level, more_warnings, auto_update]
 
