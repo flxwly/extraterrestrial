@@ -1,10 +1,6 @@
 cmake-build-debug
+__pycache__/
+
+.vscode
 .idea
 map_interpreter/.idea
-.vscode
-.floo
-.flooignore
-CMakeLists.txt
-Kackprojekt
-extraterrestrial.dll
-__pycache__/
