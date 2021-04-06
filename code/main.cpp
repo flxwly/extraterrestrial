@@ -18,13 +18,10 @@
 
 #endif
 
-
 #ifdef SFML
-
 #include "SFMLWindow.hpp"
 
 DebugWindow *debugWindow = nullptr;
-
 #endif
 
 Field *GAME0 = nullptr;
@@ -33,8 +30,17 @@ Field *GAME1 = nullptr;
 
 Robot *Bot = nullptr;
 
+bool runAsyncLoop = false;
+std::thread *AsyncLoopThread = nullptr;
+void startAsyncLoop() {
+    runAsyncLoop = true;
+    while (runAsyncLoop) {
+        Bot->updateLoop();
+        Bot->game0Loop();
+    }
+}
+
 void Setup() {
-	system("cls");
 
 	// TODO: Move static objects back to static space so the objects get initialized upon load
 	// ----------- Initialisation of static objects -------------------- //
@@ -55,29 +61,19 @@ void Setup() {
 	window.startDebugging(GAME1);
 	debugWindow = &window;
 #endif
+
+	static std::thread Thread(&startAsyncLoop);
+	AsyncLoopThread = &Thread;
 }
 
-/*
- * ///_________________________________GAME0________________________________________///
- *
- * ///__________________________________________________________________________________///
-*/
 
 void Game0() {
-    Bot->updateLoop();
-    Bot->game0Loop();
+    //Bot->updateLoop();
+    //Bot->game0Loop();
 #ifdef SFML
 	debugWindow->updateLoop();
 #endif
 }
-
-/*
- * ///_________________________________GAME1________________________________________///
- *
- * ///__________________________________________________________________________________///
-*/
-
-
 
 
 void Game1() {
@@ -86,4 +82,13 @@ void Game1() {
 #ifdef SFML
     debugWindow->updateLoop();
 #endif
+}
+
+void Stop() {
+#ifdef SFML
+    debugWindow->stopAll();
+    debugWindow->updateLoop();
+#endif
+    runAsyncLoop = false;
+    AsyncLoopThread->join();
 }

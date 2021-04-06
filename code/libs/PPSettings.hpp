@@ -10,7 +10,7 @@
 //#define COLOR_LOGGING
 
 /// define DEBUG to enable debug messages
-// #define DEBUG
+//#define DEBUG
 
 /// ---------------------------------
 ///         SFML settings

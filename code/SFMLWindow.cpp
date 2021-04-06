@@ -1,8 +1,5 @@
-#ifdef SFML
 #include "SFMLWindow.hpp"
-
-#include <cmath>
-
+#ifdef SFML
 
 DebugWindow::DebugWindow(Robot *robot) : Bot(robot) {
 
@@ -195,9 +192,24 @@ void DebugWindow::updateLoop() {
 
 	for (auto ID : canBeDeleted) {
 		stopDebugging(ID);
-
 	}
 
+}
+
+void DebugWindow::stopAll() {
+    for (unsigned int i = 0; i < IDs.size(); i++) {
+        // make sure the window gets closed
+        isRunning[i] = false;
+        runningLoops[i].join();
+
+
+        // remove it from the vectors
+        IDs.erase(IDs.begin() + i);
+        maps.erase(maps.begin() + i);
+        runningLoops.erase(runningLoops.begin() + i);
+        runningWindows.erase(runningWindows.begin() + i);
+        isRunning.erase(isRunning.begin() + i);
+    }
 }
 
 #endif

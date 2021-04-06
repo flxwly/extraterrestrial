@@ -1,10 +1,12 @@
-
 #ifndef CsBot_SFMLWINDOW_HPP
 #define CsBot_SFMLWINDOW_HPP
+
+#include "libs/PPSettings.hpp"
 
 #ifdef SFML
 
 #include <SFML/Graphics.hpp>
+#include <cmath>
 #include "Robot.hpp"
 
 class DebugWindow {
@@ -20,6 +22,8 @@ public:
 
 	void startDebugging(Field *map);
 	void stopDebugging(unsigned int ID);
+    void stopAll();
+
 
 	void GameDebug(unsigned int mapIndex);
 

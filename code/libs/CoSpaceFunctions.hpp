@@ -3,6 +3,8 @@
 
 #define _USE_MATH_DEFINES
 #include <bits/stdc++.h>
+#include "CommonFunctions.hpp"
+#include "PPSettings.hpp"
 
 #define DLL_EXPORT extern "C" __declspec(dllexport)
 
@@ -60,6 +62,7 @@ extern int ObjDuration; //The duration(seconds) of the object maintains the curr
 
 extern void Game0();
 extern void Game1();
+extern void Stop();
 extern void Setup();
 
 DLL_EXPORT void SetGameID(int GameID);

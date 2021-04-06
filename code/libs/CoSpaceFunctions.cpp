@@ -1,5 +1,4 @@
 #include "CoSpaceFunctions.hpp"
-#include "CommonFunctions.hpp"
 
 volatile int *INPUT = nullptr;
 volatile int *OUTPUT = nullptr;
@@ -35,9 +34,12 @@ int LED_1 = 0;
 int MyState = 0;
 unsigned int cycle = 0;
 int AI_SensorNum = 13;
+
+// only for superTeam challenge
 int OtherRob_PositionX;//The X coordinate of the other robot.
 int OtherRob_PositionY;//The Y coordinate of the other robot.
 
+// walls only. No points
 //The following four variables keep the information of the last state-changed object.
 int ObjState;    //The state (0: Disappear; 1:Appear.) of the last state changed object.
 int ObjPositionX;//The X coordinate of the last state-changed object.
@@ -45,6 +47,9 @@ int ObjPositionY;//The Y coordinate of the last state-changed object.
 int ObjDuration; //The duration(seconds) of the object maintains the current state;
 
 DLL_EXPORT void SetGameID(int GameID) {
+    if (GameID == -1) {
+        Stop();
+    }
     CurGame = GameID;
     bGameEnd = 0;
 }
@@ -101,14 +106,9 @@ DLL_EXPORT void GetCommand(int *AI_OUT) {
 }
 
 DLL_EXPORT void OnTimer() {
-    if (cycle == 0) {
+    if (cycle == 10) {
         Setup();
-    } else if (CurGame == 0) {
-        Game0();
-    } else {
-        Game1();
     }
-
 
     cycle++;
 }
