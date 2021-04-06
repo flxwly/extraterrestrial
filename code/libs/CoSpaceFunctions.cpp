@@ -106,9 +106,8 @@ DLL_EXPORT void GetCommand(int *AI_OUT) {
 }
 
 DLL_EXPORT void OnTimer() {
-    if (cycle == 10) {
+    if (cycle == 1) {
         Setup();
     }
-
     cycle++;
 }

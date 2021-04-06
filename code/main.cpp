@@ -32,11 +32,21 @@ Robot *Bot = nullptr;
 
 bool runAsyncLoop = false;
 std::thread *AsyncLoopThread = nullptr;
+
 void startAsyncLoop() {
     runAsyncLoop = true;
     while (runAsyncLoop) {
         Bot->updateLoop();
-        Bot->game0Loop();
+        if (CurGame == 0) {
+            Bot->game0Loop();
+        } else if (CurGame != -1){
+            Bot->game1Loop();
+        }
+
+        #ifdef SFML
+            debugWindow->updateLoop();
+        #endif
+
     }
 }
 
@@ -79,15 +89,11 @@ void Game0() {
 void Game1() {
     Bot->updateLoop();
     Bot->game1Loop();
-#ifdef SFML
-    debugWindow->updateLoop();
-#endif
 }
 
 void Stop() {
 #ifdef SFML
     debugWindow->stopAll();
-    debugWindow->updateLoop();
 #endif
     runAsyncLoop = false;
     AsyncLoopThread->join();

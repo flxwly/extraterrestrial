@@ -172,9 +172,6 @@ void Robot::updateSimVars() {
     AI_IN = *AI_GLOBAL_IN;
     AI_OUT = *AI_GLOBAL_OUT;
 
-    std::cout << "In: "<< AI_IN[3] << std::endl;
-    std::cout << "Out: "<< AI_OUT[1] << std::endl;
-
     // Input vars
 	simPos.set(
 			(AI_IN[9] != 0) ? static_cast<float>(AI_IN[9]) : NAN,
