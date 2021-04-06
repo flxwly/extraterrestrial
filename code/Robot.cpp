@@ -137,19 +137,19 @@ unsigned int ObjectLoad::num() const {
 //====================================
 
 
-Robot::Robot(volatile int *IN, volatile int *OUT, std::array<int *, 3> superObject, Field *map0, Field *map1) :
+Robot::Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, Field *map0, Field *map1) :
 		pathfinder0(*map0, false), pathfinder1(*map1, false),
-		pathfinder0T(*map0, true), pathfinder1T(*map1, true) {
+		pathfinder0T(*map0, true), pathfinder1T(*map1, true),
+		map0(map0), map1(map1), SUPER_OBJECT(superObject) {
 
 	setIN(IN);
 	setOUT(OUT);
-	SUPER_OBJECT = superObject;
 }
 
 
-bool Robot::setIN(volatile int *IN) {
+bool Robot::setIN(volatile int **IN) {
 	if (IN) {
-		AI_IN = IN;
+		AI_GLOBAL_IN = IN;
 		return true;
 	} else {
 		ERROR_MESSAGE("Input pointer is nullptr")
@@ -157,9 +157,9 @@ bool Robot::setIN(volatile int *IN) {
 	}
 }
 
-bool Robot::setOUT(volatile int *OUT) {
+bool Robot::setOUT(volatile int **OUT) {
 	if (OUT) {
-		AI_OUT = OUT;
+		AI_GLOBAL_OUT = OUT;
 		return true;
 	} else {
 		ERROR_MESSAGE("Output pointer is nullptr")
@@ -169,7 +169,13 @@ bool Robot::setOUT(volatile int *OUT) {
 
 void Robot::updateSimVars() {
 
-	// Input vars
+    AI_IN = *AI_GLOBAL_IN;
+    AI_OUT = *AI_GLOBAL_OUT;
+
+    std::cout << "In: "<< AI_IN[3] << std::endl;
+    std::cout << "Out: "<< AI_OUT[1] << std::endl;
+
+    // Input vars
 	simPos.set(
 			(AI_IN[9] != 0) ? static_cast<float>(AI_IN[9]) : NAN,
 			(AI_IN[10] != 0) ? static_cast<float>(AI_IN[10]) : NAN);
@@ -188,11 +194,14 @@ void Robot::updateSimVars() {
 		static_cast<float>(AI_IN[7]),
 		static_cast<float>(AI_IN[8])});
 
-	ultraSonic[0] = AI_IN[0], ultraSonic[1] = AI_IN[1], ultraSonic[2] = AI_IN[2];
+	ultraSonic[1] = AI_IN[0];
+	ultraSonic[0] = AI_IN[1];
+	ultraSonic[2] = AI_IN[2];
 	gameTime = AI_IN[12];
 
 	// Output vars
-	AI_OUT[0] = wheelLeft, AI_OUT[1] = wheelRight;
+	AI_OUT[0] = wheelLeft;
+	AI_OUT[1] = wheelRight;
 	AI_OUT[2] = led;
 	AI_OUT[3] = tp;
 }
@@ -424,7 +433,8 @@ int Robot::avoidVoid() const {
 }
 
 void Robot::wheels(int l, int r) {
-	wheelLeft = l; wheelRight = r;
+	wheelLeft = l * 20;
+	wheelRight = r * 20;
 }
 
 int Robot::moveToPosition(PVector p) {
@@ -700,14 +710,14 @@ void Robot::game0Loop() {
 		else if (isYellow(leftColor) && loadedObjects.num() > 0) {
 			wheels(5, 0);
 		} else {
-			switch (checkUsSensors(8, 12, 8)) {
+			switch (checkUsSensors(12, 15, 12)) {
 				// no obstacle
 				case 0:
 					// 4 | 4 is standard movement speed in w1
-					wheels(3, -2);
+					wheels(3, 3);
 					break;
 				case 1: // obstacle left
-					wheels(4, 0);
+					wheels(4, -1);
 					break;
 				case 2: // obstacle front
 					wheels(-3, -5);
@@ -716,7 +726,7 @@ void Robot::game0Loop() {
 					wheels(-1, -5);
 					break;
 				case 4: // obstacle right
-					wheels(0, 4);
+					wheels(-1, 4);
 					break;
 				case 5: // obstacles left & right; turning would be fatal; just drive forward
 					wheels(3, 3);

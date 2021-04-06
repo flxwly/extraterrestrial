@@ -89,26 +89,18 @@ DLL_EXPORT void GetSuperObj(int *X, int *Y, int *num) {
 }
 DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN) {
 
-    packet[14] = 0;
+    for (int i = 0; i < 14; ++i) {
+        packet[i] = AI_IN[i];
+        packet[14] += packet[i];
+    }
 
-	for (int i = 0; i < 14; ++i) {
-		packet[i] = AI_IN[i];
-		packet[14] += packet[i];
-	}
-
-	INPUT = AI_IN;
+    INPUT = AI_IN;
 }
 DLL_EXPORT void GetCommand(int *AI_OUT) {
-    AI_OUT[0] = WheelLeft;
-    AI_OUT[1] = WheelRight;
-    AI_OUT[2] = LED_1;
-    AI_OUT[3] = MyState;
-
     OUTPUT = AI_OUT;
 }
 
 DLL_EXPORT void OnTimer() {
-
     if (cycle == 0) {
         Setup();
     } else if (CurGame == 0) {

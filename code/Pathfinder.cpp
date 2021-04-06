@@ -21,8 +21,11 @@ double Node::calculateCost(const Node &node) {
     // A Line either enters or exits a swamp. So the Swamp_speed_penality is toggled.
     int modifier = 1;
 
+    auto comp = [](std::pair<PVector, double> a, std::pair<PVector, double> b) { return a.second > b.second; };
+    std::priority_queue<std::pair<PVector, double>, std::vector<std::pair<PVector, double>>, decltype(comp)>
+            intersections(comp);
+
     // Get all swamp intersections.
-    std::vector<std::pair<PVector, double>> intersections = {{pos, 0}};
     for (auto &swamp : field->getMapObjects({2})) {
         for (auto bound : swamp.getEdges()) {
             std::pair<PVector, double> intersection = {geometry::intersection(line, bound), 0};
@@ -31,14 +34,10 @@ double Node::calculateCost(const Node &node) {
 
             intersection.second = geometry::dist(intersection.first, pos);
 
-            if (intersections.back().second > intersection.second) {
-                std::swap(intersections.back(), intersection);
-            }
-
-            intersections.push_back(intersection);
+            intersections.push(intersection);
         }
 
-        if (modifier == 1 && geometry::isInside(pos, swamp)) {
+        if (geometry::isInside(pos, swamp)) {
             modifier = SWAMP_SPEED_PENALITY;
         }
     }
@@ -47,12 +46,18 @@ double Node::calculateCost(const Node &node) {
     if (intersections.empty())
         return geometry::dist(pos, node.pos);
 
+
     // The cost that is returned at the end
     double cost = 0;
-    for (unsigned int i = 0; i < intersections.size() - 1; i++) {
+    intersections.push({pos, 0});
+    for (unsigned int i = 0; i < intersections.size(); i++) {
+
+        double d1 = intersections.top().second;
+
+        intersections.pop();
 
         // add cost (modifier * distance)
-        cost += modifier * (intersections[i + 1].second - intersections[i].second);
+        cost += modifier * (intersections.top().second - d1);
 
         // Toggle the modifier
         modifier = (modifier == SWAMP_SPEED_PENALITY) ? 1 : SWAMP_SPEED_PENALITY;
@@ -169,8 +174,8 @@ bool Path::isOnPath(PVector p) {
 
 double Path::length() {
     double length = 0;
-    for (int i = 0; i < points.size()-1; i++)
-        length += geometry::dist(points[i], points[i+1]);
+    for (int i = 0; i < points.size() - 1; i++)
+        length += geometry::dist(points[i], points[i + 1]);
 
     return length;
 }

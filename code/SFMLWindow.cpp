@@ -1,3 +1,4 @@
+#ifdef SFML
 #include "SFMLWindow.hpp"
 
 #include <cmath>
@@ -32,6 +33,10 @@ void DebugWindow::GameDebug(unsigned int ID) {
 				isRunning[ID] = false;
 				return;
 			}
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            continue;
 		}
 
 		// clear screen
@@ -73,7 +78,7 @@ void DebugWindow::GameDebug(unsigned int ID) {
 			}
 		}
 
-		int nodeIndex = static_cast<int>(std::floor(static_cast<float>(index) / 1000)) %
+		int nodeIndex = static_cast<int>(std::floor(static_cast<float>(index) / 500)) %
 		                static_cast<int>(Bot->pathfinder1T.map.size());
 
 		block.setFillColor({255, 0, 0});
@@ -88,8 +93,9 @@ void DebugWindow::GameDebug(unsigned int ID) {
 			sf::Vector2f p2(static_cast<float>(neighbour.first->pos.x * scale.x),
 			                static_cast<float>(neighbour.first->pos.y * scale.y));
 
-			sf::Color color = sf::Color((neighbour.second / 1000) * 255, 255,
-			                            (neighbour.second > 1000) ? 255 : 0);
+			int x = (neighbour.second <= 255) ? 255 - static_cast<int> (std::round(neighbour.second)) : 0;
+
+			sf::Color color = sf::Color(255, x, x);
 
 			sf::Vertex line[] = {{p1, color},
 			                     {p2, color}};
@@ -193,3 +199,5 @@ void DebugWindow::updateLoop() {
 	}
 
 }
+
+#endif

@@ -1,6 +1,8 @@
+
 #ifndef CsBot_SFMLWINDOW_HPP
 #define CsBot_SFMLWINDOW_HPP
 
+#ifdef SFML
 
 #include <SFML/Graphics.hpp>
 #include "Robot.hpp"
@@ -28,4 +30,5 @@ public:
 	std::vector<bool> isRunning;
 };
 
+#endif
 #endif //CsBot_SFMLWINDOW_HPP

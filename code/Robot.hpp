@@ -60,12 +60,15 @@ class Robot {
 #pragma region Pointers to Simulator Variables
 private:
 
+    // Pointer to Global input and output variables
+    volatile int **AI_GLOBAL_IN{nullptr}, **AI_GLOBAL_OUT{nullptr};
+
 	// Direct Input/Output to the Sim
 	volatile int *AI_IN{nullptr}, *AI_OUT{nullptr};
 	std::array<int *, 3> SUPER_OBJECT{nullptr, nullptr, nullptr};
 
-	bool setIN(volatile int *IN);
-	bool setOUT(volatile int *OUT);
+	bool setIN(volatile int **IN);
+	bool setOUT(volatile int **OUT);
 	void updateSimVars();
 
 	// Input (read)
@@ -87,23 +90,23 @@ private:
 #pragma region Public Robot Variables
 
 public:
-	unsigned short level;
+	unsigned short level = 0;
 
-	PVector pos;
-	PVector lastPos;
+	PVector pos{0, 0};
+	PVector lastPos{0, 0};
 
-	std::vector<Path> completePath;
+	std::vector<Path> completePath{};
 	Field *map0, *map1;
 	Pathfinder pathfinder0, pathfinder1;
 	Pathfinder pathfinder0T, pathfinder1T;
 
 	ObjectLoad loadedObjects;
 
-	unsigned int lastRGBBonus;
-	bool huntingSuperObj;
+	unsigned int lastRGBBonus{0};
+	bool huntingSuperObj{false};
 	std::vector<Collectible *> superObjects;
 
-	int remainingMapTime;
+	int remainingMapTime{0};
 	typedef std::chrono::steady_clock Timer;
 	std::chrono::time_point<Timer> lastProgramCycle;
 	std::chrono::time_point<Timer> depositingSince;
@@ -116,7 +119,7 @@ public:
 
 public:
 
-	Robot(volatile int *IN, volatile int *OUT, std::array<int *, 3> superObject, Field *map0, Field *map1);
+	Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, Field *map0, Field *map1);
 
 #pragma endregion
 
