@@ -1,0 +1,313 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="_common_functions_8hpp" kind="file" language="C++">
+    <compoundname>CommonFunctions.hpp</compoundname>
+    <includes local="no">iostream</includes>
+    <includes local="no">cmath</includes>
+    <includedby refid="_color_recognition_8hpp" local="yes">code/libs/ColorRecognition.hpp</includedby>
+    <includedby refid="_common_functions_8cpp" local="yes">code/libs/CommonFunctions.cpp</includedby>
+    <includedby refid="_co_space_functions_8cpp" local="yes">code/libs/CoSpaceFunctions.cpp</includedby>
+    <includedby refid="main_8cpp" local="yes">code/main.cpp</includedby>
+    <includedby refid="_map_data_8hpp" local="yes">code/MapData.hpp</includedby>
+    <includedby refid="_pathfinder_8hpp" local="yes">code/Pathfinder.hpp</includedby>
+    <includedby refid="_robot_8hpp" local="yes">code/Robot.hpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>code/libs/CommonFunctions.hpp</label>
+        <link refid="_common_functions_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>cmath</label>
+      </node>
+      <node id="2">
+        <label>iostream</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="11">
+        <label>code/MapData.hpp</label>
+        <link refid="_map_data_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>code/libs/CommonFunctions.hpp</label>
+        <link refid="_common_functions_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>code/SFMLWindow.cpp</label>
+        <link refid="_s_f_m_l_window_8cpp"/>
+      </node>
+      <node id="5">
+        <label>code/Robot.hpp</label>
+        <link refid="_robot_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>code/libs/ColorRecognition.hpp</label>
+        <link refid="_color_recognition_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>code/MapData.cpp</label>
+        <link refid="_map_data_8cpp"/>
+      </node>
+      <node id="7">
+        <label>code/SFMLWindow.hpp</label>
+        <link refid="_s_f_m_l_window_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>code/Robot.cpp</label>
+        <link refid="_robot_8cpp"/>
+      </node>
+      <node id="3">
+        <label>code/libs/ColorRecognition.cpp</label>
+        <link refid="_color_recognition_8cpp"/>
+      </node>
+      <node id="4">
+        <label>code/main.cpp</label>
+        <link refid="main_8cpp"/>
+      </node>
+      <node id="14">
+        <label>code/Pathfinder.cpp</label>
+        <link refid="_pathfinder_8cpp"/>
+      </node>
+      <node id="10">
+        <label>code/libs/CoSpaceFunctions.cpp</label>
+        <link refid="_co_space_functions_8cpp"/>
+      </node>
+      <node id="9">
+        <label>code/libs/CommonFunctions.cpp</label>
+        <link refid="_common_functions_8cpp"/>
+      </node>
+      <node id="13">
+        <label>code/Pathfinder.hpp</label>
+        <link refid="_pathfinder_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="_common_functions_8hpp_1a138b8a8d4aea7baa7a40ac78b14be5da" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double toRadians</definition>
+        <argsstring>(double n)</argsstring>
+        <name>toRadians</name>
+        <param>
+          <type>double</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/CommonFunctions.hpp" line="7" column="8" bodyfile="code/libs/CommonFunctions.cpp" bodystart="5" bodyend="7" declfile="code/libs/CommonFunctions.hpp" declline="7" declcolumn="8"/>
+        <referencedby refid="class_robot_1ad7b7f1a5a4e56d9e4c72a24a622d69f1" compoundref="_robot_8cpp" startline="204" endline="231">Robot::getVelocity</referencedby>
+        <referencedby refid="class_collectible_1a068a4938bf6bb68cf6e7b1fd33dd1f4c" compoundref="_map_data_8cpp" startline="20" endline="25">Collectible::isCorrectCollectible</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_common_functions_8hpp_1a0400d66d703a2d3ded66efb9a1f99c25" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double toDegrees</definition>
+        <argsstring>(double n)</argsstring>
+        <name>toDegrees</name>
+        <param>
+          <type>double</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/CommonFunctions.hpp" line="9" column="8" bodyfile="code/libs/CommonFunctions.cpp" bodystart="9" bodyend="11" declfile="code/libs/CommonFunctions.hpp" declline="9" declcolumn="8"/>
+        <referencedby refid="class_robot_1a990b30f193fbc9b294ac4785798ea394" compoundref="_robot_8cpp" startline="430" endline="546">Robot::moveToPosition</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_common_functions_8hpp_1a83485420504fa236938ca6fed28810a5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double reverseAngle</definition>
+        <argsstring>(double angle)</argsstring>
+        <name>reverseAngle</name>
+        <param>
+          <type>double</type>
+          <declname>angle</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/CommonFunctions.hpp" line="11" column="8" bodyfile="code/libs/CommonFunctions.cpp" bodystart="13" bodyend="15" declfile="code/libs/CommonFunctions.hpp" declline="11" declcolumn="8"/>
+      </memberdef>
+      <memberdef kind="function" id="_common_functions_8hpp_1a215db5a1e084860b722927077d7ed55c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isInRange</definition>
+        <argsstring>(double value, double min, double max)</argsstring>
+        <name>isInRange</name>
+        <param>
+          <type>double</type>
+          <declname>value</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>min</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>max</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/CommonFunctions.hpp" line="13" column="6" bodyfile="code/libs/CommonFunctions.cpp" bodystart="18" bodyend="20" declfile="code/libs/CommonFunctions.hpp" declline="13" declcolumn="6"/>
+        <referencedby refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" compoundref="_color_recognition_8cpp" startline="4" endline="4">isCyan</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" compoundref="_color_recognition_8cpp" startline="7" endline="7">isOrange</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" compoundref="_color_recognition_8cpp" startline="3" endline="3">isRed</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" compoundref="_color_recognition_8cpp" startline="9" endline="9">isSuperObj</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab44bd2d94a55aff5b357fe0a8c1cfa46" compoundref="_color_recognition_8cpp" startline="8" endline="8">isSwamp</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab786948d23021df1eb15cad46d081a64" compoundref="_color_recognition_8cpp" startline="6" endline="6">isYellow</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_common_functions_8hpp_1af1fdafb0217b317e8172d53abb255837" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double map</definition>
+        <argsstring>(double Mmin, double Mmax, double Imin, double Imax, double input)</argsstring>
+        <name>map</name>
+        <param>
+          <type>double</type>
+          <declname>Mmin</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Mmax</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Imin</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>Imax</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>input</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/CommonFunctions.hpp" line="15" column="8" bodyfile="code/libs/CommonFunctions.cpp" bodystart="22" bodyend="35" declfile="code/libs/CommonFunctions.hpp" declline="15" declcolumn="8"/>
+        <referencedby refid="class_debug_window_1aba17bf3c6ad43474042028ca63421c8e" compoundref="_s_f_m_l_window_8cpp" startline="12" endline="149">DebugWindow::GameDebug</referencedby>
+        <referencedby refid="class_debug_window_1aec5d94da2b89975b4923b11a3bba08bc" compoundref="_s_f_m_l_window_8cpp" startline="151" endline="158">DebugWindow::startDebugging</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_common_functions_8hpp_1a266c77e247ef55b1bda29e55214578f1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T1</type>
+          </param>
+          <param>
+            <type>class T2</type>
+          </param>
+        </templateparamlist>
+        <type>std::string</type>
+        <definition>std::string str</definition>
+        <argsstring>(T1 x, T2 y)</argsstring>
+        <name>str</name>
+        <param>
+          <type>T1</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>T2</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/CommonFunctions.hpp" line="19" column="13" bodyfile="code/libs/CommonFunctions.cpp" bodystart="41" bodyend="43" declfile="code/libs/CommonFunctions.hpp" declline="19" declcolumn="13"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>COMMONFUNCTIONS_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>COMMONFUNCTIONS_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cmath&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="_common_functions_8hpp_1a138b8a8d4aea7baa7a40ac78b14be5da" kindref="member">toRadians</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>n);</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="_common_functions_8hpp_1a0400d66d703a2d3ded66efb9a1f99c25" kindref="member">toDegrees</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>n);</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="_common_functions_8hpp_1a83485420504fa236938ca6fed28810a5" kindref="member">reverseAngle</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>angle);</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_common_functions_8hpp_1a215db5a1e084860b722927077d7ed55c" kindref="member">isInRange</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>value,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>min,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>max);</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="_common_functions_8hpp_1af1fdafb0217b317e8172d53abb255837" kindref="member">map</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>Mmin,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>Mmax,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>Imin,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>Imax,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>input);</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Any<sp/>2D<sp/>coord<sp/>to<sp/>string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal">&lt;</highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T1,<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal"><sp/>T2&gt;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal">std::string<sp/><ref refid="_common_functions_8hpp_1a266c77e247ef55b1bda29e55214578f1" kindref="member">str</ref>(T1<sp/>x,<sp/>T2<sp/>y);</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>!COMMONFUNCTIONS_HPP</highlight></codeline>
+    </programlisting>
+    <location file="code/libs/CommonFunctions.hpp"/>
+  </compounddef>
+</doxygen>

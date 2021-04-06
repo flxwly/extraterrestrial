@@ -1,0 +1,16 @@
+digraph "PVector::PVector"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="PVector::PVector",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="creates a 2D Point-Vector at (NAN | NAN)"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="PVector::operator*",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_p_vector.html#a5a45ee9fed8cf1d82a7ca6aacf97c83a",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="PVector::operator+",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_p_vector.html#a3fe1eb9a568e4368e946796d5ec8ece1",tooltip=" "];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="PVector::operator-",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_p_vector.html#aa979c11e002713d4fa7d1da1205863e2",tooltip=" "];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="PVector::operator/",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_p_vector.html#adbb03e392d72e9380b3dcccc524aef9e",tooltip=" "];
+}

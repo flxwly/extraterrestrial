@@ -1,0 +1,122 @@
+.TH "geometry" 3 "Mon Apr 5 2021" "Extraterrestrial" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+geometry \- namespace for geometric functions  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBisLeft\fP (\fBPVector\fP p0, \fBPVector\fP p1, \fBPVector\fP p2)"
+.br
+.ti -1c
+.RI "bool \fBisInside\fP (const \fBPVector\fP &p, \fBArea\fP &area)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBintersection\fP (\fBLine\fP &l1, \fBLine\fP &l2)"
+.br
+.ti -1c
+.RI "bool \fBisIntersecting\fP (\fBLine\fP &l1, \fBLine\fP &l2)"
+.br
+.ti -1c
+.RI "bool \fBisIntersecting\fP (\fBLine\fP l1, const std::vector< \fBArea\fP > &Obstacles)"
+.br
+.ti -1c
+.RI "double \fBsqDist\fP (const \fBPVector\fP &p1, const \fBPVector\fP &p2)"
+.br
+.ti -1c
+.RI "double \fBdist\fP (const \fBPVector\fP &p1, const \fBPVector\fP &p2)"
+.br
+.ti -1c
+.RI "double \fBdot\fP (\fBPVector\fP p1, \fBPVector\fP p2)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBgetNormalPoint\fP (\fBLine\fP line, \fBPVector\fP point)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBangle2Vector\fP (double a)"
+.br
+.ti -1c
+.RI "double \fBvector2Angle\fP (\fBPVector\fP v)"
+.br
+.ti -1c
+.RI "double \fBvector2Angle\fP (double x, double y)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+namespace for geometric functions 
+.SH "Function Documentation"
+.PP 
+.SS "\fBPVector\fP geometry::angle2Vector (double a)"
+
+.SS "double geometry::dist (const \fBPVector\fP & p1, const \fBPVector\fP & p2)"
+
+.SS "double geometry::dot (\fBPVector\fP p1, \fBPVector\fP p2)"
+
+.SS "\fBPVector\fP geometry::getNormalPoint (\fBLine\fP line, \fBPVector\fP point)"
+Calculates normal point on a line to another point
+.PP
+\fBParameters\fP
+.RS 4
+\fIline\fP The line 
+.br
+\fIpoint\fP The point
+.RE
+.PP
+This function returns the intersection between the line and a line which goes through the point p and is orthogonal to the line This point however doesn't need to be on the line and can also lie on a extension of this line 
+.SS "\fBPVector\fP geometry::intersection (\fBLine\fP & l1, \fBLine\fP & l2)"
+calculates an intersection point between two lines 
+.PP
+\fBParameters\fP
+.RS 4
+\fIl1\fP a line 
+.br
+\fIl2\fP another line 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+intersection point if existing\&. Otherwise (-1, -1) 
+.RE
+.PP
+
+.SS "bool geometry::isInside (const \fBPVector\fP & p, \fBArea\fP & area)"
+checks if a point lies inside the \fBArea\fP 
+.PP
+\fBParameters\fP
+.RS 4
+\fIp\fP A point 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if point lies inside of the \fBArea\fP\&. Otherwise false 
+.RE
+.PP
+
+.SS "bool geometry::isIntersecting (\fBLine\fP & l1, \fBLine\fP & l2)"
+
+.SS "bool geometry::isIntersecting (\fBLine\fP l1, const std::vector< \fBArea\fP > & Obstacles)"
+
+.SS "bool geometry::isLeft (\fBPVector\fP p0, \fBPVector\fP p1, \fBPVector\fP p2)"
+
+.PP
+ geometry 
+.br
+ 
+.PP
+ 
+.SS "double geometry::sqDist (const \fBPVector\fP & p1, const \fBPVector\fP & p2)"
+
+.SS "double geometry::vector2Angle (double x, double y)"
+
+.SS "double geometry::vector2Angle (\fBPVector\fP v)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Extraterrestrial from the source code\&.

@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="_class_debug_window" xml:lang="en-US">
+<title>DebugWindow Class Reference</title>
+<indexterm><primary>DebugWindow</primary></indexterm>
+<para>
+<computeroutput>#include &lt;SFMLWindow.hpp&gt;</computeroutput>
+</para>
+Collaboration diagram for DebugWindow:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_debug_window__coll__graph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Public Member Functions    </title>
+        <itemizedlist>
+            <listitem><para><link linkend="_class_debug_window_1a661eee78f9b5e87d6237ddc0204698be">DebugWindow</link> ()=delete</para>
+</listitem>
+            <listitem><para><link linkend="_class_debug_window_1a36259a460f64d2f95b0a91d2575cb7c4">DebugWindow</link> (<link linkend="_class_robot">Robot</link> *robot)</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_debug_window_1aae198a5f410927753916628790613d68">updateLoop</link> ()</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_debug_window_1aec5d94da2b89975b4923b11a3bba08bc">startDebugging</link> (<link linkend="_class_field">Field</link> *<link linkend="__common_functions_8hpp_1af1fdafb0217b317e8172d53abb255837">map</link>)</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_debug_window_1aef0238cbba19a0a7726b9be8e30bb5a9">stopDebugging</link> (unsigned int ID)</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_debug_window_1aba17bf3c6ad43474042028ca63421c8e">GameDebug</link> (unsigned int mapIndex)</para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<simplesect>
+    <title>Public Attributes    </title>
+        <itemizedlist>
+            <listitem><para>sf::Font <link linkend="_class_debug_window_1afbd4c112443f988f099a7834ecbaf406">Font</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_robot">Robot</link> * <link linkend="_class_debug_window_1a81e6db589d1dcf44e98b4451b153f97a">Bot</link></para>
+</listitem>
+            <listitem><para>std::vector&lt; unsigned int &gt; <link linkend="_class_debug_window_1a089d888b074579390a7e40176a49de91">IDs</link></para>
+</listitem>
+            <listitem><para>std::vector&lt; <link linkend="_class_field">Field</link> * &gt; <link linkend="_class_debug_window_1a08762090c35948328269a13ad3b87908">maps</link></para>
+</listitem>
+            <listitem><para>std::vector&lt; std::thread &gt; <link linkend="_class_debug_window_1a2f7e2cd9d8695f2afdb1329f4b76377c">runningLoops</link></para>
+</listitem>
+            <listitem><para>std::vector&lt; sf::RenderWindow * &gt; <link linkend="_class_debug_window_1a48eb6474dffba2e2b677cdb033b07fd9">runningWindows</link></para>
+</listitem>
+            <listitem><para>std::vector&lt; bool &gt; <link linkend="_class_debug_window_1a638c0cbaf9f94818ca80749aa3939369">isRunning</link></para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<section>
+<title>Constructor &amp; Destructor Documentation</title>
+<anchor xml:id="_class_debug_window_1a661eee78f9b5e87d6237ddc0204698be"/>    <section>
+    <title>DebugWindow()<computeroutput>[1/2]</computeroutput></title>
+<indexterm><primary>DebugWindow</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>DebugWindow</secondary></indexterm>
+<para><computeroutput>DebugWindow::DebugWindow ( )<computeroutput>[delete]</computeroutput></computeroutput></para>    </section><anchor xml:id="_class_debug_window_1a36259a460f64d2f95b0a91d2575cb7c4"/>    <section>
+    <title>DebugWindow()<computeroutput>[2/2]</computeroutput></title>
+<indexterm><primary>DebugWindow</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>DebugWindow</secondary></indexterm>
+<para><computeroutput>DebugWindow::DebugWindow (<link linkend="_class_robot">Robot</link> * robot)<computeroutput>[explicit]</computeroutput></computeroutput></para></section>
+</section>
+<section>
+<title>Member Function Documentation</title>
+<anchor xml:id="_class_debug_window_1aba17bf3c6ad43474042028ca63421c8e"/>    <section>
+    <title>GameDebug()</title>
+<indexterm><primary>GameDebug</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>GameDebug</secondary></indexterm>
+<para><computeroutput>void DebugWindow::GameDebug (unsigned int mapIndex)</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_debug_window_aba17bf3c6ad43474042028ca63421c8e_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_debug_window_aba17bf3c6ad43474042028ca63421c8e_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_debug_window_1aec5d94da2b89975b4923b11a3bba08bc"/>    <section>
+    <title>startDebugging()</title>
+<indexterm><primary>startDebugging</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>startDebugging</secondary></indexterm>
+<para><computeroutput>void DebugWindow::startDebugging (<link linkend="_class_field">Field</link> * map)</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_debug_window_aec5d94da2b89975b4923b11a3bba08bc_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_debug_window_aec5d94da2b89975b4923b11a3bba08bc_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_debug_window_1aef0238cbba19a0a7726b9be8e30bb5a9"/>    <section>
+    <title>stopDebugging()</title>
+<indexterm><primary>stopDebugging</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>stopDebugging</secondary></indexterm>
+<para><computeroutput>void DebugWindow::stopDebugging (unsigned int ID)</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_debug_window_aef0238cbba19a0a7726b9be8e30bb5a9_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_debug_window_1aae198a5f410927753916628790613d68"/>    <section>
+    <title>updateLoop()</title>
+<indexterm><primary>updateLoop</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>updateLoop</secondary></indexterm>
+<para><computeroutput>void DebugWindow::updateLoop ( )</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_debug_window_aae198a5f410927753916628790613d68_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_debug_window_aae198a5f410927753916628790613d68_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+</section>
+</section>
+<section>
+<title>Member Data Documentation</title>
+<anchor xml:id="_class_debug_window_1a81e6db589d1dcf44e98b4451b153f97a"/>    <section>
+    <title>Bot</title>
+<indexterm><primary>Bot</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>Bot</secondary></indexterm>
+<para><computeroutput><link linkend="_class_robot">Robot</link>* DebugWindow::Bot</computeroutput></para>    </section><anchor xml:id="_class_debug_window_1afbd4c112443f988f099a7834ecbaf406"/>    <section>
+    <title>Font</title>
+<indexterm><primary>Font</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>Font</secondary></indexterm>
+<para><computeroutput>sf::Font DebugWindow::Font</computeroutput></para>    </section><anchor xml:id="_class_debug_window_1a089d888b074579390a7e40176a49de91"/>    <section>
+    <title>IDs</title>
+<indexterm><primary>IDs</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>IDs</secondary></indexterm>
+<para><computeroutput>std::vector&lt;unsigned int&gt; DebugWindow::IDs</computeroutput></para>    </section><anchor xml:id="_class_debug_window_1a638c0cbaf9f94818ca80749aa3939369"/>    <section>
+    <title>isRunning</title>
+<indexterm><primary>isRunning</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>isRunning</secondary></indexterm>
+<para><computeroutput>std::vector&lt;bool&gt; DebugWindow::isRunning</computeroutput></para>    </section><anchor xml:id="_class_debug_window_1a08762090c35948328269a13ad3b87908"/>    <section>
+    <title>maps</title>
+<indexterm><primary>maps</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>maps</secondary></indexterm>
+<para><computeroutput>std::vector&lt;<link linkend="_class_field">Field</link> *&gt; DebugWindow::maps</computeroutput></para>    </section><anchor xml:id="_class_debug_window_1a2f7e2cd9d8695f2afdb1329f4b76377c"/>    <section>
+    <title>runningLoops</title>
+<indexterm><primary>runningLoops</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>runningLoops</secondary></indexterm>
+<para><computeroutput>std::vector&lt;std::thread&gt; DebugWindow::runningLoops</computeroutput></para>    </section><anchor xml:id="_class_debug_window_1a48eb6474dffba2e2b677cdb033b07fd9"/>    <section>
+    <title>runningWindows</title>
+<indexterm><primary>runningWindows</primary><secondary>DebugWindow</secondary></indexterm>
+<indexterm><primary>DebugWindow</primary><secondary>runningWindows</secondary></indexterm>
+<para><computeroutput>std::vector&lt;sf::RenderWindow *&gt; DebugWindow::runningWindows</computeroutput></para></section>
+<para>
+The documentation for this class was generated from the following files:</para>
+code/<link linkend="__s_f_m_l_window_8hpp">SFMLWindow.hpp</link>code/<link linkend="__s_f_m_l_window_8cpp">SFMLWindow.cpp</link></section>
+</section>

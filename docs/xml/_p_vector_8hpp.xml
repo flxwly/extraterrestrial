@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="_p_vector_8hpp" kind="file" language="C++">
+    <compoundname>PVector.hpp</compoundname>
+    <includes local="no">cmath</includes>
+    <includes local="no">string</includes>
+    <includedby refid="_p_vector_8cpp" local="yes">code/libs/PVector.cpp</includedby>
+    <includedby refid="_map_data_8hpp" local="yes">code/MapData.hpp</includedby>
+    <incdepgraph>
+      <node id="2">
+        <label>cmath</label>
+      </node>
+      <node id="3">
+        <label>string</label>
+      </node>
+      <node id="1">
+        <label>code/libs/PVector.hpp</label>
+        <link refid="_p_vector_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="3">
+        <label>code/MapData.hpp</label>
+        <link refid="_map_data_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>code/SFMLWindow.cpp</label>
+        <link refid="_s_f_m_l_window_8cpp"/>
+      </node>
+      <node id="8">
+        <label>code/Robot.hpp</label>
+        <link refid="_robot_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>code/MapData.cpp</label>
+        <link refid="_map_data_8cpp"/>
+      </node>
+      <node id="2">
+        <label>code/libs/PVector.cpp</label>
+        <link refid="_p_vector_8cpp"/>
+      </node>
+      <node id="10">
+        <label>code/SFMLWindow.hpp</label>
+        <link refid="_s_f_m_l_window_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>code/Robot.cpp</label>
+        <link refid="_robot_8cpp"/>
+      </node>
+      <node id="4">
+        <label>code/main.cpp</label>
+        <link refid="main_8cpp"/>
+      </node>
+      <node id="1">
+        <label>code/libs/PVector.hpp</label>
+        <link refid="_p_vector_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>code/Pathfinder.cpp</label>
+        <link refid="_pathfinder_8cpp"/>
+      </node>
+      <node id="6">
+        <label>code/Pathfinder.hpp</label>
+        <link refid="_pathfinder_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="class_p_vector" prot="public">PVector</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>PVECTOR_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PVECTOR_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cmath&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="class_p_vector" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="class_p_vector_1aa3f2e34d647c13d05b8a318c128de955" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector_1aa3f2e34d647c13d05b8a318c128de955" kindref="member">PVector</ref>()<sp/>:<sp/><ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref>(NAN),<sp/><ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref>(NAN)<sp/>{};</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="class_p_vector_1a4f022db626337d155cf00c2de19ba8f8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector_1a4f022db626337d155cf00c2de19ba8f8" kindref="member">PVector</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_y)<sp/>:<sp/><ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref>(_x),<sp/><ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref>(_y)<sp/>{};</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref>;</highlight></codeline>
+<codeline lineno="30" refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref>;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1a9cc31db5ab8d080b0f44e2229ba34a7c" kindref="member">set</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_y);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1a6039ec3cba8898b7e102a7936572d401" kindref="member">normalize</ref>();</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="class_p_vector_1a1c82ee9e026844ca5ea97297d1e3ea3c" kindref="member">getMag</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1a10abf0646fe82df63c0c623588c5600b" kindref="member">setMag</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mag);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1a10abf0646fe82df63c0c623588c5600b" kindref="member">setMag</ref>(<ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;pVector,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>mag);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1aa0b42cf9a0da44a0ce5f28bc8937d980" kindref="member">rotate</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>angle);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1ae6e16229a6ca19047b145d794d9afb8d" kindref="member">round</ref>();</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1ae6e16229a6ca19047b145d794d9afb8d" kindref="member">round</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;pVector);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_p_vector_1ae0757ebd2a3e671aaa082215e33b72b1" kindref="member">operator==</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;lhs)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_p_vector_1ae0757ebd2a3e671aaa082215e33b72b1" kindref="member">operator==</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;d)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_p_vector_1a049a663501a81ff364e0e1f5d36ce179" kindref="member">operator!=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;lhs)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_p_vector_1a049a663501a81ff364e0e1f5d36ce179" kindref="member">operator!=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;lhs)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;<ref refid="class_p_vector_1afcbf6c7f51cc7081d4ee989fdd30b7e1" kindref="member">operator+=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;rhs);</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1a3fe1eb9a568e4368e946796d5ec8ece1" kindref="member">operator+</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;rhs);</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;<ref refid="class_p_vector_1a9d8ff99fca81009c69923eb10ad77823" kindref="member">operator-=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;rhs)<sp/>;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1aa979c11e002713d4fa7d1da1205863e2" kindref="member">operator-</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;rhs);</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;<ref refid="class_p_vector_1a1db160c46509c0fcf0b174ba8bb2ba40" kindref="member">operator*=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;m);</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1a5a45ee9fed8cf1d82a7ca6aacf97c83a" kindref="member">operator*</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;m);</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;<ref refid="class_p_vector_1ac9f004a72c267687382d7e379e5d4509" kindref="member">operator/=</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;m);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_p_vector_1adbb03e392d72e9380b3dcccc524aef9e" kindref="member">operator /</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;m);</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">explicit</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">operator</highlight><highlight class="normal"><sp/>bool()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/>std::string<sp/><ref refid="class_p_vector_1adb8ed86f463adce2d0b86d1ad8c45592" kindref="member">str</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>std::string<sp/><ref refid="class_p_vector_1adb8ed86f463adce2d0b86d1ad8c45592" kindref="member">str</ref>(<ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>pVector);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//PVECTOR_HPP</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="code/libs/PVector.hpp"/>
+  </compounddef>
+</doxygen>

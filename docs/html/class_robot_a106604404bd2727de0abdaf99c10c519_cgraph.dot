@@ -1,0 +1,20 @@
+digraph "Robot::deposit"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="Robot::deposit",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="deposits"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ObjectLoad::clearLoad",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#a95afea89ae89262ad8c01a6180bd27eb",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="ObjectLoad::rgb",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#a8f9d9674889ba7c9e49bcddee4d42017",tooltip=" "];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="ObjectLoad::black",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#ace19a0a3db1341917e23f89adaa651a6",tooltip=" "];
+  Node3 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="ObjectLoad::cyan",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#ab40ec3ba11297aa9d5db01991fd55bac",tooltip=" "];
+  Node3 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="ObjectLoad::red",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#a594a74d89f15e74b2e7d3e6bd5fc8721",tooltip=" "];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="Robot::wheels",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#a56d2661cb822912575d2cd479d08779e",tooltip="controls the robots wheels"];
+}

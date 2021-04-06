@@ -1,0 +1,172 @@
+\hypertarget{namespacegeometry}{}\doxysection{geometry Namespace Reference}
+\label{namespacegeometry}\index{geometry@{geometry}}
+
+
+namespace for geometric functions  
+
+
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{namespacegeometry_af87847d485624e5c7ab2bb1558c3a36f}{is\+Left}} (\mbox{\hyperlink{class_p_vector}{PVector}} p0, \mbox{\hyperlink{class_p_vector}{PVector}} p1, \mbox{\hyperlink{class_p_vector}{PVector}} p2)
+\item 
+bool \mbox{\hyperlink{namespacegeometry_aebf0ad8e6b1a14089df1845e5173a811}{is\+Inside}} (const \mbox{\hyperlink{class_p_vector}{PVector}} \&p, \mbox{\hyperlink{class_area}{Area}} \&area)
+\item 
+\mbox{\hyperlink{class_p_vector}{PVector}} \mbox{\hyperlink{namespacegeometry_a228137d265482ee3fd6581e2e375eb8f}{intersection}} (\mbox{\hyperlink{class_line}{Line}} \&l1, \mbox{\hyperlink{class_line}{Line}} \&l2)
+\item 
+bool \mbox{\hyperlink{namespacegeometry_ab3ebb42fdbd44fb848c370a0b4261e18}{is\+Intersecting}} (\mbox{\hyperlink{class_line}{Line}} \&l1, \mbox{\hyperlink{class_line}{Line}} \&l2)
+\item 
+bool \mbox{\hyperlink{namespacegeometry_a8a64aa44149d5f68a5ac14cb3f435708}{is\+Intersecting}} (\mbox{\hyperlink{class_line}{Line}} l1, const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&Obstacles)
+\item 
+double \mbox{\hyperlink{namespacegeometry_a478ae992edb02bc432e6d0420c40e336}{sq\+Dist}} (const \mbox{\hyperlink{class_p_vector}{PVector}} \&p1, const \mbox{\hyperlink{class_p_vector}{PVector}} \&p2)
+\item 
+double \mbox{\hyperlink{namespacegeometry_a9a1ebcb6a74b046020dcc91c40554a3a}{dist}} (const \mbox{\hyperlink{class_p_vector}{PVector}} \&p1, const \mbox{\hyperlink{class_p_vector}{PVector}} \&p2)
+\item 
+double \mbox{\hyperlink{namespacegeometry_a2710bf6fad3b638a4ee95abcd843d90f}{dot}} (\mbox{\hyperlink{class_p_vector}{PVector}} p1, \mbox{\hyperlink{class_p_vector}{PVector}} p2)
+\item 
+\mbox{\hyperlink{class_p_vector}{PVector}} \mbox{\hyperlink{namespacegeometry_a120ad790ee5a9ef199a6d67e5e9f1c90}{get\+Normal\+Point}} (\mbox{\hyperlink{class_line}{Line}} line, \mbox{\hyperlink{class_p_vector}{PVector}} point)
+\item 
+\mbox{\hyperlink{class_p_vector}{PVector}} \mbox{\hyperlink{namespacegeometry_a46dee6450badd387e6788a9ebf80fa44}{angle2\+Vector}} (double a)
+\item 
+double \mbox{\hyperlink{namespacegeometry_a0ce1748996f9e029a3cbeb665c1d17ce}{vector2\+Angle}} (\mbox{\hyperlink{class_p_vector}{PVector}} v)
+\item 
+double \mbox{\hyperlink{namespacegeometry_ab9437f91a11b422552cd37d014c43651}{vector2\+Angle}} (double x, double y)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+namespace for geometric functions 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacegeometry_a46dee6450badd387e6788a9ebf80fa44}\label{namespacegeometry_a46dee6450badd387e6788a9ebf80fa44}} 
+\index{geometry@{geometry}!angle2Vector@{angle2Vector}}
+\index{angle2Vector@{angle2Vector}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{angle2Vector()}{angle2Vector()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_p_vector}{PVector}} geometry\+::angle2\+Vector (\begin{DoxyParamCaption}\item[{double}]{a }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+% FIG 0
+\mbox{\Hypertarget{namespacegeometry_a9a1ebcb6a74b046020dcc91c40554a3a}\label{namespacegeometry_a9a1ebcb6a74b046020dcc91c40554a3a}} 
+\index{geometry@{geometry}!dist@{dist}}
+\index{dist@{dist}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{dist()}{dist()}}
+{\footnotesize\ttfamily double geometry\+::dist (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_p_vector}{PVector}} \&}]{p1,  }\item[{const \mbox{\hyperlink{class_p_vector}{PVector}} \&}]{p2 }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+% FIG 1
+Here is the caller graph for this function\+:
+% FIG 2
+\mbox{\Hypertarget{namespacegeometry_a2710bf6fad3b638a4ee95abcd843d90f}\label{namespacegeometry_a2710bf6fad3b638a4ee95abcd843d90f}} 
+\index{geometry@{geometry}!dot@{dot}}
+\index{dot@{dot}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{dot()}{dot()}}
+{\footnotesize\ttfamily double geometry\+::dot (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{p1,  }\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{p2 }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+% FIG 3
+\mbox{\Hypertarget{namespacegeometry_a120ad790ee5a9ef199a6d67e5e9f1c90}\label{namespacegeometry_a120ad790ee5a9ef199a6d67e5e9f1c90}} 
+\index{geometry@{geometry}!getNormalPoint@{getNormalPoint}}
+\index{getNormalPoint@{getNormalPoint}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{getNormalPoint()}{getNormalPoint()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_p_vector}{PVector}} geometry\+::get\+Normal\+Point (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_line}{Line}}}]{line,  }\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{point }\end{DoxyParamCaption})}
+
+Calculates normal point on a line to another point
+
+
+\begin{DoxyParams}{Parameters}
+{\em line} & The line \\
+\hline
+{\em point} & The point\\
+\hline
+\end{DoxyParams}
+This function returns the intersection between the line and a line which goes through the point p and is orthogonal to the line This point however doesn\textquotesingle{}t need to be on the line and can also lie on a extension of this line Here is the call graph for this function\+:
+% FIG 4
+Here is the caller graph for this function\+:
+% FIG 5
+\mbox{\Hypertarget{namespacegeometry_a228137d265482ee3fd6581e2e375eb8f}\label{namespacegeometry_a228137d265482ee3fd6581e2e375eb8f}} 
+\index{geometry@{geometry}!intersection@{intersection}}
+\index{intersection@{intersection}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{intersection()}{intersection()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_p_vector}{PVector}} geometry\+::intersection (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_line}{Line}} \&}]{l1,  }\item[{\mbox{\hyperlink{class_line}{Line}} \&}]{l2 }\end{DoxyParamCaption})}
+
+calculates an intersection point between two lines 
+\begin{DoxyParams}{Parameters}
+{\em l1} & a line \\
+\hline
+{\em l2} & another line \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+intersection point if existing. Otherwise (-\/1, -\/1) 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+% FIG 6
+\mbox{\Hypertarget{namespacegeometry_aebf0ad8e6b1a14089df1845e5173a811}\label{namespacegeometry_aebf0ad8e6b1a14089df1845e5173a811}} 
+\index{geometry@{geometry}!isInside@{isInside}}
+\index{isInside@{isInside}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{isInside()}{isInside()}}
+{\footnotesize\ttfamily bool geometry\+::is\+Inside (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_p_vector}{PVector}} \&}]{p,  }\item[{\mbox{\hyperlink{class_area}{Area}} \&}]{area }\end{DoxyParamCaption})}
+
+checks if a point lies inside the \mbox{\hyperlink{class_area}{Area}} 
+\begin{DoxyParams}{Parameters}
+{\em p} & A point \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if point lies inside of the \mbox{\hyperlink{class_area}{Area}}. Otherwise false 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+% FIG 7
+Here is the caller graph for this function\+:
+% FIG 8
+\mbox{\Hypertarget{namespacegeometry_ab3ebb42fdbd44fb848c370a0b4261e18}\label{namespacegeometry_ab3ebb42fdbd44fb848c370a0b4261e18}} 
+\index{geometry@{geometry}!isIntersecting@{isIntersecting}}
+\index{isIntersecting@{isIntersecting}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{isIntersecting()}{isIntersecting()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily bool geometry\+::is\+Intersecting (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_line}{Line}} \&}]{l1,  }\item[{\mbox{\hyperlink{class_line}{Line}} \&}]{l2 }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+% FIG 9
+Here is the caller graph for this function\+:
+% FIG 10
+\mbox{\Hypertarget{namespacegeometry_a8a64aa44149d5f68a5ac14cb3f435708}\label{namespacegeometry_a8a64aa44149d5f68a5ac14cb3f435708}} 
+\index{geometry@{geometry}!isIntersecting@{isIntersecting}}
+\index{isIntersecting@{isIntersecting}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{isIntersecting()}{isIntersecting()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily bool geometry\+::is\+Intersecting (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_line}{Line}}}]{l1,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&}]{Obstacles }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+% FIG 11
+\mbox{\Hypertarget{namespacegeometry_af87847d485624e5c7ab2bb1558c3a36f}\label{namespacegeometry_af87847d485624e5c7ab2bb1558c3a36f}} 
+\index{geometry@{geometry}!isLeft@{isLeft}}
+\index{isLeft@{isLeft}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{isLeft()}{isLeft()}}
+{\footnotesize\ttfamily bool geometry\+::is\+Left (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{p0,  }\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{p1,  }\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{p2 }\end{DoxyParamCaption})}
+
+\DoxyHorRuler{0}
+ geometry ~\newline
+ \DoxyHorRuler{0}
+ Here is the caller graph for this function\+:
+% FIG 12
+\mbox{\Hypertarget{namespacegeometry_a478ae992edb02bc432e6d0420c40e336}\label{namespacegeometry_a478ae992edb02bc432e6d0420c40e336}} 
+\index{geometry@{geometry}!sqDist@{sqDist}}
+\index{sqDist@{sqDist}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{sqDist()}{sqDist()}}
+{\footnotesize\ttfamily double geometry\+::sq\+Dist (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_p_vector}{PVector}} \&}]{p1,  }\item[{const \mbox{\hyperlink{class_p_vector}{PVector}} \&}]{p2 }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+% FIG 13
+\mbox{\Hypertarget{namespacegeometry_ab9437f91a11b422552cd37d014c43651}\label{namespacegeometry_ab9437f91a11b422552cd37d014c43651}} 
+\index{geometry@{geometry}!vector2Angle@{vector2Angle}}
+\index{vector2Angle@{vector2Angle}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{vector2Angle()}{vector2Angle()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double geometry\+::vector2\+Angle (\begin{DoxyParamCaption}\item[{double}]{x,  }\item[{double}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacegeometry_a0ce1748996f9e029a3cbeb665c1d17ce}\label{namespacegeometry_a0ce1748996f9e029a3cbeb665c1d17ce}} 
+\index{geometry@{geometry}!vector2Angle@{vector2Angle}}
+\index{vector2Angle@{vector2Angle}!geometry@{geometry}}
+\doxysubsubsection{\texorpdfstring{vector2Angle()}{vector2Angle()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double geometry\+::vector2\+Angle (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{v }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+% FIG 14

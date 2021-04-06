@@ -1,0 +1,410 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="class_node" kind="class" language="C++" prot="public">
+    <compoundname>Node</compoundname>
+    <includes refid="_pathfinder_8hpp" local="no">Pathfinder.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_node_1a994ffcc71d937a08581e415288ddafdd" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Node::isClosed</definition>
+        <argsstring></argsstring>
+        <name>isClosed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Booleans that indicate if this <ref refid="class_node" kindref="compound">Node</ref> is in a special list used by the A*Pathfinding algorithm</para>
+<para><simplesect kind="note"><para>These variables aren&apos;t updated automatically </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="41" column="10" bodyfile="code/Pathfinder.hpp" bodystart="41" bodyend="-1"/>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">Pathfinder::AStar</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_node_1a6b66fb95e8964a388561476467e976ae" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Node::isOpen</definition>
+        <argsstring></argsstring>
+        <name>isOpen</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="41" column="19" bodyfile="code/Pathfinder.hpp" bodystart="41" bodyend="-1"/>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">Pathfinder::AStar</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_node_1af93b606cf10abfe1766617ad9de59b01" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Node::g</definition>
+        <argsstring></argsstring>
+        <name>g</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Doubles that are used in the A*Pathfinding algorithm</para>
+<para><simplesect kind="note"><para>These variables aren&apos;t updated automatically </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="47" column="12" bodyfile="code/Pathfinder.hpp" bodystart="47" bodyend="-1"/>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">Pathfinder::AStar</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_node_1aa78fc6cd04892bc631b80d023ef088c4" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Node::f</definition>
+        <argsstring></argsstring>
+        <name>f</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="47" column="14" bodyfile="code/Pathfinder.hpp" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_node_1a17c0c1c22413b76152cd8f513a961022" prot="public" static="no" mutable="no">
+        <type><ref refid="class_node" kindref="compound">Node</ref> *</type>
+        <definition>Node* Node::previous</definition>
+        <argsstring></argsstring>
+        <name>previous</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>A pointer to the last visited <ref refid="class_node" kindref="compound">Node</ref>. This is used by the A*Pathfinding algorithm</para>
+<para><simplesect kind="note"><para>This variable isn&apos;t updated automatically </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="54" column="10" bodyfile="code/Pathfinder.hpp" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_node_1afd4810249a88e6a0fe802440800daf8a" prot="public" static="no" mutable="no">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Node::pos</definition>
+        <argsstring></argsstring>
+        <name>pos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>A <ref refid="class_p_vector" kindref="compound">PVector</ref> struct that stores the position of this node</para>
+<para><simplesect kind="note"><para>This variable could be constant and is not meant to change. However for usability reasons it&apos;s not constant. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="91" column="13" bodyfile="code/Pathfinder.hpp" bodystart="91" bodyend="-1"/>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">Pathfinder::AStar</referencedby>
+        <referencedby refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" compoundref="_pathfinder_8cpp" startline="16" endline="62">calculateCost</referencedby>
+        <referencedby refid="class_node_1a5749804287a44482c4b0b90cb5e70093" compoundref="_pathfinder_8cpp" startline="64" endline="68">canSee</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_node_1abafc6b4a9569e9ee3501e0b0ff9ce16c" prot="public" static="no" mutable="no">
+        <type><ref refid="class_field" kindref="compound">Field</ref> *</type>
+        <definition>Field* Node::field</definition>
+        <argsstring></argsstring>
+        <name>field</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>A pointer to the field Object this <ref refid="class_node" kindref="compound">Node</ref> is stored in</para>
+<para>This pointer can be used to find neighbours or obstacles. It is important that a node knows in which field it is operating in.</para>
+<para><simplesect kind="note"><para>This variable could be constant and is not meant to change. However for usability reasons it&apos;s not constant. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="101" column="11" bodyfile="code/Pathfinder.hpp" bodystart="101" bodyend="-1"/>
+        <referencedby refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" compoundref="_pathfinder_8cpp" startline="16" endline="62">calculateCost</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_node_1a91fe55da0158b872e7d16e1121f61ccd" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; std::pair&lt; <ref refid="class_node" kindref="compound">Node</ref> *, double &gt; &gt;</type>
+        <definition>std::vector&lt;std::pair&lt;Node *, double&gt; &gt; Node::neighbours</definition>
+        <argsstring></argsstring>
+        <name>neighbours</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>A vector that stores all visible neighbour nodes with their respective costs.</para>
+<para>To optimise speed the A*Pathfinding works on a precalculated environment. This vector keeps track of neighbours and distances/costs. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="110" column="17" bodyfile="code/Pathfinder.hpp" bodystart="110" bodyend="-1"/>
+        <referencedby refid="class_node_1a2a9d028795b134cd1961fc606e194ec9" compoundref="_pathfinder_8cpp" startline="85" endline="87">addNeighbour</referencedby>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">Pathfinder::AStar</referencedby>
+        <referencedby refid="class_node_1a4af5b6953c9b717764557d118332f1cb" compoundref="_pathfinder_8cpp" startline="70" endline="83">findNeighbours</referencedby>
+        <referencedby refid="class_node_1a69274b9d8270111be533536cde7dffb6" compoundref="_pathfinder_8cpp" startline="89" endline="99">removeNeighbour</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_node_1adad2269dc6d7dbd62a4cf8eef7da48fa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Node::Node</definition>
+        <argsstring>(PVector _pos, Field *_field)</argsstring>
+        <name>Node</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>_pos</declname>
+        </param>
+        <param>
+          <type><ref refid="class_field" kindref="compound">Field</ref> *</type>
+          <declname>_field</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><hruler/>
+ <ref refid="class_node" kindref="compound">Node</ref> <linebreak/>
+ <hruler/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="34" column="5" bodyfile="code/Pathfinder.cpp" bodystart="9" bodyend="13"/>
+        <references refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" compoundref="_p_p_settings_8hpp" startline="43">ERROR_MESSAGE</references>
+      </memberdef>
+      <memberdef kind="function" id="class_node_1ac916db01c0cad26a3e16c29ac68516e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Node::calculateCost</definition>
+        <argsstring>(const Node &amp;node)</argsstring>
+        <name>calculateCost</name>
+        <param>
+          <type>const <ref refid="class_node" kindref="compound">Node</ref> &amp;</type>
+          <declname>node</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This Method calculates a cost to a <ref refid="class_node" kindref="compound">Node</ref></para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+This function takes visibility into account(for that it uses Node::canSee()). If this <ref refid="class_node" kindref="compound">Node</ref> can&apos;t see the other <ref refid="class_node" kindref="compound">Node</ref> the cost will be -1. Other wise the cost is calculated also taking swamps into account. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="64" column="12" bodyfile="code/Pathfinder.cpp" bodystart="16" bodyend="62"/>
+        <references refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">geometry::dist</references>
+        <references refid="class_node_1abafc6b4a9569e9ee3501e0b0ff9ce16c" compoundref="_pathfinder_8hpp" startline="101">field</references>
+        <references refid="class_field_1a514b0362f97a072d15cc8b93e53bf529" compoundref="_map_data_8cpp" startline="130" endline="152">Field::getMapObjects</references>
+        <references refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" compoundref="_map_data_8cpp" startline="282" endline="303">geometry::intersection</references>
+        <references refid="namespacegeometry_1aebf0ad8e6b1a14089df1845e5173a811" compoundref="_map_data_8cpp" startline="255" endline="280">geometry::isInside</references>
+        <references refid="class_node_1afd4810249a88e6a0fe802440800daf8a" compoundref="_pathfinder_8hpp" startline="91">pos</references>
+        <references refid="_p_p_settings_8hpp_1a0baf6c9a9821c5341014d35e3d7eadf8" compoundref="_p_p_settings_8hpp" startline="82">SWAMP_SPEED_PENALITY</references>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">Pathfinder::AStar</referencedby>
+        <referencedby refid="class_node_1a4af5b6953c9b717764557d118332f1cb" compoundref="_pathfinder_8cpp" startline="70" endline="83">findNeighbours</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_node_1a5749804287a44482c4b0b90cb5e70093" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Node::canSee</definition>
+        <argsstring>(const Node &amp;node, const std::vector&lt; Area &gt; &amp;ObstaclesStructs) const</argsstring>
+        <name>canSee</name>
+        <param>
+          <type>const <ref refid="class_node" kindref="compound">Node</ref> &amp;</type>
+          <declname>node</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt; &amp;</type>
+          <declname>ObstaclesStructs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This Method checks if this <ref refid="class_node" kindref="compound">Node</ref> can see a certain other <ref refid="class_node" kindref="compound">Node</ref></para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>node</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>ObstaclesStructs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A vector containing all structures that are counted as Obstacles </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="72" column="10" bodyfile="code/Pathfinder.cpp" bodystart="64" bodyend="68"/>
+        <references refid="namespacegeometry_1ab3ebb42fdbd44fb848c370a0b4261e18" compoundref="_map_data_8cpp" startline="305" endline="307">geometry::isIntersecting</references>
+        <references refid="class_node_1afd4810249a88e6a0fe802440800daf8a" compoundref="_pathfinder_8hpp" startline="91">pos</references>
+        <referencedby refid="class_node_1a4af5b6953c9b717764557d118332f1cb" compoundref="_pathfinder_8cpp" startline="70" endline="83">findNeighbours</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_node_1a4af5b6953c9b717764557d118332f1cb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int Node::findNeighbours</definition>
+        <argsstring>(std::vector&lt; Node &gt; &amp;Nodes, const std::vector&lt; Area &gt; &amp;ObstacleStructs)</argsstring>
+        <name>findNeighbours</name>
+        <param>
+          <type>std::vector&lt; <ref refid="class_node" kindref="compound">Node</ref> &gt; &amp;</type>
+          <declname>Nodes</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt; &amp;</type>
+          <declname>ObstacleStructs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>This Method gets every neighbour and calculates the cost.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Nodes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A vector of pointers to Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>ObstaclesStructs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A vector containing all structures that are counted as Obstacles</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>the number of existing neighbours</para>
+</simplesect>
+<simplesect kind="note"><para>Every <ref refid="class_node" kindref="compound">Node</ref> in Nodes has to be initialized before executing this Method </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="84" column="9" bodyfile="code/Pathfinder.cpp" bodystart="70" bodyend="83"/>
+        <references refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" compoundref="_pathfinder_8cpp" startline="16" endline="62">calculateCost</references>
+        <references refid="class_node_1a5749804287a44482c4b0b90cb5e70093" compoundref="_pathfinder_8cpp" startline="64" endline="68">canSee</references>
+        <references refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" compoundref="_pathfinder_8hpp" startline="110">neighbours</references>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">Pathfinder::AStar</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_node_1a2a9d028795b134cd1961fc606e194ec9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Node::addNeighbour</definition>
+        <argsstring>(Node *neighbour, const double &amp;cost)</argsstring>
+        <name>addNeighbour</name>
+        <param>
+          <type><ref refid="class_node" kindref="compound">Node</ref> *</type>
+          <declname>neighbour</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>cost</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Adds a neighbour and it&apos;s cost</para>
+<para>To increase the speed this method will not calculate the cost. This has to be done via &quot;calculateCost()&quot; and then funneled in as a parameter to this function </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="118" column="10" bodyfile="code/Pathfinder.cpp" bodystart="85" bodyend="87"/>
+        <references refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" compoundref="_pathfinder_8hpp" startline="110">neighbours</references>
+      </memberdef>
+      <memberdef kind="function" id="class_node_1a69274b9d8270111be533536cde7dffb6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Node::removeNeighbour</definition>
+        <argsstring>(Node *neighbour)</argsstring>
+        <name>removeNeighbour</name>
+        <param>
+          <type><ref refid="class_node" kindref="compound">Node</ref> *</type>
+          <declname>neighbour</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Removes a neighbour</para>
+<para>This function only removes one neighbour by iterating over &quot;neighbours&quot; and exiting as soon as one element has been found </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="126" column="10" bodyfile="code/Pathfinder.cpp" bodystart="89" bodyend="99"/>
+        <references refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" compoundref="_pathfinder_8hpp" startline="110">neighbours</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>A point in a 2D word used by Pathfinders</para>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>pos</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Position of <ref refid="class_node" kindref="compound">Node</ref> in a 2D world. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>field</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>field-Object a <ref refid="class_node" kindref="compound">Node</ref> is working on.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+A Node can be described as anchor point in a 2D grid. It offers functions for quick visibility checks for other Nodes, which can even be in other 2D grids, variables to keep track of their status in the current pathfinding problem and a vector containing all visible nodes in the same grid together with respective their costs. </para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="3">
+        <label>Field</label>
+        <link refid="class_field"/>
+      </node>
+      <node id="2">
+        <label>PVector</label>
+        <link refid="class_p_vector"/>
+      </node>
+      <node id="1">
+        <label>Node</label>
+        <link refid="class_node"/>
+        <childnode refid="1" relation="usage">
+          <edgelabel>previous</edgelabel>
+        </childnode>
+        <childnode refid="2" relation="usage">
+          <edgelabel>pos</edgelabel>
+        </childnode>
+        <childnode refid="3" relation="usage">
+          <edgelabel>field</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="code/Pathfinder.hpp" line="31" column="1" bodyfile="code/Pathfinder.hpp" bodystart="31" bodyend="127"/>
+    <listofallmembers>
+      <member refid="class_node_1a2a9d028795b134cd1961fc606e194ec9" prot="public" virt="non-virtual"><scope>Node</scope><name>addNeighbour</name></member>
+      <member refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" prot="public" virt="non-virtual"><scope>Node</scope><name>calculateCost</name></member>
+      <member refid="class_node_1a5749804287a44482c4b0b90cb5e70093" prot="public" virt="non-virtual"><scope>Node</scope><name>canSee</name></member>
+      <member refid="class_node_1aa78fc6cd04892bc631b80d023ef088c4" prot="public" virt="non-virtual"><scope>Node</scope><name>f</name></member>
+      <member refid="class_node_1abafc6b4a9569e9ee3501e0b0ff9ce16c" prot="public" virt="non-virtual"><scope>Node</scope><name>field</name></member>
+      <member refid="class_node_1a4af5b6953c9b717764557d118332f1cb" prot="public" virt="non-virtual"><scope>Node</scope><name>findNeighbours</name></member>
+      <member refid="class_node_1af93b606cf10abfe1766617ad9de59b01" prot="public" virt="non-virtual"><scope>Node</scope><name>g</name></member>
+      <member refid="class_node_1a994ffcc71d937a08581e415288ddafdd" prot="public" virt="non-virtual"><scope>Node</scope><name>isClosed</name></member>
+      <member refid="class_node_1a6b66fb95e8964a388561476467e976ae" prot="public" virt="non-virtual"><scope>Node</scope><name>isOpen</name></member>
+      <member refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" prot="public" virt="non-virtual"><scope>Node</scope><name>neighbours</name></member>
+      <member refid="class_node_1adad2269dc6d7dbd62a4cf8eef7da48fa" prot="public" virt="non-virtual"><scope>Node</scope><name>Node</name></member>
+      <member refid="class_node_1afd4810249a88e6a0fe802440800daf8a" prot="public" virt="non-virtual"><scope>Node</scope><name>pos</name></member>
+      <member refid="class_node_1a17c0c1c22413b76152cd8f513a961022" prot="public" virt="non-virtual"><scope>Node</scope><name>previous</name></member>
+      <member refid="class_node_1a69274b9d8270111be533536cde7dffb6" prot="public" virt="non-virtual"><scope>Node</scope><name>removeNeighbour</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="_namespacegeometry" xml:lang="en-US">
+<title>geometry Namespace Reference</title>
+<indexterm><primary>geometry</primary></indexterm>
+<para>
+
+<para>namespace for geometric functions </para>
+ 
+</para>
+<simplesect>
+    <title>Functions    </title>
+        <itemizedlist>
+            <listitem><para>bool <link linkend="_namespacegeometry_1af87847d485624e5c7ab2bb1558c3a36f">isLeft</link> (<link linkend="_class_p_vector">PVector</link> p0, <link linkend="_class_p_vector">PVector</link> p1, <link linkend="_class_p_vector">PVector</link> p2)</para>
+</listitem>
+            <listitem><para>bool <link linkend="_namespacegeometry_1aebf0ad8e6b1a14089df1845e5173a811">isInside</link> (const <link linkend="_class_p_vector">PVector</link> &amp;p, <link linkend="_class_area">Area</link> &amp;area)</para>
+</listitem>
+            <listitem><para><link linkend="_class_p_vector">PVector</link> <link linkend="_namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f">intersection</link> (<link linkend="_class_line">Line</link> &amp;l1, <link linkend="_class_line">Line</link> &amp;l2)</para>
+</listitem>
+            <listitem><para>bool <link linkend="_namespacegeometry_1ab3ebb42fdbd44fb848c370a0b4261e18">isIntersecting</link> (<link linkend="_class_line">Line</link> &amp;l1, <link linkend="_class_line">Line</link> &amp;l2)</para>
+</listitem>
+            <listitem><para>bool <link linkend="_namespacegeometry_1a8a64aa44149d5f68a5ac14cb3f435708">isIntersecting</link> (<link linkend="_class_line">Line</link> l1, const std::vector&lt; <link linkend="_class_area">Area</link> &gt; &amp;Obstacles)</para>
+</listitem>
+            <listitem><para>double <link linkend="_namespacegeometry_1a478ae992edb02bc432e6d0420c40e336">sqDist</link> (const <link linkend="_class_p_vector">PVector</link> &amp;p1, const <link linkend="_class_p_vector">PVector</link> &amp;p2)</para>
+</listitem>
+            <listitem><para>double <link linkend="_namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a">dist</link> (const <link linkend="_class_p_vector">PVector</link> &amp;p1, const <link linkend="_class_p_vector">PVector</link> &amp;p2)</para>
+</listitem>
+            <listitem><para>double <link linkend="_namespacegeometry_1a2710bf6fad3b638a4ee95abcd843d90f">dot</link> (<link linkend="_class_p_vector">PVector</link> p1, <link linkend="_class_p_vector">PVector</link> p2)</para>
+</listitem>
+            <listitem><para><link linkend="_class_p_vector">PVector</link> <link linkend="_namespacegeometry_1a120ad790ee5a9ef199a6d67e5e9f1c90">getNormalPoint</link> (<link linkend="_class_line">Line</link> line, <link linkend="_class_p_vector">PVector</link> point)</para>
+</listitem>
+            <listitem><para><link linkend="_class_p_vector">PVector</link> <link linkend="_namespacegeometry_1a46dee6450badd387e6788a9ebf80fa44">angle2Vector</link> (double a)</para>
+</listitem>
+            <listitem><para>double <link linkend="_namespacegeometry_1a0ce1748996f9e029a3cbeb665c1d17ce">vector2Angle</link> (<link linkend="_class_p_vector">PVector</link> v)</para>
+</listitem>
+            <listitem><para>double <link linkend="_namespacegeometry_1ab9437f91a11b422552cd37d014c43651">vector2Angle</link> (double x, double y)</para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<section>
+<title>Detailed Description</title>
+
+<para>namespace for geometric functions </para>
+</section>
+<section>
+<title>Function Documentation</title>
+<anchor xml:id="_namespacegeometry_1a46dee6450badd387e6788a9ebf80fa44"/>    <section>
+    <title>angle2Vector()</title>
+<indexterm><primary>angle2Vector</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>angle2Vector</secondary></indexterm>
+<para><computeroutput><link linkend="_class_p_vector">PVector</link> geometry::angle2Vector (double a)</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a46dee6450badd387e6788a9ebf80fa44_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a"/>    <section>
+    <title>dist()</title>
+<indexterm><primary>dist</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>dist</secondary></indexterm>
+<para><computeroutput>double geometry::dist (const <link linkend="_class_p_vector">PVector</link> &amp; p1, const <link linkend="_class_p_vector">PVector</link> &amp; p2)</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a9a1ebcb6a74b046020dcc91c40554a3a_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a9a1ebcb6a74b046020dcc91c40554a3a_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1a2710bf6fad3b638a4ee95abcd843d90f"/>    <section>
+    <title>dot()</title>
+<indexterm><primary>dot</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>dot</secondary></indexterm>
+<para><computeroutput>double geometry::dot (<link linkend="_class_p_vector">PVector</link> p1, <link linkend="_class_p_vector">PVector</link> p2)</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a2710bf6fad3b638a4ee95abcd843d90f_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1a120ad790ee5a9ef199a6d67e5e9f1c90"/>    <section>
+    <title>getNormalPoint()</title>
+<indexterm><primary>getNormalPoint</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>getNormalPoint</secondary></indexterm>
+<para><computeroutput><link linkend="_class_p_vector">PVector</link> geometry::getNormalPoint (<link linkend="_class_line">Line</link> line, <link linkend="_class_p_vector">PVector</link> point)</computeroutput></para>
+<para>Calculates normal point on a line to another point</para>
+
+<para>
+                <formalpara>
+                    <title>
+Parameters                    </title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+                                <entry>line</entry>
+                                <entry>
+<para>The line </para>
+</entry>
+                            </row>
+                            <row>
+                                <entry>point</entry>
+                                <entry>
+<para>The point</para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                This function returns the intersection between the line and a line which goes through the point p and is orthogonal to the line This point however doesn&apos;t need to be on the line and can also lie on a extension of this line </para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a120ad790ee5a9ef199a6d67e5e9f1c90_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a120ad790ee5a9ef199a6d67e5e9f1c90_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f"/>    <section>
+    <title>intersection()</title>
+<indexterm><primary>intersection</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>intersection</secondary></indexterm>
+<para><computeroutput><link linkend="_class_p_vector">PVector</link> geometry::intersection (<link linkend="_class_line">Line</link> &amp; l1, <link linkend="_class_line">Line</link> &amp; l2)</computeroutput></para>
+<para>calculates an intersection point between two lines 
+                <formalpara>
+                    <title>
+Parameters                    </title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+                                <entry>l1</entry>
+                                <entry>
+<para>a line </para>
+</entry>
+                            </row>
+                            <row>
+                                <entry>l2</entry>
+                                <entry>
+<para>another line </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                <formalpara><title>Returns</title>
+
+<para>intersection point if existing. Otherwise (-1, -1) </para>
+</formalpara>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a228137d265482ee3fd6581e2e375eb8f_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1aebf0ad8e6b1a14089df1845e5173a811"/>    <section>
+    <title>isInside()</title>
+<indexterm><primary>isInside</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>isInside</secondary></indexterm>
+<para><computeroutput>bool geometry::isInside (const <link linkend="_class_p_vector">PVector</link> &amp; p, <link linkend="_class_area">Area</link> &amp; area)</computeroutput></para>
+<para>checks if a point lies inside the <link linkend="_class_area">Area</link> 
+                <formalpara>
+                    <title>
+Parameters                    </title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+                                <entry>p</entry>
+                                <entry>
+<para>A point </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                <formalpara><title>Returns</title>
+
+<para>true if point lies inside of the <link linkend="_class_area">Area</link>. Otherwise false </para>
+</formalpara>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_aebf0ad8e6b1a14089df1845e5173a811_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_aebf0ad8e6b1a14089df1845e5173a811_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1ab3ebb42fdbd44fb848c370a0b4261e18"/>    <section>
+    <title>isIntersecting()<computeroutput>[1/2]</computeroutput></title>
+<indexterm><primary>isIntersecting</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>isIntersecting</secondary></indexterm>
+<para><computeroutput>bool geometry::isIntersecting (<link linkend="_class_line">Line</link> &amp; l1, <link linkend="_class_line">Line</link> &amp; l2)</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_ab3ebb42fdbd44fb848c370a0b4261e18_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_ab3ebb42fdbd44fb848c370a0b4261e18_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1a8a64aa44149d5f68a5ac14cb3f435708"/>    <section>
+    <title>isIntersecting()<computeroutput>[2/2]</computeroutput></title>
+<indexterm><primary>isIntersecting</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>isIntersecting</secondary></indexterm>
+<para><computeroutput>bool geometry::isIntersecting (<link linkend="_class_line">Line</link> l1, const std::vector&lt; <link linkend="_class_area">Area</link> &gt; &amp; Obstacles)</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a8a64aa44149d5f68a5ac14cb3f435708_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1af87847d485624e5c7ab2bb1558c3a36f"/>    <section>
+    <title>isLeft()</title>
+<indexterm><primary>isLeft</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>isLeft</secondary></indexterm>
+<para><computeroutput>bool geometry::isLeft (<link linkend="_class_p_vector">PVector</link> p0, <link linkend="_class_p_vector">PVector</link> p1, <link linkend="_class_p_vector">PVector</link> p2)</computeroutput></para>
+<para><informaltable frame='bottom'><tgroup cols='1'><colspec align='center'/><tbody><row><entry align='center'>
+</entry></row></tbody></tgroup></informaltable>
+ geometry 
+<literallayout>&#160;&#xa;</literallayout>
+ <informaltable frame='bottom'><tgroup cols='1'><colspec align='center'/><tbody><row><entry align='center'>
+</entry></row></tbody></tgroup></informaltable>
+ </para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_af87847d485624e5c7ab2bb1558c3a36f_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1a478ae992edb02bc432e6d0420c40e336"/>    <section>
+    <title>sqDist()</title>
+<indexterm><primary>sqDist</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>sqDist</secondary></indexterm>
+<para><computeroutput>double geometry::sqDist (const <link linkend="_class_p_vector">PVector</link> &amp; p1, const <link linkend="_class_p_vector">PVector</link> &amp; p2)</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a478ae992edb02bc432e6d0420c40e336_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_namespacegeometry_1ab9437f91a11b422552cd37d014c43651"/>    <section>
+    <title>vector2Angle()<computeroutput>[1/2]</computeroutput></title>
+<indexterm><primary>vector2Angle</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>vector2Angle</secondary></indexterm>
+<para><computeroutput>double geometry::vector2Angle (double x, double y)</computeroutput></para>    </section><anchor xml:id="_namespacegeometry_1a0ce1748996f9e029a3cbeb665c1d17ce"/>    <section>
+    <title>vector2Angle()<computeroutput>[2/2]</computeroutput></title>
+<indexterm><primary>vector2Angle</primary><secondary>geometry</secondary></indexterm>
+<indexterm><primary>geometry</primary><secondary>vector2Angle</secondary></indexterm>
+<para><computeroutput>double geometry::vector2Angle (<link linkend="_class_p_vector">PVector</link> v)</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="namespacegeometry_a0ce1748996f9e029a3cbeb665c1d17ce_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+</section>
+</section>
+</section>

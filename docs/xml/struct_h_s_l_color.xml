@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="struct_h_s_l_color" kind="struct" language="C++" prot="public">
+    <compoundname>HSLColor</compoundname>
+    <includes refid="_color_recognition_8hpp" local="no">ColorRecognition.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float HSLColor::h</definition>
+        <argsstring></argsstring>
+        <name>h</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.hpp" line="14" column="11" bodyfile="code/libs/ColorRecognition.hpp" bodystart="14" bodyend="-1"/>
+        <referencedby refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" compoundref="_color_recognition_8cpp" startline="4" endline="4">isCyan</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" compoundref="_color_recognition_8cpp" startline="7" endline="7">isOrange</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" compoundref="_color_recognition_8cpp" startline="3" endline="3">isRed</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" compoundref="_color_recognition_8cpp" startline="9" endline="9">isSuperObj</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab44bd2d94a55aff5b357fe0a8c1cfa46" compoundref="_color_recognition_8cpp" startline="8" endline="8">isSwamp</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab786948d23021df1eb15cad46d081a64" compoundref="_color_recognition_8cpp" startline="6" endline="6">isYellow</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a373498008155314dabf15eafdd4b511f" compoundref="_color_recognition_8cpp" startline="67" endline="97">rgb2hsl</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float HSLColor::s</definition>
+        <argsstring></argsstring>
+        <name>s</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.hpp" line="15" column="11" bodyfile="code/libs/ColorRecognition.hpp" bodystart="15" bodyend="-1"/>
+        <referencedby refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" compoundref="_color_recognition_8cpp" startline="4" endline="4">isCyan</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" compoundref="_color_recognition_8cpp" startline="7" endline="7">isOrange</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" compoundref="_color_recognition_8cpp" startline="3" endline="3">isRed</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" compoundref="_color_recognition_8cpp" startline="9" endline="9">isSuperObj</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab44bd2d94a55aff5b357fe0a8c1cfa46" compoundref="_color_recognition_8cpp" startline="8" endline="8">isSwamp</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab786948d23021df1eb15cad46d081a64" compoundref="_color_recognition_8cpp" startline="6" endline="6">isYellow</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a373498008155314dabf15eafdd4b511f" compoundref="_color_recognition_8cpp" startline="67" endline="97">rgb2hsl</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float HSLColor::l</definition>
+        <argsstring></argsstring>
+        <name>l</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.hpp" line="16" column="11" bodyfile="code/libs/ColorRecognition.hpp" bodystart="16" bodyend="-1"/>
+        <referencedby refid="_color_recognition_8cpp_1afddf288619ae1066f933dc11363d097c" compoundref="_color_recognition_8cpp" startline="5" endline="5">isBlack</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" compoundref="_color_recognition_8cpp" startline="4" endline="4">isCyan</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" compoundref="_color_recognition_8cpp" startline="7" endline="7">isOrange</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" compoundref="_color_recognition_8cpp" startline="3" endline="3">isRed</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" compoundref="_color_recognition_8cpp" startline="9" endline="9">isSuperObj</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab44bd2d94a55aff5b357fe0a8c1cfa46" compoundref="_color_recognition_8cpp" startline="8" endline="8">isSwamp</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1ab786948d23021df1eb15cad46d081a64" compoundref="_color_recognition_8cpp" startline="6" endline="6">isYellow</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a373498008155314dabf15eafdd4b511f" compoundref="_color_recognition_8cpp" startline="67" endline="97">rgb2hsl</referencedby>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="code/libs/ColorRecognition.hpp" line="13" column="1" bodyfile="code/libs/ColorRecognition.hpp" bodystart="13" bodyend="17"/>
+    <listofallmembers>
+      <member refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" prot="public" virt="non-virtual"><scope>HSLColor</scope><name>h</name></member>
+      <member refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" prot="public" virt="non-virtual"><scope>HSLColor</scope><name>l</name></member>
+      <member refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" prot="public" virt="non-virtual"><scope>HSLColor</scope><name>s</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,98 @@
+\hypertarget{class_pathfinder}{}\doxysection{Pathfinder Class Reference}
+\label{class_pathfinder}\index{Pathfinder@{Pathfinder}}
+
+
+{\ttfamily \#include $<$Pathfinder.\+hpp$>$}
+
+
+
+Collaboration diagram for Pathfinder\+:
+% FIG 0
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_pathfinder_a9086888b62eaf4d99362db099075502f}{Pathfinder}} (\mbox{\hyperlink{class_field}{Field}} \&MAP, bool trap\+\_\+sensitive)
+\item 
+\mbox{\hyperlink{class_path}{Path}} \mbox{\hyperlink{class_pathfinder_a785a80cd9d469e70c298569e60ff39e1}{AStar}} (\mbox{\hyperlink{class_p_vector}{PVector}} \&start, \mbox{\hyperlink{class_p_vector}{PVector}} \&end)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_node}{Node}} $>$ \mbox{\hyperlink{class_pathfinder_a6630073ec1cebccf0f329efc5cd60937}{map}}
+\begin{DoxyCompactList}\small\item\em Contains all nodes that are important to this \mbox{\hyperlink{class_pathfinder}{Pathfinder}}. \end{DoxyCompactList}\item 
+const bool \mbox{\hyperlink{class_pathfinder_afb6e6b06b1774df0ce5d5a47c9784170}{trap\+Sensitive}}
+\item 
+\mbox{\hyperlink{class_field}{Field}} $\ast$ \mbox{\hyperlink{class_pathfinder_afab5e77b4559053eddae0f5c08608d8a}{field}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_pathfinder}{Pathfinder}} class that operates on a specific maps using nodes
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em MAP} & A field-\/object representing a map \\
+\hline
+{\em trap\+\_\+sensitive} & A bool that determines whether the pathfinder watches for traps or not\\
+\hline
+\end{DoxyTemplParams}
+At this point there\textquotesingle{}s only one pathfinding algorithm (AStar) This works fine but may be extended later 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_pathfinder_a9086888b62eaf4d99362db099075502f}\label{class_pathfinder_a9086888b62eaf4d99362db099075502f}} 
+\index{Pathfinder@{Pathfinder}!Pathfinder@{Pathfinder}}
+\index{Pathfinder@{Pathfinder}!Pathfinder@{Pathfinder}}
+\doxysubsubsection{\texorpdfstring{Pathfinder()}{Pathfinder()}}
+{\footnotesize\ttfamily Pathfinder\+::\+Pathfinder (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_field}{Field}} \&}]{MAP,  }\item[{bool}]{trap\+\_\+sensitive }\end{DoxyParamCaption})}
+
+\DoxyHorRuler{0}
+ \mbox{\hyperlink{class_pathfinder}{Pathfinder}} ~\newline
+ \DoxyHorRuler{0}
+ Here is the call graph for this function\+:
+% FIG 1
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_pathfinder_a785a80cd9d469e70c298569e60ff39e1}\label{class_pathfinder_a785a80cd9d469e70c298569e60ff39e1}} 
+\index{Pathfinder@{Pathfinder}!AStar@{AStar}}
+\index{AStar@{AStar}!Pathfinder@{Pathfinder}}
+\doxysubsubsection{\texorpdfstring{AStar()}{AStar()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_path}{Path}} Pathfinder\+::\+AStar (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_p_vector}{PVector}} \&}]{start,  }\item[{\mbox{\hyperlink{class_p_vector}{PVector}} \&}]{end }\end{DoxyParamCaption})}
+
+Finds a path between a start and an end node
+
+Here the AStar pathfinding algorithm is used because it\textquotesingle{}s fast and efficient. Note that this works on a prepared environment hence it is even faster. Here is the call graph for this function\+:
+% FIG 2
+Here is the caller graph for this function\+:
+% FIG 3
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_pathfinder_afab5e77b4559053eddae0f5c08608d8a}\label{class_pathfinder_afab5e77b4559053eddae0f5c08608d8a}} 
+\index{Pathfinder@{Pathfinder}!field@{field}}
+\index{field@{field}!Pathfinder@{Pathfinder}}
+\doxysubsubsection{\texorpdfstring{field}{field}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_field}{Field}}$\ast$ Pathfinder\+::field}
+
+\mbox{\Hypertarget{class_pathfinder_a6630073ec1cebccf0f329efc5cd60937}\label{class_pathfinder_a6630073ec1cebccf0f329efc5cd60937}} 
+\index{Pathfinder@{Pathfinder}!map@{map}}
+\index{map@{map}!Pathfinder@{Pathfinder}}
+\doxysubsubsection{\texorpdfstring{map}{map}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{class_node}{Node}}$>$ Pathfinder\+::map}
+
+
+
+Contains all nodes that are important to this \mbox{\hyperlink{class_pathfinder}{Pathfinder}}. 
+
+\mbox{\Hypertarget{class_pathfinder_afb6e6b06b1774df0ce5d5a47c9784170}\label{class_pathfinder_afb6e6b06b1774df0ce5d5a47c9784170}} 
+\index{Pathfinder@{Pathfinder}!trapSensitive@{trapSensitive}}
+\index{trapSensitive@{trapSensitive}!Pathfinder@{Pathfinder}}
+\doxysubsubsection{\texorpdfstring{trapSensitive}{trapSensitive}}
+{\footnotesize\ttfamily const bool Pathfinder\+::trap\+Sensitive}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+code/\mbox{\hyperlink{_pathfinder_8hpp}{Pathfinder.\+hpp}}\item 
+code/\mbox{\hyperlink{_pathfinder_8cpp}{Pathfinder.\+cpp}}\end{DoxyCompactItemize}

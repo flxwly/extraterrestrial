@@ -1,0 +1,655 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="_class_robot" xml:lang="en-US">
+<title>Robot Class Reference</title>
+<indexterm><primary>Robot</primary></indexterm>
+<para>
+<computeroutput>#include &lt;Robot.hpp&gt;</computeroutput>
+</para>
+Collaboration diagram for Robot:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot__coll__graph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Public Types    </title>
+        <itemizedlist>
+            <listitem><para>typedef std::chrono::steady_clock <link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Timer</link></para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<simplesect>
+    <title>Public Member Functions    </title>
+        <itemizedlist>
+            <listitem><para><link linkend="_class_robot_1a0304ff4829dfeb19a868d4feb7d59038">Robot</link> (volatile int *IN, volatile int *OUT, std::array&lt; int *, 3 &gt; superObject, <link linkend="_class_field">Field</link> *<link linkend="_class_robot_1a6eafb379fd3d28505e29f89a3e7cc0b1">map0</link>, <link linkend="_class_field">Field</link> *<link linkend="_class_robot_1a479e878152a7daccd5487d81982c7ff9">map1</link>)</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_robot_1a56d2661cb822912575d2cd479d08779e">wheels</link> (int l, int r)</para>
+
+<para>controls the robots wheels </para>
+</listitem>
+            <listitem><para>void <link linkend="_class_robot_1aa13bf89f0098d0a14d17818efdfc8cd2">moveAlongPath</link> (<link linkend="_class_path">Path</link> &amp;path)</para>
+</listitem>
+            <listitem><para><link linkend="_class_p_vector">PVector</link> <link linkend="_class_robot_1a5ad54de036deda2d9f2e151cab96a9bd">updatePos</link> ()</para>
+
+<para>updates the position of the robot mathematically and returns the change </para>
+</listitem>
+            <listitem><para>int <link linkend="_class_robot_1a990b30f193fbc9b294ac4785798ea394">moveToPosition</link> (<link linkend="_class_p_vector">PVector</link> p)</para>
+</listitem>
+            <listitem><para>int <link linkend="_class_robot_1ade9e381883860b0b81b6d2fd1e190e10">checkUsSensors</link> (int l, int f, int r)</para>
+
+<para>checks if l, f or r is higher than the us-sensor values. returns a binary-encoded value </para>
+</listitem>
+            <listitem><para>void <link linkend="_class_robot_1acff1fa64498b60568d7446e6710f64c6">updateLoop</link> ()</para>
+</listitem>
+            <listitem><para>void <link linkend="_class_robot_1a79fef2efeb1fc25fad40e2b0fa603652">game0Loop</link> ()</para>
+
+<para>game loop for first map </para>
+</listitem>
+            <listitem><para>void <link linkend="_class_robot_1ac9cf2352bb94bb2c623610c61027d2db">game1Loop</link> ()</para>
+
+<para>game loop for second map </para>
+</listitem>
+            <listitem><para><link linkend="_class_p_vector">PVector</link> <link linkend="_class_robot_1ad7b7f1a5a4e56d9e4c72a24a622d69f1">getVelocity</link> (long long int dt) const</para>
+
+<para>gets the current velocity for a certain change in time (in ms) </para>
+</listitem>
+            <listitem><para>bool <link linkend="_class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb">shouldCollect</link> ()</para>
+
+<para>decides whether collecting a point is a good idea or not </para>
+</listitem>
+            <listitem><para>int <link linkend="_class_robot_1abee8d3e53a745c33bb33e91d7a8748a4">collect</link> ()</para>
+
+<para>collects a point </para>
+</listitem>
+            <listitem><para>bool <link linkend="_class_robot_1acb30cea7c6baee7977193845aeabe009">shouldDeposit</link> ()</para>
+
+<para>decides whether depositing is a good idea or not </para>
+</listitem>
+            <listitem><para>void <link linkend="_class_robot_1a106604404bd2727de0abdaf99c10c519">deposit</link> ()</para>
+
+<para>deposits </para>
+</listitem>
+            <listitem><para>bool <link linkend="_class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e">shouldTeleport</link> ()</para>
+
+<para>decides whether teleporting is a good idea or not </para>
+</listitem>
+            <listitem><para>void <link linkend="_class_robot_1a8ad41d97cfa6b475f2910768840b9769">teleport</link> ()</para>
+
+<para>teleports </para>
+</listitem>
+            <listitem><para>int <link linkend="_class_robot_1aa46bf5e2662924fc2c9d7e747e12cec9">avoidVoid</link> () const</para>
+
+<para>returns a turning direction if the robot is about to drive off map </para>
+</listitem>
+            <listitem><para>std::array&lt; int, 4 &gt; <link linkend="_class_robot_1a70d33a38d8f422be16ef303063c07277">getDesiredLoad</link> () const</para>
+</listitem>
+            <listitem><para>std::vector&lt; <link linkend="_class_p_vector">PVector</link> &gt; <link linkend="_class_robot_1ae20fb1cda5f32735ff19b6737bdf173a">getPointPath</link> (std::array&lt; int, 4 &gt; desiredLoad)</para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<simplesect>
+    <title>Public Attributes    </title>
+        <itemizedlist>
+            <listitem><para>unsigned short <link linkend="_class_robot_1a6f43057c443f9e79b3d7875643328343">level</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_p_vector">PVector</link> <link linkend="_class_robot_1a1000239c43390bba895e574efb40bea1">pos</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_p_vector">PVector</link> <link linkend="_class_robot_1aa72f97fe06ea1da3b97e2476a87f9e2b">lastPos</link></para>
+</listitem>
+            <listitem><para>std::vector&lt; <link linkend="_class_path">Path</link> &gt; <link linkend="_class_robot_1a686d1ec7714f85bfd1fd0d5a6000f96b">completePath</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_field">Field</link> * <link linkend="_class_robot_1a6eafb379fd3d28505e29f89a3e7cc0b1">map0</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_field">Field</link> * <link linkend="_class_robot_1a479e878152a7daccd5487d81982c7ff9">map1</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_pathfinder">Pathfinder</link> <link linkend="_class_robot_1ab10294bd68a035f4ccc932b674d4f09a">pathfinder0</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_pathfinder">Pathfinder</link> <link linkend="_class_robot_1ac20c4cea4260b9958b8d869411851063">pathfinder1</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_pathfinder">Pathfinder</link> <link linkend="_class_robot_1afe2c01e9389fe2dba844b0815864b705">pathfinder0T</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_pathfinder">Pathfinder</link> <link linkend="_class_robot_1aaa2235a0007e798eb02771cb03058698">pathfinder1T</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_object_load">ObjectLoad</link> <link linkend="_class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb">loadedObjects</link></para>
+</listitem>
+            <listitem><para>unsigned int <link linkend="_class_robot_1a5ec6698f2aaaf175aecc86b8f94ec8e4">lastRGBBonus</link></para>
+</listitem>
+            <listitem><para>bool <link linkend="_class_robot_1ac2546b91734a2b4d4d22b524dc9d2d0c">huntingSuperObj</link></para>
+</listitem>
+            <listitem><para>std::vector&lt; <link linkend="_class_collectible">Collectible</link> * &gt; <link linkend="_class_robot_1ad45d8f1011a473e9b158d240dd9b6766">superObjects</link></para>
+</listitem>
+            <listitem><para>int <link linkend="_class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20">remainingMapTime</link></para>
+</listitem>
+            <listitem><para>std::chrono::time_point&lt; <link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Timer</link> &gt; <link linkend="_class_robot_1a0412b2e9cdd76a653aa6b8ddf24f450f">lastProgramCycle</link></para>
+</listitem>
+            <listitem><para>std::chrono::time_point&lt; <link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Timer</link> &gt; <link linkend="_class_robot_1a3f4d56a15c5414fbdbe6fa55be384bdc">depositingSince</link></para>
+</listitem>
+            <listitem><para>std::chrono::time_point&lt; <link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Timer</link> &gt; <link linkend="_class_robot_1a64c2b4bbf84de4682285450556ed40eb">collectingSince</link></para>
+</listitem>
+            <listitem><para>std::chrono::time_point&lt; <link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Timer</link> &gt; <link linkend="_class_robot_1a3c82c722e113435735318a47cbc4efe2">lastPositionUpdate</link></para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<section>
+<title>Detailed Description</title>
+
+<para>The robot of the CoSpace-simulator </para>
+</section>
+<section>
+<title>Member Typedef Documentation</title>
+<anchor xml:id="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87"/>    <section>
+    <title>Timer</title>
+<indexterm><primary>Timer</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>Timer</secondary></indexterm>
+<para><computeroutput>typedef std::chrono::steady_clock <link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Robot::Timer</link></computeroutput></para></section>
+</section>
+<section>
+<title>Constructor &amp; Destructor Documentation</title>
+<anchor xml:id="_class_robot_1a0304ff4829dfeb19a868d4feb7d59038"/>    <section>
+    <title>Robot()</title>
+<indexterm><primary>Robot</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>Robot</secondary></indexterm>
+<para><computeroutput>Robot::Robot (volatile int * IN, volatile int * OUT, std::array&lt; int *, 3 &gt; superObject, <link linkend="_class_field">Field</link> * map0, <link linkend="_class_field">Field</link> * map1)</computeroutput></para></section>
+</section>
+<section>
+<title>Member Function Documentation</title>
+<anchor xml:id="_class_robot_1aa46bf5e2662924fc2c9d7e747e12cec9"/>    <section>
+    <title>avoidVoid()</title>
+<indexterm><primary>avoidVoid</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>avoidVoid</secondary></indexterm>
+<para><computeroutput>int Robot::avoidVoid ( ) const</computeroutput></para><para>
+
+<para>returns a turning direction if the robot is about to drive off map </para>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_aa46bf5e2662924fc2c9d7e747e12cec9_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1ade9e381883860b0b81b6d2fd1e190e10"/>    <section>
+    <title>checkUsSensors()</title>
+<indexterm><primary>checkUsSensors</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>checkUsSensors</secondary></indexterm>
+<para><computeroutput>int Robot::checkUsSensors (int l, int f, int r)</computeroutput></para><para>
+
+<para>checks if l, f or r is higher than the us-sensor values. returns a binary-encoded value </para>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_ade9e381883860b0b81b6d2fd1e190e10_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1abee8d3e53a745c33bb33e91d7a8748a4"/>    <section>
+    <title>collect()</title>
+<indexterm><primary>collect</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>collect</secondary></indexterm>
+<para><computeroutput>int Robot::collect ( )</computeroutput></para><para>
+
+<para>collects a point </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_abee8d3e53a745c33bb33e91d7a8748a4_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_abee8d3e53a745c33bb33e91d7a8748a4_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1a106604404bd2727de0abdaf99c10c519"/>    <section>
+    <title>deposit()</title>
+<indexterm><primary>deposit</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>deposit</secondary></indexterm>
+<para><computeroutput>void Robot::deposit ( )</computeroutput></para><para>
+
+<para>deposits </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a106604404bd2727de0abdaf99c10c519_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a106604404bd2727de0abdaf99c10c519_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1a79fef2efeb1fc25fad40e2b0fa603652"/>    <section>
+    <title>game0Loop()</title>
+<indexterm><primary>game0Loop</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>game0Loop</secondary></indexterm>
+<para><computeroutput>void Robot::game0Loop ( )</computeroutput></para><para>
+
+<para>game loop for first map </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a79fef2efeb1fc25fad40e2b0fa603652_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a79fef2efeb1fc25fad40e2b0fa603652_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1ac9cf2352bb94bb2c623610c61027d2db"/>    <section>
+    <title>game1Loop()</title>
+<indexterm><primary>game1Loop</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>game1Loop</secondary></indexterm>
+<para><computeroutput>void Robot::game1Loop ( )</computeroutput></para><para>
+
+<para>game loop for second map </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_ac9cf2352bb94bb2c623610c61027d2db_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_ac9cf2352bb94bb2c623610c61027d2db_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1a70d33a38d8f422be16ef303063c07277"/>    <section>
+    <title>getDesiredLoad()</title>
+<indexterm><primary>getDesiredLoad</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>getDesiredLoad</secondary></indexterm>
+<para><computeroutput>std::array&lt; int, 4 &gt; Robot::getDesiredLoad ( ) const</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a70d33a38d8f422be16ef303063c07277_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1ae20fb1cda5f32735ff19b6737bdf173a"/>    <section>
+    <title>getPointPath()</title>
+<indexterm><primary>getPointPath</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>getPointPath</secondary></indexterm>
+<para><computeroutput>std::vector&lt; <link linkend="_class_p_vector">PVector</link> &gt; Robot::getPointPath (std::array&lt; int, 4 &gt; desiredLoad)</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_ae20fb1cda5f32735ff19b6737bdf173a_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_ae20fb1cda5f32735ff19b6737bdf173a_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1ad7b7f1a5a4e56d9e4c72a24a622d69f1"/>    <section>
+    <title>getVelocity()</title>
+<indexterm><primary>getVelocity</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>getVelocity</secondary></indexterm>
+<para><computeroutput><link linkend="_class_p_vector">PVector</link> Robot::getVelocity (long long int dt) const</computeroutput></para><para>
+
+<para>gets the current velocity for a certain change in time (in ms) </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_ad7b7f1a5a4e56d9e4c72a24a622d69f1_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_ad7b7f1a5a4e56d9e4c72a24a622d69f1_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1aa13bf89f0098d0a14d17818efdfc8cd2"/>    <section>
+    <title>moveAlongPath()</title>
+<indexterm><primary>moveAlongPath</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>moveAlongPath</secondary></indexterm>
+<para><computeroutput>void Robot::moveAlongPath (<link linkend="_class_path">Path</link> &amp; path)</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_aa13bf89f0098d0a14d17818efdfc8cd2_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_aa13bf89f0098d0a14d17818efdfc8cd2_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1a990b30f193fbc9b294ac4785798ea394"/>    <section>
+    <title>moveToPosition()</title>
+<indexterm><primary>moveToPosition</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>moveToPosition</secondary></indexterm>
+<para><computeroutput>int Robot::moveToPosition (<link linkend="_class_p_vector">PVector</link> p)</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a990b30f193fbc9b294ac4785798ea394_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a990b30f193fbc9b294ac4785798ea394_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb"/>    <section>
+    <title>shouldCollect()</title>
+<indexterm><primary>shouldCollect</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>shouldCollect</secondary></indexterm>
+<para><computeroutput>bool Robot::shouldCollect ( )</computeroutput></para><para>
+
+<para>decides whether collecting a point is a good idea or not </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_adb8f5af6a3be057b17b9d73ebf6eabbb_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_adb8f5af6a3be057b17b9d73ebf6eabbb_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1acb30cea7c6baee7977193845aeabe009"/>    <section>
+    <title>shouldDeposit()</title>
+<indexterm><primary>shouldDeposit</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>shouldDeposit</secondary></indexterm>
+<para><computeroutput>bool Robot::shouldDeposit ( )</computeroutput></para><para>
+
+<para>decides whether depositing is a good idea or not </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_acb30cea7c6baee7977193845aeabe009_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_acb30cea7c6baee7977193845aeabe009_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e"/>    <section>
+    <title>shouldTeleport()</title>
+<indexterm><primary>shouldTeleport</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>shouldTeleport</secondary></indexterm>
+<para><computeroutput>bool Robot::shouldTeleport ( )</computeroutput></para><para>
+
+<para>decides whether teleporting is a good idea or not </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_ac6da9c5a61f4ae0aa57314b027ed898e_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_ac6da9c5a61f4ae0aa57314b027ed898e_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1a8ad41d97cfa6b475f2910768840b9769"/>    <section>
+    <title>teleport()</title>
+<indexterm><primary>teleport</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>teleport</secondary></indexterm>
+<para><computeroutput>void Robot::teleport ( )</computeroutput></para><para>
+
+<para>teleports </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a8ad41d97cfa6b475f2910768840b9769_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a8ad41d97cfa6b475f2910768840b9769_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1acff1fa64498b60568d7446e6710f64c6"/>    <section>
+    <title>updateLoop()</title>
+<indexterm><primary>updateLoop</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>updateLoop</secondary></indexterm>
+<para><computeroutput>void Robot::updateLoop ( )</computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_acff1fa64498b60568d7446e6710f64c6_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_acff1fa64498b60568d7446e6710f64c6_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1a5ad54de036deda2d9f2e151cab96a9bd"/>    <section>
+    <title>updatePos()</title>
+<indexterm><primary>updatePos</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>updatePos</secondary></indexterm>
+<para><computeroutput><link linkend="_class_p_vector">PVector</link> Robot::updatePos ( )</computeroutput></para><para>
+
+<para>updates the position of the robot mathematically and returns the change </para>
+</para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a5ad54de036deda2d9f2e151cab96a9bd_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a5ad54de036deda2d9f2e151cab96a9bd_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="_class_robot_1a56d2661cb822912575d2cd479d08779e"/>    <section>
+    <title>wheels()</title>
+<indexterm><primary>wheels</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>wheels</secondary></indexterm>
+<para><computeroutput>void Robot::wheels (int l, int r)</computeroutput></para><para>
+
+<para>controls the robots wheels </para>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_robot_a56d2661cb822912575d2cd479d08779e_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+</section>
+</section>
+<section>
+<title>Member Data Documentation</title>
+<anchor xml:id="_class_robot_1a64c2b4bbf84de4682285450556ed40eb"/>    <section>
+    <title>collectingSince</title>
+<indexterm><primary>collectingSince</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>collectingSince</secondary></indexterm>
+<para><computeroutput>std::chrono::time_point&lt;<link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Timer</link>&gt; Robot::collectingSince</computeroutput></para>    </section><anchor xml:id="_class_robot_1a686d1ec7714f85bfd1fd0d5a6000f96b"/>    <section>
+    <title>completePath</title>
+<indexterm><primary>completePath</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>completePath</secondary></indexterm>
+<para><computeroutput>std::vector&lt;<link linkend="_class_path">Path</link>&gt; Robot::completePath</computeroutput></para>    </section><anchor xml:id="_class_robot_1a3f4d56a15c5414fbdbe6fa55be384bdc"/>    <section>
+    <title>depositingSince</title>
+<indexterm><primary>depositingSince</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>depositingSince</secondary></indexterm>
+<para><computeroutput>std::chrono::time_point&lt;<link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Timer</link>&gt; Robot::depositingSince</computeroutput></para>    </section><anchor xml:id="_class_robot_1ac2546b91734a2b4d4d22b524dc9d2d0c"/>    <section>
+    <title>huntingSuperObj</title>
+<indexterm><primary>huntingSuperObj</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>huntingSuperObj</secondary></indexterm>
+<para><computeroutput>bool Robot::huntingSuperObj</computeroutput></para>    </section><anchor xml:id="_class_robot_1aa72f97fe06ea1da3b97e2476a87f9e2b"/>    <section>
+    <title>lastPos</title>
+<indexterm><primary>lastPos</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>lastPos</secondary></indexterm>
+<para><computeroutput><link linkend="_class_p_vector">PVector</link> Robot::lastPos</computeroutput></para>    </section><anchor xml:id="_class_robot_1a3c82c722e113435735318a47cbc4efe2"/>    <section>
+    <title>lastPositionUpdate</title>
+<indexterm><primary>lastPositionUpdate</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>lastPositionUpdate</secondary></indexterm>
+<para><computeroutput>std::chrono::time_point&lt;<link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Timer</link>&gt; Robot::lastPositionUpdate</computeroutput></para>    </section><anchor xml:id="_class_robot_1a0412b2e9cdd76a653aa6b8ddf24f450f"/>    <section>
+    <title>lastProgramCycle</title>
+<indexterm><primary>lastProgramCycle</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>lastProgramCycle</secondary></indexterm>
+<para><computeroutput>std::chrono::time_point&lt;<link linkend="_class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87">Timer</link>&gt; Robot::lastProgramCycle</computeroutput></para>    </section><anchor xml:id="_class_robot_1a5ec6698f2aaaf175aecc86b8f94ec8e4"/>    <section>
+    <title>lastRGBBonus</title>
+<indexterm><primary>lastRGBBonus</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>lastRGBBonus</secondary></indexterm>
+<para><computeroutput>unsigned int Robot::lastRGBBonus</computeroutput></para>    </section><anchor xml:id="_class_robot_1a6f43057c443f9e79b3d7875643328343"/>    <section>
+    <title>level</title>
+<indexterm><primary>level</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>level</secondary></indexterm>
+<para><computeroutput>unsigned short Robot::level</computeroutput></para>    </section><anchor xml:id="_class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb"/>    <section>
+    <title>loadedObjects</title>
+<indexterm><primary>loadedObjects</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>loadedObjects</secondary></indexterm>
+<para><computeroutput><link linkend="_class_object_load">ObjectLoad</link> Robot::loadedObjects</computeroutput></para>    </section><anchor xml:id="_class_robot_1a6eafb379fd3d28505e29f89a3e7cc0b1"/>    <section>
+    <title>map0</title>
+<indexterm><primary>map0</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>map0</secondary></indexterm>
+<para><computeroutput><link linkend="_class_field">Field</link>* Robot::map0</computeroutput></para>    </section><anchor xml:id="_class_robot_1a479e878152a7daccd5487d81982c7ff9"/>    <section>
+    <title>map1</title>
+<indexterm><primary>map1</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>map1</secondary></indexterm>
+<para><computeroutput><link linkend="_class_field">Field</link> * Robot::map1</computeroutput></para>    </section><anchor xml:id="_class_robot_1ab10294bd68a035f4ccc932b674d4f09a"/>    <section>
+    <title>pathfinder0</title>
+<indexterm><primary>pathfinder0</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>pathfinder0</secondary></indexterm>
+<para><computeroutput><link linkend="_class_pathfinder">Pathfinder</link> Robot::pathfinder0</computeroutput></para>    </section><anchor xml:id="_class_robot_1afe2c01e9389fe2dba844b0815864b705"/>    <section>
+    <title>pathfinder0T</title>
+<indexterm><primary>pathfinder0T</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>pathfinder0T</secondary></indexterm>
+<para><computeroutput><link linkend="_class_pathfinder">Pathfinder</link> Robot::pathfinder0T</computeroutput></para>    </section><anchor xml:id="_class_robot_1ac20c4cea4260b9958b8d869411851063"/>    <section>
+    <title>pathfinder1</title>
+<indexterm><primary>pathfinder1</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>pathfinder1</secondary></indexterm>
+<para><computeroutput><link linkend="_class_pathfinder">Pathfinder</link> Robot::pathfinder1</computeroutput></para>    </section><anchor xml:id="_class_robot_1aaa2235a0007e798eb02771cb03058698"/>    <section>
+    <title>pathfinder1T</title>
+<indexterm><primary>pathfinder1T</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>pathfinder1T</secondary></indexterm>
+<para><computeroutput><link linkend="_class_pathfinder">Pathfinder</link> Robot::pathfinder1T</computeroutput></para>    </section><anchor xml:id="_class_robot_1a1000239c43390bba895e574efb40bea1"/>    <section>
+    <title>pos</title>
+<indexterm><primary>pos</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>pos</secondary></indexterm>
+<para><computeroutput><link linkend="_class_p_vector">PVector</link> Robot::pos</computeroutput></para>    </section><anchor xml:id="_class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20"/>    <section>
+    <title>remainingMapTime</title>
+<indexterm><primary>remainingMapTime</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>remainingMapTime</secondary></indexterm>
+<para><computeroutput>int Robot::remainingMapTime</computeroutput></para>    </section><anchor xml:id="_class_robot_1ad45d8f1011a473e9b158d240dd9b6766"/>    <section>
+    <title>superObjects</title>
+<indexterm><primary>superObjects</primary><secondary>Robot</secondary></indexterm>
+<indexterm><primary>Robot</primary><secondary>superObjects</secondary></indexterm>
+<para><computeroutput>std::vector&lt;<link linkend="_class_collectible">Collectible</link> *&gt; Robot::superObjects</computeroutput></para></section>
+<para>
+The documentation for this class was generated from the following files:</para>
+code/<link linkend="__robot_8hpp">Robot.hpp</link>code/<link linkend="__robot_8cpp">Robot.cpp</link></section>
+</section>

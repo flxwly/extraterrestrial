@@ -1,0 +1,32 @@
+digraph "Robot::shouldCollect"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="Robot::shouldCollect",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="decides whether collecting a point is a good idea or not"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="ObjectLoad::black",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#ace19a0a3db1341917e23f89adaa651a6",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="ObjectLoad::cyan",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#ab40ec3ba11297aa9d5db01991fd55bac",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="Robot::getDesiredLoad",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#a70d33a38d8f422be16ef303063c07277",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="isBlack",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_color_recognition_8cpp.html#afddf288619ae1066f933dc11363d097c",tooltip=" "];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="isCyan",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_color_recognition_8cpp.html#a0de6cd34c3d09a619ddd9ba9e346ef10",tooltip=" "];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="isInRange",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_common_functions_8cpp.html#a215db5a1e084860b722927077d7ed55c",tooltip=" "];
+  Node1 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="isRed",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_color_recognition_8cpp.html#a93131a6a448e02136b19cf788cbc795a",tooltip=" "];
+  Node8 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="isSuperObj",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_color_recognition_8cpp.html#a22aff79719df69d1e399682521bca3a3",tooltip=" "];
+  Node9 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="ObjectLoad::num",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#ad3c7af6f005a96360d8680cf940bf539",tooltip=" "];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="ObjectLoad::red",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#a594a74d89f15e74b2e7d3e6bd5fc8721",tooltip=" "];
+  Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="ObjectLoad::super",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#a2e819001d38ab14261830c5dc56bbb98",tooltip=" "];
+}

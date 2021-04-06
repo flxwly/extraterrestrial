@@ -1,0 +1,404 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="_p_p_settings_8hpp" kind="file" language="C++">
+    <compoundname>PPSettings.hpp</compoundname>
+    <includedby refid="main_8cpp" local="yes">code/main.cpp</includedby>
+    <includedby refid="_map_data_8hpp" local="yes">code/MapData.hpp</includedby>
+    <includedby refid="_pathfinder_8hpp" local="yes">code/Pathfinder.hpp</includedby>
+    <includedby refid="_robot_8hpp" local="yes">code/Robot.hpp</includedby>
+    <invincdepgraph>
+      <node id="3">
+        <label>code/MapData.hpp</label>
+        <link refid="_map_data_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>code/libs/PPSettings.hpp</label>
+        <link refid="_p_p_settings_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>code/SFMLWindow.cpp</label>
+        <link refid="_s_f_m_l_window_8cpp"/>
+      </node>
+      <node id="7">
+        <label>code/Robot.hpp</label>
+        <link refid="_robot_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>code/MapData.cpp</label>
+        <link refid="_map_data_8cpp"/>
+      </node>
+      <node id="9">
+        <label>code/SFMLWindow.hpp</label>
+        <link refid="_s_f_m_l_window_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>code/Robot.cpp</label>
+        <link refid="_robot_8cpp"/>
+      </node>
+      <node id="2">
+        <label>code/main.cpp</label>
+        <link refid="main_8cpp"/>
+      </node>
+      <node id="6">
+        <label>code/Pathfinder.cpp</label>
+        <link refid="_pathfinder_8cpp"/>
+      </node>
+      <node id="5">
+        <label>code/Pathfinder.hpp</label>
+        <link refid="_pathfinder_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a28c9f30d423e9c1ca6fa15a0ec9a0032" prot="public" static="no">
+        <name>SFML</name>
+        <briefdescription>
+<para>define COLOR_LOGGING to enable color logging to console </para>
+        </briefdescription>
+        <detaileddescription>
+<para>--------------------------<mdash/> /// program settings --------------------------<mdash/> /// define DEBUG to enable debug messages <hruler/>
+ </para>
+<sect2 id="_p_p_settings_8hpp_1autotoc_md0">
+<title>SFML settings</title>
+<para>define SFML to enable debugging via SFML </para>
+</sect2>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="20" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" prot="public" static="no">
+        <name>ERROR_MESSAGE</name>
+        <param><defname>message</defname></param>
+        <initializer>{}</initializer>
+        <briefdescription>
+<para>define DebugPathfinderNodes </para>
+        </briefdescription>
+        <detaileddescription>
+<para>--------------------------<mdash/> /// some debug logic --------------------------<mdash/> /// DEBUG is not defined so ERROR_MESSAGE does nothing </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="43" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1ac6a24eab26146101f140e96d88bccb4e" prot="public" static="no">
+        <name>ROBOT_SPEED</name>
+        <initializer>0.01</initializer>
+        <briefdescription>
+<para>The speed of the robot in cm/ms for 20 % of maximum speed. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>--------------------------<mdash/> /// robot settings --------------------------<mdash/> /// </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="52" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a54f7b4bb0526068866a88a0569247727" prot="public" static="no">
+        <name>RPOS_ERROR_MARGIN</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="54" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1afb42b2b51d132111c25dbd0787c8698a" prot="public" static="no">
+        <name>ROBOT_AXLE_LENGTH</name>
+        <initializer>12.6</initializer>
+        <briefdescription>
+<para>The distance between the two powered wheels in cm. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="57" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1ab63ed117649a86d40c26067da046dd73" prot="public" static="no">
+        <name>RCOLOR_X</name>
+        <initializer>-3.6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="59" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a05aeed429813dd2116101a99d3386647" prot="public" static="no">
+        <name>RCOLOR_Y</name>
+        <initializer>6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="60" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1afd23d5a0a07ee7b1ff0336c2c3e7e0b9" prot="public" static="no">
+        <name>LCOLOR_X</name>
+        <initializer>3.6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="62" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1aedb111ba2c7606943aafe609db464b81" prot="public" static="no">
+        <name>LCOLOR_Y</name>
+        <initializer>6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="63" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1af7e89348f48b53d73ab6e022d393c45d" prot="public" static="no">
+        <name>RWHEEL_X</name>
+        <initializer>-6.3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="65" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a48210c70991537e9d81e2496694af717" prot="public" static="no">
+        <name>RWHEEL_Y</name>
+        <initializer>-4.2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="66" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1ac541e5fad8ff390b7bc743c9a64257e7" prot="public" static="no">
+        <name>RWHEEL_RADIUS</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="67" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a539133e6948c1611fc4c173d69307d48" prot="public" static="no">
+        <name>LWHEEL_X</name>
+        <initializer>6.3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="70" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1aaf1f086aee4dfbec36b7d831f647444d" prot="public" static="no">
+        <name>LWHEEL_Y</name>
+        <initializer>-4.2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="71" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1abd17e369e3d04c4fd9d72e44de57b77a" prot="public" static="no">
+        <name>LWHEEL_RADIUS</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="72" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1ad2cb7925b204bd14c14854a279ec9917" prot="public" static="no">
+        <name>COLOR_SENSOR_ANGLE_OFFSET</name>
+        <initializer>49.13072561</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="75" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a9f03532683bb7e7e4840ae04f0b1bcb4" prot="public" static="no">
+        <name>COLOR_SENSOR_DIST_TO_CORE</name>
+        <initializer>6.99714227</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="76" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a6d896816c72516a3c264b9f40aa3b064" prot="public" static="no">
+        <name>GAME0_TIME</name>
+        <initializer>180</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="78" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a2eec8e6401866025805a63a4f0151bda" prot="public" static="no">
+        <name>GAME1_TIME</name>
+        <initializer>300</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="79" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a0baf6c9a9821c5341014d35e3d7eadf8" prot="public" static="no">
+        <name>SWAMP_SPEED_PENALITY</name>
+        <initializer>10</initializer>
+        <briefdescription>
+<para>The factor by what speed is reduced in swamps TODO. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="82" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_p_p_settings_8hpp_1a3f455a3be17ec4757115db120a5b271e" prot="public" static="no">
+        <name>PATH_RADIUS</name>
+        <initializer>10</initializer>
+        <briefdescription>
+<para>Standard radius of a path in cm. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/PPSettings.hpp" line="85" column="9" bodyfile="code/libs/PPSettings.hpp" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>PPSETTINGS_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PPSETTINGS_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="comment">//#define<sp/>COLOR_LOGGING</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="comment">//#define<sp/>DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"></codeline>
+<codeline lineno="20" refid="_p_p_settings_8hpp_1a28c9f30d423e9c1ca6fa15a0ec9a0032" refkind="member"><highlight class="preprocessor">#define<sp/>SFML</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="comment">//#define<sp/>DebugPathfinderNodes</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>SFML</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>DEBUG</highlight></codeline>
+<codeline lineno="38"><highlight class="preprocessor">#define<sp/>ERROR_MESSAGE(MESSAGE)<sp/>{std::cerr<sp/>&lt;&lt;<sp/>__FUNCTION__<sp/>&lt;&lt;<sp/>&quot;\t&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>MESSAGE<sp/>&lt;&lt;<sp/>std::endl;}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>DEBUG</highlight></codeline>
+<codeline lineno="43" refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" refkind="member"><highlight class="preprocessor">#define<sp/>ERROR_MESSAGE(message)<sp/>{}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"></codeline>
+<codeline lineno="52" refid="_p_p_settings_8hpp_1ac6a24eab26146101f140e96d88bccb4e" refkind="member"><highlight class="preprocessor">#define<sp/>ROBOT_SPEED<sp/>0.01</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="_p_p_settings_8hpp_1a54f7b4bb0526068866a88a0569247727" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RPOS_ERROR_MARGIN<sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57" refid="_p_p_settings_8hpp_1afb42b2b51d132111c25dbd0787c8698a" refkind="member"><highlight class="preprocessor">#define<sp/>ROBOT_AXLE_LENGTH<sp/>12.6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59" refid="_p_p_settings_8hpp_1ab63ed117649a86d40c26067da046dd73" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RCOLOR_X<sp/>-3.6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="_p_p_settings_8hpp_1a05aeed429813dd2116101a99d3386647" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RCOLOR_Y<sp/>6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62" refid="_p_p_settings_8hpp_1afd23d5a0a07ee7b1ff0336c2c3e7e0b9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LCOLOR_X<sp/>3.6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63" refid="_p_p_settings_8hpp_1aedb111ba2c7606943aafe609db464b81" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LCOLOR_Y<sp/>6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="_p_p_settings_8hpp_1af7e89348f48b53d73ab6e022d393c45d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RWHEEL_X<sp/>-6.3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66" refid="_p_p_settings_8hpp_1a48210c70991537e9d81e2496694af717" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RWHEEL_Y<sp/>-4.2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="_p_p_settings_8hpp_1ac541e5fad8ff390b7bc743c9a64257e7" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RWHEEL_RADIUS<sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70" refid="_p_p_settings_8hpp_1a539133e6948c1611fc4c173d69307d48" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LWHEEL_X<sp/>6.3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71" refid="_p_p_settings_8hpp_1aaf1f086aee4dfbec36b7d831f647444d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LWHEEL_Y<sp/>-4.2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72" refid="_p_p_settings_8hpp_1abd17e369e3d04c4fd9d72e44de57b77a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LWHEEL_RADIUS<sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75" refid="_p_p_settings_8hpp_1ad2cb7925b204bd14c14854a279ec9917" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>COLOR_SENSOR_ANGLE_OFFSET<sp/>49.13072561</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="76" refid="_p_p_settings_8hpp_1a9f03532683bb7e7e4840ae04f0b1bcb4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>COLOR_SENSOR_DIST_TO_CORE<sp/>6.99714227</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78" refid="_p_p_settings_8hpp_1a6d896816c72516a3c264b9f40aa3b064" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>GAME0_TIME<sp/>180</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79" refid="_p_p_settings_8hpp_1a2eec8e6401866025805a63a4f0151bda" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>GAME1_TIME<sp/>300</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82" refid="_p_p_settings_8hpp_1a0baf6c9a9821c5341014d35e3d7eadf8" refkind="member"><highlight class="preprocessor">#define<sp/>SWAMP_SPEED_PENALITY<sp/>10</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85" refid="_p_p_settings_8hpp_1a3f455a3be17ec4757115db120a5b271e" refkind="member"><highlight class="preprocessor">#define<sp/>PATH_RADIUS<sp/>10</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//PPSETTINGS_HPP</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="code/libs/PPSettings.hpp"/>
+  </compounddef>
+</doxygen>

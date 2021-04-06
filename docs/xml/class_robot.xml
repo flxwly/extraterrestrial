@@ -1,0 +1,1164 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="class_robot" kind="class" language="C++" prot="public">
+    <compoundname>Robot</compoundname>
+    <includes refid="_robot_8hpp" local="no">Robot.hpp</includes>
+      <sectiondef kind="public-type">
+      <memberdef kind="typedef" id="class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87" prot="public" static="no">
+        <type>std::chrono::steady_clock</type>
+        <definition>typedef std::chrono::steady_clock Robot::Timer</definition>
+        <argsstring></argsstring>
+        <name>Timer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="107" column="35" bodyfile="code/Robot.hpp" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_robot_1a462896595e90ba3b90a671f977d3f0ae" prot="private" static="no" mutable="no">
+        <type>int *</type>
+        <definition>volatile int* Robot::AI_IN</definition>
+        <argsstring></argsstring>
+        <name>AI_IN</name>
+        <initializer>{nullptr}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="64" column="14" bodyfile="code/Robot.hpp" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1ae205e7748b708944a7157acf4ef39290" prot="private" static="no" mutable="no">
+        <type>int *</type>
+        <definition>volatile int * Robot::AI_OUT</definition>
+        <argsstring></argsstring>
+        <name>AI_OUT</name>
+        <initializer>{nullptr}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="64" column="20" bodyfile="code/Robot.hpp" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a6dca8ac2c7eb6f1a114cbfb5c2143020" prot="private" static="no" mutable="no">
+        <type>std::array&lt; int *, 3 &gt;</type>
+        <definition>std::array&lt;int *, 3&gt; Robot::SUPER_OBJECT</definition>
+        <argsstring></argsstring>
+        <name>SUPER_OBJECT</name>
+        <initializer>{nullptr, nullptr, nullptr}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="65" column="12" bodyfile="code/Robot.hpp" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1aaf23537ebeb2942cb73f1f3203c009a7" prot="private" static="no" mutable="no">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Robot::simPos</definition>
+        <argsstring></argsstring>
+        <name>simPos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="72" column="9" bodyfile="code/Robot.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1ae0f2a000c43f438cdde2da0a517810be" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Robot::compass</definition>
+        <argsstring></argsstring>
+        <name>compass</name>
+        <initializer>{0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="73" column="5" bodyfile="code/Robot.hpp" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a7840d799cdd20b611847bcccc7ca953b" prot="private" static="no" mutable="no">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Robot::superObject</definition>
+        <argsstring></argsstring>
+        <name>superObject</name>
+        <initializer>{0, 0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="74" column="9" bodyfile="code/Robot.hpp" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1aec269882a4d4edbb6167f959792b12fd" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Robot::superObjectNum</definition>
+        <argsstring></argsstring>
+        <name>superObjectNum</name>
+        <initializer>{0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="75" column="5" bodyfile="code/Robot.hpp" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a714c40ff2fed15ce84cddeddbb74cea3" prot="private" static="no" mutable="no">
+        <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+        <definition>HSLColor Robot::leftColor</definition>
+        <argsstring></argsstring>
+        <name>leftColor</name>
+        <initializer>{0, 0, 0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="76" column="10" bodyfile="code/Robot.hpp" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a03fd4e78aecbd63559b6b6c85d9c711a" prot="private" static="no" mutable="no">
+        <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+        <definition>HSLColor Robot::rightColor</definition>
+        <argsstring></argsstring>
+        <name>rightColor</name>
+        <initializer>{0, 0, 0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="76" column="20" bodyfile="code/Robot.hpp" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a7248164598c8b13ace78983dbd718c4f" prot="private" static="no" mutable="no">
+        <type>std::array&lt; int, 3 &gt;</type>
+        <definition>std::array&lt;int, 3&gt; Robot::ultraSonic</definition>
+        <argsstring></argsstring>
+        <name>ultraSonic</name>
+        <initializer>{0, 0, 0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="77" column="12" bodyfile="code/Robot.hpp" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a789f574683e9d13c1d0c2de76ba1990e" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Robot::gameTime</definition>
+        <argsstring></argsstring>
+        <name>gameTime</name>
+        <initializer>{0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="78" column="5" bodyfile="code/Robot.hpp" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1abb6f67f7210605745708ff8a3c669f25" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Robot::wheelLeft</definition>
+        <argsstring></argsstring>
+        <name>wheelLeft</name>
+        <initializer>{0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="81" column="5" bodyfile="code/Robot.hpp" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a006071216736e2ff7086d75f4952cd9e" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Robot::wheelRight</definition>
+        <argsstring></argsstring>
+        <name>wheelRight</name>
+        <initializer>{0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="81" column="15" bodyfile="code/Robot.hpp" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a215487541a5227047d4293502abde31f" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Robot::led</definition>
+        <argsstring></argsstring>
+        <name>led</name>
+        <initializer>{0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="82" column="5" bodyfile="code/Robot.hpp" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1ae04868f12c83d519156f8c5c459737e1" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Robot::tp</definition>
+        <argsstring></argsstring>
+        <name>tp</name>
+        <initializer>{0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="83" column="5" bodyfile="code/Robot.hpp" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_robot_1a6f43057c443f9e79b3d7875643328343" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short Robot::level</definition>
+        <argsstring></argsstring>
+        <name>level</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="90" column="16" bodyfile="code/Robot.hpp" bodystart="90" bodyend="-1"/>
+        <referencedby refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" compoundref="_robot_8cpp" startline="585" endline="647">getPointPath</referencedby>
+        <referencedby refid="class_robot_1a8ad41d97cfa6b475f2910768840b9769" compoundref="_robot_8cpp" startline="380" endline="385">teleport</referencedby>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">updateLoop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a1000239c43390bba895e574efb40bea1" prot="public" static="no" mutable="no">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Robot::pos</definition>
+        <argsstring></argsstring>
+        <name>pos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="92" column="9" bodyfile="code/Robot.hpp" bodystart="92" bodyend="-1"/>
+        <referencedby refid="class_robot_1aa46bf5e2662924fc2c9d7e747e12cec9" compoundref="_robot_8cpp" startline="390" endline="424">avoidVoid</referencedby>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" compoundref="_robot_8cpp" startline="585" endline="647">getPointPath</referencedby>
+        <referencedby refid="class_robot_1aa13bf89f0098d0a14d17818efdfc8cd2" compoundref="_robot_8cpp" startline="548" endline="556">moveAlongPath</referencedby>
+        <referencedby refid="class_robot_1a990b30f193fbc9b294ac4785798ea394" compoundref="_robot_8cpp" startline="430" endline="546">moveToPosition</referencedby>
+        <referencedby refid="class_robot_1a5ad54de036deda2d9f2e151cab96a9bd" compoundref="_robot_8cpp" startline="233" endline="257">updatePos</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1aa72f97fe06ea1da3b97e2476a87f9e2b" prot="public" static="no" mutable="no">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Robot::lastPos</definition>
+        <argsstring></argsstring>
+        <name>lastPos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="93" column="9" bodyfile="code/Robot.hpp" bodystart="93" bodyend="-1"/>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">updateLoop</referencedby>
+        <referencedby refid="class_robot_1a5ad54de036deda2d9f2e151cab96a9bd" compoundref="_robot_8cpp" startline="233" endline="257">updatePos</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a686d1ec7714f85bfd1fd0d5a6000f96b" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_path" kindref="compound">Path</ref> &gt;</type>
+        <definition>std::vector&lt;Path&gt; Robot::completePath</definition>
+        <argsstring></argsstring>
+        <name>completePath</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="95" column="13" bodyfile="code/Robot.hpp" bodystart="95" bodyend="-1"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_debug_window_1aba17bf3c6ad43474042028ca63421c8e" compoundref="_s_f_m_l_window_8cpp" startline="12" endline="149">DebugWindow::GameDebug</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a6eafb379fd3d28505e29f89a3e7cc0b1" prot="public" static="no" mutable="no">
+        <type><ref refid="class_field" kindref="compound">Field</ref> *</type>
+        <definition>Field* Robot::map0</definition>
+        <argsstring></argsstring>
+        <name>map0</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="96" column="7" bodyfile="code/Robot.hpp" bodystart="96" bodyend="-1"/>
+        <referencedby refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" compoundref="_robot_8cpp" startline="585" endline="647">getPointPath</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a479e878152a7daccd5487d81982c7ff9" prot="public" static="no" mutable="no">
+        <type><ref refid="class_field" kindref="compound">Field</ref> *</type>
+        <definition>Field * Robot::map1</definition>
+        <argsstring></argsstring>
+        <name>map1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="96" column="12" bodyfile="code/Robot.hpp" bodystart="96" bodyend="-1"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" compoundref="_robot_8cpp" startline="585" endline="647">getPointPath</referencedby>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">updateLoop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1ab10294bd68a035f4ccc932b674d4f09a" prot="public" static="no" mutable="no">
+        <type><ref refid="class_pathfinder" kindref="compound">Pathfinder</ref></type>
+        <definition>Pathfinder Robot::pathfinder0</definition>
+        <argsstring></argsstring>
+        <name>pathfinder0</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="97" column="12" bodyfile="code/Robot.hpp" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1ac20c4cea4260b9958b8d869411851063" prot="public" static="no" mutable="no">
+        <type><ref refid="class_pathfinder" kindref="compound">Pathfinder</ref></type>
+        <definition>Pathfinder Robot::pathfinder1</definition>
+        <argsstring></argsstring>
+        <name>pathfinder1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="97" column="24" bodyfile="code/Robot.hpp" bodystart="97" bodyend="-1"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1afe2c01e9389fe2dba844b0815864b705" prot="public" static="no" mutable="no">
+        <type><ref refid="class_pathfinder" kindref="compound">Pathfinder</ref></type>
+        <definition>Pathfinder Robot::pathfinder0T</definition>
+        <argsstring></argsstring>
+        <name>pathfinder0T</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="98" column="12" bodyfile="code/Robot.hpp" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1aaa2235a0007e798eb02771cb03058698" prot="public" static="no" mutable="no">
+        <type><ref refid="class_pathfinder" kindref="compound">Pathfinder</ref></type>
+        <definition>Pathfinder Robot::pathfinder1T</definition>
+        <argsstring></argsstring>
+        <name>pathfinder1T</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="98" column="25" bodyfile="code/Robot.hpp" bodystart="98" bodyend="-1"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_debug_window_1aba17bf3c6ad43474042028ca63421c8e" compoundref="_s_f_m_l_window_8cpp" startline="12" endline="149">DebugWindow::GameDebug</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" prot="public" static="no" mutable="no">
+        <type><ref refid="class_object_load" kindref="compound">ObjectLoad</ref></type>
+        <definition>ObjectLoad Robot::loadedObjects</definition>
+        <argsstring></argsstring>
+        <name>loadedObjects</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="100" column="12" bodyfile="code/Robot.hpp" bodystart="100" bodyend="-1"/>
+        <referencedby refid="class_robot_1a106604404bd2727de0abdaf99c10c519" compoundref="_robot_8cpp" startline="328" endline="348">deposit</referencedby>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">game0Loop</referencedby>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" compoundref="_robot_8cpp" startline="585" endline="647">getPointPath</referencedby>
+        <referencedby refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" compoundref="_robot_8cpp" startline="262" endline="286">shouldCollect</referencedby>
+        <referencedby refid="class_robot_1acb30cea7c6baee7977193845aeabe009" compoundref="_robot_8cpp" startline="318" endline="326">shouldDeposit</referencedby>
+        <referencedby refid="class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e" compoundref="_robot_8cpp" startline="353" endline="378">shouldTeleport</referencedby>
+        <referencedby refid="class_robot_1a8ad41d97cfa6b475f2910768840b9769" compoundref="_robot_8cpp" startline="380" endline="385">teleport</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a5ec6698f2aaaf175aecc86b8f94ec8e4" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int Robot::lastRGBBonus</definition>
+        <argsstring></argsstring>
+        <name>lastRGBBonus</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="102" column="14" bodyfile="code/Robot.hpp" bodystart="102" bodyend="-1"/>
+        <referencedby refid="class_robot_1a106604404bd2727de0abdaf99c10c519" compoundref="_robot_8cpp" startline="328" endline="348">deposit</referencedby>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">updateLoop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1ac2546b91734a2b4d4d22b524dc9d2d0c" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Robot::huntingSuperObj</definition>
+        <argsstring></argsstring>
+        <name>huntingSuperObj</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="103" column="6" bodyfile="code/Robot.hpp" bodystart="103" bodyend="-1"/>
+        <referencedby refid="class_robot_1a70d33a38d8f422be16ef303063c07277" compoundref="_robot_8cpp" startline="574" endline="583">getDesiredLoad</referencedby>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">updateLoop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1ad45d8f1011a473e9b158d240dd9b6766" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_collectible" kindref="compound">Collectible</ref> * &gt;</type>
+        <definition>std::vector&lt;Collectible *&gt; Robot::superObjects</definition>
+        <argsstring></argsstring>
+        <name>superObjects</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="104" column="13" bodyfile="code/Robot.hpp" bodystart="104" bodyend="-1"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_robot_1a70d33a38d8f422be16ef303063c07277" compoundref="_robot_8cpp" startline="574" endline="583">getDesiredLoad</referencedby>
+        <referencedby refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" compoundref="_robot_8cpp" startline="585" endline="647">getPointPath</referencedby>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">updateLoop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Robot::remainingMapTime</definition>
+        <argsstring></argsstring>
+        <name>remainingMapTime</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="106" column="5" bodyfile="code/Robot.hpp" bodystart="106" bodyend="-1"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_robot_1a70d33a38d8f422be16ef303063c07277" compoundref="_robot_8cpp" startline="574" endline="583">getDesiredLoad</referencedby>
+        <referencedby refid="class_robot_1acb30cea7c6baee7977193845aeabe009" compoundref="_robot_8cpp" startline="318" endline="326">shouldDeposit</referencedby>
+        <referencedby refid="class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e" compoundref="_robot_8cpp" startline="353" endline="378">shouldTeleport</referencedby>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">updateLoop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a0412b2e9cdd76a653aa6b8ddf24f450f" prot="public" static="no" mutable="no">
+        <type>std::chrono::time_point&lt; <ref refid="class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87" kindref="member">Timer</ref> &gt;</type>
+        <definition>std::chrono::time_point&lt;Timer&gt; Robot::lastProgramCycle</definition>
+        <argsstring></argsstring>
+        <name>lastProgramCycle</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="108" column="25" bodyfile="code/Robot.hpp" bodystart="108" bodyend="-1"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">updateLoop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a3f4d56a15c5414fbdbe6fa55be384bdc" prot="public" static="no" mutable="no">
+        <type>std::chrono::time_point&lt; <ref refid="class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87" kindref="member">Timer</ref> &gt;</type>
+        <definition>std::chrono::time_point&lt;Timer&gt; Robot::depositingSince</definition>
+        <argsstring></argsstring>
+        <name>depositingSince</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="109" column="25" bodyfile="code/Robot.hpp" bodystart="109" bodyend="-1"/>
+        <referencedby refid="class_robot_1a106604404bd2727de0abdaf99c10c519" compoundref="_robot_8cpp" startline="328" endline="348">deposit</referencedby>
+        <referencedby refid="class_robot_1acb30cea7c6baee7977193845aeabe009" compoundref="_robot_8cpp" startline="318" endline="326">shouldDeposit</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a64c2b4bbf84de4682285450556ed40eb" prot="public" static="no" mutable="no">
+        <type>std::chrono::time_point&lt; <ref refid="class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87" kindref="member">Timer</ref> &gt;</type>
+        <definition>std::chrono::time_point&lt;Timer&gt; Robot::collectingSince</definition>
+        <argsstring></argsstring>
+        <name>collectingSince</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="110" column="25" bodyfile="code/Robot.hpp" bodystart="110" bodyend="-1"/>
+        <referencedby refid="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" compoundref="_robot_8cpp" startline="288" endline="313">collect</referencedby>
+        <referencedby refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" compoundref="_robot_8cpp" startline="262" endline="286">shouldCollect</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_robot_1a3c82c722e113435735318a47cbc4efe2" prot="public" static="no" mutable="no">
+        <type>std::chrono::time_point&lt; <ref refid="class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87" kindref="member">Timer</ref> &gt;</type>
+        <definition>std::chrono::time_point&lt;Timer&gt; Robot::lastPositionUpdate</definition>
+        <argsstring></argsstring>
+        <name>lastPositionUpdate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="111" column="25" bodyfile="code/Robot.hpp" bodystart="111" bodyend="-1"/>
+        <referencedby refid="class_robot_1a5ad54de036deda2d9f2e151cab96a9bd" compoundref="_robot_8cpp" startline="233" endline="257">updatePos</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_robot_1ae75d909bffc02462f52aa25a708f353e" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Robot::setIN</definition>
+        <argsstring>(volatile int *IN)</argsstring>
+        <name>setIN</name>
+        <param>
+          <type>volatile int *</type>
+          <declname>IN</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="67" column="6" bodyfile="code/Robot.cpp" bodystart="150" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1ae6838a17c76cb58eb17142267f035f32" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Robot::setOUT</definition>
+        <argsstring>(volatile int *OUT)</argsstring>
+        <name>setOUT</name>
+        <param>
+          <type>volatile int *</type>
+          <declname>OUT</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="68" column="6" bodyfile="code/Robot.cpp" bodystart="160" bodyend="168"/>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1a92db930a78aaf4429b9abda0c911945e" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Robot::updateSimVars</definition>
+        <argsstring>()</argsstring>
+        <name>updateSimVars</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="69" column="6" bodyfile="code/Robot.cpp" bodystart="170" bodyend="198"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_robot_1a0304ff4829dfeb19a868d4feb7d59038" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Robot::Robot</definition>
+        <argsstring>(volatile int *IN, volatile int *OUT, std::array&lt; int *, 3 &gt; superObject, Field *map0, Field *map1)</argsstring>
+        <name>Robot</name>
+        <param>
+          <type>volatile int *</type>
+          <declname>IN</declname>
+        </param>
+        <param>
+          <type>volatile int *</type>
+          <declname>OUT</declname>
+        </param>
+        <param>
+          <type>std::array&lt; int *, 3 &gt;</type>
+          <declname>superObject</declname>
+        </param>
+        <param>
+          <type><ref refid="class_field" kindref="compound">Field</ref> *</type>
+          <declname>map0</declname>
+        </param>
+        <param>
+          <type><ref refid="class_field" kindref="compound">Field</ref> *</type>
+          <declname>map1</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="119" column="1" bodyfile="code/Robot.cpp" bodystart="140" bodyend="147"/>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1a56d2661cb822912575d2cd479d08779e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Robot::wheels</definition>
+        <argsstring>(int l, int r)</argsstring>
+        <name>wheels</name>
+        <param>
+          <type>int</type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+<para>controls the robots wheels </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="124" column="6" bodyfile="code/Robot.cpp" bodystart="426" bodyend="428"/>
+        <referencedby refid="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" compoundref="_robot_8cpp" startline="288" endline="313">collect</referencedby>
+        <referencedby refid="class_robot_1a106604404bd2727de0abdaf99c10c519" compoundref="_robot_8cpp" startline="328" endline="348">deposit</referencedby>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">game0Loop</referencedby>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_robot_1a990b30f193fbc9b294ac4785798ea394" compoundref="_robot_8cpp" startline="430" endline="546">moveToPosition</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1aa13bf89f0098d0a14d17818efdfc8cd2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Robot::moveAlongPath</definition>
+        <argsstring>(Path &amp;path)</argsstring>
+        <name>moveAlongPath</name>
+        <param>
+          <type><ref refid="class_path" kindref="compound">Path</ref> &amp;</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="126" column="6" bodyfile="code/Robot.cpp" bodystart="548" bodyend="556"/>
+        <references refid="class_path_1ae1ea4946ec41269898a40ea5d26bc2e3" compoundref="_pathfinder_8cpp" startline="113" endline="138">Path::getClosestNormalPoint</references>
+        <references refid="class_robot_1a990b30f193fbc9b294ac4785798ea394" compoundref="_robot_8cpp" startline="430" endline="546">moveToPosition</references>
+        <references refid="class_robot_1a1000239c43390bba895e574efb40bea1" compoundref="_robot_8hpp" startline="92">pos</references>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1a5ad54de036deda2d9f2e151cab96a9bd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Robot::updatePos</definition>
+        <argsstring>()</argsstring>
+        <name>updatePos</name>
+        <briefdescription>
+<para>updates the position of the robot mathematically and returns the change </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="129" column="9" bodyfile="code/Robot.cpp" bodystart="233" bodyend="257"/>
+        <references refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">geometry::dist</references>
+        <references refid="class_robot_1ad7b7f1a5a4e56d9e4c72a24a622d69f1" compoundref="_robot_8cpp" startline="204" endline="231">getVelocity</references>
+        <references refid="class_robot_1aa72f97fe06ea1da3b97e2476a87f9e2b" compoundref="_robot_8hpp" startline="93">lastPos</references>
+        <references refid="class_robot_1a3c82c722e113435735318a47cbc4efe2" compoundref="_robot_8hpp" startline="111">lastPositionUpdate</references>
+        <references refid="class_robot_1a1000239c43390bba895e574efb40bea1" compoundref="_robot_8hpp" startline="92">pos</references>
+        <references refid="_p_p_settings_8hpp_1a54f7b4bb0526068866a88a0569247727" compoundref="_p_p_settings_8hpp" startline="54">RPOS_ERROR_MARGIN</references>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">updateLoop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1a990b30f193fbc9b294ac4785798ea394" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int Robot::moveToPosition</definition>
+        <argsstring>(PVector p)</argsstring>
+        <name>moveToPosition</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="131" column="5" bodyfile="code/Robot.cpp" bodystart="430" bodyend="546"/>
+        <references refid="class_robot_1ade9e381883860b0b81b6d2fd1e190e10" compoundref="_robot_8cpp" startline="561" endline="571">checkUsSensors</references>
+        <references refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">geometry::dist</references>
+        <references refid="class_robot_1a1000239c43390bba895e574efb40bea1" compoundref="_robot_8hpp" startline="92">pos</references>
+        <references refid="_common_functions_8cpp_1ab0b015642c6b85a485f7838c5b9b1b53" compoundref="_common_functions_8cpp" startline="9" endline="11">toDegrees</references>
+        <references refid="namespacegeometry_1a0ce1748996f9e029a3cbeb665c1d17ce" compoundref="_map_data_8cpp" startline="339" endline="341">geometry::vector2Angle</references>
+        <references refid="class_robot_1a56d2661cb822912575d2cd479d08779e" compoundref="_robot_8cpp" startline="426" endline="428">wheels</references>
+        <referencedby refid="class_robot_1aa13bf89f0098d0a14d17818efdfc8cd2" compoundref="_robot_8cpp" startline="548" endline="556">moveAlongPath</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1ade9e381883860b0b81b6d2fd1e190e10" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int Robot::checkUsSensors</definition>
+        <argsstring>(int l, int f, int r)</argsstring>
+        <name>checkUsSensors</name>
+        <param>
+          <type>int</type>
+          <declname>l</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>f</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+<para>checks if l, f or r is higher than the us-sensor values. returns a binary-encoded value </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="134" column="5" bodyfile="code/Robot.cpp" bodystart="561" bodyend="571"/>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">game0Loop</referencedby>
+        <referencedby refid="class_robot_1a990b30f193fbc9b294ac4785798ea394" compoundref="_robot_8cpp" startline="430" endline="546">moveToPosition</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1acff1fa64498b60568d7446e6710f64c6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Robot::updateLoop</definition>
+        <argsstring>()</argsstring>
+        <name>updateLoop</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="136" column="6" bodyfile="code/Robot.cpp" bodystart="652" bodyend="678"/>
+        <references refid="class_field_1a25e4d60285038520a8420f92570ebd9a" compoundref="_map_data_8cpp" startline="222" endline="225">Field::addCollectible</references>
+        <references refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" compoundref="_p_p_settings_8hpp" startline="43">ERROR_MESSAGE</references>
+        <references refid="_p_p_settings_8hpp_1a6d896816c72516a3c264b9f40aa3b064" compoundref="_p_p_settings_8hpp" startline="78">GAME0_TIME</references>
+        <references refid="_p_p_settings_8hpp_1a2eec8e6401866025805a63a4f0151bda" compoundref="_p_p_settings_8hpp" startline="79">GAME1_TIME</references>
+        <references refid="class_robot_1ac2546b91734a2b4d4d22b524dc9d2d0c" compoundref="_robot_8hpp" startline="103">huntingSuperObj</references>
+        <references refid="class_robot_1aa72f97fe06ea1da3b97e2476a87f9e2b" compoundref="_robot_8hpp" startline="93">lastPos</references>
+        <references refid="class_robot_1a0412b2e9cdd76a653aa6b8ddf24f450f" compoundref="_robot_8hpp" startline="108">lastProgramCycle</references>
+        <references refid="class_robot_1a5ec6698f2aaaf175aecc86b8f94ec8e4" compoundref="_robot_8hpp" startline="102">lastRGBBonus</references>
+        <references refid="class_robot_1a6f43057c443f9e79b3d7875643328343" compoundref="_robot_8hpp" startline="90">level</references>
+        <references refid="class_robot_1a479e878152a7daccd5487d81982c7ff9" compoundref="_robot_8hpp" startline="96">map1</references>
+        <references refid="class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20" compoundref="_robot_8hpp" startline="106">remainingMapTime</references>
+        <references refid="class_p_vector_1a9cc31db5ab8d080b0f44e2229ba34a7c" compoundref="_p_vector_8cpp" startline="3" endline="6">PVector::set</references>
+        <references refid="class_robot_1ad45d8f1011a473e9b158d240dd9b6766" compoundref="_robot_8hpp" startline="104">superObjects</references>
+        <references refid="_co_space_functions_8cpp_1a289cdde88a10836dd37883a4fa696703" compoundref="_co_space_functions_8cpp" startline="31">Time</references>
+        <references refid="class_robot_1a5ad54de036deda2d9f2e151cab96a9bd" compoundref="_robot_8cpp" startline="233" endline="257">updatePos</references>
+        <referencedby refid="_co_space_functions_8hpp_1a452d724e739bd277b7419320c36fc6aa" compoundref="main_8cpp" startline="87" endline="93">Game1</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Robot::game0Loop</definition>
+        <argsstring>()</argsstring>
+        <name>game0Loop</name>
+        <briefdescription>
+<para>game loop for first map </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="139" column="6" bodyfile="code/Robot.cpp" bodystart="680" bodyend="741"/>
+        <references refid="class_robot_1ade9e381883860b0b81b6d2fd1e190e10" compoundref="_robot_8cpp" startline="561" endline="571">checkUsSensors</references>
+        <references refid="class_robot_1a106604404bd2727de0abdaf99c10c519" compoundref="_robot_8cpp" startline="328" endline="348">deposit</references>
+        <references refid="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" compoundref="_color_recognition_8cpp" startline="7" endline="7">isOrange</references>
+        <references refid="_color_recognition_8cpp_1ab786948d23021df1eb15cad46d081a64" compoundref="_color_recognition_8cpp" startline="6" endline="6">isYellow</references>
+        <references refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" compoundref="_robot_8hpp" startline="100">loadedObjects</references>
+        <references refid="class_object_load_1ad3c7af6f005a96360d8680cf940bf539" compoundref="_robot_8cpp" startline="114" endline="116">ObjectLoad::num</references>
+        <references refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" compoundref="_robot_8cpp" startline="262" endline="286">shouldCollect</references>
+        <references refid="class_robot_1acb30cea7c6baee7977193845aeabe009" compoundref="_robot_8cpp" startline="318" endline="326">shouldDeposit</references>
+        <references refid="class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e" compoundref="_robot_8cpp" startline="353" endline="378">shouldTeleport</references>
+        <references refid="class_robot_1a8ad41d97cfa6b475f2910768840b9769" compoundref="_robot_8cpp" startline="380" endline="385">teleport</references>
+        <references refid="class_robot_1a56d2661cb822912575d2cd479d08779e" compoundref="_robot_8cpp" startline="426" endline="428">wheels</references>
+        <referencedby refid="_co_space_functions_8hpp_1afdc6c3ee2b294f6379cf7141aa6f839d" compoundref="main_8cpp" startline="68" endline="76">Game0</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Robot::game1Loop</definition>
+        <argsstring>()</argsstring>
+        <name>game1Loop</name>
+        <briefdescription>
+<para>game loop for second map </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="142" column="6" bodyfile="code/Robot.cpp" bodystart="743" bodyend="876"/>
+        <references refid="class_object_load_1a7a8d5cc5adf72a3c6835554a947a5d56" compoundref="_robot_8cpp" startline="34" endline="37">ObjectLoad::addObject</references>
+        <references refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">Pathfinder::AStar</references>
+        <references refid="class_robot_1aa46bf5e2662924fc2c9d7e747e12cec9" compoundref="_robot_8cpp" startline="390" endline="424">avoidVoid</references>
+        <references refid="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" compoundref="_robot_8cpp" startline="288" endline="313">collect</references>
+        <references refid="class_robot_1a686d1ec7714f85bfd1fd0d5a6000f96b" compoundref="_robot_8hpp" startline="95">completePath</references>
+        <references refid="class_robot_1a106604404bd2727de0abdaf99c10c519" compoundref="_robot_8cpp" startline="328" endline="348">deposit</references>
+        <references refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">geometry::dist</references>
+        <references refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" compoundref="_p_p_settings_8hpp" startline="43">ERROR_MESSAGE</references>
+        <references refid="class_field_1adc55f248e3fbe13202b7e1bb13537588" compoundref="_map_data_8cpp" startline="201" endline="220">Field::getCollectible</references>
+        <references refid="class_field_1a2e1fc59842bf2d0adc078a79f30efe17" compoundref="_map_data_8cpp" startline="181" endline="184">Field::getDeposits</references>
+        <references refid="class_robot_1a70d33a38d8f422be16ef303063c07277" compoundref="_robot_8cpp" startline="574" endline="583">getDesiredLoad</references>
+        <references refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" compoundref="_robot_8cpp" startline="585" endline="647">getPointPath</references>
+        <references refid="class_path_1a623d057c8c795701f9d64b8478047f9a" compoundref="_pathfinder_8hpp" startline="164" endline="164">Path::isEmpty</references>
+        <references refid="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" compoundref="_color_recognition_8cpp" startline="7" endline="7">isOrange</references>
+        <references refid="_color_recognition_8cpp_1ab786948d23021df1eb15cad46d081a64" compoundref="_color_recognition_8cpp" startline="6" endline="6">isYellow</references>
+        <references refid="class_robot_1a0412b2e9cdd76a653aa6b8ddf24f450f" compoundref="_robot_8hpp" startline="108">lastProgramCycle</references>
+        <references refid="class_path_1abb16e0278477c1663ea6b9d6df995e0d" compoundref="_pathfinder_8cpp" startline="170" endline="176">Path::length</references>
+        <references refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" compoundref="_robot_8hpp" startline="100">loadedObjects</references>
+        <references refid="class_robot_1a479e878152a7daccd5487d81982c7ff9" compoundref="_robot_8hpp" startline="96">map1</references>
+        <references refid="class_robot_1aa13bf89f0098d0a14d17818efdfc8cd2" compoundref="_robot_8cpp" startline="548" endline="556">moveAlongPath</references>
+        <references refid="class_object_load_1ad3c7af6f005a96360d8680cf940bf539" compoundref="_robot_8cpp" startline="114" endline="116">ObjectLoad::num</references>
+        <references refid="class_robot_1ac20c4cea4260b9958b8d869411851063" compoundref="_robot_8hpp" startline="97">pathfinder1</references>
+        <references refid="class_robot_1aaa2235a0007e798eb02771cb03058698" compoundref="_robot_8hpp" startline="98">pathfinder1T</references>
+        <references refid="class_robot_1a1000239c43390bba895e574efb40bea1" compoundref="_robot_8hpp" startline="92">pos</references>
+        <references refid="class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20" compoundref="_robot_8hpp" startline="106">remainingMapTime</references>
+        <references refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" compoundref="_robot_8cpp" startline="262" endline="286">shouldCollect</references>
+        <references refid="class_robot_1acb30cea7c6baee7977193845aeabe009" compoundref="_robot_8cpp" startline="318" endline="326">shouldDeposit</references>
+        <references refid="class_collectible_1ad146cff6f283cb1aadcae32cb9809181" compoundref="_map_data_8hpp" startline="56">Collectible::state</references>
+        <references refid="class_robot_1ad45d8f1011a473e9b158d240dd9b6766" compoundref="_robot_8hpp" startline="104">superObjects</references>
+        <references refid="class_collectible_1a4b05ee3fb93c337fe7e96f9f27cced8c" compoundref="_map_data_8hpp" startline="64">Collectible::visited</references>
+        <references refid="class_robot_1a56d2661cb822912575d2cd479d08779e" compoundref="_robot_8cpp" startline="426" endline="428">wheels</references>
+        <referencedby refid="_co_space_functions_8hpp_1a452d724e739bd277b7419320c36fc6aa" compoundref="main_8cpp" startline="87" endline="93">Game1</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1ad7b7f1a5a4e56d9e4c72a24a622d69f1" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Robot::getVelocity</definition>
+        <argsstring>(long long int dt) const</argsstring>
+        <name>getVelocity</name>
+        <param>
+          <type>long long int</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+<para>gets the current velocity for a certain change in time (in ms) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="146" column="10" bodyfile="code/Robot.cpp" bodystart="204" bodyend="231"/>
+        <references refid="namespacegeometry_1a46dee6450badd387e6788a9ebf80fa44" compoundref="_map_data_8cpp" startline="328" endline="330">geometry::angle2Vector</references>
+        <references refid="_color_recognition_8cpp_1ab44bd2d94a55aff5b357fe0a8c1cfa46" compoundref="_color_recognition_8cpp" startline="8" endline="8">isSwamp</references>
+        <references refid="_p_p_settings_8hpp_1afb42b2b51d132111c25dbd0787c8698a" compoundref="_p_p_settings_8hpp" startline="57">ROBOT_AXLE_LENGTH</references>
+        <references refid="_p_p_settings_8hpp_1ac6a24eab26146101f140e96d88bccb4e" compoundref="_p_p_settings_8hpp" startline="52">ROBOT_SPEED</references>
+        <references refid="class_p_vector_1aa0b42cf9a0da44a0ce5f28bc8937d980" compoundref="_p_vector_8cpp" startline="28" endline="30">PVector::rotate</references>
+        <references refid="_p_p_settings_8hpp_1a0baf6c9a9821c5341014d35e3d7eadf8" compoundref="_p_p_settings_8hpp" startline="82">SWAMP_SPEED_PENALITY</references>
+        <references refid="_common_functions_8cpp_1a128d5ca6655612162ccf138e42a8b2af" compoundref="_common_functions_8cpp" startline="5" endline="7">toRadians</references>
+        <referencedby refid="class_robot_1a5ad54de036deda2d9f2e151cab96a9bd" compoundref="_robot_8cpp" startline="233" endline="257">updatePos</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Robot::shouldCollect</definition>
+        <argsstring>()</argsstring>
+        <name>shouldCollect</name>
+        <briefdescription>
+<para>decides whether collecting a point is a good idea or not </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="150" column="6" bodyfile="code/Robot.cpp" bodystart="262" bodyend="286"/>
+        <references refid="class_object_load_1ace19a0a3db1341917e23f89adaa651a6" compoundref="_robot_8cpp" startline="98" endline="100">ObjectLoad::black</references>
+        <references refid="class_robot_1a64c2b4bbf84de4682285450556ed40eb" compoundref="_robot_8hpp" startline="110">collectingSince</references>
+        <references refid="class_object_load_1ab40ec3ba11297aa9d5db01991fd55bac" compoundref="_robot_8cpp" startline="94" endline="96">ObjectLoad::cyan</references>
+        <references refid="class_robot_1a70d33a38d8f422be16ef303063c07277" compoundref="_robot_8cpp" startline="574" endline="583">getDesiredLoad</references>
+        <references refid="_color_recognition_8cpp_1afddf288619ae1066f933dc11363d097c" compoundref="_color_recognition_8cpp" startline="5" endline="5">isBlack</references>
+        <references refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" compoundref="_color_recognition_8cpp" startline="4" endline="4">isCyan</references>
+        <references refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" compoundref="_color_recognition_8cpp" startline="3" endline="3">isRed</references>
+        <references refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" compoundref="_color_recognition_8cpp" startline="9" endline="9">isSuperObj</references>
+        <references refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" compoundref="_robot_8hpp" startline="100">loadedObjects</references>
+        <references refid="class_object_load_1ad3c7af6f005a96360d8680cf940bf539" compoundref="_robot_8cpp" startline="114" endline="116">ObjectLoad::num</references>
+        <references refid="class_object_load_1a594a74d89f15e74b2e7d3e6bd5fc8721" compoundref="_robot_8cpp" startline="90" endline="92">ObjectLoad::red</references>
+        <references refid="class_object_load_1a2e819001d38ab14261830c5dc56bbb98" compoundref="_robot_8cpp" startline="102" endline="104">ObjectLoad::super</references>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">game0Loop</referencedby>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int Robot::collect</definition>
+        <argsstring>()</argsstring>
+        <name>collect</name>
+        <briefdescription>
+<para>collects a point </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="153" column="5" bodyfile="code/Robot.cpp" bodystart="288" bodyend="313"/>
+        <references refid="class_robot_1a64c2b4bbf84de4682285450556ed40eb" compoundref="_robot_8hpp" startline="110">collectingSince</references>
+        <references refid="_color_recognition_8cpp_1afddf288619ae1066f933dc11363d097c" compoundref="_color_recognition_8cpp" startline="5" endline="5">isBlack</references>
+        <references refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" compoundref="_color_recognition_8cpp" startline="4" endline="4">isCyan</references>
+        <references refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" compoundref="_color_recognition_8cpp" startline="3" endline="3">isRed</references>
+        <references refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" compoundref="_color_recognition_8cpp" startline="9" endline="9">isSuperObj</references>
+        <references refid="class_robot_1a56d2661cb822912575d2cd479d08779e" compoundref="_robot_8cpp" startline="426" endline="428">wheels</references>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1acb30cea7c6baee7977193845aeabe009" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Robot::shouldDeposit</definition>
+        <argsstring>()</argsstring>
+        <name>shouldDeposit</name>
+        <briefdescription>
+<para>decides whether depositing is a good idea or not </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="156" column="6" bodyfile="code/Robot.cpp" bodystart="318" bodyend="326"/>
+        <references refid="class_robot_1a3f4d56a15c5414fbdbe6fa55be384bdc" compoundref="_robot_8hpp" startline="109">depositingSince</references>
+        <references refid="class_object_load_1a93aca9fdea2b8f94c7dcc9c4536d3525" compoundref="_robot_8cpp" startline="66" endline="88">ObjectLoad::getValue</references>
+        <references refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" compoundref="_robot_8hpp" startline="100">loadedObjects</references>
+        <references refid="class_object_load_1ad3c7af6f005a96360d8680cf940bf539" compoundref="_robot_8cpp" startline="114" endline="116">ObjectLoad::num</references>
+        <references refid="class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20" compoundref="_robot_8hpp" startline="106">remainingMapTime</references>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">game0Loop</referencedby>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e" compoundref="_robot_8cpp" startline="353" endline="378">shouldTeleport</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1a106604404bd2727de0abdaf99c10c519" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Robot::deposit</definition>
+        <argsstring>()</argsstring>
+        <name>deposit</name>
+        <briefdescription>
+<para>deposits </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="159" column="6" bodyfile="code/Robot.cpp" bodystart="328" bodyend="348"/>
+        <references refid="class_object_load_1a95afea89ae89262ad8c01a6180bd27eb" compoundref="_robot_8cpp" startline="57" endline="60">ObjectLoad::clearLoad</references>
+        <references refid="class_robot_1a3f4d56a15c5414fbdbe6fa55be384bdc" compoundref="_robot_8hpp" startline="109">depositingSince</references>
+        <references refid="class_robot_1a5ec6698f2aaaf175aecc86b8f94ec8e4" compoundref="_robot_8hpp" startline="102">lastRGBBonus</references>
+        <references refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" compoundref="_robot_8hpp" startline="100">loadedObjects</references>
+        <references refid="class_object_load_1a8f9d9674889ba7c9e49bcddee4d42017" compoundref="_robot_8cpp" startline="62" endline="64">ObjectLoad::rgb</references>
+        <references refid="class_robot_1a56d2661cb822912575d2cd479d08779e" compoundref="_robot_8cpp" startline="426" endline="428">wheels</references>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">game0Loop</referencedby>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Robot::shouldTeleport</definition>
+        <argsstring>()</argsstring>
+        <name>shouldTeleport</name>
+        <briefdescription>
+<para>decides whether teleporting is a good idea or not </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="162" column="6" bodyfile="code/Robot.cpp" bodystart="353" bodyend="378"/>
+        <references refid="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" compoundref="_color_recognition_8cpp" startline="7" endline="7">isOrange</references>
+        <references refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" compoundref="_robot_8hpp" startline="100">loadedObjects</references>
+        <references refid="class_object_load_1ad3c7af6f005a96360d8680cf940bf539" compoundref="_robot_8cpp" startline="114" endline="116">ObjectLoad::num</references>
+        <references refid="class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20" compoundref="_robot_8hpp" startline="106">remainingMapTime</references>
+        <references refid="class_robot_1acb30cea7c6baee7977193845aeabe009" compoundref="_robot_8cpp" startline="318" endline="326">shouldDeposit</references>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">game0Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1a8ad41d97cfa6b475f2910768840b9769" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Robot::teleport</definition>
+        <argsstring>()</argsstring>
+        <name>teleport</name>
+        <briefdescription>
+<para>teleports </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="165" column="6" bodyfile="code/Robot.cpp" bodystart="380" bodyend="385"/>
+        <references refid="class_object_load_1a95afea89ae89262ad8c01a6180bd27eb" compoundref="_robot_8cpp" startline="57" endline="60">ObjectLoad::clearLoad</references>
+        <references refid="class_robot_1a6f43057c443f9e79b3d7875643328343" compoundref="_robot_8hpp" startline="90">level</references>
+        <references refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" compoundref="_robot_8hpp" startline="100">loadedObjects</references>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">game0Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1aa46bf5e2662924fc2c9d7e747e12cec9" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int Robot::avoidVoid</definition>
+        <argsstring>() const</argsstring>
+        <name>avoidVoid</name>
+        <briefdescription>
+<para>returns a turning direction if the robot is about to drive off map </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="168" column="6" bodyfile="code/Robot.cpp" bodystart="390" bodyend="424"/>
+        <references refid="class_robot_1a1000239c43390bba895e574efb40bea1" compoundref="_robot_8hpp" startline="92">pos</references>
+        <references refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" compoundref="_p_vector_8hpp" startline="25">PVector::x</references>
+        <references refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" compoundref="_p_vector_8hpp" startline="30">PVector::y</references>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1a70d33a38d8f422be16ef303063c07277" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>std::array&lt; int, 4 &gt;</type>
+        <definition>std::array&lt; int, 4 &gt; Robot::getDesiredLoad</definition>
+        <argsstring>() const</argsstring>
+        <name>getDesiredLoad</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="170" column="13" bodyfile="code/Robot.cpp" bodystart="574" bodyend="583"/>
+        <references refid="class_robot_1ac2546b91734a2b4d4d22b524dc9d2d0c" compoundref="_robot_8hpp" startline="103">huntingSuperObj</references>
+        <references refid="class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20" compoundref="_robot_8hpp" startline="106">remainingMapTime</references>
+        <references refid="class_robot_1ad45d8f1011a473e9b158d240dd9b6766" compoundref="_robot_8hpp" startline="104">superObjects</references>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+        <referencedby refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" compoundref="_robot_8cpp" startline="262" endline="286">shouldCollect</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt;</type>
+        <definition>std::vector&lt; PVector &gt; Robot::getPointPath</definition>
+        <argsstring>(std::array&lt; int, 4 &gt; desiredLoad)</argsstring>
+        <name>getPointPath</name>
+        <param>
+          <type>std::array&lt; int, 4 &gt;</type>
+          <declname>desiredLoad</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Robot.hpp" line="172" column="13" bodyfile="code/Robot.cpp" bodystart="585" bodyend="647"/>
+        <references refid="class_object_load_1a535a944ad764a5c64c4b46f5d7dacd3a" compoundref="_robot_8cpp" startline="106" endline="108">ObjectLoad::all</references>
+        <references refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">geometry::dist</references>
+        <references refid="class_field_1ac726f4dc045fd47ad2de745fe2f898dd" compoundref="_map_data_8cpp" startline="187" endline="199">Field::getCollectibles</references>
+        <references refid="class_robot_1a6f43057c443f9e79b3d7875643328343" compoundref="_robot_8hpp" startline="90">level</references>
+        <references refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" compoundref="_robot_8hpp" startline="100">loadedObjects</references>
+        <references refid="class_robot_1a6eafb379fd3d28505e29f89a3e7cc0b1" compoundref="_robot_8hpp" startline="96">map0</references>
+        <references refid="class_robot_1a479e878152a7daccd5487d81982c7ff9" compoundref="_robot_8hpp" startline="96">map1</references>
+        <references refid="class_object_load_1ad3c7af6f005a96360d8680cf940bf539" compoundref="_robot_8cpp" startline="114" endline="116">ObjectLoad::num</references>
+        <references refid="class_robot_1a1000239c43390bba895e574efb40bea1" compoundref="_robot_8hpp" startline="92">pos</references>
+        <references refid="class_robot_1ad45d8f1011a473e9b158d240dd9b6766" compoundref="_robot_8hpp" startline="104">superObjects</references>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">game1Loop</referencedby>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>The robot of the CoSpace-simulator </para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="3">
+        <label>Field</label>
+        <link refid="class_field"/>
+      </node>
+      <node id="1">
+        <label>Robot</label>
+        <link refid="class_robot"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>lastPos</edgelabel>
+          <edgelabel>pos</edgelabel>
+        </childnode>
+        <childnode refid="3" relation="usage">
+          <edgelabel>map0</edgelabel>
+          <edgelabel>map1</edgelabel>
+        </childnode>
+        <childnode refid="4" relation="usage">
+          <edgelabel>pathfinder0</edgelabel>
+          <edgelabel>pathfinder0T</edgelabel>
+          <edgelabel>pathfinder1</edgelabel>
+          <edgelabel>pathfinder1T</edgelabel>
+        </childnode>
+        <childnode refid="5" relation="usage">
+          <edgelabel>loadedObjects</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>PVector</label>
+        <link refid="class_p_vector"/>
+      </node>
+      <node id="5">
+        <label>ObjectLoad</label>
+        <link refid="class_object_load"/>
+      </node>
+      <node id="4">
+        <label>Pathfinder</label>
+        <link refid="class_pathfinder"/>
+        <childnode refid="3" relation="usage">
+          <edgelabel>field</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="code/Robot.hpp" line="58" column="1" bodyfile="code/Robot.hpp" bodystart="58" bodyend="173"/>
+    <listofallmembers>
+      <member refid="class_robot_1a462896595e90ba3b90a671f977d3f0ae" prot="private" virt="non-virtual"><scope>Robot</scope><name>AI_IN</name></member>
+      <member refid="class_robot_1ae205e7748b708944a7157acf4ef39290" prot="private" virt="non-virtual"><scope>Robot</scope><name>AI_OUT</name></member>
+      <member refid="class_robot_1aa46bf5e2662924fc2c9d7e747e12cec9" prot="public" virt="non-virtual"><scope>Robot</scope><name>avoidVoid</name></member>
+      <member refid="class_robot_1ade9e381883860b0b81b6d2fd1e190e10" prot="public" virt="non-virtual"><scope>Robot</scope><name>checkUsSensors</name></member>
+      <member refid="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" prot="public" virt="non-virtual"><scope>Robot</scope><name>collect</name></member>
+      <member refid="class_robot_1a64c2b4bbf84de4682285450556ed40eb" prot="public" virt="non-virtual"><scope>Robot</scope><name>collectingSince</name></member>
+      <member refid="class_robot_1ae0f2a000c43f438cdde2da0a517810be" prot="private" virt="non-virtual"><scope>Robot</scope><name>compass</name></member>
+      <member refid="class_robot_1a686d1ec7714f85bfd1fd0d5a6000f96b" prot="public" virt="non-virtual"><scope>Robot</scope><name>completePath</name></member>
+      <member refid="class_robot_1a106604404bd2727de0abdaf99c10c519" prot="public" virt="non-virtual"><scope>Robot</scope><name>deposit</name></member>
+      <member refid="class_robot_1a3f4d56a15c5414fbdbe6fa55be384bdc" prot="public" virt="non-virtual"><scope>Robot</scope><name>depositingSince</name></member>
+      <member refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" prot="public" virt="non-virtual"><scope>Robot</scope><name>game0Loop</name></member>
+      <member refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" prot="public" virt="non-virtual"><scope>Robot</scope><name>game1Loop</name></member>
+      <member refid="class_robot_1a789f574683e9d13c1d0c2de76ba1990e" prot="private" virt="non-virtual"><scope>Robot</scope><name>gameTime</name></member>
+      <member refid="class_robot_1a70d33a38d8f422be16ef303063c07277" prot="public" virt="non-virtual"><scope>Robot</scope><name>getDesiredLoad</name></member>
+      <member refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" prot="public" virt="non-virtual"><scope>Robot</scope><name>getPointPath</name></member>
+      <member refid="class_robot_1ad7b7f1a5a4e56d9e4c72a24a622d69f1" prot="public" virt="non-virtual"><scope>Robot</scope><name>getVelocity</name></member>
+      <member refid="class_robot_1ac2546b91734a2b4d4d22b524dc9d2d0c" prot="public" virt="non-virtual"><scope>Robot</scope><name>huntingSuperObj</name></member>
+      <member refid="class_robot_1aa72f97fe06ea1da3b97e2476a87f9e2b" prot="public" virt="non-virtual"><scope>Robot</scope><name>lastPos</name></member>
+      <member refid="class_robot_1a3c82c722e113435735318a47cbc4efe2" prot="public" virt="non-virtual"><scope>Robot</scope><name>lastPositionUpdate</name></member>
+      <member refid="class_robot_1a0412b2e9cdd76a653aa6b8ddf24f450f" prot="public" virt="non-virtual"><scope>Robot</scope><name>lastProgramCycle</name></member>
+      <member refid="class_robot_1a5ec6698f2aaaf175aecc86b8f94ec8e4" prot="public" virt="non-virtual"><scope>Robot</scope><name>lastRGBBonus</name></member>
+      <member refid="class_robot_1a215487541a5227047d4293502abde31f" prot="private" virt="non-virtual"><scope>Robot</scope><name>led</name></member>
+      <member refid="class_robot_1a714c40ff2fed15ce84cddeddbb74cea3" prot="private" virt="non-virtual"><scope>Robot</scope><name>leftColor</name></member>
+      <member refid="class_robot_1a6f43057c443f9e79b3d7875643328343" prot="public" virt="non-virtual"><scope>Robot</scope><name>level</name></member>
+      <member refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" prot="public" virt="non-virtual"><scope>Robot</scope><name>loadedObjects</name></member>
+      <member refid="class_robot_1a6eafb379fd3d28505e29f89a3e7cc0b1" prot="public" virt="non-virtual"><scope>Robot</scope><name>map0</name></member>
+      <member refid="class_robot_1a479e878152a7daccd5487d81982c7ff9" prot="public" virt="non-virtual"><scope>Robot</scope><name>map1</name></member>
+      <member refid="class_robot_1aa13bf89f0098d0a14d17818efdfc8cd2" prot="public" virt="non-virtual"><scope>Robot</scope><name>moveAlongPath</name></member>
+      <member refid="class_robot_1a990b30f193fbc9b294ac4785798ea394" prot="public" virt="non-virtual"><scope>Robot</scope><name>moveToPosition</name></member>
+      <member refid="class_robot_1ab10294bd68a035f4ccc932b674d4f09a" prot="public" virt="non-virtual"><scope>Robot</scope><name>pathfinder0</name></member>
+      <member refid="class_robot_1afe2c01e9389fe2dba844b0815864b705" prot="public" virt="non-virtual"><scope>Robot</scope><name>pathfinder0T</name></member>
+      <member refid="class_robot_1ac20c4cea4260b9958b8d869411851063" prot="public" virt="non-virtual"><scope>Robot</scope><name>pathfinder1</name></member>
+      <member refid="class_robot_1aaa2235a0007e798eb02771cb03058698" prot="public" virt="non-virtual"><scope>Robot</scope><name>pathfinder1T</name></member>
+      <member refid="class_robot_1a1000239c43390bba895e574efb40bea1" prot="public" virt="non-virtual"><scope>Robot</scope><name>pos</name></member>
+      <member refid="class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20" prot="public" virt="non-virtual"><scope>Robot</scope><name>remainingMapTime</name></member>
+      <member refid="class_robot_1a03fd4e78aecbd63559b6b6c85d9c711a" prot="private" virt="non-virtual"><scope>Robot</scope><name>rightColor</name></member>
+      <member refid="class_robot_1a0304ff4829dfeb19a868d4feb7d59038" prot="public" virt="non-virtual"><scope>Robot</scope><name>Robot</name></member>
+      <member refid="class_robot_1ae75d909bffc02462f52aa25a708f353e" prot="private" virt="non-virtual"><scope>Robot</scope><name>setIN</name></member>
+      <member refid="class_robot_1ae6838a17c76cb58eb17142267f035f32" prot="private" virt="non-virtual"><scope>Robot</scope><name>setOUT</name></member>
+      <member refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" prot="public" virt="non-virtual"><scope>Robot</scope><name>shouldCollect</name></member>
+      <member refid="class_robot_1acb30cea7c6baee7977193845aeabe009" prot="public" virt="non-virtual"><scope>Robot</scope><name>shouldDeposit</name></member>
+      <member refid="class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e" prot="public" virt="non-virtual"><scope>Robot</scope><name>shouldTeleport</name></member>
+      <member refid="class_robot_1aaf23537ebeb2942cb73f1f3203c009a7" prot="private" virt="non-virtual"><scope>Robot</scope><name>simPos</name></member>
+      <member refid="class_robot_1a6dca8ac2c7eb6f1a114cbfb5c2143020" prot="private" virt="non-virtual"><scope>Robot</scope><name>SUPER_OBJECT</name></member>
+      <member refid="class_robot_1a7840d799cdd20b611847bcccc7ca953b" prot="private" virt="non-virtual"><scope>Robot</scope><name>superObject</name></member>
+      <member refid="class_robot_1aec269882a4d4edbb6167f959792b12fd" prot="private" virt="non-virtual"><scope>Robot</scope><name>superObjectNum</name></member>
+      <member refid="class_robot_1ad45d8f1011a473e9b158d240dd9b6766" prot="public" virt="non-virtual"><scope>Robot</scope><name>superObjects</name></member>
+      <member refid="class_robot_1a8ad41d97cfa6b475f2910768840b9769" prot="public" virt="non-virtual"><scope>Robot</scope><name>teleport</name></member>
+      <member refid="class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87" prot="public" virt="non-virtual"><scope>Robot</scope><name>Timer</name></member>
+      <member refid="class_robot_1ae04868f12c83d519156f8c5c459737e1" prot="private" virt="non-virtual"><scope>Robot</scope><name>tp</name></member>
+      <member refid="class_robot_1a7248164598c8b13ace78983dbd718c4f" prot="private" virt="non-virtual"><scope>Robot</scope><name>ultraSonic</name></member>
+      <member refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" prot="public" virt="non-virtual"><scope>Robot</scope><name>updateLoop</name></member>
+      <member refid="class_robot_1a5ad54de036deda2d9f2e151cab96a9bd" prot="public" virt="non-virtual"><scope>Robot</scope><name>updatePos</name></member>
+      <member refid="class_robot_1a92db930a78aaf4429b9abda0c911945e" prot="private" virt="non-virtual"><scope>Robot</scope><name>updateSimVars</name></member>
+      <member refid="class_robot_1abb6f67f7210605745708ff8a3c669f25" prot="private" virt="non-virtual"><scope>Robot</scope><name>wheelLeft</name></member>
+      <member refid="class_robot_1a006071216736e2ff7086d75f4952cd9e" prot="private" virt="non-virtual"><scope>Robot</scope><name>wheelRight</name></member>
+      <member refid="class_robot_1a56d2661cb822912575d2cd479d08779e" prot="public" virt="non-virtual"><scope>Robot</scope><name>wheels</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

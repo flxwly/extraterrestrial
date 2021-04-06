@@ -1,0 +1,46 @@
+digraph "ObjectLoad::cyan"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="ObjectLoad::cyan",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ObjectLoad::all",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#a535a944ad764a5c64c4b46f5d7dacd3a",tooltip=" "];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="Robot::getPointPath",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#ae20fb1cda5f32735ff19b6737bdf173a",tooltip=" "];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="Robot::game1Loop",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#ac9cf2352bb94bb2c623610c61027d2db",tooltip="game loop for second map"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="Game1",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_co_space_functions_8hpp.html#a452d724e739bd277b7419320c36fc6aa",tooltip=" "];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="OnTimer",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_co_space_functions_8cpp.html#ac6a4a9bd3e8000dffa847ce28b5e8c92",tooltip=" "];
+  Node5 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="Setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_co_space_functions_8hpp.html#a769404f2985a027a0d626fedfd4de1e9",tooltip=" "];
+  Node7 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="ObjectLoad::getValue",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#a93aca9fdea2b8f94c7dcc9c4536d3525",tooltip=" "];
+  Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="Robot::shouldDeposit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#acb30cea7c6baee7977193845aeabe009",tooltip="decides whether depositing is a good idea or not"];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="Robot::game0Loop",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#a79fef2efeb1fc25fad40e2b0fa603652",tooltip="game loop for first map"];
+  Node10 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="Game0",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_co_space_functions_8hpp.html#afdc6c3ee2b294f6379cf7141aa6f839d",tooltip=" "];
+  Node11 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="Robot::shouldTeleport",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#ac6da9c5a61f4ae0aa57314b027ed898e",tooltip="decides whether teleporting is a good idea or not"];
+  Node12 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="ObjectLoad::rgb",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_object_load.html#a8f9d9674889ba7c9e49bcddee4d42017",tooltip=" "];
+  Node13 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="Robot::deposit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#a106604404bd2727de0abdaf99c10c519",tooltip="deposits"];
+  Node14 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="Robot::shouldCollect",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#adb8f5af6a3be057b17b9d73ebf6eabbb",tooltip="decides whether collecting a point is a good idea or not"];
+  Node15 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

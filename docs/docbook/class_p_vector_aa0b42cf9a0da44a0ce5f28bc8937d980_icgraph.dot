@@ -1,0 +1,28 @@
+digraph "PVector::rotate"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="PVector::rotate",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="counter-clockwise rotation"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="Path::getClosestNormalPoint",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_path.html#ae1ea4946ec41269898a40ea5d26bc2e3",tooltip=" "];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="Robot::moveAlongPath",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#aa13bf89f0098d0a14d17818efdfc8cd2",tooltip=" "];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="Robot::game1Loop",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#ac9cf2352bb94bb2c623610c61027d2db",tooltip="game loop for second map"];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="Game1",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_co_space_functions_8hpp.html#a452d724e739bd277b7419320c36fc6aa",tooltip=" "];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="OnTimer",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_co_space_functions_8cpp.html#ac6a4a9bd3e8000dffa847ce28b5e8c92",tooltip=" "];
+  Node5 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="Setup",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_co_space_functions_8hpp.html#a769404f2985a027a0d626fedfd4de1e9",tooltip=" "];
+  Node7 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="Robot::getVelocity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#ad7b7f1a5a4e56d9e4c72a24a622d69f1",tooltip="gets the current velocity for a certain change in time (in ms)"];
+  Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="Robot::updatePos",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#a5ad54de036deda2d9f2e151cab96a9bd",tooltip="updates the position of the robot mathematically and returns the change"];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="Robot::updateLoop",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#acff1fa64498b60568d7446e6710f64c6",tooltip=" "];
+  Node10 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

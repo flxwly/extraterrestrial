@@ -1,0 +1,33 @@
+digraph "Pathfinder::AStar"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="Pathfinder::AStar",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="Node::calculateCost",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_node.html#ac916db01c0cad26a3e16c29ac68516e8",tooltip=" "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="geometry::dist",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#a9a1ebcb6a74b046020dcc91c40554a3a",tooltip=" "];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="geometry::sqDist",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#a478ae992edb02bc432e6d0420c40e336",tooltip=" "];
+  Node2 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="Field::getMapObjects",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_field.html#a514b0362f97a072d15cc8b93e53bf529",tooltip=" "];
+  Node2 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="geometry::intersection",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#a228137d265482ee3fd6581e2e375eb8f",tooltip=" "];
+  Node2 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="geometry::isInside",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#aebf0ad8e6b1a14089df1845e5173a811",tooltip=" "];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="Area::getCorners",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_area.html#a8f62e3ceb16049e775a5d62726b2da8d",tooltip="Getter method for Area::Corners_."];
+  Node7 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="geometry::isLeft",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#af87847d485624e5c7ab2bb1558c3a36f",tooltip=" "];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="Node::findNeighbours",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_node.html#a4af5b6953c9b717764557d118332f1cb",tooltip=" "];
+  Node10 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="Node::canSee",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_node.html#a5749804287a44482c4b0b90cb5e70093",tooltip=" "];
+  Node11 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="geometry::isIntersecting",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#ab3ebb42fdbd44fb848c370a0b4261e18",tooltip=" "];
+  Node12 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+}

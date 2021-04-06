@@ -1,0 +1,346 @@
+.TH "PVector" 3 "Mon Apr 5 2021" "Extraterrestrial" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PVector
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <PVector\&.hpp>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPVector\fP ()"
+.br
+.RI "creates a 2D Point-Vector at (NAN | NAN) "
+.ti -1c
+.RI "\fBPVector\fP (double _x, double _y)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBset\fP (double _x, double _y)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBnormalize\fP ()"
+.br
+.ti -1c
+.RI "double \fBgetMag\fP () const"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBsetMag\fP (double mag)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBrotate\fP (double angle)"
+.br
+.RI "counter-clockwise rotation "
+.ti -1c
+.RI "\fBPVector\fP \fBround\fP ()"
+.br
+.ti -1c
+.RI "bool \fBoperator==\fP (const \fBPVector\fP &lhs) const"
+.br
+.ti -1c
+.RI "bool \fBoperator==\fP (const double &d) const"
+.br
+.ti -1c
+.RI "bool \fBoperator!=\fP (const \fBPVector\fP &lhs) const"
+.br
+.ti -1c
+.RI "bool \fBoperator!=\fP (const double &lhs) const"
+.br
+.ti -1c
+.RI "\fBPVector\fP & \fBoperator+=\fP (const \fBPVector\fP &rhs)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBoperator+\fP (const \fBPVector\fP &rhs)"
+.br
+.ti -1c
+.RI "\fBPVector\fP & \fBoperator\-=\fP (const \fBPVector\fP &rhs)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBoperator\-\fP (const \fBPVector\fP &rhs)"
+.br
+.ti -1c
+.RI "\fBPVector\fP & \fBoperator*=\fP (const double &m)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBoperator*\fP (const double &m)"
+.br
+.ti -1c
+.RI "\fBPVector\fP & \fBoperator/=\fP (const double &m)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBoperator/\fP (const double &m)"
+.br
+.ti -1c
+.RI "\fBoperator bool\fP () const"
+.br
+.ti -1c
+.RI "std::string \fBstr\fP () const"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBPVector\fP \fBsetMag\fP (\fBPVector\fP &pVector, double mag)"
+.br
+.ti -1c
+.RI "static \fBPVector\fP \fBround\fP (const \fBPVector\fP &pVector)"
+.br
+.ti -1c
+.RI "static std::string \fBstr\fP (\fBPVector\fP pVector)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "double \fBx\fP"
+.br
+.RI "the x-Position of the \fBPVector\fP "
+.ti -1c
+.RI "double \fBy\fP"
+.br
+.RI "the x-Position of the \fBPVector\fP "
+.in -1c
+.SH "Detailed Description"
+.PP 
+a representation of both a point and a vector in 2D space that includes some methods to manipulate and compare it\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PVector::PVector ()\fC [inline]\fP"
+
+.PP
+creates a 2D Point-Vector at (NAN | NAN) 
+.SS "PVector::PVector (double _x, double _y)\fC [inline]\fP"
+creates a 2D Point-Vector at the given coordinates
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fI_x\fP x-Position of the \fBPVector\fP\&. 
+.br
+\fI_y\fP y-Position of the \fBPVector\fP\&. 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "double PVector::getMag () const"
+calculates and returns the magnitude of the \fBPVector\fP
+.PP
+\fBReturns\fP
+.RS 4
+magnitude of the \fBPVector\fP 
+.RE
+.PP
+
+.SS "\fBPVector\fP PVector::normalize ()"
+normalizes the \fBPVector\fP's magnitude
+.PP
+\fBReturns\fP
+.RS 4
+a copy of itself after executing the method 
+.RE
+.PP
+
+.SS "PVector::operator bool () const\fC [explicit]\fP"
+binary operator to check whether a PVectors position is defined or not
+.PP
+\fBReturns\fP
+.RS 4
+true if both the x and the y coordinate are not NAN 
+.RE
+.PP
+
+.SS "bool PVector::operator!= (const double & lhs) const"
+binary operator to compare this \fBPVector\fP with a double for equal coordinates
+.PP
+\fBParameters\fP
+.RS 4
+\fId\fP the double that should be compared to this
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if both the x and the y coordinate of this \fBPVector\fP match with d 
+.RE
+.PP
+
+.SS "bool PVector::operator!= (const \fBPVector\fP & lhs) const"
+binary operator to compare a pVectors with a double for unequal coordinates
+.PP
+\fBParameters\fP
+.RS 4
+\fId\fP the double that should be compared to this
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if either the x or the y coordinate of this \fBPVector\fP doesn't match with d 
+.RE
+.PP
+
+.SS "\fBPVector\fP PVector::operator* (const double & m)"
+
+.SS "\fBPVector\fP & PVector::operator*= (const double & m)"
+
+.SS "\fBPVector\fP PVector::operator+ (const \fBPVector\fP & rhs)"
+
+.SS "\fBPVector\fP & PVector::operator+= (const \fBPVector\fP & rhs)"
+
+.SS "\fBPVector\fP PVector::operator\- (const \fBPVector\fP & rhs)"
+
+.SS "\fBPVector\fP & PVector::operator\-= (const \fBPVector\fP & rhs)"
+
+.SS "\fBPVector\fP PVector::operator/ (const double & m)"
+
+.SS "\fBPVector\fP & PVector::operator/= (const double & m)"
+
+.SS "bool PVector::operator== (const double & d) const"
+binary operator to compare this \fBPVector\fP with a double for unequal coordinates
+.PP
+\fBParameters\fP
+.RS 4
+\fIlhs\fP the other \fBPVector\fP that should be compared to this
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if either the x or the y coordinate doesn't match 
+.RE
+.PP
+
+.SS "bool PVector::operator== (const \fBPVector\fP & lhs) const"
+binary operator to compare two pVectors with each other for equal coordinates
+.PP
+\fBParameters\fP
+.RS 4
+\fIlhs\fP the other \fBPVector\fP that should be compared to this
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if both the x and the y coordinate of each \fBPVector\fP match 
+.RE
+.PP
+
+.SS "\fBPVector\fP PVector::rotate (double angle)"
+
+.PP
+counter-clockwise rotation rotates the \fBPVector\fP counter-clockwise by a given angle
+.PP
+\fBParameters\fP
+.RS 4
+\fIangle\fP the angle the \fBPVector\fP should be rotated by
+.RE
+.PP
+\fBNote\fP
+.RS 4
+angle must be in radians
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a copy of pVector after executing the method 
+.RE
+.PP
+
+.SS "\fBPVector\fP PVector::round ()"
+rounds the coordinates of the \fBPVector\fP
+.PP
+\fBReturns\fP
+.RS 4
+a copy this \fBPVector\fP after executing the method 
+.RE
+.PP
+
+.SS "\fBPVector\fP PVector::round (const \fBPVector\fP & pVector)\fC [static]\fP"
+rounds the coordinates of a given pVector
+.PP
+\fBParameters\fP
+.RS 4
+\fIpVector\fP the \fBPVector\fP the coordinates should be rounded of
+.RE
+.PP
+\fBNote\fP
+.RS 4
+this is the static version of \fBPVector::round()\fP;
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a copy of pVector after executing the method 
+.RE
+.PP
+
+.SS "\fBPVector\fP PVector::set (double _x, double _y)"
+sets the position to the given coordinates
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fI_x\fP new x-Position of the \fBPVector\fP\&. 
+.br
+\fI_y\fP new y-Position of the \fBPVector\fP\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a copy of itself after executing the method 
+.RE
+.PP
+
+.SS "\fBPVector\fP PVector::setMag (double mag)"
+sets the magnitude of the \fBPVector\fP
+.PP
+\fBParameters\fP
+.RS 4
+\fImag\fP the new magnitude the \fBPVector\fP should have 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a copy of itself after executing the method 
+.RE
+.PP
+
+.SS "\fBPVector\fP PVector::setMag (\fBPVector\fP & pVector, double mag)\fC [static]\fP"
+sets the magnitude of a given \fBPVector\fP
+.PP
+\fBParameters\fP
+.RS 4
+\fIpVector\fP the \fBPVector\fP the magnitude should be changed of 
+.br
+\fImag\fP the new magnitude pVector should have
+.RE
+.PP
+\fBNote\fP
+.RS 4
+this is the static version of \fBPVector::setMag()\fP;
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a copy of pVector after executing the method 
+.RE
+.PP
+
+.SS "std::string PVector::str () const"
+
+.SS "std::string PVector::str (\fBPVector\fP pVector)\fC [static]\fP"
+
+.SH "Member Data Documentation"
+.PP 
+.SS "double PVector::x"
+
+.PP
+the x-Position of the \fBPVector\fP 
+.SS "double PVector::y"
+
+.PP
+the x-Position of the \fBPVector\fP 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Extraterrestrial from the source code\&.

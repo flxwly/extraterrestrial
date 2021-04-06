@@ -1,0 +1,363 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="namespacegeometry" kind="namespace" language="C++">
+    <compoundname>geometry</compoundname>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespacegeometry_1af87847d485624e5c7ab2bb1558c3a36f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool geometry::isLeft</definition>
+        <argsstring>(PVector p0, PVector p1, PVector p2)</argsstring>
+        <name>isLeft</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>p0</declname>
+        </param>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>p1</declname>
+        </param>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>p2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><hruler/>
+ geometry <linebreak/>
+ <hruler/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="250" column="10" bodyfile="code/MapData.cpp" bodystart="248" bodyend="250" declfile="code/MapData.hpp" declline="250" declcolumn="10"/>
+        <references refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" compoundref="_p_vector_8hpp" startline="25">PVector::x</references>
+        <references refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" compoundref="_p_vector_8hpp" startline="30">PVector::y</references>
+        <referencedby refid="class_path_1ae1ea4946ec41269898a40ea5d26bc2e3" compoundref="_pathfinder_8cpp" startline="113" endline="138">Path::getClosestNormalPoint</referencedby>
+        <referencedby refid="namespacegeometry_1aebf0ad8e6b1a14089df1845e5173a811" compoundref="_map_data_8cpp" startline="255" endline="280">isInside</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1aebf0ad8e6b1a14089df1845e5173a811" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool geometry::isInside</definition>
+        <argsstring>(const PVector &amp;p, Area &amp;area)</argsstring>
+        <name>isInside</name>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type><ref refid="class_area" kindref="compound">Area</ref> &amp;</type>
+          <declname>area</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>checks if a point lies inside the <ref refid="class_area" kindref="compound">Area</ref> <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>p</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A point </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if point lies inside of the <ref refid="class_area" kindref="compound">Area</ref>. Otherwise false </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="256" column="10" bodyfile="code/MapData.cpp" bodystart="255" bodyend="280" declfile="code/MapData.hpp" declline="256" declcolumn="10"/>
+        <references refid="class_area_1a8f62e3ceb16049e775a5d62726b2da8d" compoundref="_map_data_8cpp" startline="72" endline="74">Area::getCorners</references>
+        <references refid="namespacegeometry_1af87847d485624e5c7ab2bb1558c3a36f" compoundref="_map_data_8cpp" startline="248" endline="250">isLeft</references>
+        <references refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" compoundref="_p_vector_8hpp" startline="30">PVector::y</references>
+        <referencedby refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" compoundref="_pathfinder_8cpp" startline="16" endline="62">Node::calculateCost</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector geometry::intersection</definition>
+        <argsstring>(Line &amp;l1, Line &amp;l2)</argsstring>
+        <name>intersection</name>
+        <param>
+          <type><ref refid="class_line" kindref="compound">Line</ref> &amp;</type>
+          <declname>l1</declname>
+        </param>
+        <param>
+          <type><ref refid="class_line" kindref="compound">Line</ref> &amp;</type>
+          <declname>l2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>calculates an intersection point between two lines <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>l1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a line </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>l2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>another line </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>intersection point if existing. Otherwise (-1, -1) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="263" column="13" bodyfile="code/MapData.cpp" bodystart="282" bodyend="303" declfile="code/MapData.hpp" declline="263" declcolumn="13"/>
+        <references refid="class_line_1a83967c5447d139815c8be5de33fdc39e" compoundref="_map_data_8hpp" startline="98">Line::p1</references>
+        <references refid="class_line_1a113f0f7413651d7eb0b4602d1da226d4" compoundref="_map_data_8hpp" startline="101">Line::p2</references>
+        <references refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" compoundref="_p_vector_8hpp" startline="25">PVector::x</references>
+        <references refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" compoundref="_p_vector_8hpp" startline="30">PVector::y</references>
+        <referencedby refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" compoundref="_pathfinder_8cpp" startline="16" endline="62">Node::calculateCost</referencedby>
+        <referencedby refid="namespacegeometry_1ab3ebb42fdbd44fb848c370a0b4261e18" compoundref="_map_data_8cpp" startline="305" endline="307">isIntersecting</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1ab3ebb42fdbd44fb848c370a0b4261e18" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool geometry::isIntersecting</definition>
+        <argsstring>(Line &amp;l1, Line &amp;l2)</argsstring>
+        <name>isIntersecting</name>
+        <param>
+          <type><ref refid="class_line" kindref="compound">Line</ref> &amp;</type>
+          <declname>l1</declname>
+        </param>
+        <param>
+          <type><ref refid="class_line" kindref="compound">Line</ref> &amp;</type>
+          <declname>l2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="265" column="6" bodyfile="code/MapData.cpp" bodystart="305" bodyend="307" declfile="code/MapData.hpp" declline="265" declcolumn="6"/>
+        <references refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" compoundref="_map_data_8cpp" startline="282" endline="303">intersection</references>
+        <referencedby refid="class_node_1a5749804287a44482c4b0b90cb5e70093" compoundref="_pathfinder_8cpp" startline="64" endline="68">Node::canSee</referencedby>
+        <referencedby refid="namespacegeometry_1a8a64aa44149d5f68a5ac14cb3f435708" compoundref="_map_data_8cpp" startline="309" endline="318">isIntersecting</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1a8a64aa44149d5f68a5ac14cb3f435708" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool geometry::isIntersecting</definition>
+        <argsstring>(Line l1, const std::vector&lt; Area &gt; &amp;Obstacles)</argsstring>
+        <name>isIntersecting</name>
+        <param>
+          <type><ref refid="class_line" kindref="compound">Line</ref></type>
+          <declname>l1</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt; &amp;</type>
+          <declname>Obstacles</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="267" column="6" bodyfile="code/MapData.cpp" bodystart="309" bodyend="318" declfile="code/MapData.hpp" declline="267" declcolumn="6"/>
+        <references refid="namespacegeometry_1ab3ebb42fdbd44fb848c370a0b4261e18" compoundref="_map_data_8cpp" startline="305" endline="307">isIntersecting</references>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1a478ae992edb02bc432e6d0420c40e336" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double geometry::sqDist</definition>
+        <argsstring>(const PVector &amp;p1, const PVector &amp;p2)</argsstring>
+        <name>sqDist</name>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>p1</declname>
+        </param>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>p2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="269" column="12" bodyfile="code/MapData.cpp" bodystart="320" bodyend="322" declfile="code/MapData.hpp" declline="269" declcolumn="12"/>
+        <references refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" compoundref="_p_vector_8hpp" startline="25">PVector::x</references>
+        <references refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" compoundref="_p_vector_8hpp" startline="30">PVector::y</references>
+        <referencedby refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">dist</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double geometry::dist</definition>
+        <argsstring>(const PVector &amp;p1, const PVector &amp;p2)</argsstring>
+        <name>dist</name>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>p1</declname>
+        </param>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>p2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="271" column="12" bodyfile="code/MapData.cpp" bodystart="324" bodyend="326" declfile="code/MapData.hpp" declline="271" declcolumn="12"/>
+        <references refid="namespacegeometry_1a478ae992edb02bc432e6d0420c40e336" compoundref="_map_data_8cpp" startline="320" endline="322">sqDist</references>
+        <referencedby refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" compoundref="_pathfinder_8cpp" startline="16" endline="62">Node::calculateCost</referencedby>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+        <referencedby refid="class_path_1ae1ea4946ec41269898a40ea5d26bc2e3" compoundref="_pathfinder_8cpp" startline="113" endline="138">Path::getClosestNormalPoint</referencedby>
+        <referencedby refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" compoundref="_robot_8cpp" startline="585" endline="647">Robot::getPointPath</referencedby>
+        <referencedby refid="class_collectible_1a068a4938bf6bb68cf6e7b1fd33dd1f4c" compoundref="_map_data_8cpp" startline="20" endline="25">Collectible::isCorrectCollectible</referencedby>
+        <referencedby refid="class_path_1af35feac82b7ef6cd57495e5328b8d4aa" compoundref="_pathfinder_8cpp" startline="152" endline="168">Path::isOnPath</referencedby>
+        <referencedby refid="class_path_1abb16e0278477c1663ea6b9d6df995e0d" compoundref="_pathfinder_8cpp" startline="170" endline="176">Path::length</referencedby>
+        <referencedby refid="class_robot_1a990b30f193fbc9b294ac4785798ea394" compoundref="_robot_8cpp" startline="430" endline="546">Robot::moveToPosition</referencedby>
+        <referencedby refid="class_robot_1a5ad54de036deda2d9f2e151cab96a9bd" compoundref="_robot_8cpp" startline="233" endline="257">Robot::updatePos</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1a2710bf6fad3b638a4ee95abcd843d90f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double geometry::dot</definition>
+        <argsstring>(PVector p1, PVector p2)</argsstring>
+        <name>dot</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>p1</declname>
+        </param>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>p2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="273" column="12" bodyfile="code/MapData.cpp" bodystart="343" bodyend="345" declfile="code/MapData.hpp" declline="273" declcolumn="12"/>
+        <references refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" compoundref="_p_vector_8hpp" startline="25">PVector::x</references>
+        <references refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" compoundref="_p_vector_8hpp" startline="30">PVector::y</references>
+        <referencedby refid="namespacegeometry_1a120ad790ee5a9ef199a6d67e5e9f1c90" compoundref="_map_data_8cpp" startline="347" endline="359">getNormalPoint</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1a120ad790ee5a9ef199a6d67e5e9f1c90" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector geometry::getNormalPoint</definition>
+        <argsstring>(Line line, PVector point)</argsstring>
+        <name>getNormalPoint</name>
+        <param>
+          <type><ref refid="class_line" kindref="compound">Line</ref></type>
+          <declname>line</declname>
+        </param>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>point</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Calculates normal point on a line to another point</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>line</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The line </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>point</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The point</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+This function returns the intersection between the line and a line which goes through the point p and is orthogonal to the line This point however doesn&apos;t need to be on the line and can also lie on a extension of this line </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="285" column="13" bodyfile="code/MapData.cpp" bodystart="347" bodyend="359" declfile="code/MapData.hpp" declline="285" declcolumn="13"/>
+        <references refid="namespacegeometry_1a2710bf6fad3b638a4ee95abcd843d90f" compoundref="_map_data_8cpp" startline="343" endline="345">dot</references>
+        <references refid="class_line_1a83967c5447d139815c8be5de33fdc39e" compoundref="_map_data_8hpp" startline="98">Line::p1</references>
+        <references refid="class_line_1a113f0f7413651d7eb0b4602d1da226d4" compoundref="_map_data_8hpp" startline="101">Line::p2</references>
+        <references refid="class_p_vector_1a10abf0646fe82df63c0c623588c5600b" compoundref="_p_vector_8cpp" startline="17" endline="20">PVector::setMag</references>
+        <references refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" compoundref="_p_vector_8hpp" startline="25">PVector::x</references>
+        <references refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" compoundref="_p_vector_8hpp" startline="30">PVector::y</references>
+        <referencedby refid="class_path_1ae1ea4946ec41269898a40ea5d26bc2e3" compoundref="_pathfinder_8cpp" startline="113" endline="138">Path::getClosestNormalPoint</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1a46dee6450badd387e6788a9ebf80fa44" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector geometry::angle2Vector</definition>
+        <argsstring>(double a)</argsstring>
+        <name>angle2Vector</name>
+        <param>
+          <type>double</type>
+          <declname>a</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="287" column="13" bodyfile="code/MapData.cpp" bodystart="328" bodyend="330" declfile="code/MapData.hpp" declline="287" declcolumn="13"/>
+        <referencedby refid="class_robot_1ad7b7f1a5a4e56d9e4c72a24a622d69f1" compoundref="_robot_8cpp" startline="204" endline="231">Robot::getVelocity</referencedby>
+        <referencedby refid="class_collectible_1a068a4938bf6bb68cf6e7b1fd33dd1f4c" compoundref="_map_data_8cpp" startline="20" endline="25">Collectible::isCorrectCollectible</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1a0ce1748996f9e029a3cbeb665c1d17ce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double geometry::vector2Angle</definition>
+        <argsstring>(PVector v)</argsstring>
+        <name>vector2Angle</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="289" column="12" bodyfile="code/MapData.cpp" bodystart="339" bodyend="341" declfile="code/MapData.hpp" declline="289" declcolumn="12"/>
+        <references refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" compoundref="_p_vector_8hpp" startline="25">PVector::x</references>
+        <references refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" compoundref="_p_vector_8hpp" startline="30">PVector::y</references>
+        <referencedby refid="class_robot_1a990b30f193fbc9b294ac4785798ea394" compoundref="_robot_8cpp" startline="430" endline="546">Robot::moveToPosition</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="namespacegeometry_1ab9437f91a11b422552cd37d014c43651" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double geometry::vector2Angle</definition>
+        <argsstring>(double x, double y)</argsstring>
+        <name>vector2Angle</name>
+        <param>
+          <type>double</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>y</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="291" column="12" bodyfile="code/MapData.cpp" bodystart="332" bodyend="337" declfile="code/MapData.hpp" declline="291" declcolumn="12"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>namespace for geometric functions </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="code/MapData.hpp" line="248" column="1"/>
+  </compounddef>
+</doxygen>

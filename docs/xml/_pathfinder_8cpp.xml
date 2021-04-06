@@ -1,0 +1,444 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="_pathfinder_8cpp" kind="file" language="C++">
+    <compoundname>Pathfinder.cpp</compoundname>
+    <includes refid="_pathfinder_8hpp" local="yes">Pathfinder.hpp</includes>
+    <incdepgraph>
+      <node id="7">
+        <label>MapData.hpp</label>
+        <link refid="_map_data_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>libs/PPSettings.hpp</label>
+        <link refid="_p_p_settings_8hpp"/>
+      </node>
+      <node id="4">
+        <label>libs/CommonFunctions.hpp</label>
+        <link refid="_common_functions_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>queue</label>
+      </node>
+      <node id="6">
+        <label>cmath</label>
+      </node>
+      <node id="9">
+        <label>string</label>
+      </node>
+      <node id="8">
+        <label>libs/PVector.hpp</label>
+        <link refid="_p_vector_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>vector</label>
+      </node>
+      <node id="1">
+        <label>code/Pathfinder.cpp</label>
+        <link refid="_pathfinder_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>utility</label>
+      </node>
+      <node id="11">
+        <label>array</label>
+      </node>
+      <node id="5">
+        <label>iostream</label>
+      </node>
+      <node id="2">
+        <label>Pathfinder.hpp</label>
+        <link refid="_pathfinder_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="12">
+        <label>algorithm</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_pathfinder_8hpp" kindref="compound">Pathfinder.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="class_node_1adad2269dc6d7dbd62a4cf8eef7da48fa" refkind="member"><highlight class="normal"><ref refid="class_node_1adad2269dc6d7dbd62a4cf8eef7da48fa" kindref="member">Node::Node</ref>(<ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>_pos,<sp/><ref refid="class_field" kindref="compound">Field</ref><sp/>*_field)<sp/>:<sp/>pos(_pos),<sp/>field(_field),</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>isClosed(false),<sp/>isOpen(false),</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>g(0),<sp/>f(0),<sp/>previous(nullptr),<sp/>neighbours()<sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" kindref="member">ERROR_MESSAGE</ref>(</highlight><highlight class="stringliteral">&quot;Constructed<sp/>node&quot;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="13"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" kindref="member">Node::calculateCost</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_node" kindref="compound">Node</ref><sp/>&amp;node)<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Line<sp/>from<sp/>this.pos<sp/>to<sp/>node.pos</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_line" kindref="compound">Line</ref><sp/>line(<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>,<sp/>node.<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>);</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>A<sp/>Line<sp/>either<sp/>enters<sp/>or<sp/>exits<sp/>a<sp/>swamp.<sp/>So<sp/>the<sp/>Swamp_speed_penality<sp/>is<sp/>toggled.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>modifier<sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Get<sp/>all<sp/>swamp<sp/>intersections.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;std::pair&lt;PVector,<sp/>double&gt;&gt;<sp/>intersections<sp/>=<sp/>{{<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>,<sp/>0}};</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;swamp<sp/>:<sp/><ref refid="class_node_1abafc6b4a9569e9ee3501e0b0ff9ce16c" kindref="member">field</ref>-&gt;<ref refid="class_field_1a514b0362f97a072d15cc8b93e53bf529" kindref="member">getMapObjects</ref>({2}))<sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>bound<sp/>:<sp/>swamp.getEdges())<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::pair&lt;PVector,<sp/>double&gt;<sp/><ref refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" kindref="member">intersection</ref><sp/>=<sp/>{<ref refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" kindref="member">geometry::intersection</ref>(line,<sp/>bound),<sp/>0};</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" kindref="member">intersection</ref>.first)</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" kindref="member">intersection</ref>.second<sp/>=<sp/><ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">geometry::dist</ref>(<ref refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" kindref="member">intersection</ref>.first,<sp/><ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(intersections.back().second<sp/>&gt;<sp/><ref refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" kindref="member">intersection</ref>.second)<sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::swap(intersections.back(),<sp/><ref refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" kindref="member">intersection</ref>);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>intersections.push_back(<ref refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" kindref="member">intersection</ref>);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(modifier<sp/>==<sp/>1<sp/>&amp;&amp;<sp/><ref refid="namespacegeometry_1aebf0ad8e6b1a14089df1845e5173a811" kindref="member">geometry::isInside</ref>(<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>,<sp/>swamp))<sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>modifier<sp/>=<sp/><ref refid="_p_p_settings_8hpp_1a0baf6c9a9821c5341014d35e3d7eadf8" kindref="member">SWAMP_SPEED_PENALITY</ref>;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>interrupt<sp/>everything<sp/>if<sp/>no<sp/>intersections<sp/>were<sp/>found</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(intersections.empty())</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">geometry::dist</ref>(<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>,<sp/>node.<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>);</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>The<sp/>cost<sp/>that<sp/>is<sp/>returned<sp/>at<sp/>the<sp/>end</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>cost<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>intersections.size()<sp/>-<sp/>1;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>add<sp/>cost<sp/>(modifier<sp/>*<sp/>distance)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cost<sp/>+=<sp/>modifier<sp/>*<sp/>(intersections[i<sp/>+<sp/>1].second<sp/>-<sp/>intersections[i].second);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Toggle<sp/>the<sp/>modifier</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>modifier<sp/>=<sp/>(modifier<sp/>==<sp/><ref refid="_p_p_settings_8hpp_1a0baf6c9a9821c5341014d35e3d7eadf8" kindref="member">SWAMP_SPEED_PENALITY</ref>)<sp/>?<sp/>1<sp/>:<sp/><ref refid="_p_p_settings_8hpp_1a0baf6c9a9821c5341014d35e3d7eadf8" kindref="member">SWAMP_SPEED_PENALITY</ref>;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>cost;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64" refid="class_node_1a5749804287a44482c4b0b90cb5e70093" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_node_1a5749804287a44482c4b0b90cb5e70093" kindref="member">Node::canSee</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_node" kindref="compound">Node</ref><sp/>&amp;node,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;Area&gt;<sp/>&amp;Obstacles)</highlight><highlight class="keyword"><sp/>const<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref><sp/>==<sp/>node.<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>)</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>!<ref refid="namespacegeometry_1ab3ebb42fdbd44fb848c370a0b4261e18" kindref="member">geometry::isIntersecting</ref>({<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>,<sp/>node.<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>},<sp/>Obstacles);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70" refid="class_node_1a4af5b6953c9b717764557d118332f1cb" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_node_1a4af5b6953c9b717764557d118332f1cb" kindref="member">Node::findNeighbours</ref>(std::vector&lt;Node&gt;<sp/>&amp;Nodes,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;Area&gt;<sp/>&amp;Obstacles)<sp/>{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;node<sp/>:<sp/>Nodes)<sp/>{</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="class_node_1a5749804287a44482c4b0b90cb5e70093" kindref="member">canSee</ref>(node,<sp/>Obstacles))<sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(std::find_if(<ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>.begin(),<sp/><ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>.end(),</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[&amp;](std::pair&lt;Node<sp/>*,<sp/>double&gt;<sp/>n)<sp/>{<sp/>return<sp/>n.first<sp/>==<sp/>&amp;node;<sp/>})</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>==<sp/><ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>.end())<sp/>{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>.emplace_back(&amp;node,<sp/><ref refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" kindref="member">calculateCost</ref>(node));</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>.size();</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85" refid="class_node_1a2a9d028795b134cd1961fc606e194ec9" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_node_1a2a9d028795b134cd1961fc606e194ec9" kindref="member">Node::addNeighbour</ref>(<ref refid="class_node" kindref="compound">Node</ref><sp/>*neighbour,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;cost)<sp/>{</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>.emplace_back(neighbour,<sp/>cost);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89" refid="class_node_1a69274b9d8270111be533536cde7dffb6" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_node_1a69274b9d8270111be533536cde7dffb6" kindref="member">Node::removeNeighbour</ref>(<ref refid="class_node" kindref="compound">Node</ref><sp/>*neighbour)<sp/>{</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>.size();<sp/>++i)<sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>[i].first<sp/>==<sp/>neighbour)<sp/>{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>.erase(<ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>.begin()<sp/>+<sp/>i);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109" refid="class_path_1ada3c05fb174e6878a59222b9219a113a" refkind="member"><highlight class="normal"><ref refid="class_path_1ada3c05fb174e6878a59222b9219a113a" kindref="member">Path::Path</ref>(std::vector&lt;PVector&gt;<sp/>points,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_r)<sp/>:<sp/>points(std::move(points)),<sp/>r(_r)<sp/>{</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113" refid="class_path_1ae1ea4946ec41269898a40ea5d26bc2e3" refkind="member"><highlight class="normal"><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_path_1ae1ea4946ec41269898a40ea5d26bc2e3" kindref="member">Path::getClosestNormalPoint</ref>(<ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>p,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>d)<sp/>{</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">dist</ref><sp/>=<sp/>INFINITY;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>finalNormal<sp/>=<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>.back();</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>.size()<sp/>==<sp/>1)<sp/>{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>finalNormal<sp/>=<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>.back();</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>.size()<sp/>-<sp/>1;<sp/>++i)<sp/>{</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>normalPoint<sp/>=<sp/><ref refid="namespacegeometry_1a120ad790ee5a9ef199a6d67e5e9f1c90" kindref="member">geometry::getNormalPoint</ref>(<ref refid="class_line" kindref="compound">Line</ref>(<ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i],<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i<sp/>+<sp/>1]),<sp/>p);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Test<sp/>if<sp/>this<sp/>is<sp/>the<sp/>closest<sp/>yet<sp/>seen<sp/>normalpoint</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">geometry::dist</ref>(normalPoint,<sp/>p)<sp/>&lt;<sp/><ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">dist</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>line<sp/>=<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i<sp/>+<sp/>1]<sp/>-<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i];</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>line.<ref refid="class_p_vector_1aa0b42cf9a0da44a0ce5f28bc8937d980" kindref="member">rotate</ref>(M_PI<sp/>/<sp/>2);</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="namespacegeometry_1af87847d485624e5c7ab2bb1558c3a36f" kindref="member">geometry::isLeft</ref>(<ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i<sp/>+<sp/>1],<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i<sp/>+<sp/>1]<sp/>+<sp/>line,<sp/>normalPoint))<sp/>{</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">dist</ref><sp/>=<sp/><ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">geometry::dist</ref>(normalPoint,<sp/>p);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>finalNormal<sp/>=<sp/>normalPoint<sp/>+<sp/>(<ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i<sp/>+<sp/>1]<sp/>-<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i]).setMag(d);</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>finalNormal;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140" refid="class_path_1a6e051a7405adafa723277cc6d28d6b19" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_path_1a6e051a7405adafa723277cc6d28d6b19" kindref="member">Path::addPoint</ref>(<ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>p)<sp/>{</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>.push_back(p);</highlight></codeline>
+<codeline lineno="142"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight></codeline>
+<codeline lineno="144" refid="class_path_1a9be76dab519b5ce2416ed86aae3db417" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_path_1a9be76dab519b5ce2416ed86aae3db417" kindref="member">Path::removeLast</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>.pop_back();</highlight></codeline>
+<codeline lineno="146"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148" refid="class_path_1acb65ffeab6ad10db6c88a22176252a27" refkind="member"><highlight class="normal"><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_path_1acb65ffeab6ad10db6c88a22176252a27" kindref="member">Path::getLast</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>.back();</highlight></codeline>
+<codeline lineno="150"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152" refid="class_path_1af35feac82b7ef6cd57495e5328b8d4aa" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_path_1af35feac82b7ef6cd57495e5328b8d4aa" kindref="member">Path::isOnPath</ref>(<ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>p)<sp/>{</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>.size()<sp/>-<sp/>1;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>p1<sp/>=<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i];</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>p2<sp/>=<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i<sp/>+<sp/>1];</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>see<sp/>https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">dist</ref><sp/>=<sp/>fabs((p2.<ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref><sp/>-<sp/>p1.<ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref>)<sp/>*<sp/>p.<ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref><sp/>-<sp/>(p2.<ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref><sp/>-<sp/>p1.<ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref>)<sp/>*<sp/>p.<ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref><sp/>+<sp/>p2.<ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref><sp/>*<sp/>p1.<ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref><sp/>-<sp/>p2.<ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref><sp/>*<sp/>p1.<ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref>)<sp/>/</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sqrt(pow(p2.<ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref><sp/>-<sp/>p1.<ref refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" kindref="member">y</ref>,<sp/>2)<sp/>+<sp/>pow(p2.<ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref><sp/>-<sp/>p1.<ref refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" kindref="member">x</ref>,<sp/>2));</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">dist</ref><sp/>&lt;=<sp/><ref refid="class_path_1af7f3cd570c15ff5a666d3341aa3969ce" kindref="member">r</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="168"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight></codeline>
+<codeline lineno="170" refid="class_path_1abb16e0278477c1663ea6b9d6df995e0d" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="class_path_1abb16e0278477c1663ea6b9d6df995e0d" kindref="member">Path::length</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="class_path_1abb16e0278477c1663ea6b9d6df995e0d" kindref="member">length</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>.size()-1;<sp/>i++)</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_path_1abb16e0278477c1663ea6b9d6df995e0d" kindref="member">length</ref><sp/>+=<sp/><ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">geometry::dist</ref>(<ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i],<sp/><ref refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" kindref="member">points</ref>[i+1]);</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"></highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_path_1abb16e0278477c1663ea6b9d6df995e0d" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="176"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"></highlight></codeline>
+<codeline lineno="178"><highlight class="normal"></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="186" refid="class_pathfinder_1a9086888b62eaf4d99362db099075502f" refkind="member"><highlight class="normal"><ref refid="class_pathfinder_1a9086888b62eaf4d99362db099075502f" kindref="member">Pathfinder::Pathfinder</ref>(<ref refid="class_field" kindref="compound">Field</ref><sp/>&amp;MAP,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>trap_sensitive)<sp/>:<sp/>trapSensitive{trap_sensitive},<sp/>field{&amp;MAP}<sp/>{</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"></highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>get<sp/>map<sp/>objects</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;Area&gt;<sp/>mapObjects<sp/>=<sp/>{};</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(trap_sensitive)<sp/>{</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mapObjects<sp/>=<sp/><ref refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" kindref="member">field</ref>-&gt;<ref refid="class_field_1a514b0362f97a072d15cc8b93e53bf529" kindref="member">getMapObjects</ref>({0,<sp/>1});</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mapObjects<sp/>=<sp/><ref refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" kindref="member">field</ref>-&gt;<ref refid="class_field_1a514b0362f97a072d15cc8b93e53bf529" kindref="member">getMapObjects</ref>({0});</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>get<sp/>map<sp/>nodes</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;PVector&gt;<sp/>mapNodes<sp/>=<sp/>{};</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(trap_sensitive)<sp/>{</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mapNodes<sp/>=<sp/><ref refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" kindref="member">field</ref>-&gt;<ref refid="class_field_1a5bcbf3fdf8db5ef596be0a15efdc3892" kindref="member">getMapNodes</ref>({0,<sp/>1,<sp/>2});</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mapNodes<sp/>=<sp/><ref refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" kindref="member">field</ref>-&gt;<ref refid="class_field_1a5bcbf3fdf8db5ef596be0a15efdc3892" kindref="member">getMapNodes</ref>({0,<sp/>2});</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>create<sp/>&amp;<sp/>store<sp/>Node</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>node<sp/>:<sp/>mapNodes)<sp/>{</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937" kindref="member">map</ref>.emplace_back(node,<sp/><ref refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" kindref="member">field</ref>);</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"></highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>get<sp/>neighbour<sp/>Nodes</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;node<sp/>:<sp/><ref refid="class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937" kindref="member">map</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>node.findNeighbours(<ref refid="class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937" kindref="member">map</ref>,<sp/>mapObjects);</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight></codeline>
+<codeline lineno="213"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"></highlight></codeline>
+<codeline lineno="215"><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>Pathfinder::heuristic(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;cur,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;end)<sp/>{</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" kindref="member">geometry::dist</ref>(cur,<sp/>end);</highlight></codeline>
+<codeline lineno="217"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"></highlight></codeline>
+<codeline lineno="219" refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" refkind="member"><highlight class="normal"><ref refid="class_path" kindref="compound">Path</ref><sp/><ref refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" kindref="member">Pathfinder::AStar</ref>(<ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;begin,<sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>&amp;goal)<sp/>{</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>If<sp/>the<sp/>begin<sp/>is<sp/>also<sp/>the<sp/>goal<sp/>a<sp/>path<sp/>is<sp/>just<sp/>the<sp/>goal</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(begin<sp/>==<sp/>goal)</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_path" kindref="compound">Path</ref>({goal},<sp/><ref refid="_p_p_settings_8hpp_1a3f455a3be17ec4757115db120a5b271e" kindref="member">PATH_RADIUS</ref>);</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"></highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_node" kindref="compound">Node</ref><sp/>start<sp/>=<sp/><ref refid="class_node" kindref="compound">Node</ref>(begin,<sp/><ref refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" kindref="member">field</ref>);</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_node" kindref="compound">Node</ref><sp/>end<sp/>=<sp/><ref refid="class_node" kindref="compound">Node</ref>(goal,<sp/><ref refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" kindref="member">field</ref>);</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"></highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>If<sp/>the<sp/>pathfinder<sp/>is<sp/>trap<sp/>sensitive<sp/>traps<sp/>have<sp/>to<sp/>be<sp/>taken<sp/>into<sp/>account</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;Area&gt;<sp/>mapObjects<sp/>=<sp/>{};</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="class_pathfinder_1afb6e6b06b1774df0ce5d5a47c9784170" kindref="member">trapSensitive</ref>)<sp/>mapObjects<sp/>=<sp/><ref refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" kindref="member">field</ref>-&gt;<ref refid="class_field_1a514b0362f97a072d15cc8b93e53bf529" kindref="member">getMapObjects</ref>({0,<sp/>1});</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>mapObjects<sp/>=<sp/><ref refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" kindref="member">field</ref>-&gt;<ref refid="class_field_1a514b0362f97a072d15cc8b93e53bf529" kindref="member">getMapObjects</ref>({0});</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight></codeline>
+<codeline lineno="233"><highlight class="normal"></highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Initialize<sp/>the<sp/>start<sp/>and<sp/>end<sp/>nodes</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/>start.findNeighbours(<ref refid="class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937" kindref="member">map</ref>,<sp/>mapObjects);</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(start.canSee(end,<sp/>mapObjects))</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>start.addNeighbour(&amp;end,<sp/>start.<ref refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" kindref="member">calculateCost</ref>(end));</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"></highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/>end.<ref refid="class_node_1a4af5b6953c9b717764557d118332f1cb" kindref="member">findNeighbours</ref>(<ref refid="class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937" kindref="member">map</ref>,<sp/>mapObjects);</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;neighbour<sp/>:<sp/>end.<ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>)</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;addNeighbour(&amp;end,<sp/>neighbour.second);</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"></highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>init<sp/>open-<sp/>&amp;<sp/>closedList</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/>std::priority_queue&lt;Node<sp/>*,<sp/>std::vector&lt;Node<sp/>*&gt;,<sp/>Pathfinder::PRIORITY&gt;<sp/>openList;</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;Node<sp/>*&gt;<sp/>closedList;</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"></highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>add<sp/>start<sp/>to<sp/>openList</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/>openList.push(&amp;start);</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/>start.isOpen<sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>tempG;</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>update<sp/>start.g<sp/>&amp;<sp/>start.f</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/>start.g<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/>start.f<sp/>=<sp/>(start.g<sp/>+<sp/>heuristic(start.pos,<sp/>end.<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>));</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>loop<sp/>until<sp/>solution<sp/>is<sp/>found<sp/>or<sp/>no<sp/>solution<sp/>possible</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(!openList.empty())<sp/>{</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"></highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>choose<sp/>node<sp/>with<sp/>lowest<sp/>f</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_node" kindref="compound">Node</ref><sp/>*cur<sp/>=<sp/>openList.top();</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"></highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>if<sp/>cur<sp/>and<sp/>end<sp/>are<sp/>the<sp/>same,<sp/>the<sp/>path<sp/>is<sp/>found</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(cur<sp/>==<sp/>&amp;end)<sp/>{</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"></highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="class_path" kindref="compound">Path</ref><sp/>path<sp/>=<sp/>Pathfinder::traverse(&amp;end);</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>remove<sp/>end<sp/>node<sp/>from<sp/>map<sp/>nodes<sp/>neighbour<sp/>list</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;neighbour<sp/>:<sp/>end.<ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;removeNeighbour(&amp;end);</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"></highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>reset<sp/>node<sp/>booleans</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="class_node" kindref="compound">Node</ref><sp/>*element<sp/>:<sp/>closedList)<sp/>{</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>element-&gt;isClosed<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(!openList.empty())<sp/>{</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>openList.top()-&gt;isOpen<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>openList.pop();</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"></highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>path;</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"></highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>continue<sp/>loop</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>remove<sp/>cur<sp/>from<sp/>openList<sp/>&amp;<sp/>add<sp/>cur<sp/>to<sp/>closedList</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>openList.pop();</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cur-&gt;<ref refid="class_node_1a6b66fb95e8964a388561476467e976ae" kindref="member">isOpen</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"></highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>for<sp/>every<sp/>neighbour<sp/>from<sp/>cur:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;neighbour<sp/>:<sp/>cur-&gt;<ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(neighbour.first-&gt;isClosed)<sp/>{</highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="296"><highlight class="normal"></highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>tempG<sp/>=<sp/>g<sp/>cost<sp/>over<sp/>cur</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>tempG<sp/>=<sp/>cur-&gt;<ref refid="class_node_1af93b606cf10abfe1766617ad9de59b01" kindref="member">g</ref><sp/>+<sp/>neighbour.second;</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"></highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>if<sp/>neighbour<sp/>is<sp/>in<sp/>openList<sp/>just<sp/>update<sp/>|<sp/>otherwise<sp/>add<sp/>and<sp/>update</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(neighbour.first-&gt;isOpen)<sp/>{</highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>only<sp/>if<sp/>path<sp/>over<sp/>cur<sp/>is<sp/>better</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(neighbour.first-&gt;g<sp/>&gt;<sp/>tempG)<sp/>{</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//if(!pqContainsNode(openList,<sp/>neighbour)<sp/>||<sp/>tempG<sp/>&lt;<sp/>neighbour.g)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>update</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;g<sp/>=<sp/>tempG;</highlight></codeline>
+<codeline lineno="307"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;f<sp/>=<sp/>tempG<sp/>+<sp/>heuristic(neighbour.first-&gt;pos,<sp/>end.<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>);</highlight></codeline>
+<codeline lineno="308"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;previous<sp/>=<sp/>cur;</highlight></codeline>
+<codeline lineno="309"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//ERROR_MESSAGE(&quot;<sp/>-<sp/>updated<sp/>&quot;<sp/>+<sp/>PVector::str(neighbour.first-&gt;pos)<sp/>+<sp/>&quot;<sp/>-<sp/>&quot;);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="310"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="311"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="312"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>add</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="313"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;<ref refid="class_node_1af93b606cf10abfe1766617ad9de59b01" kindref="member">g</ref><sp/>=<sp/>tempG;</highlight></codeline>
+<codeline lineno="314"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;f<sp/>=<sp/>tempG<sp/>+<sp/>heuristic(neighbour.first-&gt;pos,<sp/>end.<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>);</highlight></codeline>
+<codeline lineno="315"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;previous<sp/>=<sp/>cur;</highlight></codeline>
+<codeline lineno="316"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>openList.push(neighbour.first);</highlight></codeline>
+<codeline lineno="317"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;<ref refid="class_node_1a6b66fb95e8964a388561476467e976ae" kindref="member">isOpen</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="318"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//ERROR_MESSAGE(&quot;<sp/>-<sp/>added<sp/>&quot;<sp/>+<sp/>PVector::str(neighbour.first-&gt;pos)<sp/>+<sp/>&quot;<sp/>-<sp/>&quot;)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="319"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="320"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="321"><highlight class="normal"></highlight></codeline>
+<codeline lineno="322"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>closedList.push_back(cur);</highlight></codeline>
+<codeline lineno="323"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cur-&gt;<ref refid="class_node_1a994ffcc71d937a08581e415288ddafdd" kindref="member">isClosed</ref><sp/>=<sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="324"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="325"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="326"><highlight class="normal"></highlight></codeline>
+<codeline lineno="327"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>resetting<sp/>everything</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="328"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keyword">auto</highlight><highlight class="normal"><sp/>&amp;neighbour<sp/>:<sp/>end.<ref refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" kindref="member">neighbours</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="329"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>neighbour.first-&gt;removeNeighbour(&amp;end);</highlight></codeline>
+<codeline lineno="330"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="331"><highlight class="normal"></highlight></codeline>
+<codeline lineno="332"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal"><sp/>(<ref refid="class_node" kindref="compound">Node</ref><sp/>*element<sp/>:<sp/>closedList)<sp/>{</highlight></codeline>
+<codeline lineno="333"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>element-&gt;isClosed<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="334"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="335"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(!openList.empty())<sp/>{</highlight></codeline>
+<codeline lineno="336"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>openList.top()-&gt;isOpen<sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="337"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>openList.pop();</highlight></codeline>
+<codeline lineno="338"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="339"><highlight class="normal"></highlight></codeline>
+<codeline lineno="340"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_path" kindref="compound">Path</ref>({},<sp/><ref refid="_p_p_settings_8hpp_1a3f455a3be17ec4757115db120a5b271e" kindref="member">PATH_RADIUS</ref>);</highlight></codeline>
+<codeline lineno="341"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="342"><highlight class="normal"></highlight></codeline>
+<codeline lineno="343"><highlight class="normal"><ref refid="class_path" kindref="compound">Path</ref><sp/>Pathfinder::traverse(<ref refid="class_node" kindref="compound">Node</ref><sp/>*end)<sp/>{</highlight></codeline>
+<codeline lineno="344"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;PVector&gt;<sp/>path;</highlight></codeline>
+<codeline lineno="345"><highlight class="normal"></highlight></codeline>
+<codeline lineno="346"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(end<sp/>!=<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="347"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>path.push_back(end-&gt;<ref refid="class_node_1afd4810249a88e6a0fe802440800daf8a" kindref="member">pos</ref>);</highlight></codeline>
+<codeline lineno="348"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>end<sp/>=<sp/>end-&gt;<ref refid="class_node_1a17c0c1c22413b76152cd8f513a961022" kindref="member">previous</ref>;</highlight></codeline>
+<codeline lineno="349"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="350"><highlight class="normal"><sp/><sp/><sp/><sp/>std::reverse(path.begin(),<sp/>path.end());</highlight></codeline>
+<codeline lineno="351"><highlight class="normal"></highlight></codeline>
+<codeline lineno="352"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="class_path" kindref="compound">Path</ref>(path,<sp/><ref refid="_p_p_settings_8hpp_1a3f455a3be17ec4757115db120a5b271e" kindref="member">PATH_RADIUS</ref>);</highlight></codeline>
+<codeline lineno="353"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="354"><highlight class="normal"></highlight></codeline>
+<codeline lineno="355"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="code/Pathfinder.cpp"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="__p_vector_8cpp" xml:lang="en-US">
+<title>code/libs/PVector.cpp File Reference</title>
+<indexterm><primary>code/libs/PVector.cpp</primary></indexterm>
+<programlisting>#include &quot;PVector.hpp&quot;
+</programlisting>Include dependency graph for PVector.cpp:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_p_vector_8cpp__incl.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+</section>

@@ -1,0 +1,78 @@
+.TH "Line" 3 "Mon Apr 5 2021" "Extraterrestrial" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Line
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <MapData\&.hpp>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLine\fP (const \fBPVector\fP &_p1, const \fBPVector\fP &_p2)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static std::string \fBstr\fP (\fBLine\fP &l)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBPVector\fP \fBp1\fP"
+.br
+.RI "One end of the line\&. "
+.ti -1c
+.RI "\fBPVector\fP \fBp2\fP"
+.br
+.RI "The other end of the line\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+A \fBLine\fP in a 2D grid\&.
+.PP
+A line is defined by to points p1 and p2\&. It does not provide much functionality by itself and is simply a container for two points under a namespace\&.
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fIp1\fP Position of the 1st \fBPVector\fP\&. 
+.br
+\fIp2\fP Position of the 2nd \fBPVector\fP\&. 
+.RE
+.PP
+
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Line::Line (const \fBPVector\fP & _p1, const \fBPVector\fP & _p2)"
+
+.PP
+ \fBLine\fP 
+.br
+ 
+.PP
+ 
+.SH "Member Function Documentation"
+.PP 
+.SS "static std::string Line::str (\fBLine\fP & l)\fC [inline]\fP, \fC [static]\fP"
+
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBPVector\fP Line::p1"
+
+.PP
+One end of the line\&. 
+.SS "\fBPVector\fP Line::p2"
+
+.PP
+The other end of the line\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Extraterrestrial from the source code\&.

@@ -1,0 +1,496 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="class_field" kind="class" language="C++" prot="public">
+    <compoundname>Field</compoundname>
+    <includes refid="_map_data_8hpp" local="no">MapData.hpp</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_field_1a1869b2a973fcaec6766bdba56d19171f" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt;</type>
+        <definition>std::vector&lt;Area&gt; Field::Walls_</definition>
+        <argsstring></argsstring>
+        <name>Walls_</name>
+        <briefdescription>
+<para>Contains all walls. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="214" column="17" bodyfile="code/MapData.hpp" bodystart="214" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_field_1aff816fa0ba4324987bbc0ccb574da4ba" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt;</type>
+        <definition>std::vector&lt;Area&gt; Field::Traps_</definition>
+        <argsstring></argsstring>
+        <name>Traps_</name>
+        <briefdescription>
+<para>Contains all traps. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="216" column="17" bodyfile="code/MapData.hpp" bodystart="216" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_field_1a03b4810f14fa9dc1b9bde681d0b56b2a" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt;</type>
+        <definition>std::vector&lt;Area&gt; Field::Swamps_</definition>
+        <argsstring></argsstring>
+        <name>Swamps_</name>
+        <briefdescription>
+<para>Contains all swamps. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="218" column="17" bodyfile="code/MapData.hpp" bodystart="218" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_field_1aad67b8e845972c6d4157058f447d8f28" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt;</type>
+        <definition>std::vector&lt;Area&gt; Field::Waters_</definition>
+        <argsstring></argsstring>
+        <name>Waters_</name>
+        <briefdescription>
+<para>Contains all waters / bonus areas. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="220" column="17" bodyfile="code/MapData.hpp" bodystart="220" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_field_1aa10bec6704ec7555cf693b473f701bc7" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt;</type>
+        <definition>std::vector&lt;PVector&gt; Field::Deposits_</definition>
+        <argsstring></argsstring>
+        <name>Deposits_</name>
+        <briefdescription>
+<para>The deposits saved as points in their respective center. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="223" column="17" bodyfile="code/MapData.hpp" bodystart="223" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_field_1afcbb77c9ad3b5f0ea750069db98d5b88" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt;</type>
+        <definition>std::vector&lt;PVector&gt; Field::WallNodes_</definition>
+        <argsstring></argsstring>
+        <name>WallNodes_</name>
+        <briefdescription>
+<para>Contains all wall nodes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="226" column="17" bodyfile="code/MapData.hpp" bodystart="226" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_field_1aa766632db0fd22ef114333ab4ce415e6" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt;</type>
+        <definition>std::vector&lt;PVector&gt; Field::TrapNodes_</definition>
+        <argsstring></argsstring>
+        <name>TrapNodes_</name>
+        <briefdescription>
+<para>Contains all trap nodes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="228" column="17" bodyfile="code/MapData.hpp" bodystart="228" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_field_1a3eef6f066c0001af007527b013563629" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt;</type>
+        <definition>std::vector&lt;PVector&gt; Field::SwampNodes_</definition>
+        <argsstring></argsstring>
+        <name>SwampNodes_</name>
+        <briefdescription>
+<para>Contains all trap nodes. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="230" column="17" bodyfile="code/MapData.hpp" bodystart="230" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_field_1aaf386699bff15c53f4918f2771b94785" prot="private" static="no" mutable="no">
+        <type>std::array&lt; std::vector&lt; <ref refid="class_collectible" kindref="compound">Collectible</ref> &gt;, 4 &gt;</type>
+        <definition>std::array&lt;std::vector&lt;Collectible&gt;, 4&gt; Field::Collectibles_</definition>
+        <argsstring></argsstring>
+        <name>Collectibles_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>contains collectibles of all colors They&apos;re ordered the following: index = 0 &lt;=&gt; Red; 1 &lt;=&gt; Cyan/Green; 2 &lt;=&gt; Black; 3 &lt;=&gt; SuperObject </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="235" column="16" bodyfile="code/MapData.hpp" bodystart="235" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_field_1a5b3289d1dfe4f68a33b8701fed450716" prot="private" static="no" mutable="no">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Field::size_</definition>
+        <argsstring></argsstring>
+        <name>size_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>represents the size in cm of the field object</para>
+<para><simplesect kind="note"><para>There can never be a negative sized <ref refid="class_field" kindref="compound">Field</ref>. The size is also defined by the CoSpace-Rules so FieldA = {270, 180}; FieldB = {360, 270}) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="242" column="13" bodyfile="code/MapData.hpp" bodystart="242" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_field_1a67b9e78358f9db7499bfdd5ef2871101" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Field::Field</definition>
+        <argsstring>(const int &amp;width, const int &amp;height, const std::vector&lt; Area &gt; &amp;walls, const std::vector&lt; Area &gt; &amp;traps, const std::vector&lt; Area &gt; &amp;swamps, const std::vector&lt; Area &gt; &amp;waters, const std::vector&lt; PVector &gt; &amp;deposits, const std::vector&lt; PVector &gt; &amp;wallNodes, const std::vector&lt; PVector &gt; &amp;trapNodes, const std::vector&lt; PVector &gt; &amp;swampNodes, const std::vector&lt; Collectible &gt; &amp;collectibles)</argsstring>
+        <name>Field</name>
+        <param>
+          <type>const int &amp;</type>
+          <declname>width</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>height</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt; &amp;</type>
+          <declname>walls</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt; &amp;</type>
+          <declname>traps</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt; &amp;</type>
+          <declname>swamps</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt; &amp;</type>
+          <declname>waters</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt; &amp;</type>
+          <declname>deposits</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt; &amp;</type>
+          <declname>wallNodes</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt; &amp;</type>
+          <declname>trapNodes</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt; &amp;</type>
+          <declname>swampNodes</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; <ref refid="class_collectible" kindref="compound">Collectible</ref> &gt; &amp;</type>
+          <declname>collectibles</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><hruler/>
+ MapData <linebreak/>
+ <hruler/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="169" column="5" bodyfile="code/MapData.cpp" bodystart="96" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="class_field_1a25e4d60285038520a8420f92570ebd9a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_collectible" kindref="compound">Collectible</ref> *</type>
+        <definition>Collectible * Field::addCollectible</definition>
+        <argsstring>(Collectible collectible)</argsstring>
+        <name>addCollectible</name>
+        <param>
+          <type><ref refid="class_collectible" kindref="compound">Collectible</ref></type>
+          <declname>collectible</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="181" column="17" bodyfile="code/MapData.cpp" bodystart="222" bodyend="225"/>
+        <references refid="class_collectible_1a9db7f5679bc72eeb0202f2d1d524d543" compoundref="_map_data_8hpp" startline="74">Collectible::color</references>
+        <referencedby refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" compoundref="_robot_8cpp" startline="652" endline="678">Robot::updateLoop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_field_1aaf3139f53330d51b04a58d308b3d449f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Field::removeCollectible</definition>
+        <argsstring>(Collectible collectible)</argsstring>
+        <name>removeCollectible</name>
+        <param>
+          <type><ref refid="class_collectible" kindref="compound">Collectible</ref></type>
+          <declname>collectible</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="182" column="10" bodyfile="code/MapData.cpp" bodystart="227" bodyend="235"/>
+        <references refid="class_collectible_1a9db7f5679bc72eeb0202f2d1d524d543" compoundref="_map_data_8hpp" startline="74">Collectible::color</references>
+      </memberdef>
+      <memberdef kind="function" id="class_field_1adc55f248e3fbe13202b7e1bb13537588" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_collectible" kindref="compound">Collectible</ref> *</type>
+        <definition>Collectible * Field::getCollectible</definition>
+        <argsstring>(PVector pos, double angle, double uncertainty, int color)</argsstring>
+        <name>getCollectible</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>pos</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>angle</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>uncertainty</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="184" column="17" bodyfile="code/MapData.cpp" bodystart="201" bodyend="220"/>
+        <references refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" compoundref="_p_p_settings_8hpp" startline="43">ERROR_MESSAGE</references>
+        <references refid="class_field_1ac726f4dc045fd47ad2de745fe2f898dd" compoundref="_map_data_8cpp" startline="187" endline="199">getCollectibles</references>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_field_1ac2f890f8e4263dbfd327922065ba0306" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Field::getSize</definition>
+        <argsstring>()</argsstring>
+        <name>getSize</name>
+        <briefdescription>
+<para>Getter for the size. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="188" column="13" bodyfile="code/MapData.cpp" bodystart="126" bodyend="128"/>
+      </memberdef>
+      <memberdef kind="function" id="class_field_1a514b0362f97a072d15cc8b93e53bf529" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="class_area" kindref="compound">Area</ref> &gt;</type>
+        <definition>std::vector&lt; Area &gt; Field::getMapObjects</definition>
+        <argsstring>(const std::vector&lt; unsigned int &gt; &amp;indices)</argsstring>
+        <name>getMapObjects</name>
+        <param>
+          <type>const std::vector&lt; unsigned int &gt; &amp;</type>
+          <declname>indices</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>gets map objects based on their index</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>indices</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the index of the wanted map objects 0 -&gt; walls; 1 -&gt; traps; 2 -&gt; swamps; 3 -&gt; bonus areas;</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>a vector containing all map object areas with the indices </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="196" column="17" bodyfile="code/MapData.cpp" bodystart="130" bodyend="152"/>
+        <references refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" compoundref="_p_p_settings_8hpp" startline="43">ERROR_MESSAGE</references>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">Pathfinder::AStar</referencedby>
+        <referencedby refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" compoundref="_pathfinder_8cpp" startline="16" endline="62">Node::calculateCost</referencedby>
+        <referencedby refid="class_pathfinder_1a9086888b62eaf4d99362db099075502f" compoundref="_pathfinder_8cpp" startline="186" endline="213">Pathfinder::Pathfinder</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_field_1a5bcbf3fdf8db5ef596be0a15efdc3892" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt;</type>
+        <definition>std::vector&lt; PVector &gt; Field::getMapNodes</definition>
+        <argsstring>(const std::vector&lt; unsigned int &gt; &amp;indices)</argsstring>
+        <name>getMapNodes</name>
+        <param>
+          <type>const std::vector&lt; unsigned int &gt; &amp;</type>
+          <declname>indices</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>gets map nodes based on their index</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>indices</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>0 -&gt; walls; 1 -&gt; traps; 2 -&gt; swamps</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>a vector containing all map object areas with the indices </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="204" column="17" bodyfile="code/MapData.cpp" bodystart="154" bodyend="178"/>
+        <references refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" compoundref="_p_p_settings_8hpp" startline="43">ERROR_MESSAGE</references>
+        <referencedby refid="class_pathfinder_1a9086888b62eaf4d99362db099075502f" compoundref="_pathfinder_8cpp" startline="186" endline="213">Pathfinder::Pathfinder</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_field_1a2e1fc59842bf2d0adc078a79f30efe17" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt;</type>
+        <definition>std::vector&lt; PVector &gt; Field::getDeposits</definition>
+        <argsstring>()</argsstring>
+        <name>getDeposits</name>
+        <briefdescription>
+<para>Getter method for deposits. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Getter for field::collectibles </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="207" column="17" bodyfile="code/MapData.cpp" bodystart="181" bodyend="184"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_field_1ac726f4dc045fd47ad2de745fe2f898dd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="class_collectible" kindref="compound">Collectible</ref> &gt;</type>
+        <definition>std::vector&lt; Collectible &gt; Field::getCollectibles</definition>
+        <argsstring>(const std::vector&lt; unsigned int &gt; &amp;colors)</argsstring>
+        <name>getCollectibles</name>
+        <param>
+          <type>const std::vector&lt; unsigned int &gt; &amp;</type>
+          <declname>colors</declname>
+        </param>
+        <briefdescription>
+<para>Getter method for collectibles. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Getter for field::collectibles </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="210" column="17" bodyfile="code/MapData.cpp" bodystart="187" bodyend="199"/>
+        <references refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" compoundref="_p_p_settings_8hpp" startline="43">ERROR_MESSAGE</references>
+        <referencedby refid="class_field_1adc55f248e3fbe13202b7e1bb13537588" compoundref="_map_data_8cpp" startline="201" endline="220">getCollectible</referencedby>
+        <referencedby refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" compoundref="_robot_8cpp" startline="585" endline="647">Robot::getPointPath</referencedby>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>Contains all important map data about the map</para>
+<para>It contains all information given by the map_interpreter.py script. This information is enough to fully reconstruct the map from one field-object</para>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>width</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>width of the map </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>height</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>height of the map </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>walls</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>All walls </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>traps</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>All traps </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>swamps</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>All swamps </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>waters</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>All waters/bonus areas </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>deposits</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>All deposits </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>collectibles</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>All collectibles</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+TODO: show function for <ref refid="class_field" kindref="compound">Field</ref> class. (for Debugging) </para>
+    </detaileddescription>
+    <location file="code/MapData.hpp" line="166" column="1" bodyfile="code/MapData.hpp" bodystart="166" bodyend="244"/>
+    <listofallmembers>
+      <member refid="class_field_1a25e4d60285038520a8420f92570ebd9a" prot="public" virt="non-virtual"><scope>Field</scope><name>addCollectible</name></member>
+      <member refid="class_field_1aaf386699bff15c53f4918f2771b94785" prot="private" virt="non-virtual"><scope>Field</scope><name>Collectibles_</name></member>
+      <member refid="class_field_1aa10bec6704ec7555cf693b473f701bc7" prot="private" virt="non-virtual"><scope>Field</scope><name>Deposits_</name></member>
+      <member refid="class_field_1a67b9e78358f9db7499bfdd5ef2871101" prot="public" virt="non-virtual"><scope>Field</scope><name>Field</name></member>
+      <member refid="class_field_1adc55f248e3fbe13202b7e1bb13537588" prot="public" virt="non-virtual"><scope>Field</scope><name>getCollectible</name></member>
+      <member refid="class_field_1ac726f4dc045fd47ad2de745fe2f898dd" prot="public" virt="non-virtual"><scope>Field</scope><name>getCollectibles</name></member>
+      <member refid="class_field_1a2e1fc59842bf2d0adc078a79f30efe17" prot="public" virt="non-virtual"><scope>Field</scope><name>getDeposits</name></member>
+      <member refid="class_field_1a5bcbf3fdf8db5ef596be0a15efdc3892" prot="public" virt="non-virtual"><scope>Field</scope><name>getMapNodes</name></member>
+      <member refid="class_field_1a514b0362f97a072d15cc8b93e53bf529" prot="public" virt="non-virtual"><scope>Field</scope><name>getMapObjects</name></member>
+      <member refid="class_field_1ac2f890f8e4263dbfd327922065ba0306" prot="public" virt="non-virtual"><scope>Field</scope><name>getSize</name></member>
+      <member refid="class_field_1aaf3139f53330d51b04a58d308b3d449f" prot="public" virt="non-virtual"><scope>Field</scope><name>removeCollectible</name></member>
+      <member refid="class_field_1a5b3289d1dfe4f68a33b8701fed450716" prot="private" virt="non-virtual"><scope>Field</scope><name>size_</name></member>
+      <member refid="class_field_1a3eef6f066c0001af007527b013563629" prot="private" virt="non-virtual"><scope>Field</scope><name>SwampNodes_</name></member>
+      <member refid="class_field_1a03b4810f14fa9dc1b9bde681d0b56b2a" prot="private" virt="non-virtual"><scope>Field</scope><name>Swamps_</name></member>
+      <member refid="class_field_1aa766632db0fd22ef114333ab4ce415e6" prot="private" virt="non-virtual"><scope>Field</scope><name>TrapNodes_</name></member>
+      <member refid="class_field_1aff816fa0ba4324987bbc0ccb574da4ba" prot="private" virt="non-virtual"><scope>Field</scope><name>Traps_</name></member>
+      <member refid="class_field_1afcbb77c9ad3b5f0ea750069db98d5b88" prot="private" virt="non-virtual"><scope>Field</scope><name>WallNodes_</name></member>
+      <member refid="class_field_1a1869b2a973fcaec6766bdba56d19171f" prot="private" virt="non-virtual"><scope>Field</scope><name>Walls_</name></member>
+      <member refid="class_field_1aad67b8e845972c6d4157058f447d8f28" prot="private" virt="non-virtual"><scope>Field</scope><name>Waters_</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

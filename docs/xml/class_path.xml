@@ -1,0 +1,276 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="class_path" kind="class" language="C++" prot="public">
+    <compoundname>Path</compoundname>
+    <includes refid="_pathfinder_8hpp" local="no">Pathfinder.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_path_1ab102b4db6b6f6c174091676e6269ad72" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt;</type>
+        <definition>std::vector&lt;PVector&gt; Path::points</definition>
+        <argsstring></argsstring>
+        <name>points</name>
+        <briefdescription>
+<para>Contains all points of the path in order so that p[0] -&gt; p[1] -&gt; p[2] represents the path. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="172" column="17" bodyfile="code/Pathfinder.hpp" bodystart="172" bodyend="-1"/>
+        <referencedby refid="class_path_1a6e051a7405adafa723277cc6d28d6b19" compoundref="_pathfinder_8cpp" startline="140" endline="142">addPoint</referencedby>
+        <referencedby refid="class_debug_window_1aba17bf3c6ad43474042028ca63421c8e" compoundref="_s_f_m_l_window_8cpp" startline="12" endline="149">DebugWindow::GameDebug</referencedby>
+        <referencedby refid="class_path_1ae1ea4946ec41269898a40ea5d26bc2e3" compoundref="_pathfinder_8cpp" startline="113" endline="138">getClosestNormalPoint</referencedby>
+        <referencedby refid="class_path_1acb65ffeab6ad10db6c88a22176252a27" compoundref="_pathfinder_8cpp" startline="148" endline="150">getLast</referencedby>
+        <referencedby refid="class_path_1a623d057c8c795701f9d64b8478047f9a" compoundref="_pathfinder_8hpp" startline="164" endline="164">isEmpty</referencedby>
+        <referencedby refid="class_path_1af35feac82b7ef6cd57495e5328b8d4aa" compoundref="_pathfinder_8cpp" startline="152" endline="168">isOnPath</referencedby>
+        <referencedby refid="class_path_1abb16e0278477c1663ea6b9d6df995e0d" compoundref="_pathfinder_8cpp" startline="170" endline="176">length</referencedby>
+        <referencedby refid="class_path_1a9be76dab519b5ce2416ed86aae3db417" compoundref="_pathfinder_8cpp" startline="144" endline="146">removeLast</referencedby>
+        <referencedby refid="class_path_1ac14f36934a2140da769bfd7d63e2677a" compoundref="_pathfinder_8hpp" startline="167" endline="167">size</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_path_1af7f3cd570c15ff5a666d3341aa3969ce" prot="public" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Path::r</definition>
+        <argsstring></argsstring>
+        <name>r</name>
+        <briefdescription>
+<para>The radius of the <ref refid="class_path" kindref="compound">Path</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="175" column="12" bodyfile="code/Pathfinder.hpp" bodystart="175" bodyend="-1"/>
+        <referencedby refid="class_path_1af35feac82b7ef6cd57495e5328b8d4aa" compoundref="_pathfinder_8cpp" startline="152" endline="168">isOnPath</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_path_1ada3c05fb174e6878a59222b9219a113a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Path::Path</definition>
+        <argsstring>(std::vector&lt; PVector &gt; points, double _r)</argsstring>
+        <name>Path</name>
+        <param>
+          <type>std::vector&lt; <ref refid="class_p_vector" kindref="compound">PVector</ref> &gt;</type>
+          <declname>points</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><hruler/>
+ <ref refid="class_path" kindref="compound">Path</ref> <linebreak/>
+ <hruler/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="137" column="5" bodyfile="code/Pathfinder.cpp" bodystart="109" bodyend="111"/>
+      </memberdef>
+      <memberdef kind="function" id="class_path_1ae1ea4946ec41269898a40ea5d26bc2e3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Path::getClosestNormalPoint</definition>
+        <argsstring>(PVector p, double d)</argsstring>
+        <name>getClosestNormalPoint</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>d</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Calculates the closest normal point to a point that is extended by the factor d</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>p</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a point the normal should be calculated to </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>d</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the amount by which the point should lie ahead on the path.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+This method calculates a point that lies on the path or an extension of one of it&apos;s lines. This point is moved by the factor d on the path. (If d = 0 than the point is just a normal point to p) </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="149" column="13" bodyfile="code/Pathfinder.cpp" bodystart="113" bodyend="138"/>
+        <references refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">geometry::dist</references>
+        <references refid="namespacegeometry_1a120ad790ee5a9ef199a6d67e5e9f1c90" compoundref="_map_data_8cpp" startline="347" endline="359">geometry::getNormalPoint</references>
+        <references refid="namespacegeometry_1af87847d485624e5c7ab2bb1558c3a36f" compoundref="_map_data_8cpp" startline="248" endline="250">geometry::isLeft</references>
+        <references refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" compoundref="_pathfinder_8hpp" startline="172">points</references>
+        <references refid="class_p_vector_1aa0b42cf9a0da44a0ce5f28bc8937d980" compoundref="_p_vector_8cpp" startline="28" endline="30">PVector::rotate</references>
+        <referencedby refid="class_robot_1aa13bf89f0098d0a14d17818efdfc8cd2" compoundref="_robot_8cpp" startline="548" endline="556">Robot::moveAlongPath</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_path_1af35feac82b7ef6cd57495e5328b8d4aa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Path::isOnPath</definition>
+        <argsstring>(PVector p)</argsstring>
+        <name>isOnPath</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+<para>Checks whether a point is inside the radius of the path. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="152" column="10" bodyfile="code/Pathfinder.cpp" bodystart="152" bodyend="168"/>
+        <references refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">geometry::dist</references>
+        <references refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" compoundref="_pathfinder_8hpp" startline="172">points</references>
+        <references refid="class_path_1af7f3cd570c15ff5a666d3341aa3969ce" compoundref="_pathfinder_8hpp" startline="175">r</references>
+        <references refid="class_p_vector_1ae8f2976bebde7c888ce91e84ae082b65" compoundref="_p_vector_8hpp" startline="25">PVector::x</references>
+        <references refid="class_p_vector_1a8dab9e24be65753f9b261e6329df500a" compoundref="_p_vector_8hpp" startline="30">PVector::y</references>
+      </memberdef>
+      <memberdef kind="function" id="class_path_1a6e051a7405adafa723277cc6d28d6b19" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Path::addPoint</definition>
+        <argsstring>(PVector p)</argsstring>
+        <name>addPoint</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>p</declname>
+        </param>
+        <briefdescription>
+<para>Adds a point to the <ref refid="class_path" kindref="compound">Path</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="155" column="10" bodyfile="code/Pathfinder.cpp" bodystart="140" bodyend="142"/>
+        <references refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" compoundref="_pathfinder_8hpp" startline="172">points</references>
+      </memberdef>
+      <memberdef kind="function" id="class_path_1a9be76dab519b5ce2416ed86aae3db417" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Path::removeLast</definition>
+        <argsstring>()</argsstring>
+        <name>removeLast</name>
+        <briefdescription>
+<para>Removes the last point of the path. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="158" column="10" bodyfile="code/Pathfinder.cpp" bodystart="144" bodyend="146"/>
+        <references refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" compoundref="_pathfinder_8hpp" startline="172">points</references>
+      </memberdef>
+      <memberdef kind="function" id="class_path_1acb65ffeab6ad10db6c88a22176252a27" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Path::getLast</definition>
+        <argsstring>()</argsstring>
+        <name>getLast</name>
+        <briefdescription>
+<para>Returns the last point of the path. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="161" column="13" bodyfile="code/Pathfinder.cpp" bodystart="148" bodyend="150"/>
+        <references refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" compoundref="_pathfinder_8hpp" startline="172">points</references>
+      </memberdef>
+      <memberdef kind="function" id="class_path_1a623d057c8c795701f9d64b8478047f9a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Path::isEmpty</definition>
+        <argsstring>() const</argsstring>
+        <name>isEmpty</name>
+        <briefdescription>
+<para>Checks whether the <ref refid="class_path" kindref="compound">Path</ref> is empty. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="164" column="11" bodyfile="code/Pathfinder.hpp" bodystart="164" bodyend="164"/>
+        <references refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" compoundref="_pathfinder_8hpp" startline="172">points</references>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_path_1ac14f36934a2140da769bfd7d63e2677a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>unsigned int</type>
+        <definition>unsigned int Path::size</definition>
+        <argsstring>() const</argsstring>
+        <name>size</name>
+        <briefdescription>
+<para>Returns the size of the <ref refid="class_path" kindref="compound">Path</ref> vector. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="167" column="19" bodyfile="code/Pathfinder.hpp" bodystart="167" bodyend="167"/>
+        <references refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" compoundref="_pathfinder_8hpp" startline="172">points</references>
+      </memberdef>
+      <memberdef kind="function" id="class_path_1abb16e0278477c1663ea6b9d6df995e0d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Path::length</definition>
+        <argsstring>()</argsstring>
+        <name>length</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="169" column="12" bodyfile="code/Pathfinder.cpp" bodystart="170" bodyend="176"/>
+        <references refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">geometry::dist</references>
+        <references refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" compoundref="_pathfinder_8hpp" startline="172">points</references>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>A container class for a path generated by the <ref refid="class_pathfinder" kindref="compound">Pathfinder</ref> class</para>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>points</parametername>
+</parameternamelist>
+<parameterdescription>
+<para><ref refid="class_p_vector" kindref="compound">PVector</ref> vector containing all points in the path </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>r</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the radius of the path </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+    </detaileddescription>
+    <location file="code/Pathfinder.hpp" line="135" column="1" bodyfile="code/Pathfinder.hpp" bodystart="135" bodyend="176"/>
+    <listofallmembers>
+      <member refid="class_path_1a6e051a7405adafa723277cc6d28d6b19" prot="public" virt="non-virtual"><scope>Path</scope><name>addPoint</name></member>
+      <member refid="class_path_1ae1ea4946ec41269898a40ea5d26bc2e3" prot="public" virt="non-virtual"><scope>Path</scope><name>getClosestNormalPoint</name></member>
+      <member refid="class_path_1acb65ffeab6ad10db6c88a22176252a27" prot="public" virt="non-virtual"><scope>Path</scope><name>getLast</name></member>
+      <member refid="class_path_1a623d057c8c795701f9d64b8478047f9a" prot="public" virt="non-virtual"><scope>Path</scope><name>isEmpty</name></member>
+      <member refid="class_path_1af35feac82b7ef6cd57495e5328b8d4aa" prot="public" virt="non-virtual"><scope>Path</scope><name>isOnPath</name></member>
+      <member refid="class_path_1abb16e0278477c1663ea6b9d6df995e0d" prot="public" virt="non-virtual"><scope>Path</scope><name>length</name></member>
+      <member refid="class_path_1ada3c05fb174e6878a59222b9219a113a" prot="public" virt="non-virtual"><scope>Path</scope><name>Path</name></member>
+      <member refid="class_path_1ab102b4db6b6f6c174091676e6269ad72" prot="public" virt="non-virtual"><scope>Path</scope><name>points</name></member>
+      <member refid="class_path_1af7f3cd570c15ff5a666d3341aa3969ce" prot="public" virt="non-virtual"><scope>Path</scope><name>r</name></member>
+      <member refid="class_path_1a9be76dab519b5ce2416ed86aae3db417" prot="public" virt="non-virtual"><scope>Path</scope><name>removeLast</name></member>
+      <member refid="class_path_1ac14f36934a2140da769bfd7d63e2677a" prot="public" virt="non-virtual"><scope>Path</scope><name>size</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,418 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="_color_recognition_8cpp" kind="file" language="C++">
+    <compoundname>ColorRecognition.cpp</compoundname>
+    <includes refid="_color_recognition_8hpp" local="yes">ColorRecognition.hpp</includes>
+    <incdepgraph>
+      <node id="5">
+        <label>CommonFunctions.hpp</label>
+        <link refid="_common_functions_8hpp"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>bits/stdc++.h</label>
+      </node>
+      <node id="2">
+        <label>ColorRecognition.hpp</label>
+        <link refid="_color_recognition_8hpp"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>cmath</label>
+      </node>
+      <node id="1">
+        <label>code/libs/ColorRecognition.cpp</label>
+        <link refid="_color_recognition_8cpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>iostream</label>
+      </node>
+      <node id="3">
+        <label>CoSpaceFunctions.hpp</label>
+        <link refid="_co_space_functions_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isRed</definition>
+        <argsstring>(HSLColor c)</argsstring>
+        <name>isRed</name>
+        <param>
+          <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="3" column="6" bodyfile="code/libs/ColorRecognition.cpp" bodystart="3" bodyend="3"/>
+        <references refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" compoundref="_color_recognition_8hpp" startline="14">HSLColor::h</references>
+        <references refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" compoundref="_common_functions_8cpp" startline="18" endline="20">isInRange</references>
+        <references refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" compoundref="_color_recognition_8hpp" startline="16">HSLColor::l</references>
+        <references refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" compoundref="_color_recognition_8hpp" startline="15">HSLColor::s</references>
+        <referencedby refid="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" compoundref="_robot_8cpp" startline="288" endline="313">Robot::collect</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a3ef683233017dc6db53be1506bfc871b" compoundref="_color_recognition_8cpp" startline="10" endline="10">isColor</referencedby>
+        <referencedby refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" compoundref="_robot_8cpp" startline="262" endline="286">Robot::shouldCollect</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isCyan</definition>
+        <argsstring>(HSLColor c)</argsstring>
+        <name>isCyan</name>
+        <param>
+          <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="4" column="6" bodyfile="code/libs/ColorRecognition.cpp" bodystart="4" bodyend="4"/>
+        <references refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" compoundref="_color_recognition_8hpp" startline="14">HSLColor::h</references>
+        <references refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" compoundref="_common_functions_8cpp" startline="18" endline="20">isInRange</references>
+        <references refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" compoundref="_color_recognition_8hpp" startline="16">HSLColor::l</references>
+        <references refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" compoundref="_color_recognition_8hpp" startline="15">HSLColor::s</references>
+        <referencedby refid="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" compoundref="_robot_8cpp" startline="288" endline="313">Robot::collect</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a3ef683233017dc6db53be1506bfc871b" compoundref="_color_recognition_8cpp" startline="10" endline="10">isColor</referencedby>
+        <referencedby refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" compoundref="_robot_8cpp" startline="262" endline="286">Robot::shouldCollect</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1afddf288619ae1066f933dc11363d097c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isBlack</definition>
+        <argsstring>(HSLColor c)</argsstring>
+        <name>isBlack</name>
+        <param>
+          <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="5" column="6" bodyfile="code/libs/ColorRecognition.cpp" bodystart="5" bodyend="5"/>
+        <references refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" compoundref="_color_recognition_8hpp" startline="16">HSLColor::l</references>
+        <referencedby refid="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" compoundref="_robot_8cpp" startline="288" endline="313">Robot::collect</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a3ef683233017dc6db53be1506bfc871b" compoundref="_color_recognition_8cpp" startline="10" endline="10">isColor</referencedby>
+        <referencedby refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" compoundref="_robot_8cpp" startline="262" endline="286">Robot::shouldCollect</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1ab786948d23021df1eb15cad46d081a64" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isYellow</definition>
+        <argsstring>(HSLColor c)</argsstring>
+        <name>isYellow</name>
+        <param>
+          <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="6" column="6" bodyfile="code/libs/ColorRecognition.cpp" bodystart="6" bodyend="6"/>
+        <references refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" compoundref="_color_recognition_8hpp" startline="14">HSLColor::h</references>
+        <references refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" compoundref="_common_functions_8cpp" startline="18" endline="20">isInRange</references>
+        <references refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" compoundref="_color_recognition_8hpp" startline="16">HSLColor::l</references>
+        <references refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" compoundref="_color_recognition_8hpp" startline="15">HSLColor::s</references>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">Robot::game0Loop</referencedby>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isOrange</definition>
+        <argsstring>(HSLColor c)</argsstring>
+        <name>isOrange</name>
+        <param>
+          <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="7" column="6" bodyfile="code/libs/ColorRecognition.cpp" bodystart="7" bodyend="7"/>
+        <references refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" compoundref="_color_recognition_8hpp" startline="14">HSLColor::h</references>
+        <references refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" compoundref="_common_functions_8cpp" startline="18" endline="20">isInRange</references>
+        <references refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" compoundref="_color_recognition_8hpp" startline="16">HSLColor::l</references>
+        <references refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" compoundref="_color_recognition_8hpp" startline="15">HSLColor::s</references>
+        <referencedby refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" compoundref="_robot_8cpp" startline="680" endline="741">Robot::game0Loop</referencedby>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+        <referencedby refid="class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e" compoundref="_robot_8cpp" startline="353" endline="378">Robot::shouldTeleport</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1ab44bd2d94a55aff5b357fe0a8c1cfa46" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isSwamp</definition>
+        <argsstring>(HSLColor c)</argsstring>
+        <name>isSwamp</name>
+        <param>
+          <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="8" column="6" bodyfile="code/libs/ColorRecognition.cpp" bodystart="8" bodyend="8"/>
+        <references refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" compoundref="_color_recognition_8hpp" startline="14">HSLColor::h</references>
+        <references refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" compoundref="_common_functions_8cpp" startline="18" endline="20">isInRange</references>
+        <references refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" compoundref="_color_recognition_8hpp" startline="16">HSLColor::l</references>
+        <references refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" compoundref="_color_recognition_8hpp" startline="15">HSLColor::s</references>
+        <referencedby refid="class_robot_1ad7b7f1a5a4e56d9e4c72a24a622d69f1" compoundref="_robot_8cpp" startline="204" endline="231">Robot::getVelocity</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isSuperObj</definition>
+        <argsstring>(HSLColor c)</argsstring>
+        <name>isSuperObj</name>
+        <param>
+          <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="9" column="6" bodyfile="code/libs/ColorRecognition.cpp" bodystart="9" bodyend="9"/>
+        <references refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" compoundref="_color_recognition_8hpp" startline="14">HSLColor::h</references>
+        <references refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" compoundref="_common_functions_8cpp" startline="18" endline="20">isInRange</references>
+        <references refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" compoundref="_color_recognition_8hpp" startline="16">HSLColor::l</references>
+        <references refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" compoundref="_color_recognition_8hpp" startline="15">HSLColor::s</references>
+        <referencedby refid="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" compoundref="_robot_8cpp" startline="288" endline="313">Robot::collect</referencedby>
+        <referencedby refid="_color_recognition_8cpp_1a3ef683233017dc6db53be1506bfc871b" compoundref="_color_recognition_8cpp" startline="10" endline="10">isColor</referencedby>
+        <referencedby refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" compoundref="_robot_8cpp" startline="262" endline="286">Robot::shouldCollect</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1a3ef683233017dc6db53be1506bfc871b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool isColor</definition>
+        <argsstring>(HSLColor c)</argsstring>
+        <name>isColor</name>
+        <param>
+          <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="10" column="6" bodyfile="code/libs/ColorRecognition.cpp" bodystart="10" bodyend="10"/>
+        <references refid="_color_recognition_8cpp_1afddf288619ae1066f933dc11363d097c" compoundref="_color_recognition_8cpp" startline="5" endline="5">isBlack</references>
+        <references refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" compoundref="_color_recognition_8cpp" startline="4" endline="4">isCyan</references>
+        <references refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" compoundref="_color_recognition_8cpp" startline="3" endline="3">isRed</references>
+        <references refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" compoundref="_color_recognition_8cpp" startline="9" endline="9">isSuperObj</references>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1a2327fc4a0ddc141cac73370c8c05d30b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>float</type>
+        <definition>float rgb2h</definition>
+        <argsstring>(RGBColor c)</argsstring>
+        <name>rgb2h</name>
+        <param>
+          <type><ref refid="struct_r_g_b_color" kindref="compound">RGBColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="13" column="7" bodyfile="code/libs/ColorRecognition.cpp" bodystart="13" bodyend="35"/>
+        <references refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" compoundref="_color_recognition_8hpp" startline="10">RGBColor::b</references>
+        <references refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" compoundref="_color_recognition_8hpp" startline="9">RGBColor::g</references>
+        <references refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" compoundref="_color_recognition_8hpp" startline="8">RGBColor::r</references>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1af5b187403c0b3c3bb371e2f788e965ed" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>float</type>
+        <definition>float rgb2s</definition>
+        <argsstring>(RGBColor c)</argsstring>
+        <name>rgb2s</name>
+        <param>
+          <type><ref refid="struct_r_g_b_color" kindref="compound">RGBColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="37" column="7" bodyfile="code/libs/ColorRecognition.cpp" bodystart="37" bodyend="51"/>
+        <references refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" compoundref="_color_recognition_8hpp" startline="10">RGBColor::b</references>
+        <references refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" compoundref="_color_recognition_8hpp" startline="9">RGBColor::g</references>
+        <references refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" compoundref="_color_recognition_8hpp" startline="8">RGBColor::r</references>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1a2e17f2e8bf4857ac3c4fe0cc8710953d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>float</type>
+        <definition>float rgb2l</definition>
+        <argsstring>(RGBColor c)</argsstring>
+        <name>rgb2l</name>
+        <param>
+          <type><ref refid="struct_r_g_b_color" kindref="compound">RGBColor</ref></type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="53" column="7" bodyfile="code/libs/ColorRecognition.cpp" bodystart="53" bodyend="65"/>
+        <references refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" compoundref="_color_recognition_8hpp" startline="10">RGBColor::b</references>
+        <references refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" compoundref="_color_recognition_8hpp" startline="9">RGBColor::g</references>
+        <references refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" compoundref="_color_recognition_8hpp" startline="8">RGBColor::r</references>
+      </memberdef>
+      <memberdef kind="function" id="_color_recognition_8cpp_1a373498008155314dabf15eafdd4b511f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref></type>
+        <definition>HSLColor rgb2hsl</definition>
+        <argsstring>(RGBColor rgb)</argsstring>
+        <name>rgb2hsl</name>
+        <param>
+          <type><ref refid="struct_r_g_b_color" kindref="compound">RGBColor</ref></type>
+          <declname>rgb</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/libs/ColorRecognition.cpp" line="67" column="10" bodyfile="code/libs/ColorRecognition.cpp" bodystart="67" bodyend="97"/>
+        <references refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" compoundref="_color_recognition_8hpp" startline="10">RGBColor::b</references>
+        <references refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" compoundref="_color_recognition_8hpp" startline="9">RGBColor::g</references>
+        <references refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" compoundref="_color_recognition_8hpp" startline="14">HSLColor::h</references>
+        <references refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" compoundref="_color_recognition_8hpp" startline="16">HSLColor::l</references>
+        <references refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" compoundref="_color_recognition_8hpp" startline="8">RGBColor::r</references>
+        <references refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" compoundref="_color_recognition_8hpp" startline="15">HSLColor::s</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_color_recognition_8hpp" kindref="compound">ColorRecognition.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3" refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" kindref="member">isRed</ref>(<ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>c)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>c.<ref refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" kindref="member">s</ref><sp/>&gt;=<sp/>75<sp/>&amp;&amp;<sp/>c.<ref refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" kindref="member">l</ref><sp/>&gt;=<sp/>30<sp/>&amp;&amp;<sp/><ref refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" kindref="member">isInRange</ref>(c.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref>,<sp/>340,<sp/>361);<sp/>}</highlight></codeline>
+<codeline lineno="4" refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" kindref="member">isCyan</ref>(<ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>c)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>c.<ref refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" kindref="member">s</ref><sp/>&gt;=<sp/>75<sp/>&amp;&amp;<sp/>c.<ref refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" kindref="member">l</ref><sp/>&gt;=<sp/>30<sp/>&amp;&amp;<sp/><ref refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" kindref="member">isInRange</ref>(c.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref>,<sp/>175,<sp/>185);<sp/>}</highlight></codeline>
+<codeline lineno="5" refid="_color_recognition_8cpp_1afddf288619ae1066f933dc11363d097c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1afddf288619ae1066f933dc11363d097c" kindref="member">isBlack</ref>(<ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>c)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>c.<ref refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" kindref="member">l</ref><sp/>&lt;=<sp/>20;<sp/>}</highlight></codeline>
+<codeline lineno="6" refid="_color_recognition_8cpp_1ab786948d23021df1eb15cad46d081a64" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1ab786948d23021df1eb15cad46d081a64" kindref="member">isYellow</ref>(<ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>c)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>c.<ref refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" kindref="member">s</ref><sp/>&gt;=<sp/>75<sp/>&amp;&amp;<sp/>c.<ref refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" kindref="member">l</ref><sp/>&gt;=<sp/>30<sp/>&amp;&amp;<sp/><ref refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" kindref="member">isInRange</ref>(c.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref>,<sp/>58,<sp/>80);<sp/>}</highlight></codeline>
+<codeline lineno="7" refid="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1ab31008e7e603f3af9b06544f40b8553f" kindref="member">isOrange</ref>(<ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>c)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>c.<ref refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" kindref="member">s</ref><sp/>&gt;=<sp/>75<sp/>&amp;&amp;<sp/>c.<ref refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" kindref="member">l</ref><sp/>&gt;=<sp/>30<sp/>&amp;&amp;<sp/><ref refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" kindref="member">isInRange</ref>(c.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref>,<sp/>35,<sp/>50);<sp/>}</highlight></codeline>
+<codeline lineno="8" refid="_color_recognition_8cpp_1ab44bd2d94a55aff5b357fe0a8c1cfa46" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1ab44bd2d94a55aff5b357fe0a8c1cfa46" kindref="member">isSwamp</ref>(<ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>c)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>c.<ref refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" kindref="member">s</ref><sp/>&lt;=<sp/>60<sp/>&amp;&amp;<sp/><ref refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" kindref="member">isInRange</ref>(c.<ref refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" kindref="member">l</ref>,<sp/>40,<sp/>80)<sp/>&amp;&amp;<sp/><ref refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" kindref="member">isInRange</ref>(c.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref>,<sp/>200,<sp/>240);<sp/>}</highlight></codeline>
+<codeline lineno="9" refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" kindref="member">isSuperObj</ref>(<ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>c)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>c.<ref refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" kindref="member">s</ref><sp/>&gt;=<sp/>80<sp/>&amp;&amp;<sp/>c.<ref refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" kindref="member">l</ref><sp/>&gt;=<sp/>30<sp/>&amp;&amp;<sp/><ref refid="_common_functions_8cpp_1a215db5a1e084860b722927077d7ed55c" kindref="member">isInRange</ref>(c.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref>,<sp/>290,<sp/>310);<sp/>}</highlight></codeline>
+<codeline lineno="10" refid="_color_recognition_8cpp_1a3ef683233017dc6db53be1506bfc871b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1a3ef683233017dc6db53be1506bfc871b" kindref="member">isColor</ref>(<ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>c)<sp/>{<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1afddf288619ae1066f933dc11363d097c" kindref="member">isBlack</ref>(c)<sp/>||<sp/><ref refid="_color_recognition_8cpp_1a93131a6a448e02136b19cf788cbc795a" kindref="member">isRed</ref>(c),<sp/><ref refid="_color_recognition_8cpp_1a0de6cd34c3d09a619ddd9ba9e346ef10" kindref="member">isCyan</ref>(c),<sp/><ref refid="_color_recognition_8cpp_1a22aff79719df69d1e399682521bca3a3" kindref="member">isSuperObj</ref>(c);<sp/>}</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="_color_recognition_8cpp_1a2327fc4a0ddc141cac73370c8c05d30b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1a2327fc4a0ddc141cac73370c8c05d30b" kindref="member">rgb2h</ref>(<ref refid="struct_r_g_b_color" kindref="compound">RGBColor</ref><sp/>c)<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>map<sp/>the<sp/>r,<sp/>g,<sp/>b<sp/>values<sp/>to<sp/>a<sp/>minimum<sp/>of<sp/>0<sp/>and<sp/>a<sp/>max<sp/>of<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/>c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>cmax<sp/>=<sp/>std::max(c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>,<sp/>std::max(c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>,<sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>));</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>cmin<sp/>=<sp/>std::min(c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>,<sp/>std::min(c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>,<sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>));</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>hue<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>chroma<sp/>=<sp/>cmax<sp/>-<sp/>cmin;<sp/></highlight><highlight class="comment">//<sp/>chroma</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(chroma<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(cmax<sp/>==<sp/>c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>hue<sp/>=<sp/>(c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref><sp/>-<sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>)<sp/>/<sp/>chroma<sp/>*<sp/>60;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(cmax<sp/>==<sp/>c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>hue<sp/>=<sp/>((c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref><sp/>-<sp/>c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>)<sp/>/<sp/>chroma<sp/>+<sp/>2)<sp/>*<sp/>60;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(cmax<sp/>==<sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>hue<sp/>=<sp/>((c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref><sp/>-<sp/>c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>)<sp/>/<sp/>chroma<sp/>+<sp/>4)<sp/>*<sp/>60;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(hue<sp/>&gt;<sp/>0)<sp/>?<sp/>hue<sp/>:<sp/>hue<sp/>+<sp/>360;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37" refid="_color_recognition_8cpp_1af5b187403c0b3c3bb371e2f788e965ed" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1af5b187403c0b3c3bb371e2f788e965ed" kindref="member">rgb2s</ref>(<ref refid="struct_r_g_b_color" kindref="compound">RGBColor</ref><sp/>c)<sp/>{</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>map<sp/>the<sp/>r,<sp/>g,<sp/>b<sp/>values<sp/>to<sp/>a<sp/>minimum<sp/>of<sp/>0<sp/>and<sp/>a<sp/>max<sp/>of<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>cmax<sp/>=<sp/>std::max(c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>,<sp/>std::max(c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>,<sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>));</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>cmin<sp/>=<sp/>std::min(c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>,<sp/>std::min(c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>,<sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>));</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>chroma<sp/>is<sp/>the<sp/>difference<sp/>between<sp/>max<sp/>and<sp/>min.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>chroma<sp/>=<sp/>cmax<sp/>-<sp/>cmin;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(cmax<sp/>!=<sp/>0)<sp/>?<sp/>(chroma<sp/>/<sp/>cmax<sp/>*<sp/>100)<sp/>:<sp/>0;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53" refid="_color_recognition_8cpp_1a2e17f2e8bf4857ac3c4fe0cc8710953d" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><ref refid="_color_recognition_8cpp_1a2e17f2e8bf4857ac3c4fe0cc8710953d" kindref="member">rgb2l</ref>(<ref refid="struct_r_g_b_color" kindref="compound">RGBColor</ref><sp/>c)<sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>map<sp/>the<sp/>r,<sp/>g,<sp/>b<sp/>values<sp/>to<sp/>a<sp/>minimum<sp/>of<sp/>0<sp/>and<sp/>a<sp/>max<sp/>of<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>cmax<sp/>=<sp/>std::max(c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>,<sp/>std::max(c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>,<sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>));</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>cmin<sp/>=<sp/>std::min(c.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>,<sp/>std::min(c.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>,<sp/>c.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>));</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>lightness<sp/>is<sp/>the<sp/>average<sp/>of<sp/>the<sp/>largest<sp/>and<sp/>smallest<sp/>color<sp/>components</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(cmax<sp/>+<sp/>cmin)<sp/>/<sp/>0.02f;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="_color_recognition_8cpp_1a373498008155314dabf15eafdd4b511f" refkind="member"><highlight class="normal"><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/><ref refid="_color_recognition_8cpp_1a373498008155314dabf15eafdd4b511f" kindref="member">rgb2hsl</ref>(<ref refid="struct_r_g_b_color" kindref="compound">RGBColor</ref><sp/>rgb)<sp/>{</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>color;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>map<sp/>the<sp/>r,<sp/>g,<sp/>b<sp/>values<sp/>to<sp/>a<sp/>minimum<sp/>of<sp/>0<sp/>and<sp/>a<sp/>max<sp/>of<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>rgb.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>rgb.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>rgb.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref><sp/>/=<sp/>255;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>cmax<sp/>=<sp/>std::max(rgb.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>,<sp/>std::max(rgb.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>,<sp/>rgb.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>));</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>cmin<sp/>=<sp/>std::min(rgb.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>,<sp/>std::min(rgb.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>,<sp/>rgb.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>));</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>c<sp/>=<sp/>cmax<sp/>-<sp/>cmin;<sp/></highlight><highlight class="comment">//<sp/>chroma</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>color.<ref refid="struct_h_s_l_color_1ae08ff5c191d7f8342d6a3dbce1fb49f4" kindref="member">s</ref><sp/>=<sp/>(cmax<sp/>!=<sp/>0)<sp/>?<sp/>(c<sp/>/<sp/>cmax<sp/>*<sp/>100)<sp/>:<sp/>0;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>color.<ref refid="struct_h_s_l_color_1aba6de0f3e47ab23ff32e62946aac0417" kindref="member">l</ref><sp/>=<sp/>(cmax<sp/>+<sp/>cmin)<sp/>/<sp/>0.02f;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(c<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>color;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(cmax<sp/>==<sp/>rgb.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>color.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref><sp/>=<sp/>(rgb.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref><sp/>-<sp/>rgb.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>)<sp/>/<sp/>c<sp/>*<sp/>60;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(cmax<sp/>==<sp/>rgb.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>color.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref><sp/>=<sp/>((rgb.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref><sp/>-<sp/>rgb.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref>)<sp/>/<sp/>c<sp/>+<sp/>2)<sp/>*<sp/>60;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(cmax<sp/>==<sp/>rgb.<ref refid="struct_r_g_b_color_1adec4491768d446770055a6b23f18927d" kindref="member">b</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>color.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref><sp/>=<sp/>((rgb.<ref refid="struct_r_g_b_color_1a9c0b69a5100747dc0dee8d151129f8f2" kindref="member">r</ref><sp/>-<sp/>rgb.<ref refid="struct_r_g_b_color_1a744b090c52455e09a4eacf55cabc39f9" kindref="member">g</ref>)<sp/>/<sp/>c<sp/>+<sp/>4)<sp/>*<sp/>60;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>color.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref><sp/>+=<sp/>(color.<ref refid="struct_h_s_l_color_1a7bb3ad7e9a3f9ea948fee8b18035dd6b" kindref="member">h</ref><sp/>&gt;<sp/>0)<sp/>?<sp/>0<sp/>:<sp/>360;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>color;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="code/libs/ColorRecognition.cpp"/>
+  </compounddef>
+</doxygen>

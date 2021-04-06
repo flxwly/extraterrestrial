@@ -1,0 +1,93 @@
+.TH "DebugWindow" 3 "Mon Apr 5 2021" "Extraterrestrial" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+DebugWindow
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <SFMLWindow\&.hpp>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDebugWindow\fP ()=delete"
+.br
+.ti -1c
+.RI "\fBDebugWindow\fP (\fBRobot\fP *robot)"
+.br
+.ti -1c
+.RI "void \fBupdateLoop\fP ()"
+.br
+.ti -1c
+.RI "void \fBstartDebugging\fP (\fBField\fP *\fBmap\fP)"
+.br
+.ti -1c
+.RI "void \fBstopDebugging\fP (unsigned int ID)"
+.br
+.ti -1c
+.RI "void \fBGameDebug\fP (unsigned int mapIndex)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "sf::Font \fBFont\fP"
+.br
+.ti -1c
+.RI "\fBRobot\fP * \fBBot\fP"
+.br
+.ti -1c
+.RI "std::vector< unsigned int > \fBIDs\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBField\fP * > \fBmaps\fP"
+.br
+.ti -1c
+.RI "std::vector< std::thread > \fBrunningLoops\fP"
+.br
+.ti -1c
+.RI "std::vector< sf::RenderWindow * > \fBrunningWindows\fP"
+.br
+.ti -1c
+.RI "std::vector< bool > \fBisRunning\fP"
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "DebugWindow::DebugWindow ()\fC [delete]\fP"
+
+.SS "DebugWindow::DebugWindow (\fBRobot\fP * robot)\fC [explicit]\fP"
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void DebugWindow::GameDebug (unsigned int mapIndex)"
+
+.SS "void DebugWindow::startDebugging (\fBField\fP * map)"
+
+.SS "void DebugWindow::stopDebugging (unsigned int ID)"
+
+.SS "void DebugWindow::updateLoop ()"
+
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBRobot\fP* DebugWindow::Bot"
+
+.SS "sf::Font DebugWindow::Font"
+
+.SS "std::vector<unsigned int> DebugWindow::IDs"
+
+.SS "std::vector<bool> DebugWindow::isRunning"
+
+.SS "std::vector<\fBField\fP *> DebugWindow::maps"
+
+.SS "std::vector<std::thread> DebugWindow::runningLoops"
+
+.SS "std::vector<sf::RenderWindow *> DebugWindow::runningWindows"
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Extraterrestrial from the source code\&.

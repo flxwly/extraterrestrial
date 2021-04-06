@@ -1,0 +1,355 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="_robot_8hpp" kind="file" language="C++">
+    <compoundname>Robot.hpp</compoundname>
+    <includes refid="_p_p_settings_8hpp" local="yes">libs/PPSettings.hpp</includes>
+    <includes refid="_common_functions_8hpp" local="yes">libs/CommonFunctions.hpp</includes>
+    <includes refid="_color_recognition_8hpp" local="yes">libs/ColorRecognition.hpp</includes>
+    <includes refid="_co_space_functions_8hpp" local="yes">libs/CoSpaceFunctions.hpp</includes>
+    <includes refid="_map_data_8hpp" local="yes">MapData.hpp</includes>
+    <includes refid="_pathfinder_8hpp" local="yes">Pathfinder.hpp</includes>
+    <includes local="no">vector</includes>
+    <includes local="no">ctime</includes>
+    <includes local="no">chrono</includes>
+    <includes local="no">array</includes>
+    <includedby refid="main_8cpp" local="yes">code/main.cpp</includedby>
+    <includedby refid="_robot_8cpp" local="yes">code/Robot.cpp</includedby>
+    <includedby refid="_s_f_m_l_window_8hpp" local="yes">code/SFMLWindow.hpp</includedby>
+    <incdepgraph>
+      <node id="9">
+        <label>MapData.hpp</label>
+        <link refid="_map_data_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>libs/PPSettings.hpp</label>
+        <link refid="_p_p_settings_8hpp"/>
+      </node>
+      <node id="3">
+        <label>libs/CommonFunctions.hpp</label>
+        <link refid="_common_functions_8hpp"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="17">
+        <label>queue</label>
+      </node>
+      <node id="8">
+        <label>bits/stdc++.h</label>
+      </node>
+      <node id="1">
+        <label>code/Robot.hpp</label>
+        <link refid="_robot_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>libs/ColorRecognition.hpp</label>
+        <link refid="_color_recognition_8hpp"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>cmath</label>
+      </node>
+      <node id="11">
+        <label>string</label>
+      </node>
+      <node id="10">
+        <label>libs/PVector.hpp</label>
+        <link refid="_p_vector_8hpp"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+      </node>
+      <node id="18">
+        <label>ctime</label>
+      </node>
+      <node id="12">
+        <label>vector</label>
+      </node>
+      <node id="16">
+        <label>utility</label>
+      </node>
+      <node id="13">
+        <label>array</label>
+      </node>
+      <node id="4">
+        <label>iostream</label>
+      </node>
+      <node id="19">
+        <label>chrono</label>
+      </node>
+      <node id="15">
+        <label>Pathfinder.hpp</label>
+        <link refid="_pathfinder_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>CoSpaceFunctions.hpp</label>
+        <link refid="_co_space_functions_8hpp"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>algorithm</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="5">
+        <label>code/SFMLWindow.cpp</label>
+        <link refid="_s_f_m_l_window_8cpp"/>
+      </node>
+      <node id="1">
+        <label>code/Robot.hpp</label>
+        <link refid="_robot_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>code/SFMLWindow.hpp</label>
+        <link refid="_s_f_m_l_window_8hpp"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>code/Robot.cpp</label>
+        <link refid="_robot_8cpp"/>
+      </node>
+      <node id="2">
+        <label>code/main.cpp</label>
+        <link refid="main_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="class_object_load" prot="public">ObjectLoad</innerclass>
+    <innerclass refid="class_robot" prot="public">Robot</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>ROBOT_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ROBOT_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_p_p_settings_8hpp" kindref="compound">libs/PPSettings.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_common_functions_8hpp" kindref="compound">libs/CommonFunctions.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_color_recognition_8hpp" kindref="compound">libs/ColorRecognition.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_co_space_functions_8hpp" kindref="compound">libs/CoSpaceFunctions.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_map_data_8hpp" kindref="compound">MapData.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="_pathfinder_8hpp" kindref="compound">Pathfinder.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;ctime&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;chrono&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;array&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="class_object_load" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_object_load" kindref="compound">ObjectLoad</ref><sp/>{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>std::array&lt;std::vector&lt;Collectible<sp/>*&gt;,<sp/>4&gt;<sp/>m_loadedCollectibles;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>m_count;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_object_load_1abc159fde8e88a13eceeac7b07524bad1" kindref="member">ObjectLoad</ref>();</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">explicit</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1abc159fde8e88a13eceeac7b07524bad1" kindref="member">ObjectLoad</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;Collectible<sp/>*&gt;<sp/>&amp;collectibles);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1a7a8d5cc5adf72a3c6835554a947a5d56" kindref="member">addObject</ref>(<ref refid="class_collectible" kindref="compound">Collectible</ref><sp/>*collectible);</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1a8b1d0b00ea1f1b02d7454b5da1b156cf" kindref="member">removeObject</ref>(<ref refid="class_collectible" kindref="compound">Collectible</ref><sp/>*collectible);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1a76d3822057d00761f28a5144d09e3518" kindref="member">setLoad</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;Collectible<sp/>*&gt;<sp/>&amp;collectible);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1a95afea89ae89262ad8c01a6180bd27eb" kindref="member">clearLoad</ref>();</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1a93aca9fdea2b8f94c7dcc9c4536d3525" kindref="member">getValue</ref>();</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1a8f9d9674889ba7c9e49bcddee4d42017" kindref="member">rgb</ref>();</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1a594a74d89f15e74b2e7d3e6bd5fc8721" kindref="member">red</ref>();</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1ab40ec3ba11297aa9d5db01991fd55bac" kindref="member">cyan</ref>();</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1ace19a0a3db1341917e23f89adaa651a6" kindref="member">black</ref>();</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1a2e819001d38ab14261830c5dc56bbb98" kindref="member">super</ref>();</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>std::array&lt;unsigned<sp/>int,<sp/>4&gt;<sp/><ref refid="class_object_load_1a535a944ad764a5c64c4b46f5d7dacd3a" kindref="member">all</ref>();</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::array&lt;std::vector&lt;Collectible<sp/>*&gt;,<sp/>4&gt;<sp/>&amp;<ref refid="class_object_load_1a7859f8bf1785e7638dcced19657ef83d" kindref="member">loadedObjects</ref>();</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_object_load_1ad3c7af6f005a96360d8680cf940bf539" kindref="member">num</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58" refid="class_robot" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_robot" kindref="compound">Robot</ref><sp/>{</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>region<sp/>Pointers<sp/>to<sp/>Simulator<sp/>Variables</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Direct<sp/>Input/Output<sp/>to<sp/>the<sp/>Sim</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*AI_IN{</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">},<sp/>*AI_OUT{</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">};</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>std::array&lt;int<sp/>*,<sp/>3&gt;<sp/>SUPER_OBJECT{</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">,<sp/></highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">};</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>setIN(</highlight><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*IN);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>setOUT(</highlight><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*OUT);</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>updateSimVars();</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Input<sp/>(read)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>simPos;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>compass{0};</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>superObject{0,<sp/>0};</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>superObjectNum{0};</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_h_s_l_color" kindref="compound">HSLColor</ref><sp/>leftColor{0,<sp/>0,<sp/>0},<sp/>rightColor{0,<sp/>0,<sp/>0};</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>std::array&lt;int,<sp/>3&gt;<sp/>ultraSonic{0,<sp/>0,<sp/>0};</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>gameTime{0};</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Output<sp/>(write)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>wheelLeft{0},<sp/>wheelRight{0};</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>led{0};</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>tp{0};</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>endregion</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>region<sp/>Public<sp/>Robot<sp/>Variables</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="90" refid="class_robot_1a6f43057c443f9e79b3d7875643328343" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="class_robot_1a6f43057c443f9e79b3d7875643328343" kindref="member">level</ref>;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92" refid="class_robot_1a1000239c43390bba895e574efb40bea1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_robot_1a1000239c43390bba895e574efb40bea1" kindref="member">pos</ref>;</highlight></codeline>
+<codeline lineno="93" refid="class_robot_1aa72f97fe06ea1da3b97e2476a87f9e2b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_robot_1aa72f97fe06ea1da3b97e2476a87f9e2b" kindref="member">lastPos</ref>;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95" refid="class_robot_1a686d1ec7714f85bfd1fd0d5a6000f96b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;Path&gt;<sp/><ref refid="class_robot_1a686d1ec7714f85bfd1fd0d5a6000f96b" kindref="member">completePath</ref>;</highlight></codeline>
+<codeline lineno="96" refid="class_robot_1a6eafb379fd3d28505e29f89a3e7cc0b1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_field" kindref="compound">Field</ref><sp/>*<ref refid="class_robot_1a6eafb379fd3d28505e29f89a3e7cc0b1" kindref="member">map0</ref>,<sp/>*<ref refid="class_robot_1a479e878152a7daccd5487d81982c7ff9" kindref="member">map1</ref>;</highlight></codeline>
+<codeline lineno="97" refid="class_robot_1ab10294bd68a035f4ccc932b674d4f09a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_pathfinder" kindref="compound">Pathfinder</ref><sp/><ref refid="class_robot_1ab10294bd68a035f4ccc932b674d4f09a" kindref="member">pathfinder0</ref>,<sp/><ref refid="class_robot_1ac20c4cea4260b9958b8d869411851063" kindref="member">pathfinder1</ref>;</highlight></codeline>
+<codeline lineno="98" refid="class_robot_1afe2c01e9389fe2dba844b0815864b705" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_pathfinder" kindref="compound">Pathfinder</ref><sp/><ref refid="class_robot_1afe2c01e9389fe2dba844b0815864b705" kindref="member">pathfinder0T</ref>,<sp/><ref refid="class_robot_1aaa2235a0007e798eb02771cb03058698" kindref="member">pathfinder1T</ref>;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100" refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_object_load" kindref="compound">ObjectLoad</ref><sp/><ref refid="class_robot_1acd0a9b0c24c28c62b6903fe1570b2eeb" kindref="member">loadedObjects</ref>;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102" refid="class_robot_1a5ec6698f2aaaf175aecc86b8f94ec8e4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_robot_1a5ec6698f2aaaf175aecc86b8f94ec8e4" kindref="member">lastRGBBonus</ref>;</highlight></codeline>
+<codeline lineno="103" refid="class_robot_1ac2546b91734a2b4d4d22b524dc9d2d0c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_robot_1ac2546b91734a2b4d4d22b524dc9d2d0c" kindref="member">huntingSuperObj</ref>;</highlight></codeline>
+<codeline lineno="104" refid="class_robot_1ad45d8f1011a473e9b158d240dd9b6766" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;Collectible<sp/>*&gt;<sp/><ref refid="class_robot_1ad45d8f1011a473e9b158d240dd9b6766" kindref="member">superObjects</ref>;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106" refid="class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_robot_1a4a8fcb89aa81ba370f85c1dbbf401a20" kindref="member">remainingMapTime</ref>;</highlight></codeline>
+<codeline lineno="107" refid="class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::chrono::steady_clock<sp/><ref refid="class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87" kindref="member">Timer</ref>;</highlight></codeline>
+<codeline lineno="108" refid="class_robot_1a0412b2e9cdd76a653aa6b8ddf24f450f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::chrono::time_point&lt;Timer&gt;<sp/><ref refid="class_robot_1a0412b2e9cdd76a653aa6b8ddf24f450f" kindref="member">lastProgramCycle</ref>;</highlight></codeline>
+<codeline lineno="109" refid="class_robot_1a3f4d56a15c5414fbdbe6fa55be384bdc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::chrono::time_point&lt;Timer&gt;<sp/><ref refid="class_robot_1a3f4d56a15c5414fbdbe6fa55be384bdc" kindref="member">depositingSince</ref>;</highlight></codeline>
+<codeline lineno="110" refid="class_robot_1a64c2b4bbf84de4682285450556ed40eb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::chrono::time_point&lt;Timer&gt;<sp/><ref refid="class_robot_1a64c2b4bbf84de4682285450556ed40eb" kindref="member">collectingSince</ref>;</highlight></codeline>
+<codeline lineno="111" refid="class_robot_1a3c82c722e113435735318a47cbc4efe2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>std::chrono::time_point&lt;Timer&gt;<sp/><ref refid="class_robot_1a3c82c722e113435735318a47cbc4efe2" kindref="member">lastPositionUpdate</ref>;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>endregion</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>region<sp/>Constructor</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_robot_1a0304ff4829dfeb19a868d4feb7d59038" kindref="member">Robot</ref>(</highlight><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*IN,<sp/></highlight><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*OUT,<sp/>std::array&lt;int<sp/>*,<sp/>3&gt;<sp/>superObject,<sp/><ref refid="class_field" kindref="compound">Field</ref><sp/>*<ref refid="class_robot_1a6eafb379fd3d28505e29f89a3e7cc0b1" kindref="member">map0</ref>,<sp/><ref refid="class_field" kindref="compound">Field</ref><sp/>*<ref refid="class_robot_1a479e878152a7daccd5487d81982c7ff9" kindref="member">map1</ref>);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight><highlight class="preprocessor">#pragma<sp/>endregion</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_robot_1a56d2661cb822912575d2cd479d08779e" kindref="member">wheels</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>l,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>r);</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_robot_1aa13bf89f0098d0a14d17818efdfc8cd2" kindref="member">moveAlongPath</ref>(<ref refid="class_path" kindref="compound">Path</ref><sp/>&amp;path);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_robot_1a5ad54de036deda2d9f2e151cab96a9bd" kindref="member">updatePos</ref>();</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_robot_1a990b30f193fbc9b294ac4785798ea394" kindref="member">moveToPosition</ref>(<ref refid="class_p_vector" kindref="compound">PVector</ref><sp/>p);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_robot_1ade9e381883860b0b81b6d2fd1e190e10" kindref="member">checkUsSensors</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>l,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>f,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>r);</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_robot_1acff1fa64498b60568d7446e6710f64c6" kindref="member">updateLoop</ref>();</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_robot_1a79fef2efeb1fc25fad40e2b0fa603652" kindref="member">game0Loop</ref>();</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" kindref="member">game1Loop</ref>();</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/><ref refid="class_p_vector" kindref="compound">PVector</ref><sp/><ref refid="class_robot_1ad7b7f1a5a4e56d9e4c72a24a622d69f1" kindref="member">getVelocity</ref>(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dt)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_robot_1adb8f5af6a3be057b17b9d73ebf6eabbb" kindref="member">shouldCollect</ref>();</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_robot_1abee8d3e53a745c33bb33e91d7a8748a4" kindref="member">collect</ref>();</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_robot_1acb30cea7c6baee7977193845aeabe009" kindref="member">shouldDeposit</ref>();</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_robot_1a106604404bd2727de0abdaf99c10c519" kindref="member">deposit</ref>();</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e" kindref="member">shouldTeleport</ref>();</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="class_robot_1a8ad41d97cfa6b475f2910768840b9769" kindref="member">teleport</ref>();</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="class_robot_1aa46bf5e2662924fc2c9d7e747e12cec9" kindref="member">avoidVoid</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/>[[nodiscard]]<sp/>std::array&lt;int,<sp/>4&gt;<sp/><ref refid="class_robot_1a70d33a38d8f422be16ef303063c07277" kindref="member">getDesiredLoad</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/>std::vector&lt;PVector&gt;<sp/><ref refid="class_robot_1ae20fb1cda5f32735ff19b6737bdf173a" kindref="member">getPointPath</ref>(std::array&lt;int,<sp/>4&gt;<sp/>desiredLoad);</highlight></codeline>
+<codeline lineno="173"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"></highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//ROBOT_HPP</highlight><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="code/Robot.hpp"/>
+  </compounddef>
+</doxygen>

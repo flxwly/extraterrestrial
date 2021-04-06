@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="_dir_050edd66366d13764f98250ef6db77f6"
+         xml:lang="en-US">
+<title>code Directory Reference</title>
+<indexterm><primary>code Directory Reference</primary></indexterm>
+Directory dependency graph for code:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="dir_050edd66366d13764f98250ef6db77f6_dep.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Directories    </title>
+        <itemizedlist>
+            <listitem><para>directory <link linkend="_dir_4cd8977fa66db7719b7022c7c7a03a79">libs</link></para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<simplesect>
+    <title>Files    </title>
+        <itemizedlist>
+            <listitem><para>file <link linkend="_main_8cpp">main.cpp</link></para>
+</listitem>
+            <listitem><para>file <link linkend="__map_data_8cpp">MapData.cpp</link></para>
+</listitem>
+            <listitem><para>file <link linkend="__map_data_8hpp">MapData.hpp</link></para>
+</listitem>
+            <listitem><para>file <link linkend="__pathfinder_8cpp">Pathfinder.cpp</link></para>
+</listitem>
+            <listitem><para>file <link linkend="__pathfinder_8hpp">Pathfinder.hpp</link></para>
+</listitem>
+            <listitem><para>file <link linkend="__robot_8cpp">Robot.cpp</link></para>
+</listitem>
+            <listitem><para>file <link linkend="__robot_8hpp">Robot.hpp</link></para>
+</listitem>
+            <listitem><para>file <link linkend="__s_f_m_l_window_8cpp">SFMLWindow.cpp</link></para>
+</listitem>
+            <listitem><para>file <link linkend="__s_f_m_l_window_8hpp">SFMLWindow.hpp</link></para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+</section>

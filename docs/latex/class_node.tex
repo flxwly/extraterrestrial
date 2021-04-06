@@ -1,0 +1,234 @@
+\hypertarget{class_node}{}\doxysection{Node Class Reference}
+\label{class_node}\index{Node@{Node}}
+
+
+{\ttfamily \#include $<$Pathfinder.\+hpp$>$}
+
+
+
+Collaboration diagram for Node\+:
+% FIG 0
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_node_adad2269dc6d7dbd62a4cf8eef7da48fa}{Node}} (\mbox{\hyperlink{class_p_vector}{PVector}} \+\_\+pos, \mbox{\hyperlink{class_field}{Field}} $\ast$\+\_\+field)
+\item 
+double \mbox{\hyperlink{class_node_ac916db01c0cad26a3e16c29ac68516e8}{calculate\+Cost}} (const \mbox{\hyperlink{class_node}{Node}} \&node)
+\item 
+bool \mbox{\hyperlink{class_node_a5749804287a44482c4b0b90cb5e70093}{can\+See}} (const \mbox{\hyperlink{class_node}{Node}} \&node, const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&Obstacles\+Structs) const
+\item 
+int \mbox{\hyperlink{class_node_a4af5b6953c9b717764557d118332f1cb}{find\+Neighbours}} (std\+::vector$<$ \mbox{\hyperlink{class_node}{Node}} $>$ \&Nodes, const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&Obstacle\+Structs)
+\item 
+void \mbox{\hyperlink{class_node_a2a9d028795b134cd1961fc606e194ec9}{add\+Neighbour}} (\mbox{\hyperlink{class_node}{Node}} $\ast$neighbour, const double \&cost)
+\item 
+bool \mbox{\hyperlink{class_node_a69274b9d8270111be533536cde7dffb6}{remove\+Neighbour}} (\mbox{\hyperlink{class_node}{Node}} $\ast$neighbour)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_node_a994ffcc71d937a08581e415288ddafdd}{is\+Closed}}
+\item 
+bool \mbox{\hyperlink{class_node_a6b66fb95e8964a388561476467e976ae}{is\+Open}}
+\item 
+double \mbox{\hyperlink{class_node_af93b606cf10abfe1766617ad9de59b01}{g}}
+\item 
+double \mbox{\hyperlink{class_node_aa78fc6cd04892bc631b80d023ef088c4}{f}}
+\item 
+\mbox{\hyperlink{class_node}{Node}} $\ast$ \mbox{\hyperlink{class_node_a17c0c1c22413b76152cd8f513a961022}{previous}}
+\item 
+\mbox{\hyperlink{class_p_vector}{PVector}} \mbox{\hyperlink{class_node_afd4810249a88e6a0fe802440800daf8a}{pos}}
+\item 
+\mbox{\hyperlink{class_field}{Field}} $\ast$ \mbox{\hyperlink{class_node_abafc6b4a9569e9ee3501e0b0ff9ce16c}{field}}
+\item 
+std\+::vector$<$ std\+::pair$<$ \mbox{\hyperlink{class_node}{Node}} $\ast$, double $>$ $>$ \mbox{\hyperlink{class_node_a91fe55da0158b872e7d16e1121f61ccd}{neighbours}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A point in a 2D word used by Pathfinders
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em pos} & Position of \mbox{\hyperlink{class_node}{Node}} in a 2D world. \\
+\hline
+{\em field} & field-\/\+Object a \mbox{\hyperlink{class_node}{Node}} is working on.\\
+\hline
+\end{DoxyTemplParams}
+A Node can be described as anchor point in a 2D grid. It offers functions for quick visibility checks for other Nodes, which can even be in other 2D grids, variables to keep track of their status in the current pathfinding problem and a vector containing all visible nodes in the same grid together with respective their costs. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_node_adad2269dc6d7dbd62a4cf8eef7da48fa}\label{class_node_adad2269dc6d7dbd62a4cf8eef7da48fa}} 
+\index{Node@{Node}!Node@{Node}}
+\index{Node@{Node}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{Node()}{Node()}}
+{\footnotesize\ttfamily Node\+::\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{\+\_\+pos,  }\item[{\mbox{\hyperlink{class_field}{Field}} $\ast$}]{\+\_\+field }\end{DoxyParamCaption})}
+
+\DoxyHorRuler{0}
+ \mbox{\hyperlink{class_node}{Node}} ~\newline
+ \DoxyHorRuler{0}
+ 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_node_a2a9d028795b134cd1961fc606e194ec9}\label{class_node_a2a9d028795b134cd1961fc606e194ec9}} 
+\index{Node@{Node}!addNeighbour@{addNeighbour}}
+\index{addNeighbour@{addNeighbour}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{addNeighbour()}{addNeighbour()}}
+{\footnotesize\ttfamily void Node\+::add\+Neighbour (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_node}{Node}} $\ast$}]{neighbour,  }\item[{const double \&}]{cost }\end{DoxyParamCaption})}
+
+Adds a neighbour and it\textquotesingle{}s cost
+
+To increase the speed this method will not calculate the cost. This has to be done via \char`\"{}calculate\+Cost()\char`\"{} and then funneled in as a parameter to this function \mbox{\Hypertarget{class_node_ac916db01c0cad26a3e16c29ac68516e8}\label{class_node_ac916db01c0cad26a3e16c29ac68516e8}} 
+\index{Node@{Node}!calculateCost@{calculateCost}}
+\index{calculateCost@{calculateCost}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{calculateCost()}{calculateCost()}}
+{\footnotesize\ttfamily double Node\+::calculate\+Cost (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_node}{Node}} \&}]{node }\end{DoxyParamCaption})}
+
+This Method calculates a cost to a \mbox{\hyperlink{class_node}{Node}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & \\
+\hline
+\end{DoxyParams}
+This function takes visibility into account(for that it uses Node\+::can\+See()). If this \mbox{\hyperlink{class_node}{Node}} can\textquotesingle{}t see the other \mbox{\hyperlink{class_node}{Node}} the cost will be -\/1. Other wise the cost is calculated also taking swamps into account. Here is the call graph for this function\+:
+% FIG 1
+Here is the caller graph for this function\+:
+% FIG 2
+\mbox{\Hypertarget{class_node_a5749804287a44482c4b0b90cb5e70093}\label{class_node_a5749804287a44482c4b0b90cb5e70093}} 
+\index{Node@{Node}!canSee@{canSee}}
+\index{canSee@{canSee}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{canSee()}{canSee()}}
+{\footnotesize\ttfamily bool Node\+::can\+See (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_node}{Node}} \&}]{node,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&}]{Obstacles\+Structs }\end{DoxyParamCaption}) const}
+
+This Method checks if this \mbox{\hyperlink{class_node}{Node}} can see a certain other \mbox{\hyperlink{class_node}{Node}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & \\
+\hline
+{\em Obstacles\+Structs} & A vector containing all structures that are counted as Obstacles \\
+\hline
+\end{DoxyParams}
+Here is the call graph for this function\+:
+% FIG 3
+Here is the caller graph for this function\+:
+% FIG 4
+\mbox{\Hypertarget{class_node_a4af5b6953c9b717764557d118332f1cb}\label{class_node_a4af5b6953c9b717764557d118332f1cb}} 
+\index{Node@{Node}!findNeighbours@{findNeighbours}}
+\index{findNeighbours@{findNeighbours}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{findNeighbours()}{findNeighbours()}}
+{\footnotesize\ttfamily int Node\+::find\+Neighbours (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{class_node}{Node}} $>$ \&}]{Nodes,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&}]{Obstacle\+Structs }\end{DoxyParamCaption})}
+
+This Method gets every neighbour and calculates the cost.
+
+
+\begin{DoxyParams}{Parameters}
+{\em Nodes} & A vector of pointers to Nodes \\
+\hline
+{\em Obstacles\+Structs} & A vector containing all structures that are counted as Obstacles\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the number of existing neighbours
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Every \mbox{\hyperlink{class_node}{Node}} in Nodes has to be initialized before executing this Method 
+\end{DoxyNote}
+Here is the call graph for this function\+:
+% FIG 5
+Here is the caller graph for this function\+:
+% FIG 6
+\mbox{\Hypertarget{class_node_a69274b9d8270111be533536cde7dffb6}\label{class_node_a69274b9d8270111be533536cde7dffb6}} 
+\index{Node@{Node}!removeNeighbour@{removeNeighbour}}
+\index{removeNeighbour@{removeNeighbour}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{removeNeighbour()}{removeNeighbour()}}
+{\footnotesize\ttfamily bool Node\+::remove\+Neighbour (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_node}{Node}} $\ast$}]{neighbour }\end{DoxyParamCaption})}
+
+Removes a neighbour
+
+This function only removes one neighbour by iterating over \char`\"{}neighbours\char`\"{} and exiting as soon as one element has been found 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_node_aa78fc6cd04892bc631b80d023ef088c4}\label{class_node_aa78fc6cd04892bc631b80d023ef088c4}} 
+\index{Node@{Node}!f@{f}}
+\index{f@{f}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{f}{f}}
+{\footnotesize\ttfamily double Node\+::f}
+
+\mbox{\Hypertarget{class_node_abafc6b4a9569e9ee3501e0b0ff9ce16c}\label{class_node_abafc6b4a9569e9ee3501e0b0ff9ce16c}} 
+\index{Node@{Node}!field@{field}}
+\index{field@{field}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{field}{field}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_field}{Field}}$\ast$ Node\+::field}
+
+A pointer to the field Object this \mbox{\hyperlink{class_node}{Node}} is stored in
+
+This pointer can be used to find neighbours or obstacles. It is important that a node knows in which field it is operating in.
+
+\begin{DoxyNote}{Note}
+This variable could be constant and is not meant to change. However for usability reasons it\textquotesingle{}s not constant. 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_node_af93b606cf10abfe1766617ad9de59b01}\label{class_node_af93b606cf10abfe1766617ad9de59b01}} 
+\index{Node@{Node}!g@{g}}
+\index{g@{g}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{g}{g}}
+{\footnotesize\ttfamily double Node\+::g}
+
+Doubles that are used in the A$\ast$\+Pathfinding algorithm
+
+\begin{DoxyNote}{Note}
+These variables aren\textquotesingle{}t updated automatically 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_node_a994ffcc71d937a08581e415288ddafdd}\label{class_node_a994ffcc71d937a08581e415288ddafdd}} 
+\index{Node@{Node}!isClosed@{isClosed}}
+\index{isClosed@{isClosed}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{isClosed}{isClosed}}
+{\footnotesize\ttfamily bool Node\+::is\+Closed}
+
+Booleans that indicate if this \mbox{\hyperlink{class_node}{Node}} is in a special list used by the A$\ast$\+Pathfinding algorithm
+
+\begin{DoxyNote}{Note}
+These variables aren\textquotesingle{}t updated automatically 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_node_a6b66fb95e8964a388561476467e976ae}\label{class_node_a6b66fb95e8964a388561476467e976ae}} 
+\index{Node@{Node}!isOpen@{isOpen}}
+\index{isOpen@{isOpen}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{isOpen}{isOpen}}
+{\footnotesize\ttfamily bool Node\+::is\+Open}
+
+\mbox{\Hypertarget{class_node_a91fe55da0158b872e7d16e1121f61ccd}\label{class_node_a91fe55da0158b872e7d16e1121f61ccd}} 
+\index{Node@{Node}!neighbours@{neighbours}}
+\index{neighbours@{neighbours}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{neighbours}{neighbours}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::pair$<$\mbox{\hyperlink{class_node}{Node}} $\ast$, double$>$ $>$ Node\+::neighbours}
+
+A vector that stores all visible neighbour nodes with their respective costs.
+
+To optimise speed the A$\ast$\+Pathfinding works on a precalculated environment. This vector keeps track of neighbours and distances/costs. \mbox{\Hypertarget{class_node_afd4810249a88e6a0fe802440800daf8a}\label{class_node_afd4810249a88e6a0fe802440800daf8a}} 
+\index{Node@{Node}!pos@{pos}}
+\index{pos@{pos}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{pos}{pos}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_p_vector}{PVector}} Node\+::pos}
+
+A \mbox{\hyperlink{class_p_vector}{PVector}} struct that stores the position of this node
+
+\begin{DoxyNote}{Note}
+This variable could be constant and is not meant to change. However for usability reasons it\textquotesingle{}s not constant. 
+\end{DoxyNote}
+\mbox{\Hypertarget{class_node_a17c0c1c22413b76152cd8f513a961022}\label{class_node_a17c0c1c22413b76152cd8f513a961022}} 
+\index{Node@{Node}!previous@{previous}}
+\index{previous@{previous}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{previous}{previous}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_node}{Node}}$\ast$ Node\+::previous}
+
+A pointer to the last visited \mbox{\hyperlink{class_node}{Node}}. This is used by the A$\ast$\+Pathfinding algorithm
+
+\begin{DoxyNote}{Note}
+This variable isn\textquotesingle{}t updated automatically 
+\end{DoxyNote}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+code/\mbox{\hyperlink{_pathfinder_8hpp}{Pathfinder.\+hpp}}\item 
+code/\mbox{\hyperlink{_pathfinder_8cpp}{Pathfinder.\+cpp}}\end{DoxyCompactItemize}

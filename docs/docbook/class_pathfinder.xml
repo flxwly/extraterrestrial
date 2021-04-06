@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="_class_pathfinder" xml:lang="en-US">
+<title>Pathfinder Class Reference</title>
+<indexterm><primary>Pathfinder</primary></indexterm>
+<para>
+<computeroutput>#include &lt;Pathfinder.hpp&gt;</computeroutput>
+</para>
+Collaboration diagram for Pathfinder:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_pathfinder__coll__graph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Public Member Functions    </title>
+        <itemizedlist>
+            <listitem><para><link linkend="_class_pathfinder_1a9086888b62eaf4d99362db099075502f">Pathfinder</link> (<link linkend="_class_field">Field</link> &amp;MAP, bool trap_sensitive)</para>
+</listitem>
+            <listitem><para><link linkend="_class_path">Path</link> <link linkend="_class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1">AStar</link> (<link linkend="_class_p_vector">PVector</link> &amp;start, <link linkend="_class_p_vector">PVector</link> &amp;end)</para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<simplesect>
+    <title>Public Attributes    </title>
+        <itemizedlist>
+            <listitem><para>std::vector&lt; <link linkend="_class_node">Node</link> &gt; <link linkend="_class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937">map</link></para>
+
+<para>Contains all nodes that are important to this <link linkend="_class_pathfinder">Pathfinder</link>. </para>
+</listitem>
+            <listitem><para>const bool <link linkend="_class_pathfinder_1afb6e6b06b1774df0ce5d5a47c9784170">trapSensitive</link></para>
+</listitem>
+            <listitem><para><link linkend="_class_field">Field</link> * <link linkend="_class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a">field</link></para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<section>
+<title>Detailed Description</title>
+
+<para>A <link linkend="_class_pathfinder">Pathfinder</link> class that operates on a specific maps using nodes</para>
+
+<para>
+                <formalpara>
+                    <title>
+Template Parameters                    </title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+                                <entry>MAP</entry>
+                                <entry>
+<para>A field-object representing a map </para>
+</entry>
+                            </row>
+                            <row>
+                                <entry>trap_sensitive</entry>
+                                <entry>
+<para>A bool that determines whether the pathfinder watches for traps or not</para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                At this point there&apos;s only one pathfinding algorithm (AStar) This works fine but may be extended later </para>
+</section>
+<section>
+<title>Constructor &amp; Destructor Documentation</title>
+<anchor xml:id="_class_pathfinder_1a9086888b62eaf4d99362db099075502f"/>    <section>
+    <title>Pathfinder()</title>
+<indexterm><primary>Pathfinder</primary><secondary>Pathfinder</secondary></indexterm>
+<indexterm><primary>Pathfinder</primary><secondary>Pathfinder</secondary></indexterm>
+<para><computeroutput>Pathfinder::Pathfinder (<link linkend="_class_field">Field</link> &amp; MAP, bool trap_sensitive)</computeroutput></para>
+<para><informaltable frame='bottom'><tgroup cols='1'><colspec align='center'/><tbody><row><entry align='center'>
+</entry></row></tbody></tgroup></informaltable>
+ <link linkend="_class_pathfinder">Pathfinder</link> 
+<literallayout>&#160;&#xa;</literallayout>
+ <informaltable frame='bottom'><tgroup cols='1'><colspec align='center'/><tbody><row><entry align='center'>
+</entry></row></tbody></tgroup></informaltable>
+ </para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_pathfinder_a9086888b62eaf4d99362db099075502f_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+</section>
+</section>
+<section>
+<title>Member Function Documentation</title>
+<anchor xml:id="_class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1"/>    <section>
+    <title>AStar()</title>
+<indexterm><primary>AStar</primary><secondary>Pathfinder</secondary></indexterm>
+<indexterm><primary>Pathfinder</primary><secondary>AStar</secondary></indexterm>
+<para><computeroutput><link linkend="_class_path">Path</link> Pathfinder::AStar (<link linkend="_class_p_vector">PVector</link> &amp; start, <link linkend="_class_p_vector">PVector</link> &amp; end)</computeroutput></para>
+<para>Finds a path between a start and an end node</para>
+
+<para>Here the AStar pathfinding algorithm is used because it&apos;s fast and efficient. Note that this works on a prepared environment hence it is even faster. </para>
+Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_pathfinder_a785a80cd9d469e70c298569e60ff39e1_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_pathfinder_a785a80cd9d469e70c298569e60ff39e1_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+</section>
+</section>
+<section>
+<title>Member Data Documentation</title>
+<anchor xml:id="_class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a"/>    <section>
+    <title>field</title>
+<indexterm><primary>field</primary><secondary>Pathfinder</secondary></indexterm>
+<indexterm><primary>Pathfinder</primary><secondary>field</secondary></indexterm>
+<para><computeroutput><link linkend="_class_field">Field</link>* Pathfinder::field</computeroutput></para>    </section><anchor xml:id="_class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937"/>    <section>
+    <title>map</title>
+<indexterm><primary>map</primary><secondary>Pathfinder</secondary></indexterm>
+<indexterm><primary>Pathfinder</primary><secondary>map</secondary></indexterm>
+<para><computeroutput>std::vector&lt;<link linkend="_class_node">Node</link>&gt; Pathfinder::map</computeroutput></para><para>
+
+<para>Contains all nodes that are important to this <link linkend="_class_pathfinder">Pathfinder</link>. </para>
+</para>
+    </section><anchor xml:id="_class_pathfinder_1afb6e6b06b1774df0ce5d5a47c9784170"/>    <section>
+    <title>trapSensitive</title>
+<indexterm><primary>trapSensitive</primary><secondary>Pathfinder</secondary></indexterm>
+<indexterm><primary>Pathfinder</primary><secondary>trapSensitive</secondary></indexterm>
+<para><computeroutput>const bool Pathfinder::trapSensitive</computeroutput></para></section>
+<para>
+The documentation for this class was generated from the following files:</para>
+code/<link linkend="__pathfinder_8hpp">Pathfinder.hpp</link>code/<link linkend="__pathfinder_8cpp">Pathfinder.cpp</link></section>
+</section>

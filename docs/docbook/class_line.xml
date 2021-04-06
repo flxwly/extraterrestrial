@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="_class_line" xml:lang="en-US">
+<title>Line Class Reference</title>
+<indexterm><primary>Line</primary></indexterm>
+<para>
+<computeroutput>#include &lt;MapData.hpp&gt;</computeroutput>
+</para>
+Collaboration diagram for Line:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_line__coll__graph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Public Member Functions    </title>
+        <itemizedlist>
+            <listitem><para><link linkend="_class_line_1acbdd5208bed57bca25c0db540d68dc4d">Line</link> (const <link linkend="_class_p_vector">PVector</link> &amp;_p1, const <link linkend="_class_p_vector">PVector</link> &amp;_p2)</para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<simplesect>
+    <title>Static Public Member Functions    </title>
+        <itemizedlist>
+            <listitem><para>static std::string <link linkend="_class_line_1a85685f9a0e23d1ff9d03d6e32313aaeb">str</link> (<link linkend="_class_line">Line</link> &amp;l)</para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<simplesect>
+    <title>Public Attributes    </title>
+        <itemizedlist>
+            <listitem><para><link linkend="_class_p_vector">PVector</link> <link linkend="_class_line_1a83967c5447d139815c8be5de33fdc39e">p1</link></para>
+
+<para>One end of the line. </para>
+</listitem>
+            <listitem><para><link linkend="_class_p_vector">PVector</link> <link linkend="_class_line_1a113f0f7413651d7eb0b4602d1da226d4">p2</link></para>
+
+<para>The other end of the line. </para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<section>
+<title>Detailed Description</title>
+
+<para>A <link linkend="_class_line">Line</link> in a 2D grid.</para>
+
+<para>A line is defined by to points p1 and p2. It does not provide much functionality by itself and is simply a container for two points under a namespace.</para>
+
+<para>
+                <formalpara>
+                    <title>
+Template Parameters                    </title>
+                    <para>
+                    <table frame="all">
+                        <tgroup cols="2" align="left" colsep="1" rowsep="1">
+                        <colspec colwidth="1*"/>
+                        <colspec colwidth="4*"/>
+                        <tbody>
+                            <row>
+                                <entry>p1</entry>
+                                <entry>
+<para>Position of the 1st <link linkend="_class_p_vector">PVector</link>. </para>
+</entry>
+                            </row>
+                            <row>
+                                <entry>p2</entry>
+                                <entry>
+<para>Position of the 2nd <link linkend="_class_p_vector">PVector</link>. </para>
+</entry>
+                            </row>
+                        </tbody>
+                        </tgroup>
+                    </table>
+                    </para>
+                </formalpara>
+                </para>
+</section>
+<section>
+<title>Constructor &amp; Destructor Documentation</title>
+<anchor xml:id="_class_line_1acbdd5208bed57bca25c0db540d68dc4d"/>    <section>
+    <title>Line()</title>
+<indexterm><primary>Line</primary><secondary>Line</secondary></indexterm>
+<indexterm><primary>Line</primary><secondary>Line</secondary></indexterm>
+<para><computeroutput>Line::Line (const <link linkend="_class_p_vector">PVector</link> &amp; _p1, const <link linkend="_class_p_vector">PVector</link> &amp; _p2)</computeroutput></para>
+<para><informaltable frame='bottom'><tgroup cols='1'><colspec align='center'/><tbody><row><entry align='center'>
+</entry></row></tbody></tgroup></informaltable>
+ <link linkend="_class_line">Line</link> 
+<literallayout>&#160;&#xa;</literallayout>
+ <informaltable frame='bottom'><tgroup cols='1'><colspec align='center'/><tbody><row><entry align='center'>
+</entry></row></tbody></tgroup></informaltable>
+ </para>
+</section>
+</section>
+<section>
+<title>Member Function Documentation</title>
+<anchor xml:id="_class_line_1a85685f9a0e23d1ff9d03d6e32313aaeb"/>    <section>
+    <title>str()</title>
+<indexterm><primary>str</primary><secondary>Line</secondary></indexterm>
+<indexterm><primary>Line</primary><secondary>str</secondary></indexterm>
+<para><computeroutput>static std::string Line::str (<link linkend="_class_line">Line</link> &amp; l)<computeroutput>[inline]</computeroutput>, <computeroutput>[static]</computeroutput></computeroutput></para>Here is the call graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="class_line_a85685f9a0e23d1ff9d03d6e32313aaeb_cgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+</section>
+</section>
+<section>
+<title>Member Data Documentation</title>
+<anchor xml:id="_class_line_1a83967c5447d139815c8be5de33fdc39e"/>    <section>
+    <title>p1</title>
+<indexterm><primary>p1</primary><secondary>Line</secondary></indexterm>
+<indexterm><primary>Line</primary><secondary>p1</secondary></indexterm>
+<para><computeroutput><link linkend="_class_p_vector">PVector</link> Line::p1</computeroutput></para><para>
+
+<para>One end of the line. </para>
+</para>
+    </section><anchor xml:id="_class_line_1a113f0f7413651d7eb0b4602d1da226d4"/>    <section>
+    <title>p2</title>
+<indexterm><primary>p2</primary><secondary>Line</secondary></indexterm>
+<indexterm><primary>Line</primary><secondary>p2</secondary></indexterm>
+<para><computeroutput><link linkend="_class_p_vector">PVector</link> Line::p2</computeroutput></para><para>
+
+<para>The other end of the line. </para>
+</para>
+</section>
+<para>
+The documentation for this class was generated from the following files:</para>
+code/<link linkend="__map_data_8hpp">MapData.hpp</link>code/<link linkend="__map_data_8cpp">MapData.cpp</link></section>
+</section>

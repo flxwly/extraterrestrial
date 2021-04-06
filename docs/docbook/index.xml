@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="_index" xml:lang="en-US">
+    <info>
+    <title>Extraterrestrial</title>
+    </info>
+<chapter>
+    <title>Namespace Documentation</title>
+<xi:include href="namespacegeometry.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+</chapter>
+<chapter>
+    <title>Class Documentation</title>
+    <xi:include href="class_area.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_collectible.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_debug_window.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_field.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="struct_h_s_l_color.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_line.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_node.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_object_load.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_path.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_pathfinder.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_p_vector.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="struct_r_g_b_color.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="class_robot.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+</chapter>
+<chapter>
+    <title>File Documentation</title>
+    <xi:include href="_color_recognition_8cpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_color_recognition_8hpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_common_functions_8cpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_common_functions_8hpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_co_space_functions_8cpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_co_space_functions_8hpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_p_p_settings_8hpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_p_vector_8cpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_p_vector_8hpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="main_8cpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_map_data_8cpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_map_data_8hpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_pathfinder_8cpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_pathfinder_8hpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_robot_8cpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_robot_8hpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_s_f_m_l_window_8cpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <xi:include href="_s_f_m_l_window_8hpp.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+</chapter>
+<index/>
+</book>

@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="class_pathfinder" kind="class" language="C++" prot="public">
+    <compoundname>Pathfinder</compoundname>
+    <includes refid="_pathfinder_8hpp" local="no">Pathfinder.hpp</includes>
+    <innerclass refid="struct_pathfinder_1_1_p_r_i_o_r_i_t_y" prot="private">Pathfinder::PRIORITY</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_node" kindref="compound">Node</ref> &gt;</type>
+        <definition>std::vector&lt;Node&gt; Pathfinder::map</definition>
+        <argsstring></argsstring>
+        <name>map</name>
+        <briefdescription>
+<para>Contains all nodes that are important to this <ref refid="class_pathfinder" kindref="compound">Pathfinder</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="200" column="17" bodyfile="code/Pathfinder.hpp" bodystart="200" bodyend="-1"/>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">AStar</referencedby>
+        <referencedby refid="class_debug_window_1aba17bf3c6ad43474042028ca63421c8e" compoundref="_s_f_m_l_window_8cpp" startline="12" endline="149">DebugWindow::GameDebug</referencedby>
+        <referencedby refid="class_pathfinder_1a9086888b62eaf4d99362db099075502f" compoundref="_pathfinder_8cpp" startline="186" endline="213">Pathfinder</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_pathfinder_1afb6e6b06b1774df0ce5d5a47c9784170" prot="public" static="no" mutable="no">
+        <type>const bool</type>
+        <definition>const bool Pathfinder::trapSensitive</definition>
+        <argsstring></argsstring>
+        <name>trapSensitive</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="202" column="16" bodyfile="code/Pathfinder.hpp" bodystart="202" bodyend="-1"/>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">AStar</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" prot="public" static="no" mutable="no">
+        <type><ref refid="class_field" kindref="compound">Field</ref> *</type>
+        <definition>Field* Pathfinder::field</definition>
+        <argsstring></argsstring>
+        <name>field</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="203" column="11" bodyfile="code/Pathfinder.hpp" bodystart="203" bodyend="-1"/>
+        <referencedby refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" compoundref="_pathfinder_8cpp" startline="219" endline="341">AStar</referencedby>
+        <referencedby refid="class_pathfinder_1a9086888b62eaf4d99362db099075502f" compoundref="_pathfinder_8cpp" startline="186" endline="213">Pathfinder</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_pathfinder_1a9086888b62eaf4d99362db099075502f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Pathfinder::Pathfinder</definition>
+        <argsstring>(Field &amp;MAP, bool trap_sensitive)</argsstring>
+        <name>Pathfinder</name>
+        <param>
+          <type><ref refid="class_field" kindref="compound">Field</ref> &amp;</type>
+          <declname>MAP</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>trap_sensitive</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><hruler/>
+ <ref refid="class_pathfinder" kindref="compound">Pathfinder</ref> <linebreak/>
+ <hruler/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="189" column="5" bodyfile="code/Pathfinder.cpp" bodystart="186" bodyend="213"/>
+        <references refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" compoundref="_pathfinder_8hpp" startline="203">field</references>
+        <references refid="class_field_1a5bcbf3fdf8db5ef596be0a15efdc3892" compoundref="_map_data_8cpp" startline="154" endline="178">Field::getMapNodes</references>
+        <references refid="class_field_1a514b0362f97a072d15cc8b93e53bf529" compoundref="_map_data_8cpp" startline="130" endline="152">Field::getMapObjects</references>
+        <references refid="class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937" compoundref="_pathfinder_8hpp" startline="200">map</references>
+      </memberdef>
+      <memberdef kind="function" id="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_path" kindref="compound">Path</ref></type>
+        <definition>Path Pathfinder::AStar</definition>
+        <argsstring>(PVector &amp;start, PVector &amp;end)</argsstring>
+        <name>AStar</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>start</declname>
+        </param>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>end</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Finds a path between a start and an end node</para>
+<para>Here the AStar pathfinding algorithm is used because it&apos;s fast and efficient. Note that this works on a prepared environment hence it is even faster. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="197" column="10" bodyfile="code/Pathfinder.cpp" bodystart="219" bodyend="341"/>
+        <references refid="class_node_1ac916db01c0cad26a3e16c29ac68516e8" compoundref="_pathfinder_8cpp" startline="16" endline="62">Node::calculateCost</references>
+        <references refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" compoundref="_pathfinder_8hpp" startline="203">field</references>
+        <references refid="class_node_1a4af5b6953c9b717764557d118332f1cb" compoundref="_pathfinder_8cpp" startline="70" endline="83">Node::findNeighbours</references>
+        <references refid="class_node_1af93b606cf10abfe1766617ad9de59b01" compoundref="_pathfinder_8hpp" startline="47">Node::g</references>
+        <references refid="class_field_1a514b0362f97a072d15cc8b93e53bf529" compoundref="_map_data_8cpp" startline="130" endline="152">Field::getMapObjects</references>
+        <references refid="class_node_1a994ffcc71d937a08581e415288ddafdd" compoundref="_pathfinder_8hpp" startline="41">Node::isClosed</references>
+        <references refid="class_node_1a6b66fb95e8964a388561476467e976ae" compoundref="_pathfinder_8hpp" startline="41">Node::isOpen</references>
+        <references refid="class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937" compoundref="_pathfinder_8hpp" startline="200">map</references>
+        <references refid="class_node_1a91fe55da0158b872e7d16e1121f61ccd" compoundref="_pathfinder_8hpp" startline="110">Node::neighbours</references>
+        <references refid="_p_p_settings_8hpp_1a3f455a3be17ec4757115db120a5b271e" compoundref="_p_p_settings_8hpp" startline="85">PATH_RADIUS</references>
+        <references refid="class_node_1afd4810249a88e6a0fe802440800daf8a" compoundref="_pathfinder_8hpp" startline="91">Node::pos</references>
+        <references refid="class_pathfinder_1afb6e6b06b1774df0ce5d5a47c9784170" compoundref="_pathfinder_8hpp" startline="202">trapSensitive</references>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-static-func">
+      <memberdef kind="function" id="class_pathfinder_1a6878736a3cfc4fe698ea499c489f6296" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double Pathfinder::heuristic</definition>
+        <argsstring>(const PVector &amp;cur, const PVector &amp;end)</argsstring>
+        <name>heuristic</name>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>cur</declname>
+        </param>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>end</declname>
+        </param>
+        <briefdescription>
+<para>The heuristic function for approximate cost calculation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="215" column="19" bodyfile="code/Pathfinder.cpp" bodystart="215" bodyend="217"/>
+      </memberdef>
+      <memberdef kind="function" id="class_pathfinder_1a97dfc75e723a4507f9d3d2f639ca6ed6" prot="private" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="class_path" kindref="compound">Path</ref></type>
+        <definition>Path Pathfinder::traverse</definition>
+        <argsstring>(Node *end)</argsstring>
+        <name>traverse</name>
+        <param>
+          <type><ref refid="class_node" kindref="compound">Node</ref> *</type>
+          <declname>end</declname>
+        </param>
+        <briefdescription>
+<para>Converts previous pointers of nodes to path. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/Pathfinder.hpp" line="218" column="17" bodyfile="code/Pathfinder.cpp" bodystart="343" bodyend="353"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>A <ref refid="class_pathfinder" kindref="compound">Pathfinder</ref> class that operates on a specific maps using nodes</para>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>MAP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A field-object representing a map </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>trap_sensitive</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A bool that determines whether the pathfinder watches for traps or not</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+At this point there&apos;s only one pathfinding algorithm (AStar) This works fine but may be extended later </para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>Field</label>
+        <link refid="class_field"/>
+      </node>
+      <node id="1">
+        <label>Pathfinder</label>
+        <link refid="class_pathfinder"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>field</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="code/Pathfinder.hpp" line="187" column="1" bodyfile="code/Pathfinder.hpp" bodystart="187" bodyend="219"/>
+    <listofallmembers>
+      <member refid="class_pathfinder_1a785a80cd9d469e70c298569e60ff39e1" prot="public" virt="non-virtual"><scope>Pathfinder</scope><name>AStar</name></member>
+      <member refid="class_pathfinder_1afab5e77b4559053eddae0f5c08608d8a" prot="public" virt="non-virtual"><scope>Pathfinder</scope><name>field</name></member>
+      <member refid="class_pathfinder_1a6878736a3cfc4fe698ea499c489f6296" prot="private" virt="non-virtual"><scope>Pathfinder</scope><name>heuristic</name></member>
+      <member refid="class_pathfinder_1a6630073ec1cebccf0f329efc5cd60937" prot="public" virt="non-virtual"><scope>Pathfinder</scope><name>map</name></member>
+      <member refid="class_pathfinder_1a9086888b62eaf4d99362db099075502f" prot="public" virt="non-virtual"><scope>Pathfinder</scope><name>Pathfinder</name></member>
+      <member refid="class_pathfinder_1afb6e6b06b1774df0ce5d5a47c9784170" prot="public" virt="non-virtual"><scope>Pathfinder</scope><name>trapSensitive</name></member>
+      <member refid="class_pathfinder_1a97dfc75e723a4507f9d3d2f639ca6ed6" prot="private" virt="non-virtual"><scope>Pathfinder</scope><name>traverse</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

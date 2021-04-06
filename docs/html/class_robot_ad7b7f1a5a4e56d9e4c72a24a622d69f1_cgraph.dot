@@ -1,0 +1,20 @@
+digraph "Robot::getVelocity"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="Robot::getVelocity",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="gets the current velocity for a certain change in time (in ms)"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="geometry::angle2Vector",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#a46dee6450badd387e6788a9ebf80fa44",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="isSwamp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_color_recognition_8cpp.html#ab44bd2d94a55aff5b357fe0a8c1cfa46",tooltip=" "];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="isInRange",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_common_functions_8cpp.html#a215db5a1e084860b722927077d7ed55c",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="PVector::rotate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_p_vector.html#aa0b42cf9a0da44a0ce5f28bc8937d980",tooltip="counter-clockwise rotation"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="PVector::set",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_p_vector.html#a9cc31db5ab8d080b0f44e2229ba34a7c",tooltip=" "];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="toRadians",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_common_functions_8cpp.html#a128d5ca6655612162ccf138e42a8b2af",tooltip=" "];
+}

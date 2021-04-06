@@ -1,0 +1,31 @@
+digraph "Robot::updateLoop"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="Robot::updateLoop",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="Field::addCollectible",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_field.html#a25e4d60285038520a8420f92570ebd9a",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="PVector::set",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_p_vector.html#a9cc31db5ab8d080b0f44e2229ba34a7c",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="Robot::updatePos",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#a5ad54de036deda2d9f2e151cab96a9bd",tooltip="updates the position of the robot mathematically and returns the change"];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="geometry::dist",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#a9a1ebcb6a74b046020dcc91c40554a3a",tooltip=" "];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="geometry::sqDist",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#a478ae992edb02bc432e6d0420c40e336",tooltip=" "];
+  Node4 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="Robot::getVelocity",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_robot.html#ad7b7f1a5a4e56d9e4c72a24a622d69f1",tooltip="gets the current velocity for a certain change in time (in ms)"];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="geometry::angle2Vector",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacegeometry.html#a46dee6450badd387e6788a9ebf80fa44",tooltip=" "];
+  Node7 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="isSwamp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_color_recognition_8cpp.html#ab44bd2d94a55aff5b357fe0a8c1cfa46",tooltip=" "];
+  Node9 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="isInRange",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_common_functions_8cpp.html#a215db5a1e084860b722927077d7ed55c",tooltip=" "];
+  Node7 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="PVector::rotate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_p_vector.html#aa0b42cf9a0da44a0ce5f28bc8937d980",tooltip="counter-clockwise rotation"];
+  Node11 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="toRadians",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_common_functions_8cpp.html#a128d5ca6655612162ccf138e42a8b2af",tooltip=" "];
+}

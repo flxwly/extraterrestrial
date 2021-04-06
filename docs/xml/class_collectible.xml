@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="class_collectible" kind="class" language="C++" prot="public">
+    <compoundname>Collectible</compoundname>
+    <includes refid="_map_data_8hpp" local="no">MapData.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_collectible_1ad146cff6f283cb1aadcae32cb9809181" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int Collectible::state</definition>
+        <argsstring></argsstring>
+        <name>state</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Represents the state</para>
+<para>Depending on whether a robot has seen, not seen or collected this collectible state is changed. Since not all collectibles on the map will be available from the start it&apos;s important to mark missing ones to prevent going after non existing / not collectible collectibles</para>
+<para><simplesect kind="note"><para>state = 0 =&gt; never seen; state = 1 =&gt; seen; state = 2 =&gt; collected </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="56" column="18" bodyfile="code/MapData.hpp" bodystart="56" bodyend="-1"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_collectible_1a4b05ee3fb93c337fe7e96f9f27cced8c" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int Collectible::visited</definition>
+        <argsstring></argsstring>
+        <name>visited</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Represents the number a collectible has been visited</para>
+<para>Everytime the robot passes by this collectible, this variable should be counted upwards. This allows to only mark collectibles as missing if the robot has visited them a certain number of times </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="64" column="18" bodyfile="code/MapData.hpp" bodystart="64" bodyend="-1"/>
+        <referencedby refid="class_robot_1ac9cf2352bb94bb2c623610c61027d2db" compoundref="_robot_8cpp" startline="743" endline="876">Robot::game1Loop</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_collectible_1a9db7f5679bc72eeb0202f2d1d524d543" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int Collectible::color</definition>
+        <argsstring></argsstring>
+        <name>color</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Represents the color</para>
+<para>Normally a collectible can have either of the 3 colors (red, cyan, black, [special case for superobjects: pink]). Collectibles with different colors give different amounts of score points. In addition certain combinations of colors create bonus score. To track maximize the score the robot needs to now which color each object. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="74" column="18" bodyfile="code/MapData.hpp" bodystart="74" bodyend="-1"/>
+        <referencedby refid="class_field_1a25e4d60285038520a8420f92570ebd9a" compoundref="_map_data_8cpp" startline="222" endline="225">Field::addCollectible</referencedby>
+        <referencedby refid="class_collectible_1aadc689e6d7e13d4355da7ec3404105b9" compoundref="_map_data_8cpp" startline="11" endline="18">Collectible</referencedby>
+        <referencedby refid="class_collectible_1af2442e4febf0a7c610b5314b6c81641b" compoundref="_map_data_8cpp" startline="27" endline="29">operator==</referencedby>
+        <referencedby refid="class_field_1aaf3139f53330d51b04a58d308b3d449f" compoundref="_map_data_8cpp" startline="227" endline="235">Field::removeCollectible</referencedby>
+        <referencedby refid="class_object_load_1a8b1d0b00ea1f1b02d7454b5da1b156cf" compoundref="_robot_8cpp" startline="39" endline="48">ObjectLoad::removeObject</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_collectible_1a35548d744bfc32a213a82769ef226d31" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Collectible::isWorthDouble</definition>
+        <argsstring></argsstring>
+        <name>isWorthDouble</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="76" column="10" bodyfile="code/MapData.hpp" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_collectible_1a8e02c21c99236a193670926c1f7cd1a9" prot="public" static="no" mutable="no">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Collectible::pos</definition>
+        <argsstring></argsstring>
+        <name>pos</name>
+        <briefdescription>
+<para>Represents the position. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="81" column="13" bodyfile="code/MapData.hpp" bodystart="81" bodyend="-1"/>
+        <referencedby refid="class_collectible_1a068a4938bf6bb68cf6e7b1fd33dd1f4c" compoundref="_map_data_8cpp" startline="20" endline="25">isCorrectCollectible</referencedby>
+        <referencedby refid="class_collectible_1af2442e4febf0a7c610b5314b6c81641b" compoundref="_map_data_8cpp" startline="27" endline="29">operator==</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_collectible_1aadc689e6d7e13d4355da7ec3404105b9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Collectible::Collectible</definition>
+        <argsstring>(const PVector &amp;p, const unsigned int &amp;c, bool worthDouble)</argsstring>
+        <name>Collectible</name>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>p</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>c</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>worthDouble</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><hruler/>
+ <ref refid="class_collectible" kindref="compound">Collectible</ref> <linebreak/>
+ <hruler/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="32" column="5" bodyfile="code/MapData.cpp" bodystart="11" bodyend="18"/>
+        <references refid="class_collectible_1a9db7f5679bc72eeb0202f2d1d524d543" compoundref="_map_data_8hpp" startline="74">color</references>
+        <references refid="_p_p_settings_8hpp_1ad5a8bf285fa3bfd218dd2d1db40419df" compoundref="_p_p_settings_8hpp" startline="43">ERROR_MESSAGE</references>
+      </memberdef>
+      <memberdef kind="function" id="class_collectible_1a068a4938bf6bb68cf6e7b1fd33dd1f4c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Collectible::isCorrectCollectible</definition>
+        <argsstring>(PVector robotPos, double angle, double uncertainty) const</argsstring>
+        <name>isCorrectCollectible</name>
+        <param>
+          <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+          <declname>robotPos</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>angle</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>uncertainty</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Checks if this collectible could be the seen one (position wise)</para>
+<para>The color sensors of the robots aren&apos;t the same coords as the robot&apos;s ones. Therefore it is mandatory to check whether a collectible is actually the right/seen one before changing it&apos;s state.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>robotPos</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the actual position of the robot given by the simulator </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>angle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the actual angle of the robot given by the simulator </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>uncertainty</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>how imprecise the position and the angle is </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="44" column="11" bodyfile="code/MapData.cpp" bodystart="20" bodyend="25"/>
+        <references refid="namespacegeometry_1a46dee6450badd387e6788a9ebf80fa44" compoundref="_map_data_8cpp" startline="328" endline="330">geometry::angle2Vector</references>
+        <references refid="_p_p_settings_8hpp_1ad2cb7925b204bd14c14854a279ec9917" compoundref="_p_p_settings_8hpp" startline="75">COLOR_SENSOR_ANGLE_OFFSET</references>
+        <references refid="_p_p_settings_8hpp_1a9f03532683bb7e7e4840ae04f0b1bcb4" compoundref="_p_p_settings_8hpp" startline="76">COLOR_SENSOR_DIST_TO_CORE</references>
+        <references refid="namespacegeometry_1a9a1ebcb6a74b046020dcc91c40554a3a" compoundref="_map_data_8cpp" startline="324" endline="326">geometry::dist</references>
+        <references refid="class_collectible_1a8e02c21c99236a193670926c1f7cd1a9" compoundref="_map_data_8hpp" startline="81">pos</references>
+        <references refid="_common_functions_8cpp_1a128d5ca6655612162ccf138e42a8b2af" compoundref="_common_functions_8cpp" startline="5" endline="7">toRadians</references>
+      </memberdef>
+      <memberdef kind="function" id="class_collectible_1af2442e4febf0a7c610b5314b6c81641b" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Collectible::operator==</definition>
+        <argsstring>(const Collectible &amp;lhs) const</argsstring>
+        <name>operator==</name>
+        <param>
+          <type>const <ref refid="class_collectible" kindref="compound">Collectible</ref> &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="78" column="10" bodyfile="code/MapData.cpp" bodystart="27" bodyend="29"/>
+        <references refid="class_collectible_1a9db7f5679bc72eeb0202f2d1d524d543" compoundref="_map_data_8hpp" startline="74">color</references>
+        <references refid="class_collectible_1a8e02c21c99236a193670926c1f7cd1a9" compoundref="_map_data_8hpp" startline="81">pos</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>A type of <ref refid="class_p_vector" kindref="compound">PVector</ref> that can be collected by a robot.</para>
+<para>Collectibles have a color value in addition to normal points in 2D-plane. They can be picked up by the robot in the CoSpace-SE. However the robot can&apos;t interact directly with this program and the map the robot uses is actually created by the <bold>map_interpreter.py</bold> script. This can result in imprecise movement and calculations. The method <bold><ref refid="class_collectible_1a068a4938bf6bb68cf6e7b1fd33dd1f4c" kindref="member">Collectible::isCorrectCollectible()</ref></bold> resolves this problem taking the imprecision into account.</para>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>p</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Position of the <ref refid="class_collectible" kindref="compound">Collectible</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>c</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Color of the <ref refid="class_collectible" kindref="compound">Collectible</ref>.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Generally Collectibles are only created upon initializing members of the field class. The only exception is made when a super-object spawns </para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>PVector</label>
+        <link refid="class_p_vector"/>
+      </node>
+      <node id="1">
+        <label>Collectible</label>
+        <link refid="class_collectible"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>pos</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="code/MapData.hpp" line="30" column="1" bodyfile="code/MapData.hpp" bodystart="30" bodyend="82"/>
+    <listofallmembers>
+      <member refid="class_collectible_1aadc689e6d7e13d4355da7ec3404105b9" prot="public" virt="non-virtual"><scope>Collectible</scope><name>Collectible</name></member>
+      <member refid="class_collectible_1a9db7f5679bc72eeb0202f2d1d524d543" prot="public" virt="non-virtual"><scope>Collectible</scope><name>color</name></member>
+      <member refid="class_collectible_1a068a4938bf6bb68cf6e7b1fd33dd1f4c" prot="public" virt="non-virtual"><scope>Collectible</scope><name>isCorrectCollectible</name></member>
+      <member refid="class_collectible_1a35548d744bfc32a213a82769ef226d31" prot="public" virt="non-virtual"><scope>Collectible</scope><name>isWorthDouble</name></member>
+      <member refid="class_collectible_1af2442e4febf0a7c610b5314b6c81641b" prot="public" virt="non-virtual"><scope>Collectible</scope><name>operator==</name></member>
+      <member refid="class_collectible_1a8e02c21c99236a193670926c1f7cd1a9" prot="public" virt="non-virtual"><scope>Collectible</scope><name>pos</name></member>
+      <member refid="class_collectible_1ad146cff6f283cb1aadcae32cb9809181" prot="public" virt="non-virtual"><scope>Collectible</scope><name>state</name></member>
+      <member refid="class_collectible_1a4b05ee3fb93c337fe7e96f9f27cced8c" prot="public" virt="non-virtual"><scope>Collectible</scope><name>visited</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

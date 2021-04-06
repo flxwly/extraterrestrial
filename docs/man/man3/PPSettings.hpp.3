@@ -1,0 +1,144 @@
+.TH "code/libs/PPSettings.hpp" 3 "Mon Apr 5 2021" "Extraterrestrial" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+code/libs/PPSettings.hpp
+.SH SYNOPSIS
+.br
+.PP
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSFML\fP"
+.br
+.RI "define COLOR_LOGGING to enable color logging to console "
+.ti -1c
+.RI "#define \fBERROR_MESSAGE\fP(message)   {}"
+.br
+.RI "define DebugPathfinderNodes "
+.ti -1c
+.RI "#define \fBROBOT_SPEED\fP   0\&.01"
+.br
+.RI "The speed of the robot in cm/ms for 20 % of maximum speed\&. "
+.ti -1c
+.RI "#define \fBRPOS_ERROR_MARGIN\fP   3"
+.br
+.ti -1c
+.RI "#define \fBROBOT_AXLE_LENGTH\fP   12\&.6"
+.br
+.RI "The distance between the two powered wheels in cm\&. "
+.ti -1c
+.RI "#define \fBRCOLOR_X\fP   \-3\&.6"
+.br
+.ti -1c
+.RI "#define \fBRCOLOR_Y\fP   6"
+.br
+.ti -1c
+.RI "#define \fBLCOLOR_X\fP   3\&.6"
+.br
+.ti -1c
+.RI "#define \fBLCOLOR_Y\fP   6"
+.br
+.ti -1c
+.RI "#define \fBRWHEEL_X\fP   \-6\&.3"
+.br
+.ti -1c
+.RI "#define \fBRWHEEL_Y\fP   \-4\&.2"
+.br
+.ti -1c
+.RI "#define \fBRWHEEL_RADIUS\fP   3"
+.br
+.ti -1c
+.RI "#define \fBLWHEEL_X\fP   6\&.3"
+.br
+.ti -1c
+.RI "#define \fBLWHEEL_Y\fP   \-4\&.2"
+.br
+.ti -1c
+.RI "#define \fBLWHEEL_RADIUS\fP   3"
+.br
+.ti -1c
+.RI "#define \fBCOLOR_SENSOR_ANGLE_OFFSET\fP   49\&.13072561"
+.br
+.ti -1c
+.RI "#define \fBCOLOR_SENSOR_DIST_TO_CORE\fP   6\&.99714227"
+.br
+.ti -1c
+.RI "#define \fBGAME0_TIME\fP   180"
+.br
+.ti -1c
+.RI "#define \fBGAME1_TIME\fP   300"
+.br
+.ti -1c
+.RI "#define \fBSWAMP_SPEED_PENALITY\fP   10"
+.br
+.RI "The factor by what speed is reduced in swamps TODO\&. "
+.ti -1c
+.RI "#define \fBPATH_RADIUS\fP   10"
+.br
+.RI "Standard radius of a path in cm\&. "
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define COLOR_SENSOR_ANGLE_OFFSET   49\&.13072561"
+
+.SS "#define COLOR_SENSOR_DIST_TO_CORE   6\&.99714227"
+
+.SS "#define ERROR_MESSAGE(message)   {}"
+
+.PP
+define DebugPathfinderNodes ----------------------------- /// some debug logic ----------------------------- /// DEBUG is not defined so ERROR_MESSAGE does nothing 
+.SS "#define GAME0_TIME   180"
+
+.SS "#define GAME1_TIME   300"
+
+.SS "#define LCOLOR_X   3\&.6"
+
+.SS "#define LCOLOR_Y   6"
+
+.SS "#define LWHEEL_RADIUS   3"
+
+.SS "#define LWHEEL_X   6\&.3"
+
+.SS "#define LWHEEL_Y   \-4\&.2"
+
+.SS "#define PATH_RADIUS   10"
+
+.PP
+Standard radius of a path in cm\&. 
+.SS "#define RCOLOR_X   \-3\&.6"
+
+.SS "#define RCOLOR_Y   6"
+
+.SS "#define ROBOT_AXLE_LENGTH   12\&.6"
+
+.PP
+The distance between the two powered wheels in cm\&. 
+.SS "#define ROBOT_SPEED   0\&.01"
+
+.PP
+The speed of the robot in cm/ms for 20 % of maximum speed\&. ----------------------------- /// robot settings ----------------------------- /// 
+.SS "#define RPOS_ERROR_MARGIN   3"
+
+.SS "#define RWHEEL_RADIUS   3"
+
+.SS "#define RWHEEL_X   \-6\&.3"
+
+.SS "#define RWHEEL_Y   \-4\&.2"
+
+.SS "#define SFML"
+
+.PP
+define COLOR_LOGGING to enable color logging to console ----------------------------- /// program settings ----------------------------- /// define DEBUG to enable debug messages 
+.PP
+ 
+.SS "SFML settings"
+define SFML to enable debugging via SFML 
+.SS "#define SWAMP_SPEED_PENALITY   10"
+
+.PP
+The factor by what speed is reduced in swamps TODO\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Extraterrestrial from the source code\&.

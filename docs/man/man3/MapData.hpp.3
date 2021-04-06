@@ -1,0 +1,190 @@
+.TH "code/MapData.hpp" 3 "Mon Apr 5 2021" "Extraterrestrial" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+code/MapData.hpp
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'libs/PPSettings\&.hpp'\fP
+.br
+\fC#include 'libs/CommonFunctions\&.hpp'\fP
+.br
+\fC#include 'libs/PVector\&.hpp'\fP
+.br
+\fC#include <vector>\fP
+.br
+\fC#include <iostream>\fP
+.br
+\fC#include <array>\fP
+.br
+\fC#include <cmath>\fP
+.br
+\fC#include <algorithm>\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBCollectible\fP"
+.br
+.ti -1c
+.RI "class \fBLine\fP"
+.br
+.ti -1c
+.RI "class \fBArea\fP"
+.br
+.ti -1c
+.RI "class \fBField\fP"
+.br
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBgeometry\fP"
+.br
+.RI "namespace for geometric functions "
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBgeometry::isLeft\fP (\fBPVector\fP p0, \fBPVector\fP p1, \fBPVector\fP p2)"
+.br
+.ti -1c
+.RI "bool \fBgeometry::isInside\fP (const \fBPVector\fP &p, \fBArea\fP &area)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBgeometry::intersection\fP (\fBLine\fP &l1, \fBLine\fP &l2)"
+.br
+.ti -1c
+.RI "bool \fBgeometry::isIntersecting\fP (\fBLine\fP &l1, \fBLine\fP &l2)"
+.br
+.ti -1c
+.RI "bool \fBgeometry::isIntersecting\fP (\fBLine\fP l1, const std::vector< \fBArea\fP > &Obstacles)"
+.br
+.ti -1c
+.RI "double \fBgeometry::sqDist\fP (const \fBPVector\fP &p1, const \fBPVector\fP &p2)"
+.br
+.ti -1c
+.RI "double \fBgeometry::dist\fP (const \fBPVector\fP &p1, const \fBPVector\fP &p2)"
+.br
+.ti -1c
+.RI "double \fBgeometry::dot\fP (\fBPVector\fP p1, \fBPVector\fP p2)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBgeometry::getNormalPoint\fP (\fBLine\fP line, \fBPVector\fP point)"
+.br
+.ti -1c
+.RI "\fBPVector\fP \fBgeometry::angle2Vector\fP (double a)"
+.br
+.ti -1c
+.RI "double \fBgeometry::vector2Angle\fP (\fBPVector\fP v)"
+.br
+.ti -1c
+.RI "double \fBgeometry::vector2Angle\fP (double x, double y)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "const std::vector< \fBArea\fP > \fBGAME0WALLS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBArea\fP > \fBGAME0TRAPS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBArea\fP > \fBGAME0SWAMPS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBArea\fP > \fBGAME0WATERS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBPVector\fP > \fBGAME0DEPOSITS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBPVector\fP > \fBGAME0WALLNODES\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBPVector\fP > \fBGAME0TRAPNODES\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBPVector\fP > \fBGAME0SWAMPNODES\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBCollectible\fP > \fBGAME0COLLECTIBLES\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBArea\fP > \fBGAME1WALLS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBArea\fP > \fBGAME1TRAPS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBArea\fP > \fBGAME1SWAMPS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBArea\fP > \fBGAME1WATERS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBPVector\fP > \fBGAME1DEPOSITS\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBPVector\fP > \fBGAME1WALLNODES\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBPVector\fP > \fBGAME1TRAPNODES\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBPVector\fP > \fBGAME1SWAMPNODES\fP"
+.br
+.ti -1c
+.RI "const std::vector< \fBCollectible\fP > \fBGAME1COLLECTIBLES\fP"
+.br
+.in -1c
+.SH "Variable Documentation"
+.PP 
+.SS "const std::vector<\fBCollectible\fP> GAME0COLLECTIBLES\fC [extern]\fP"
+
+.SS "const std::vector<\fBPVector\fP> GAME0DEPOSITS\fC [extern]\fP"
+
+.SS "const std::vector<\fBPVector\fP> GAME0SWAMPNODES\fC [extern]\fP"
+
+.SS "const std::vector<\fBArea\fP> GAME0SWAMPS\fC [extern]\fP"
+
+.SS "const std::vector<\fBPVector\fP> GAME0TRAPNODES\fC [extern]\fP"
+
+.SS "const std::vector<\fBArea\fP> GAME0TRAPS\fC [extern]\fP"
+
+.SS "const std::vector<\fBPVector\fP> GAME0WALLNODES\fC [extern]\fP"
+
+.SS "const std::vector<\fBArea\fP> GAME0WALLS\fC [extern]\fP"
+
+.PP
+ | | |\&.---\&.-\&.\&.-----\&.| \\ \&.---\&.-\&.| |_ \&.---\&.-\&. | || _ || _ || -- || _ || _|| _ | |__|_|__||___\&._|| __||_____/ |___\&._||____||___\&._| |__| 
+.SS "const std::vector<\fBArea\fP> GAME0WATERS\fC [extern]\fP"
+
+.SS "const std::vector<\fBCollectible\fP> GAME1COLLECTIBLES\fC [extern]\fP"
+
+.SS "const std::vector<\fBPVector\fP> GAME1DEPOSITS\fC [extern]\fP"
+
+.SS "const std::vector<\fBPVector\fP> GAME1SWAMPNODES\fC [extern]\fP"
+
+.SS "const std::vector<\fBArea\fP> GAME1SWAMPS\fC [extern]\fP"
+
+.SS "const std::vector<\fBPVector\fP> GAME1TRAPNODES\fC [extern]\fP"
+
+.SS "const std::vector<\fBArea\fP> GAME1TRAPS\fC [extern]\fP"
+
+.SS "const std::vector<\fBPVector\fP> GAME1WALLNODES\fC [extern]\fP"
+
+.SS "const std::vector<\fBArea\fP> GAME1WALLS\fC [extern]\fP"
+
+.SS "const std::vector<\fBArea\fP> GAME1WATERS\fC [extern]\fP"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Extraterrestrial from the source code\&.

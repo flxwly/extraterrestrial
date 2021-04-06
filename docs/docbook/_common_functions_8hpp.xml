@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="__common_functions_8hpp" xml:lang="en-US">
+<title>code/libs/CommonFunctions.hpp File Reference</title>
+<indexterm><primary>code/libs/CommonFunctions.hpp</primary></indexterm>
+<programlisting>#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+</programlisting>Include dependency graph for CommonFunctions.hpp:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_common_functions_8hpp__incl.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+This graph shows which files directly or indirectly include this file:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_common_functions_8hpp__dep__incl.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Functions    </title>
+        <itemizedlist>
+            <listitem><para>double <link linkend="__common_functions_8hpp_1a138b8a8d4aea7baa7a40ac78b14be5da">toRadians</link> (double n)</para>
+</listitem>
+            <listitem><para>double <link linkend="__common_functions_8hpp_1a0400d66d703a2d3ded66efb9a1f99c25">toDegrees</link> (double n)</para>
+</listitem>
+            <listitem><para>double <link linkend="__common_functions_8hpp_1a83485420504fa236938ca6fed28810a5">reverseAngle</link> (double angle)</para>
+</listitem>
+            <listitem><para>bool <link linkend="__common_functions_8hpp_1a215db5a1e084860b722927077d7ed55c">isInRange</link> (double value, double min, double max)</para>
+</listitem>
+            <listitem><para>double <link linkend="__common_functions_8hpp_1af1fdafb0217b317e8172d53abb255837">map</link> (double Mmin, double Mmax, double Imin, double Imax, double input)</para>
+</listitem>
+            <listitem><para>template&lt;class T1 , class T2 &gt; </para><para>std::string <link linkend="__common_functions_8hpp_1a266c77e247ef55b1bda29e55214578f1">str</link> (T1 x, T2 y)</para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+<section>
+<title>Function Documentation</title>
+<anchor xml:id="__common_functions_8hpp_1a215db5a1e084860b722927077d7ed55c"/>    <section>
+    <title>isInRange()</title>
+<indexterm><primary>isInRange</primary><secondary>CommonFunctions.hpp</secondary></indexterm>
+<indexterm><primary>CommonFunctions.hpp</primary><secondary>isInRange</secondary></indexterm>
+<para><computeroutput>bool isInRange (double value, double min, double max)</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_common_functions_8hpp_a215db5a1e084860b722927077d7ed55c_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="__common_functions_8hpp_1af1fdafb0217b317e8172d53abb255837"/>    <section>
+    <title>map()</title>
+<indexterm><primary>map</primary><secondary>CommonFunctions.hpp</secondary></indexterm>
+<indexterm><primary>CommonFunctions.hpp</primary><secondary>map</secondary></indexterm>
+<para><computeroutput>double map (double Mmin, double Mmax, double Imin, double Imax, double input)</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_common_functions_8hpp_af1fdafb0217b317e8172d53abb255837_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="__common_functions_8hpp_1a83485420504fa236938ca6fed28810a5"/>    <section>
+    <title>reverseAngle()</title>
+<indexterm><primary>reverseAngle</primary><secondary>CommonFunctions.hpp</secondary></indexterm>
+<indexterm><primary>CommonFunctions.hpp</primary><secondary>reverseAngle</secondary></indexterm>
+<para><computeroutput>double reverseAngle (double angle)</computeroutput></para>    </section><anchor xml:id="__common_functions_8hpp_1a266c77e247ef55b1bda29e55214578f1"/>    <section>
+    <title>str()</title>
+<indexterm><primary>str</primary><secondary>CommonFunctions.hpp</secondary></indexterm>
+<indexterm><primary>CommonFunctions.hpp</primary><secondary>str</secondary></indexterm>
+<computeroutput>template&lt;class T1 , class T2 &gt; </computeroutput><para><computeroutput>std::string str (T1 x, T2 y)</computeroutput></para>    </section><anchor xml:id="__common_functions_8hpp_1a0400d66d703a2d3ded66efb9a1f99c25"/>    <section>
+    <title>toDegrees()</title>
+<indexterm><primary>toDegrees</primary><secondary>CommonFunctions.hpp</secondary></indexterm>
+<indexterm><primary>CommonFunctions.hpp</primary><secondary>toDegrees</secondary></indexterm>
+<para><computeroutput>double toDegrees (double n)</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_common_functions_8hpp_a0400d66d703a2d3ded66efb9a1f99c25_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+    </section><anchor xml:id="__common_functions_8hpp_1a138b8a8d4aea7baa7a40ac78b14be5da"/>    <section>
+    <title>toRadians()</title>
+<indexterm><primary>toRadians</primary><secondary>CommonFunctions.hpp</secondary></indexterm>
+<indexterm><primary>CommonFunctions.hpp</primary><secondary>toRadians</secondary></indexterm>
+<para><computeroutput>double toRadians (double n)</computeroutput></para>Here is the caller graph for this function:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_common_functions_8hpp_a138b8a8d4aea7baa7a40ac78b14be5da_icgraph.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+</section>
+</section>
+</section>

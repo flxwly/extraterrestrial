@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="__s_f_m_l_window_8hpp" xml:lang="en-US">
+<title>code/SFMLWindow.hpp File Reference</title>
+<indexterm><primary>code/SFMLWindow.hpp</primary></indexterm>
+<programlisting>#include &lt;SFML/Graphics.hpp&gt;
+#include &quot;Robot.hpp&quot;
+</programlisting>Include dependency graph for SFMLWindow.hpp:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_s_f_m_l_window_8hpp__incl.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+This graph shows which files directly or indirectly include this file:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_s_f_m_l_window_8hpp__dep__incl.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Classes    </title>
+        <itemizedlist>
+            <listitem><para>class <link linkend="_class_debug_window">DebugWindow</link></para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+</section>

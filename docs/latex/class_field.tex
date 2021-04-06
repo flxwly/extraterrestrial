@@ -1,0 +1,168 @@
+\hypertarget{class_field}{}\doxysection{Field Class Reference}
+\label{class_field}\index{Field@{Field}}
+
+
+{\ttfamily \#include $<$Map\+Data.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_field_a67b9e78358f9db7499bfdd5ef2871101}{Field}} (const int \&width, const int \&height, const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&walls, const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&traps, const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&swamps, const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&waters, const std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \&deposits, const std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \&wall\+Nodes, const std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \&trap\+Nodes, const std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \&swamp\+Nodes, const std\+::vector$<$ \mbox{\hyperlink{class_collectible}{Collectible}} $>$ \&collectibles)
+\item 
+\mbox{\hyperlink{class_collectible}{Collectible}} $\ast$ \mbox{\hyperlink{class_field_a25e4d60285038520a8420f92570ebd9a}{add\+Collectible}} (\mbox{\hyperlink{class_collectible}{Collectible}} collectible)
+\item 
+bool \mbox{\hyperlink{class_field_aaf3139f53330d51b04a58d308b3d449f}{remove\+Collectible}} (\mbox{\hyperlink{class_collectible}{Collectible}} collectible)
+\item 
+\mbox{\hyperlink{class_collectible}{Collectible}} $\ast$ \mbox{\hyperlink{class_field_adc55f248e3fbe13202b7e1bb13537588}{get\+Collectible}} (\mbox{\hyperlink{class_p_vector}{PVector}} pos, double angle, double uncertainty, int color)
+\item 
+\mbox{\hyperlink{class_p_vector}{PVector}} \mbox{\hyperlink{class_field_ac2f890f8e4263dbfd327922065ba0306}{get\+Size}} ()
+\begin{DoxyCompactList}\small\item\em Getter for the size. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \mbox{\hyperlink{class_field_a514b0362f97a072d15cc8b93e53bf529}{get\+Map\+Objects}} (const std\+::vector$<$ unsigned int $>$ \&indices)
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \mbox{\hyperlink{class_field_a5bcbf3fdf8db5ef596be0a15efdc3892}{get\+Map\+Nodes}} (const std\+::vector$<$ unsigned int $>$ \&indices)
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \mbox{\hyperlink{class_field_a2e1fc59842bf2d0adc078a79f30efe17}{get\+Deposits}} ()
+\begin{DoxyCompactList}\small\item\em Getter method for deposits. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{class_collectible}{Collectible}} $>$ \mbox{\hyperlink{class_field_ac726f4dc045fd47ad2de745fe2f898dd}{get\+Collectibles}} (const std\+::vector$<$ unsigned int $>$ \&colors)
+\begin{DoxyCompactList}\small\item\em Getter method for collectibles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all important map data about the map
+
+It contains all information given by the map\+\_\+interpreter.\+py script. This information is enough to fully reconstruct the map from one field-\/object
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em width} & width of the map \\
+\hline
+{\em height} & height of the map \\
+\hline
+{\em walls} & All walls \\
+\hline
+{\em traps} & All traps \\
+\hline
+{\em swamps} & All swamps \\
+\hline
+{\em waters} & All waters/bonus areas \\
+\hline
+{\em deposits} & All deposits \\
+\hline
+{\em collectibles} & All collectibles\\
+\hline
+\end{DoxyTemplParams}
+TODO\+: show function for \mbox{\hyperlink{class_field}{Field}} class. (for Debugging) 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_field_a67b9e78358f9db7499bfdd5ef2871101}\label{class_field_a67b9e78358f9db7499bfdd5ef2871101}} 
+\index{Field@{Field}!Field@{Field}}
+\index{Field@{Field}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{Field()}{Field()}}
+{\footnotesize\ttfamily Field\+::\+Field (\begin{DoxyParamCaption}\item[{const int \&}]{width,  }\item[{const int \&}]{height,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&}]{walls,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&}]{traps,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&}]{swamps,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ \&}]{waters,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \&}]{deposits,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \&}]{wall\+Nodes,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \&}]{trap\+Nodes,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \&}]{swamp\+Nodes,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{class_collectible}{Collectible}} $>$ \&}]{collectibles }\end{DoxyParamCaption})}
+
+\DoxyHorRuler{0}
+ Map\+Data ~\newline
+ \DoxyHorRuler{0}
+ 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_field_a25e4d60285038520a8420f92570ebd9a}\label{class_field_a25e4d60285038520a8420f92570ebd9a}} 
+\index{Field@{Field}!addCollectible@{addCollectible}}
+\index{addCollectible@{addCollectible}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{addCollectible()}{addCollectible()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_collectible}{Collectible}} $\ast$ Field\+::add\+Collectible (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_collectible}{Collectible}}}]{collectible }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+% FIG 0
+\mbox{\Hypertarget{class_field_adc55f248e3fbe13202b7e1bb13537588}\label{class_field_adc55f248e3fbe13202b7e1bb13537588}} 
+\index{Field@{Field}!getCollectible@{getCollectible}}
+\index{getCollectible@{getCollectible}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{getCollectible()}{getCollectible()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_collectible}{Collectible}} $\ast$ Field\+::get\+Collectible (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{pos,  }\item[{double}]{angle,  }\item[{double}]{uncertainty,  }\item[{int}]{color }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+% FIG 1
+Here is the caller graph for this function\+:
+% FIG 2
+\mbox{\Hypertarget{class_field_ac726f4dc045fd47ad2de745fe2f898dd}\label{class_field_ac726f4dc045fd47ad2de745fe2f898dd}} 
+\index{Field@{Field}!getCollectibles@{getCollectibles}}
+\index{getCollectibles@{getCollectibles}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{getCollectibles()}{getCollectibles()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{class_collectible}{Collectible}} $>$ Field\+::get\+Collectibles (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ unsigned int $>$ \&}]{colors }\end{DoxyParamCaption})}
+
+
+
+Getter method for collectibles. 
+
+Getter for field\+::collectibles Here is the caller graph for this function\+:
+% FIG 3
+\mbox{\Hypertarget{class_field_a2e1fc59842bf2d0adc078a79f30efe17}\label{class_field_a2e1fc59842bf2d0adc078a79f30efe17}} 
+\index{Field@{Field}!getDeposits@{getDeposits}}
+\index{getDeposits@{getDeposits}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{getDeposits()}{getDeposits()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ Field\+::get\+Deposits (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Getter method for deposits. 
+
+Getter for field\+::collectibles Here is the caller graph for this function\+:
+% FIG 4
+\mbox{\Hypertarget{class_field_a5bcbf3fdf8db5ef596be0a15efdc3892}\label{class_field_a5bcbf3fdf8db5ef596be0a15efdc3892}} 
+\index{Field@{Field}!getMapNodes@{getMapNodes}}
+\index{getMapNodes@{getMapNodes}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{getMapNodes()}{getMapNodes()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ Field\+::get\+Map\+Nodes (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ unsigned int $>$ \&}]{indices }\end{DoxyParamCaption})}
+
+gets map nodes based on their index
+
+
+\begin{DoxyParams}{Parameters}
+{\em indices} & 0 -\/$>$ walls; 1 -\/$>$ traps; 2 -\/$>$ swamps\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a vector containing all map object areas with the indices 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+% FIG 5
+\mbox{\Hypertarget{class_field_a514b0362f97a072d15cc8b93e53bf529}\label{class_field_a514b0362f97a072d15cc8b93e53bf529}} 
+\index{Field@{Field}!getMapObjects@{getMapObjects}}
+\index{getMapObjects@{getMapObjects}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{getMapObjects()}{getMapObjects()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{class_area}{Area}} $>$ Field\+::get\+Map\+Objects (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ unsigned int $>$ \&}]{indices }\end{DoxyParamCaption})}
+
+gets map objects based on their index
+
+
+\begin{DoxyParams}{Parameters}
+{\em indices} & the index of the wanted map objects 0 -\/$>$ walls; 1 -\/$>$ traps; 2 -\/$>$ swamps; 3 -\/$>$ bonus areas;\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a vector containing all map object areas with the indices 
+\end{DoxyReturn}
+Here is the caller graph for this function\+:
+% FIG 6
+\mbox{\Hypertarget{class_field_ac2f890f8e4263dbfd327922065ba0306}\label{class_field_ac2f890f8e4263dbfd327922065ba0306}} 
+\index{Field@{Field}!getSize@{getSize}}
+\index{getSize@{getSize}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{getSize()}{getSize()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_p_vector}{PVector}} Field\+::get\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Getter for the size. 
+
+\mbox{\Hypertarget{class_field_aaf3139f53330d51b04a58d308b3d449f}\label{class_field_aaf3139f53330d51b04a58d308b3d449f}} 
+\index{Field@{Field}!removeCollectible@{removeCollectible}}
+\index{removeCollectible@{removeCollectible}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{removeCollectible()}{removeCollectible()}}
+{\footnotesize\ttfamily bool Field\+::remove\+Collectible (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_collectible}{Collectible}}}]{collectible }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+code/\mbox{\hyperlink{_map_data_8hpp}{Map\+Data.\+hpp}}\item 
+code/\mbox{\hyperlink{_map_data_8cpp}{Map\+Data.\+cpp}}\end{DoxyCompactItemize}

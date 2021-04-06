@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="__robot_8hpp" xml:lang="en-US">
+<title>code/Robot.hpp File Reference</title>
+<indexterm><primary>code/Robot.hpp</primary></indexterm>
+<programlisting>#include &quot;libs/PPSettings.hpp&quot;
+#include &quot;libs/CommonFunctions.hpp&quot;
+#include &quot;libs/ColorRecognition.hpp&quot;
+#include &quot;libs/CoSpaceFunctions.hpp&quot;
+#include &quot;MapData.hpp&quot;
+#include &quot;Pathfinder.hpp&quot;
+#include &lt;vector&gt;
+#include &lt;ctime&gt;
+#include &lt;chrono&gt;
+#include &lt;array&gt;
+</programlisting>Include dependency graph for Robot.hpp:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_robot_8hpp__incl.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+This graph shows which files directly or indirectly include this file:<para>
+    <informalfigure>
+        <mediaobject>
+            <imageobject>
+                <imagedata width="50%" align="center" valign="middle" scalefit="0" fileref="_robot_8hpp__dep__incl.png"></imagedata>
+            </imageobject>
+        </mediaobject>
+    </informalfigure>
+</para>
+<simplesect>
+    <title>Classes    </title>
+        <itemizedlist>
+            <listitem><para>class <link linkend="_class_object_load">ObjectLoad</link></para>
+</listitem>
+            <listitem><para>class <link linkend="_class_robot">Robot</link></para>
+</listitem>
+        </itemizedlist>
+</simplesect>
+</section>

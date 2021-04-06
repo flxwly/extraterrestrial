@@ -1,0 +1,322 @@
+.TH "code/libs/CoSpaceFunctions.hpp" 3 "Mon Apr 5 2021" "Extraterrestrial" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+code/libs/CoSpaceFunctions.hpp
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <bits/stdc++\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fB_USE_MATH_DEFINES\fP"
+.br
+.ti -1c
+.RI "#define \fBDLL_EXPORT\fP   extern 'C' __declspec(dllexport)"
+.br
+.ti -1c
+.RI "#define \fBDISABLE_C4996\fP"
+.br
+.ti -1c
+.RI "#define \fBENABLE_C4996\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBGame0\fP ()"
+.br
+.ti -1c
+.RI "void \fBGame1\fP ()"
+.br
+.ti -1c
+.RI "void \fBSetup\fP ()"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP void \fBSetGameID\fP (int GameID)"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP int \fBGetGameID\fP ()"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP int \fBIsGameEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP char * \fBGetDebugInfo\fP ()"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP char * \fBGetTeamName\fP ()"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP int \fBGetCurAction\fP ()"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP int \fBGetTeleport\fP ()"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP void \fBSetSuperObj\fP (int X, int Y, int num)"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP void \fBGetSuperObj\fP (int *X, int *Y, int *num)"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP void \fBSetDataAI\fP (volatile int *packet, volatile int *AI_IN)"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP void \fBGetCommand\fP (int *AI_OUT)"
+.br
+.ti -1c
+.RI "\fBDLL_EXPORT\fP void \fBOnTimer\fP ()"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "volatile int * \fBINPUT\fP"
+.br
+.ti -1c
+.RI "volatile int * \fBOUTPUT\fP"
+.br
+.ti -1c
+.RI "char \fBAI_MyID\fP [2]"
+.br
+.ti -1c
+.RI "int \fBDuration\fP"
+.br
+.ti -1c
+.RI "int \fBSuperDuration\fP"
+.br
+.ti -1c
+.RI "int \fBbGameEnd\fP"
+.br
+.ti -1c
+.RI "int \fBCurAction\fP"
+.br
+.ti -1c
+.RI "int \fBCurGame\fP"
+.br
+.ti -1c
+.RI "int \fBSuperObj_Num\fP"
+.br
+.ti -1c
+.RI "int \fBSuperObj_X\fP"
+.br
+.ti -1c
+.RI "int \fBSuperObj_Y\fP"
+.br
+.ti -1c
+.RI "int \fBTeleport\fP"
+.br
+.ti -1c
+.RI "int \fBLoadedObjects\fP"
+.br
+.ti -1c
+.RI "int \fBUS_Front\fP"
+.br
+.ti -1c
+.RI "int \fBUS_Left\fP"
+.br
+.ti -1c
+.RI "int \fBUS_Right\fP"
+.br
+.ti -1c
+.RI "int \fBCSLeft_R\fP"
+.br
+.ti -1c
+.RI "int \fBCSLeft_G\fP"
+.br
+.ti -1c
+.RI "int \fBCSLeft_B\fP"
+.br
+.ti -1c
+.RI "int \fBCSRight_R\fP"
+.br
+.ti -1c
+.RI "int \fBCSRight_G\fP"
+.br
+.ti -1c
+.RI "int \fBCSRight_B\fP"
+.br
+.ti -1c
+.RI "int \fBPositionX\fP"
+.br
+.ti -1c
+.RI "int \fBPositionY\fP"
+.br
+.ti -1c
+.RI "int \fBTM_State\fP"
+.br
+.ti -1c
+.RI "int \fBCompass\fP"
+.br
+.ti -1c
+.RI "int \fBTime\fP"
+.br
+.ti -1c
+.RI "int \fBWheelLeft\fP"
+.br
+.ti -1c
+.RI "int \fBWheelRight\fP"
+.br
+.ti -1c
+.RI "int \fBLED_1\fP"
+.br
+.ti -1c
+.RI "int \fBMyState\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBcycle\fP"
+.br
+.ti -1c
+.RI "int \fBAI_SensorNum\fP"
+.br
+.ti -1c
+.RI "int \fBOtherRob_PositionX\fP"
+.br
+.ti -1c
+.RI "int \fBOtherRob_PositionY\fP"
+.br
+.ti -1c
+.RI "int \fBObjState\fP"
+.br
+.ti -1c
+.RI "int \fBObjPositionX\fP"
+.br
+.ti -1c
+.RI "int \fBObjPositionY\fP"
+.br
+.ti -1c
+.RI "int \fBObjDuration\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define _USE_MATH_DEFINES"
+
+.SS "#define DISABLE_C4996"
+
+.SS "#define DLL_EXPORT   extern 'C' __declspec(dllexport)"
+
+.SS "#define ENABLE_C4996"
+
+.SH "Function Documentation"
+.PP 
+.SS "void Game0 ()"
+
+.SS "void Game1 ()"
+
+.SS "\fBDLL_EXPORT\fP void GetCommand (int * AI_OUT)"
+
+.SS "\fBDLL_EXPORT\fP int GetCurAction ()"
+
+.SS "\fBDLL_EXPORT\fP char* GetDebugInfo ()"
+
+.SS "\fBDLL_EXPORT\fP int GetGameID ()"
+
+.SS "\fBDLL_EXPORT\fP void GetSuperObj (int * X, int * Y, int * num)"
+
+.SS "\fBDLL_EXPORT\fP char* GetTeamName ()"
+
+.SS "\fBDLL_EXPORT\fP int GetTeleport ()"
+
+.SS "\fBDLL_EXPORT\fP int IsGameEnd ()"
+
+.SS "\fBDLL_EXPORT\fP void OnTimer ()"
+
+.SS "\fBDLL_EXPORT\fP void SetDataAI (volatile int * packet, volatile int * AI_IN)"
+
+.SS "\fBDLL_EXPORT\fP void SetGameID (int GameID)"
+
+.SS "\fBDLL_EXPORT\fP void SetSuperObj (int X, int Y, int num)"
+
+.SS "void Setup ()"
+
+.SH "Variable Documentation"
+.PP 
+.SS "char AI_MyID[2]\fC [extern]\fP"
+
+.SS "int AI_SensorNum\fC [extern]\fP"
+
+.SS "int bGameEnd\fC [extern]\fP"
+
+.SS "int Compass\fC [extern]\fP"
+
+.SS "int CSLeft_B\fC [extern]\fP"
+
+.SS "int CSLeft_G\fC [extern]\fP"
+
+.SS "int CSLeft_R\fC [extern]\fP"
+
+.SS "int CSRight_B\fC [extern]\fP"
+
+.SS "int CSRight_G\fC [extern]\fP"
+
+.SS "int CSRight_R\fC [extern]\fP"
+
+.SS "int CurAction\fC [extern]\fP"
+
+.SS "int CurGame\fC [extern]\fP"
+
+.SS "unsigned int cycle\fC [extern]\fP"
+
+.SS "int Duration\fC [extern]\fP"
+
+.SS "volatile int* INPUT\fC [extern]\fP"
+
+.SS "int LED_1\fC [extern]\fP"
+
+.SS "int LoadedObjects\fC [extern]\fP"
+
+.SS "int MyState\fC [extern]\fP"
+
+.SS "int ObjDuration\fC [extern]\fP"
+
+.SS "int ObjPositionX\fC [extern]\fP"
+
+.SS "int ObjPositionY\fC [extern]\fP"
+
+.SS "int ObjState\fC [extern]\fP"
+
+.SS "int OtherRob_PositionX\fC [extern]\fP"
+
+.SS "int OtherRob_PositionY\fC [extern]\fP"
+
+.SS "volatile int* OUTPUT\fC [extern]\fP"
+
+.SS "int PositionX\fC [extern]\fP"
+
+.SS "int PositionY\fC [extern]\fP"
+
+.SS "int SuperDuration\fC [extern]\fP"
+
+.SS "int SuperObj_Num\fC [extern]\fP"
+
+.SS "int SuperObj_X\fC [extern]\fP"
+
+.SS "int SuperObj_Y\fC [extern]\fP"
+
+.SS "int Teleport\fC [extern]\fP"
+
+.SS "int Time\fC [extern]\fP"
+
+.SS "int TM_State\fC [extern]\fP"
+
+.SS "int US_Front\fC [extern]\fP"
+
+.SS "int US_Left\fC [extern]\fP"
+
+.SS "int US_Right\fC [extern]\fP"
+
+.SS "int WheelLeft\fC [extern]\fP"
+
+.SS "int WheelRight\fC [extern]\fP"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Extraterrestrial from the source code\&.

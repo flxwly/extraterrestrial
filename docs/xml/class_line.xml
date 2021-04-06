@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.1" xml:lang="en-US">
+  <compounddef id="class_line" kind="class" language="C++" prot="public">
+    <compoundname>Line</compoundname>
+    <includes refid="_map_data_8hpp" local="no">MapData.hpp</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_line_1a83967c5447d139815c8be5de33fdc39e" prot="public" static="no" mutable="no">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Line::p1</definition>
+        <argsstring></argsstring>
+        <name>p1</name>
+        <briefdescription>
+<para>One end of the line. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="98" column="13" bodyfile="code/MapData.hpp" bodystart="98" bodyend="-1"/>
+        <referencedby refid="namespacegeometry_1a120ad790ee5a9ef199a6d67e5e9f1c90" compoundref="_map_data_8cpp" startline="347" endline="359">geometry::getNormalPoint</referencedby>
+        <referencedby refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" compoundref="_map_data_8cpp" startline="282" endline="303">geometry::intersection</referencedby>
+        <referencedby refid="class_line_1a85685f9a0e23d1ff9d03d6e32313aaeb" compoundref="_map_data_8hpp" startline="103" endline="105">str</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_line_1a113f0f7413651d7eb0b4602d1da226d4" prot="public" static="no" mutable="no">
+        <type><ref refid="class_p_vector" kindref="compound">PVector</ref></type>
+        <definition>PVector Line::p2</definition>
+        <argsstring></argsstring>
+        <name>p2</name>
+        <briefdescription>
+<para>The other end of the line. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="101" column="13" bodyfile="code/MapData.hpp" bodystart="101" bodyend="-1"/>
+        <referencedby refid="namespacegeometry_1a120ad790ee5a9ef199a6d67e5e9f1c90" compoundref="_map_data_8cpp" startline="347" endline="359">geometry::getNormalPoint</referencedby>
+        <referencedby refid="namespacegeometry_1a228137d265482ee3fd6581e2e375eb8f" compoundref="_map_data_8cpp" startline="282" endline="303">geometry::intersection</referencedby>
+        <referencedby refid="class_line_1a85685f9a0e23d1ff9d03d6e32313aaeb" compoundref="_map_data_8hpp" startline="103" endline="105">str</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_line_1acbdd5208bed57bca25c0db540d68dc4d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Line::Line</definition>
+        <argsstring>(const PVector &amp;_p1, const PVector &amp;_p2)</argsstring>
+        <name>Line</name>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>_p1</declname>
+        </param>
+        <param>
+          <type>const <ref refid="class_p_vector" kindref="compound">PVector</ref> &amp;</type>
+          <declname>_p2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><hruler/>
+ <ref refid="class_line" kindref="compound">Line</ref> <linebreak/>
+ <hruler/>
+ </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="95" column="5" bodyfile="code/MapData.cpp" bodystart="38" bodyend="38"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-static-func">
+      <memberdef kind="function" id="class_line_1a85685f9a0e23d1ff9d03d6e32313aaeb" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>static std::string Line::str</definition>
+        <argsstring>(Line &amp;l)</argsstring>
+        <name>str</name>
+        <param>
+          <type><ref refid="class_line" kindref="compound">Line</ref> &amp;</type>
+          <declname>l</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="code/MapData.hpp" line="103" column="24" bodyfile="code/MapData.hpp" bodystart="103" bodyend="105"/>
+        <references refid="class_line_1a83967c5447d139815c8be5de33fdc39e" compoundref="_map_data_8hpp" startline="98">p1</references>
+        <references refid="class_line_1a113f0f7413651d7eb0b4602d1da226d4" compoundref="_map_data_8hpp" startline="101">p2</references>
+        <references refid="class_p_vector_1adb8ed86f463adce2d0b86d1ad8c45592" compoundref="_p_vector_8cpp" startline="96" endline="98">PVector::str</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>A <ref refid="class_line" kindref="compound">Line</ref> in a 2D grid.</para>
+<para>A line is defined by to points p1 and p2. It does not provide much functionality by itself and is simply a container for two points under a namespace.</para>
+<para><parameterlist kind="templateparam"><parameteritem>
+<parameternamelist>
+<parametername>p1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Position of the 1st <ref refid="class_p_vector" kindref="compound">PVector</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>p2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Position of the 2nd <ref refid="class_p_vector" kindref="compound">PVector</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>Line</label>
+        <link refid="class_line"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>p1</edgelabel>
+          <edgelabel>p2</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>PVector</label>
+        <link refid="class_p_vector"/>
+      </node>
+    </collaborationgraph>
+    <location file="code/MapData.hpp" line="93" column="1" bodyfile="code/MapData.hpp" bodystart="93" bodyend="106"/>
+    <listofallmembers>
+      <member refid="class_line_1acbdd5208bed57bca25c0db540d68dc4d" prot="public" virt="non-virtual"><scope>Line</scope><name>Line</name></member>
+      <member refid="class_line_1a83967c5447d139815c8be5de33fdc39e" prot="public" virt="non-virtual"><scope>Line</scope><name>p1</name></member>
+      <member refid="class_line_1a113f0f7413651d7eb0b4602d1da226d4" prot="public" virt="non-virtual"><scope>Line</scope><name>p2</name></member>
+      <member refid="class_line_1a85685f9a0e23d1ff9d03d6e32313aaeb" prot="public" virt="non-virtual"><scope>Line</scope><name>str</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

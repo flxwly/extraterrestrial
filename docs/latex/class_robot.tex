@@ -1,0 +1,468 @@
+\hypertarget{class_robot}{}\doxysection{Robot Class Reference}
+\label{class_robot}\index{Robot@{Robot}}
+
+
+{\ttfamily \#include $<$Robot.\+hpp$>$}
+
+
+
+Collaboration diagram for Robot\+:
+% FIG 0
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::chrono\+::steady\+\_\+clock \mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Timer}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_robot_a0304ff4829dfeb19a868d4feb7d59038}{Robot}} (volatile int $\ast$IN, volatile int $\ast$OUT, std\+::array$<$ int $\ast$, 3 $>$ super\+Object, \mbox{\hyperlink{class_field}{Field}} $\ast$\mbox{\hyperlink{class_robot_a6eafb379fd3d28505e29f89a3e7cc0b1}{map0}}, \mbox{\hyperlink{class_field}{Field}} $\ast$\mbox{\hyperlink{class_robot_a479e878152a7daccd5487d81982c7ff9}{map1}})
+\item 
+void \mbox{\hyperlink{class_robot_a56d2661cb822912575d2cd479d08779e}{wheels}} (int l, int r)
+\begin{DoxyCompactList}\small\item\em controls the robots wheels \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_robot_aa13bf89f0098d0a14d17818efdfc8cd2}{move\+Along\+Path}} (\mbox{\hyperlink{class_path}{Path}} \&path)
+\item 
+\mbox{\hyperlink{class_p_vector}{PVector}} \mbox{\hyperlink{class_robot_a5ad54de036deda2d9f2e151cab96a9bd}{update\+Pos}} ()
+\begin{DoxyCompactList}\small\item\em updates the position of the robot mathematically and returns the change \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_robot_a990b30f193fbc9b294ac4785798ea394}{move\+To\+Position}} (\mbox{\hyperlink{class_p_vector}{PVector}} p)
+\item 
+int \mbox{\hyperlink{class_robot_ade9e381883860b0b81b6d2fd1e190e10}{check\+Us\+Sensors}} (int l, int f, int r)
+\begin{DoxyCompactList}\small\item\em checks if l, f or r is higher than the us-\/sensor values. returns a binary-\/encoded value \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_robot_acff1fa64498b60568d7446e6710f64c6}{update\+Loop}} ()
+\item 
+void \mbox{\hyperlink{class_robot_a79fef2efeb1fc25fad40e2b0fa603652}{game0\+Loop}} ()
+\begin{DoxyCompactList}\small\item\em game loop for first map \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_robot_ac9cf2352bb94bb2c623610c61027d2db}{game1\+Loop}} ()
+\begin{DoxyCompactList}\small\item\em game loop for second map \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_p_vector}{PVector}} \mbox{\hyperlink{class_robot_ad7b7f1a5a4e56d9e4c72a24a622d69f1}{get\+Velocity}} (long long int dt) const
+\begin{DoxyCompactList}\small\item\em gets the current velocity for a certain change in time (in ms) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_robot_adb8f5af6a3be057b17b9d73ebf6eabbb}{should\+Collect}} ()
+\begin{DoxyCompactList}\small\item\em decides whether collecting a point is a good idea or not \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_robot_abee8d3e53a745c33bb33e91d7a8748a4}{collect}} ()
+\begin{DoxyCompactList}\small\item\em collects a point \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_robot_acb30cea7c6baee7977193845aeabe009}{should\+Deposit}} ()
+\begin{DoxyCompactList}\small\item\em decides whether depositing is a good idea or not \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_robot_a106604404bd2727de0abdaf99c10c519}{deposit}} ()
+\begin{DoxyCompactList}\small\item\em deposits \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_robot_ac6da9c5a61f4ae0aa57314b027ed898e}{should\+Teleport}} ()
+\begin{DoxyCompactList}\small\item\em decides whether teleporting is a good idea or not \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_robot_a8ad41d97cfa6b475f2910768840b9769}{teleport}} ()
+\begin{DoxyCompactList}\small\item\em teleports \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_robot_aa46bf5e2662924fc2c9d7e747e12cec9}{avoid\+Void}} () const
+\begin{DoxyCompactList}\small\item\em returns a turning direction if the robot is about to drive off map \end{DoxyCompactList}\item 
+std\+::array$<$ int, 4 $>$ \mbox{\hyperlink{class_robot_a70d33a38d8f422be16ef303063c07277}{get\+Desired\+Load}} () const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ \mbox{\hyperlink{class_robot_ae20fb1cda5f32735ff19b6737bdf173a}{get\+Point\+Path}} (std\+::array$<$ int, 4 $>$ desired\+Load)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+unsigned short \mbox{\hyperlink{class_robot_a6f43057c443f9e79b3d7875643328343}{level}}
+\item 
+\mbox{\hyperlink{class_p_vector}{PVector}} \mbox{\hyperlink{class_robot_a1000239c43390bba895e574efb40bea1}{pos}}
+\item 
+\mbox{\hyperlink{class_p_vector}{PVector}} \mbox{\hyperlink{class_robot_aa72f97fe06ea1da3b97e2476a87f9e2b}{last\+Pos}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_path}{Path}} $>$ \mbox{\hyperlink{class_robot_a686d1ec7714f85bfd1fd0d5a6000f96b}{complete\+Path}}
+\item 
+\mbox{\hyperlink{class_field}{Field}} $\ast$ \mbox{\hyperlink{class_robot_a6eafb379fd3d28505e29f89a3e7cc0b1}{map0}}
+\item 
+\mbox{\hyperlink{class_field}{Field}} $\ast$ \mbox{\hyperlink{class_robot_a479e878152a7daccd5487d81982c7ff9}{map1}}
+\item 
+\mbox{\hyperlink{class_pathfinder}{Pathfinder}} \mbox{\hyperlink{class_robot_ab10294bd68a035f4ccc932b674d4f09a}{pathfinder0}}
+\item 
+\mbox{\hyperlink{class_pathfinder}{Pathfinder}} \mbox{\hyperlink{class_robot_ac20c4cea4260b9958b8d869411851063}{pathfinder1}}
+\item 
+\mbox{\hyperlink{class_pathfinder}{Pathfinder}} \mbox{\hyperlink{class_robot_afe2c01e9389fe2dba844b0815864b705}{pathfinder0T}}
+\item 
+\mbox{\hyperlink{class_pathfinder}{Pathfinder}} \mbox{\hyperlink{class_robot_aaa2235a0007e798eb02771cb03058698}{pathfinder1T}}
+\item 
+\mbox{\hyperlink{class_object_load}{Object\+Load}} \mbox{\hyperlink{class_robot_acd0a9b0c24c28c62b6903fe1570b2eeb}{loaded\+Objects}}
+\item 
+unsigned int \mbox{\hyperlink{class_robot_a5ec6698f2aaaf175aecc86b8f94ec8e4}{last\+RGBBonus}}
+\item 
+bool \mbox{\hyperlink{class_robot_ac2546b91734a2b4d4d22b524dc9d2d0c}{hunting\+Super\+Obj}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{class_collectible}{Collectible}} $\ast$ $>$ \mbox{\hyperlink{class_robot_ad45d8f1011a473e9b158d240dd9b6766}{super\+Objects}}
+\item 
+int \mbox{\hyperlink{class_robot_a4a8fcb89aa81ba370f85c1dbbf401a20}{remaining\+Map\+Time}}
+\item 
+std\+::chrono\+::time\+\_\+point$<$ \mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Timer}} $>$ \mbox{\hyperlink{class_robot_a0412b2e9cdd76a653aa6b8ddf24f450f}{last\+Program\+Cycle}}
+\item 
+std\+::chrono\+::time\+\_\+point$<$ \mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Timer}} $>$ \mbox{\hyperlink{class_robot_a3f4d56a15c5414fbdbe6fa55be384bdc}{depositing\+Since}}
+\item 
+std\+::chrono\+::time\+\_\+point$<$ \mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Timer}} $>$ \mbox{\hyperlink{class_robot_a64c2b4bbf84de4682285450556ed40eb}{collecting\+Since}}
+\item 
+std\+::chrono\+::time\+\_\+point$<$ \mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Timer}} $>$ \mbox{\hyperlink{class_robot_a3c82c722e113435735318a47cbc4efe2}{last\+Position\+Update}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The robot of the Co\+Space-\/simulator 
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}\label{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}} 
+\index{Robot@{Robot}!Timer@{Timer}}
+\index{Timer@{Timer}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{Timer}{Timer}}
+{\footnotesize\ttfamily typedef std\+::chrono\+::steady\+\_\+clock \mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Robot\+::\+Timer}}}
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_robot_a0304ff4829dfeb19a868d4feb7d59038}\label{class_robot_a0304ff4829dfeb19a868d4feb7d59038}} 
+\index{Robot@{Robot}!Robot@{Robot}}
+\index{Robot@{Robot}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{Robot()}{Robot()}}
+{\footnotesize\ttfamily Robot\+::\+Robot (\begin{DoxyParamCaption}\item[{volatile int $\ast$}]{IN,  }\item[{volatile int $\ast$}]{OUT,  }\item[{std\+::array$<$ int $\ast$, 3 $>$}]{super\+Object,  }\item[{\mbox{\hyperlink{class_field}{Field}} $\ast$}]{map0,  }\item[{\mbox{\hyperlink{class_field}{Field}} $\ast$}]{map1 }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_robot_aa46bf5e2662924fc2c9d7e747e12cec9}\label{class_robot_aa46bf5e2662924fc2c9d7e747e12cec9}} 
+\index{Robot@{Robot}!avoidVoid@{avoidVoid}}
+\index{avoidVoid@{avoidVoid}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{avoidVoid()}{avoidVoid()}}
+{\footnotesize\ttfamily int Robot\+::avoid\+Void (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+returns a turning direction if the robot is about to drive off map 
+
+Here is the caller graph for this function\+:
+% FIG 1
+\mbox{\Hypertarget{class_robot_ade9e381883860b0b81b6d2fd1e190e10}\label{class_robot_ade9e381883860b0b81b6d2fd1e190e10}} 
+\index{Robot@{Robot}!checkUsSensors@{checkUsSensors}}
+\index{checkUsSensors@{checkUsSensors}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{checkUsSensors()}{checkUsSensors()}}
+{\footnotesize\ttfamily int Robot\+::check\+Us\+Sensors (\begin{DoxyParamCaption}\item[{int}]{l,  }\item[{int}]{f,  }\item[{int}]{r }\end{DoxyParamCaption})}
+
+
+
+checks if l, f or r is higher than the us-\/sensor values. returns a binary-\/encoded value 
+
+Here is the caller graph for this function\+:
+% FIG 2
+\mbox{\Hypertarget{class_robot_abee8d3e53a745c33bb33e91d7a8748a4}\label{class_robot_abee8d3e53a745c33bb33e91d7a8748a4}} 
+\index{Robot@{Robot}!collect@{collect}}
+\index{collect@{collect}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{collect()}{collect()}}
+{\footnotesize\ttfamily int Robot\+::collect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+collects a point 
+
+Here is the call graph for this function\+:
+% FIG 3
+Here is the caller graph for this function\+:
+% FIG 4
+\mbox{\Hypertarget{class_robot_a106604404bd2727de0abdaf99c10c519}\label{class_robot_a106604404bd2727de0abdaf99c10c519}} 
+\index{Robot@{Robot}!deposit@{deposit}}
+\index{deposit@{deposit}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{deposit()}{deposit()}}
+{\footnotesize\ttfamily void Robot\+::deposit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+deposits 
+
+Here is the call graph for this function\+:
+% FIG 5
+Here is the caller graph for this function\+:
+% FIG 6
+\mbox{\Hypertarget{class_robot_a79fef2efeb1fc25fad40e2b0fa603652}\label{class_robot_a79fef2efeb1fc25fad40e2b0fa603652}} 
+\index{Robot@{Robot}!game0Loop@{game0Loop}}
+\index{game0Loop@{game0Loop}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{game0Loop()}{game0Loop()}}
+{\footnotesize\ttfamily void Robot\+::game0\+Loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+game loop for first map 
+
+Here is the call graph for this function\+:
+% FIG 7
+Here is the caller graph for this function\+:
+% FIG 8
+\mbox{\Hypertarget{class_robot_ac9cf2352bb94bb2c623610c61027d2db}\label{class_robot_ac9cf2352bb94bb2c623610c61027d2db}} 
+\index{Robot@{Robot}!game1Loop@{game1Loop}}
+\index{game1Loop@{game1Loop}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{game1Loop()}{game1Loop()}}
+{\footnotesize\ttfamily void Robot\+::game1\+Loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+game loop for second map 
+
+Here is the call graph for this function\+:
+% FIG 9
+Here is the caller graph for this function\+:
+% FIG 10
+\mbox{\Hypertarget{class_robot_a70d33a38d8f422be16ef303063c07277}\label{class_robot_a70d33a38d8f422be16ef303063c07277}} 
+\index{Robot@{Robot}!getDesiredLoad@{getDesiredLoad}}
+\index{getDesiredLoad@{getDesiredLoad}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{getDesiredLoad()}{getDesiredLoad()}}
+{\footnotesize\ttfamily std\+::array$<$ int, 4 $>$ Robot\+::get\+Desired\+Load (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Here is the caller graph for this function\+:
+% FIG 11
+\mbox{\Hypertarget{class_robot_ae20fb1cda5f32735ff19b6737bdf173a}\label{class_robot_ae20fb1cda5f32735ff19b6737bdf173a}} 
+\index{Robot@{Robot}!getPointPath@{getPointPath}}
+\index{getPointPath@{getPointPath}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{getPointPath()}{getPointPath()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{class_p_vector}{PVector}} $>$ Robot\+::get\+Point\+Path (\begin{DoxyParamCaption}\item[{std\+::array$<$ int, 4 $>$}]{desired\+Load }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+% FIG 12
+Here is the caller graph for this function\+:
+% FIG 13
+\mbox{\Hypertarget{class_robot_ad7b7f1a5a4e56d9e4c72a24a622d69f1}\label{class_robot_ad7b7f1a5a4e56d9e4c72a24a622d69f1}} 
+\index{Robot@{Robot}!getVelocity@{getVelocity}}
+\index{getVelocity@{getVelocity}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{getVelocity()}{getVelocity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_p_vector}{PVector}} Robot\+::get\+Velocity (\begin{DoxyParamCaption}\item[{long long int}]{dt }\end{DoxyParamCaption}) const}
+
+
+
+gets the current velocity for a certain change in time (in ms) 
+
+Here is the call graph for this function\+:
+% FIG 14
+Here is the caller graph for this function\+:
+% FIG 15
+\mbox{\Hypertarget{class_robot_aa13bf89f0098d0a14d17818efdfc8cd2}\label{class_robot_aa13bf89f0098d0a14d17818efdfc8cd2}} 
+\index{Robot@{Robot}!moveAlongPath@{moveAlongPath}}
+\index{moveAlongPath@{moveAlongPath}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{moveAlongPath()}{moveAlongPath()}}
+{\footnotesize\ttfamily void Robot\+::move\+Along\+Path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_path}{Path}} \&}]{path }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+% FIG 16
+Here is the caller graph for this function\+:
+% FIG 17
+\mbox{\Hypertarget{class_robot_a990b30f193fbc9b294ac4785798ea394}\label{class_robot_a990b30f193fbc9b294ac4785798ea394}} 
+\index{Robot@{Robot}!moveToPosition@{moveToPosition}}
+\index{moveToPosition@{moveToPosition}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{moveToPosition()}{moveToPosition()}}
+{\footnotesize\ttfamily int Robot\+::move\+To\+Position (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_p_vector}{PVector}}}]{p }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+% FIG 18
+Here is the caller graph for this function\+:
+% FIG 19
+\mbox{\Hypertarget{class_robot_adb8f5af6a3be057b17b9d73ebf6eabbb}\label{class_robot_adb8f5af6a3be057b17b9d73ebf6eabbb}} 
+\index{Robot@{Robot}!shouldCollect@{shouldCollect}}
+\index{shouldCollect@{shouldCollect}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{shouldCollect()}{shouldCollect()}}
+{\footnotesize\ttfamily bool Robot\+::should\+Collect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+decides whether collecting a point is a good idea or not 
+
+Here is the call graph for this function\+:
+% FIG 20
+Here is the caller graph for this function\+:
+% FIG 21
+\mbox{\Hypertarget{class_robot_acb30cea7c6baee7977193845aeabe009}\label{class_robot_acb30cea7c6baee7977193845aeabe009}} 
+\index{Robot@{Robot}!shouldDeposit@{shouldDeposit}}
+\index{shouldDeposit@{shouldDeposit}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{shouldDeposit()}{shouldDeposit()}}
+{\footnotesize\ttfamily bool Robot\+::should\+Deposit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+decides whether depositing is a good idea or not 
+
+Here is the call graph for this function\+:
+% FIG 22
+Here is the caller graph for this function\+:
+% FIG 23
+\mbox{\Hypertarget{class_robot_ac6da9c5a61f4ae0aa57314b027ed898e}\label{class_robot_ac6da9c5a61f4ae0aa57314b027ed898e}} 
+\index{Robot@{Robot}!shouldTeleport@{shouldTeleport}}
+\index{shouldTeleport@{shouldTeleport}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{shouldTeleport()}{shouldTeleport()}}
+{\footnotesize\ttfamily bool Robot\+::should\+Teleport (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+decides whether teleporting is a good idea or not 
+
+Here is the call graph for this function\+:
+% FIG 24
+Here is the caller graph for this function\+:
+% FIG 25
+\mbox{\Hypertarget{class_robot_a8ad41d97cfa6b475f2910768840b9769}\label{class_robot_a8ad41d97cfa6b475f2910768840b9769}} 
+\index{Robot@{Robot}!teleport@{teleport}}
+\index{teleport@{teleport}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{teleport()}{teleport()}}
+{\footnotesize\ttfamily void Robot\+::teleport (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+teleports 
+
+Here is the call graph for this function\+:
+% FIG 26
+Here is the caller graph for this function\+:
+% FIG 27
+\mbox{\Hypertarget{class_robot_acff1fa64498b60568d7446e6710f64c6}\label{class_robot_acff1fa64498b60568d7446e6710f64c6}} 
+\index{Robot@{Robot}!updateLoop@{updateLoop}}
+\index{updateLoop@{updateLoop}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{updateLoop()}{updateLoop()}}
+{\footnotesize\ttfamily void Robot\+::update\+Loop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+% FIG 28
+Here is the caller graph for this function\+:
+% FIG 29
+\mbox{\Hypertarget{class_robot_a5ad54de036deda2d9f2e151cab96a9bd}\label{class_robot_a5ad54de036deda2d9f2e151cab96a9bd}} 
+\index{Robot@{Robot}!updatePos@{updatePos}}
+\index{updatePos@{updatePos}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{updatePos()}{updatePos()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_p_vector}{PVector}} Robot\+::update\+Pos (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+updates the position of the robot mathematically and returns the change 
+
+Here is the call graph for this function\+:
+% FIG 30
+Here is the caller graph for this function\+:
+% FIG 31
+\mbox{\Hypertarget{class_robot_a56d2661cb822912575d2cd479d08779e}\label{class_robot_a56d2661cb822912575d2cd479d08779e}} 
+\index{Robot@{Robot}!wheels@{wheels}}
+\index{wheels@{wheels}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{wheels()}{wheels()}}
+{\footnotesize\ttfamily void Robot\+::wheels (\begin{DoxyParamCaption}\item[{int}]{l,  }\item[{int}]{r }\end{DoxyParamCaption})}
+
+
+
+controls the robots wheels 
+
+Here is the caller graph for this function\+:
+% FIG 32
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_robot_a64c2b4bbf84de4682285450556ed40eb}\label{class_robot_a64c2b4bbf84de4682285450556ed40eb}} 
+\index{Robot@{Robot}!collectingSince@{collectingSince}}
+\index{collectingSince@{collectingSince}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{collectingSince}{collectingSince}}
+{\footnotesize\ttfamily std\+::chrono\+::time\+\_\+point$<$\mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Timer}}$>$ Robot\+::collecting\+Since}
+
+\mbox{\Hypertarget{class_robot_a686d1ec7714f85bfd1fd0d5a6000f96b}\label{class_robot_a686d1ec7714f85bfd1fd0d5a6000f96b}} 
+\index{Robot@{Robot}!completePath@{completePath}}
+\index{completePath@{completePath}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{completePath}{completePath}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{class_path}{Path}}$>$ Robot\+::complete\+Path}
+
+\mbox{\Hypertarget{class_robot_a3f4d56a15c5414fbdbe6fa55be384bdc}\label{class_robot_a3f4d56a15c5414fbdbe6fa55be384bdc}} 
+\index{Robot@{Robot}!depositingSince@{depositingSince}}
+\index{depositingSince@{depositingSince}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{depositingSince}{depositingSince}}
+{\footnotesize\ttfamily std\+::chrono\+::time\+\_\+point$<$\mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Timer}}$>$ Robot\+::depositing\+Since}
+
+\mbox{\Hypertarget{class_robot_ac2546b91734a2b4d4d22b524dc9d2d0c}\label{class_robot_ac2546b91734a2b4d4d22b524dc9d2d0c}} 
+\index{Robot@{Robot}!huntingSuperObj@{huntingSuperObj}}
+\index{huntingSuperObj@{huntingSuperObj}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{huntingSuperObj}{huntingSuperObj}}
+{\footnotesize\ttfamily bool Robot\+::hunting\+Super\+Obj}
+
+\mbox{\Hypertarget{class_robot_aa72f97fe06ea1da3b97e2476a87f9e2b}\label{class_robot_aa72f97fe06ea1da3b97e2476a87f9e2b}} 
+\index{Robot@{Robot}!lastPos@{lastPos}}
+\index{lastPos@{lastPos}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{lastPos}{lastPos}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_p_vector}{PVector}} Robot\+::last\+Pos}
+
+\mbox{\Hypertarget{class_robot_a3c82c722e113435735318a47cbc4efe2}\label{class_robot_a3c82c722e113435735318a47cbc4efe2}} 
+\index{Robot@{Robot}!lastPositionUpdate@{lastPositionUpdate}}
+\index{lastPositionUpdate@{lastPositionUpdate}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{lastPositionUpdate}{lastPositionUpdate}}
+{\footnotesize\ttfamily std\+::chrono\+::time\+\_\+point$<$\mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Timer}}$>$ Robot\+::last\+Position\+Update}
+
+\mbox{\Hypertarget{class_robot_a0412b2e9cdd76a653aa6b8ddf24f450f}\label{class_robot_a0412b2e9cdd76a653aa6b8ddf24f450f}} 
+\index{Robot@{Robot}!lastProgramCycle@{lastProgramCycle}}
+\index{lastProgramCycle@{lastProgramCycle}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{lastProgramCycle}{lastProgramCycle}}
+{\footnotesize\ttfamily std\+::chrono\+::time\+\_\+point$<$\mbox{\hyperlink{class_robot_a27ef3b6f5da83dba4423fb44bbf8aa87}{Timer}}$>$ Robot\+::last\+Program\+Cycle}
+
+\mbox{\Hypertarget{class_robot_a5ec6698f2aaaf175aecc86b8f94ec8e4}\label{class_robot_a5ec6698f2aaaf175aecc86b8f94ec8e4}} 
+\index{Robot@{Robot}!lastRGBBonus@{lastRGBBonus}}
+\index{lastRGBBonus@{lastRGBBonus}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{lastRGBBonus}{lastRGBBonus}}
+{\footnotesize\ttfamily unsigned int Robot\+::last\+RGBBonus}
+
+\mbox{\Hypertarget{class_robot_a6f43057c443f9e79b3d7875643328343}\label{class_robot_a6f43057c443f9e79b3d7875643328343}} 
+\index{Robot@{Robot}!level@{level}}
+\index{level@{level}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{level}{level}}
+{\footnotesize\ttfamily unsigned short Robot\+::level}
+
+\mbox{\Hypertarget{class_robot_acd0a9b0c24c28c62b6903fe1570b2eeb}\label{class_robot_acd0a9b0c24c28c62b6903fe1570b2eeb}} 
+\index{Robot@{Robot}!loadedObjects@{loadedObjects}}
+\index{loadedObjects@{loadedObjects}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{loadedObjects}{loadedObjects}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_object_load}{Object\+Load}} Robot\+::loaded\+Objects}
+
+\mbox{\Hypertarget{class_robot_a6eafb379fd3d28505e29f89a3e7cc0b1}\label{class_robot_a6eafb379fd3d28505e29f89a3e7cc0b1}} 
+\index{Robot@{Robot}!map0@{map0}}
+\index{map0@{map0}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{map0}{map0}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_field}{Field}}$\ast$ Robot\+::map0}
+
+\mbox{\Hypertarget{class_robot_a479e878152a7daccd5487d81982c7ff9}\label{class_robot_a479e878152a7daccd5487d81982c7ff9}} 
+\index{Robot@{Robot}!map1@{map1}}
+\index{map1@{map1}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{map1}{map1}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_field}{Field}} $\ast$ Robot\+::map1}
+
+\mbox{\Hypertarget{class_robot_ab10294bd68a035f4ccc932b674d4f09a}\label{class_robot_ab10294bd68a035f4ccc932b674d4f09a}} 
+\index{Robot@{Robot}!pathfinder0@{pathfinder0}}
+\index{pathfinder0@{pathfinder0}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{pathfinder0}{pathfinder0}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_pathfinder}{Pathfinder}} Robot\+::pathfinder0}
+
+\mbox{\Hypertarget{class_robot_afe2c01e9389fe2dba844b0815864b705}\label{class_robot_afe2c01e9389fe2dba844b0815864b705}} 
+\index{Robot@{Robot}!pathfinder0T@{pathfinder0T}}
+\index{pathfinder0T@{pathfinder0T}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{pathfinder0T}{pathfinder0T}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_pathfinder}{Pathfinder}} Robot\+::pathfinder0T}
+
+\mbox{\Hypertarget{class_robot_ac20c4cea4260b9958b8d869411851063}\label{class_robot_ac20c4cea4260b9958b8d869411851063}} 
+\index{Robot@{Robot}!pathfinder1@{pathfinder1}}
+\index{pathfinder1@{pathfinder1}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{pathfinder1}{pathfinder1}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_pathfinder}{Pathfinder}} Robot\+::pathfinder1}
+
+\mbox{\Hypertarget{class_robot_aaa2235a0007e798eb02771cb03058698}\label{class_robot_aaa2235a0007e798eb02771cb03058698}} 
+\index{Robot@{Robot}!pathfinder1T@{pathfinder1T}}
+\index{pathfinder1T@{pathfinder1T}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{pathfinder1T}{pathfinder1T}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_pathfinder}{Pathfinder}} Robot\+::pathfinder1T}
+
+\mbox{\Hypertarget{class_robot_a1000239c43390bba895e574efb40bea1}\label{class_robot_a1000239c43390bba895e574efb40bea1}} 
+\index{Robot@{Robot}!pos@{pos}}
+\index{pos@{pos}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{pos}{pos}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_p_vector}{PVector}} Robot\+::pos}
+
+\mbox{\Hypertarget{class_robot_a4a8fcb89aa81ba370f85c1dbbf401a20}\label{class_robot_a4a8fcb89aa81ba370f85c1dbbf401a20}} 
+\index{Robot@{Robot}!remainingMapTime@{remainingMapTime}}
+\index{remainingMapTime@{remainingMapTime}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{remainingMapTime}{remainingMapTime}}
+{\footnotesize\ttfamily int Robot\+::remaining\+Map\+Time}
+
+\mbox{\Hypertarget{class_robot_ad45d8f1011a473e9b158d240dd9b6766}\label{class_robot_ad45d8f1011a473e9b158d240dd9b6766}} 
+\index{Robot@{Robot}!superObjects@{superObjects}}
+\index{superObjects@{superObjects}!Robot@{Robot}}
+\doxysubsubsection{\texorpdfstring{superObjects}{superObjects}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{class_collectible}{Collectible}} $\ast$$>$ Robot\+::super\+Objects}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+code/\mbox{\hyperlink{_robot_8hpp}{Robot.\+hpp}}\item 
+code/\mbox{\hyperlink{_robot_8cpp}{Robot.\+cpp}}\end{DoxyCompactItemize}
