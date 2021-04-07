@@ -10,14 +10,14 @@
 //#define COLOR_LOGGING
 
 /// define DEBUG to enable debug messages
-//#define DEBUG
+#define DEBUG
 
 /// ---------------------------------
 ///         SFML settings
 /// ---------------------------------
 
 /// define SFML to enable debugging via SFML
-// #define SFML
+//#define SFML
 
 /// define DebugPathfinderNodes
 //#define DebugPathfinderNodes
