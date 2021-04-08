@@ -63,7 +63,7 @@ void Setup() {
 	                   GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
 	GAME1 = &Game1;
 
-	static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, GAME0, GAME1);
+	static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, &Teleport, GAME0, GAME1);
 	Bot = &bot;
 
 #ifdef SFML

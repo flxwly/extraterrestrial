@@ -137,11 +137,13 @@ unsigned int ObjectLoad::num() const {
 //====================================
 
 
-Robot::Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, Field *map0, Field *map1) :
+Robot::Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, int *teleport,
+             Field *map0, Field *map1) :
 		pathfinder0(*map0, false), pathfinder1(*map1, false),
 		pathfinder0T(*map0, true), pathfinder1T(*map1, true),
 		map0(map0), map1(map1), SUPER_OBJECT(superObject) {
 
+    TELEPORT = teleport;
 	setIN(IN);
 	setOUT(OUT);
 }
@@ -195,6 +197,7 @@ void Robot::updateSimVars() {
 	ultraSonic[0] = AI_IN[1];
 	ultraSonic[2] = AI_IN[2];
 	gameTime = AI_IN[12];
+	*TELEPORT = level;
 
 	// Output vars
 	AI_OUT[0] = wheelLeft;

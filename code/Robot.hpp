@@ -66,6 +66,7 @@ private:
 	// Direct Input/Output to the Sim
 	volatile int *AI_IN{nullptr}, *AI_OUT{nullptr};
 	std::array<int *, 3> SUPER_OBJECT{nullptr, nullptr, nullptr};
+	int *TELEPORT = nullptr;
 
 	bool setIN(volatile int **IN);
 	bool setOUT(volatile int **OUT);
@@ -79,6 +80,7 @@ private:
 	HSLColor leftColor{0, 0, 0}, rightColor{0, 0, 0};
 	std::array<int, 3> ultraSonic{0, 0, 0};
 	int gameTime{0};
+    int level = 0;
 
 	// Output (write)
 	int wheelLeft{0}, wheelRight{0};
@@ -90,7 +92,6 @@ private:
 #pragma region Public Robot Variables
 
 public:
-	unsigned short level = 0;
 
 	PVector pos{0, 0};
 	PVector lastPos{0, 0};
@@ -119,7 +120,7 @@ public:
 
 public:
 
-	Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, Field *map0, Field *map1);
+	Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, int *teleport, Field *map0, Field *map1);
 
 #pragma endregion
 
