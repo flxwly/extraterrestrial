@@ -94,7 +94,6 @@ private:
 public:
 
 	PVector pos{0, 0};
-	PVector lastPos{0, 0};
 
 	std::vector<Path> completePath{};
 	Field *map0, *map1;
@@ -130,7 +129,7 @@ public:
 	void moveAlongPath(Path &path);
 
 	/// updates the position of the robot mathematically and returns the change
-	PVector updatePos();
+	void updatePos();
 
 	int moveToPosition(PVector p);
 
