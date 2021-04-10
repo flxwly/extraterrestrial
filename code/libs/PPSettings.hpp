@@ -10,7 +10,7 @@
 //#define COLOR_LOGGING
 
 /// define DEBUG to enable debug messages
-#define DEBUG
+//#define DEBUG
 
 /// ---------------------------------
 ///         SFML settings
@@ -19,8 +19,8 @@
 /// define SFML to enable debugging via SFML
 //#define SFML
 
-/// define DebugPathfinderNodes
-//#define DebugPathfinderNodes
+/// define DEBUG_PATHFINDER_NODES
+//#define DEBUG_PATHFINDER_NODES
 
 
 
@@ -48,8 +48,9 @@
 ///         robot settings
 /// ----------------------------- ///
 
-/// The speed of the robot in cm/ms for 20 % of maximum speed
-#define ROBOT_SPEED 0.01
+/// The speed of the robot in cm/ms for 1 % of maximum speed (wheels(1, 1))
+#define ROBOT_SPEED 0.0005
+#define BREAKING_COEFFICIENT 0.01
 
 #define RPOS_ERROR_MARGIN 3
 

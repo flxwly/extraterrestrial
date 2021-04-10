@@ -74,6 +74,7 @@ void DebugWindow::GameDebug(unsigned int ID) {
 				window.draw(area, 2, sf::Lines);
 			}
 		}
+#ifdef DEBUG_PATHFINDER_NODES
 
 		int nodeIndex = static_cast<int>(std::floor(static_cast<float>(index) / 500)) %
 		                static_cast<int>(Bot->pathfinder1T.map.size());
@@ -102,6 +103,8 @@ void DebugWindow::GameDebug(unsigned int ID) {
 
 
 		window.draw(block);
+
+#endif
 
 
 
@@ -139,8 +142,8 @@ void DebugWindow::GameDebug(unsigned int ID) {
 		block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));
 		block.setOrigin(scale.x * 2, scale.y * 2);
 		block.setFillColor({140, 30, 0});             // dark red / brown
-		block.setPosition(static_cast<float> (PositionX) * scale.x,
-		                  static_cast<float> (PositionY) * scale.y);
+		block.setPosition(static_cast<float> (Bot->pos.x) * scale.x,
+		                  static_cast<float> (Bot->pos.y) * scale.y);
 		window.draw(block);
 
 		window.display();

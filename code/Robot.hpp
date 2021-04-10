@@ -146,8 +146,9 @@ public:
 
 
 	/// gets the current velocity for a certain change in time (in ms)
-	[[nodiscard]] PVector getVelocity(long long int dt) const;
+	[[nodiscard]] PVector getVelocity() const;
 
+	[[nodiscard]] double getBreakingDistance();
 
 	/// decides whether collecting a point is a good idea or not
 	bool shouldCollect();

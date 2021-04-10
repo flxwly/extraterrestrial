@@ -210,7 +210,7 @@ void Robot::updateSimVars() {
 //     position/update Methods
 //====================================
 
-PVector Robot::getVelocity(long long int dt) const {
+PVector Robot::getVelocity() const {
 
     // For clarification on how this works see
     // https://math.stackexchange.com/questions/3962859/calculate-path-of-vehicle-with-two-wheels-parallel-to-each-other
@@ -219,7 +219,7 @@ PVector Robot::getVelocity(long long int dt) const {
 
     if (wheelLeft == wheelRight) {
         return geometry::angle2Vector(toRadians(compass + 90)) *
-               (static_cast<double>(wheelLeft) * ROBOT_SPEED / penalty) * static_cast<double>(dt);
+               (static_cast<double>(wheelLeft) * ROBOT_SPEED / penalty);
     }
 
     double v1 = static_cast<double>(wheelLeft) * ROBOT_SPEED / penalty;
@@ -228,11 +228,11 @@ PVector Robot::getVelocity(long long int dt) const {
     double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
 
     PVector vel = (v1 != 0) ?
-                  PVector(s * cos(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s)) - s,
-                          s * sin(v1 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 + s))) :
+                  PVector(-s * cos(v1 / (ROBOT_AXLE_LENGTH / 2 + s)) + s,
+                          s * sin(v1 / (ROBOT_AXLE_LENGTH / 2 + s))) :
 
-                  PVector(s * cos(v2 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 - s)) - s,
-                          s * sin(v2 * static_cast<double> (dt) / (ROBOT_AXLE_LENGTH / 2 - s)));
+                  PVector(-s * cos(v2 / (ROBOT_AXLE_LENGTH / 2 - s)) + s,
+                          s * sin(v2 / (ROBOT_AXLE_LENGTH / 2 - s)));
 
     vel.rotate(toRadians(compass + 90));
 
@@ -245,8 +245,8 @@ void Robot::updatePos() {
     if (geometry::dist(pos, simPos) > RPOS_ERROR_MARGIN && simPos) {
         pos = simPos;
     } else {
-        pos = pos + getVelocity(std::chrono::duration_cast<std::chrono::milliseconds>(
-                Timer::now() - lastPositionUpdate).count());
+        pos = pos + getVelocity() * std::chrono::duration_cast<std::chrono::milliseconds>(
+                Timer::now() - lastPositionUpdate).count();
     }
 
     lastPositionUpdate = Timer::now();
@@ -868,6 +868,10 @@ void Robot::game1Loop() {
     }
 
     lastProgramCycle = Timer::now();
+}
+
+double Robot::getBreakingDistance() {
+    return std::pow(getVelocity().getMag(), 2) / BREAKING_COEFFICIENT;
 }
 
 
