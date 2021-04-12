@@ -40,8 +40,9 @@ public:
      * @param robotPos the actual position of the robot given by the simulator
      * @param angle the actual angle of the robot given by the simulator
      * @param uncertainty how imprecise the position and the angle is
+     * @param possibleStates which states the collectible can have. An empty vector means any state
      */
-    [[nodiscard]] bool isCorrectCollectible(PVector robotPos, double angle, double uncertainty) const;
+    [[nodiscard]] bool isCorrectCollectible(PVector robotPos, double angle, double uncertainty, std::vector<int> possibleStates) const;
 
     /** Represents the state
      *
@@ -181,7 +182,7 @@ public:
     Collectible* addCollectible(Collectible collectible);
     bool removeCollectible(Collectible collectible);
 
-    Collectible *getCollectible(PVector pos, double angle, double uncertainty, int color);
+    Collectible *getCollectible(PVector pos, double angle, double uncertainty, int color, std::vector<int> possibleStates);
 
 
     /// Getter for the size

@@ -37,7 +37,7 @@ void ObjectLoad::addObject(Collectible *object) {
 }
 
 bool ObjectLoad::removeObject(Collectible *object) {
-    auto it = find(m_loadedCollectibles[object->color].begin(), m_loadedCollectibles[object->color].end(), object);
+    auto it = std::find(m_loadedCollectibles[object->color].begin(), m_loadedCollectibles[object->color].end(), object);
     if (it != m_loadedCollectibles[object->color].end()) {
         m_loadedCollectibles[object->color].erase(it);
         m_count--;
@@ -179,7 +179,7 @@ void Robot::updateSimVars() {
             (AI_IN[9] != 0) ? static_cast<float>(AI_IN[9]) : NAN,
             (AI_IN[10] != 0) ? static_cast<float>(AI_IN[10]) : NAN);
 
-    compass = AI_IN[12];
+    compass = AI_IN[11];
     superObject.set(*SUPER_OBJECT[0], *SUPER_OBJECT[1]);
     superObjectNum = *SUPER_OBJECT[2];
 
@@ -234,7 +234,10 @@ PVector Robot::getVelocity() const {
                   PVector(-s * cos(v2 / (ROBOT_AXLE_LENGTH / 2 - s)) + s,
                           s * sin(v2 / (ROBOT_AXLE_LENGTH / 2 - s)));
 
+    ERROR_MESSAGE("1. Velocity: " + PVector::str(vel))
     vel.rotate(toRadians(compass + 90));
+
+    ERROR_MESSAGE("2. Velocity: " + PVector::str(vel))
 
     return vel;
 }
@@ -654,9 +657,6 @@ void Robot::updateLoop() {
     // --------- Time ----------
     remainingMapTime = GAME0_TIME - Time + ((level == 1) ? GAME1_TIME : 0);
 
-    ERROR_MESSAGE("Time for one cycle: " + std::to_string(
-            std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - lastProgramCycle).count()))
-
     // --------- Should start super obj hunting ----------
     huntingSuperObj = (remainingMapTime < 60 || superObjects.size() >= 3 || huntingSuperObj) && !superObjects.empty();
 
@@ -795,7 +795,7 @@ void Robot::game1Loop() {
     // remove path if point reached
     if (geometry::dist(completePath.front().getLast(), pos) < 5) {
         completePath.erase(completePath.begin());
-        Collectible *collectible = map1->getCollectible(pos, compass, 5, -1);
+        Collectible *collectible = map1->getCollectible(pos, compass, 5, -1, {0, 1});
         if (collectible) {
 
             if (collectible->visited > 3) {
@@ -836,7 +836,7 @@ void Robot::game1Loop() {
 
         if (color != -1) {
 
-            Collectible *collectible = map1->getCollectible(pos, compass, 10, color);
+            Collectible *collectible = map1->getCollectible(pos, compass, 10, color, {0, 1});
             std::cout << "Mark Collectible: " << collectible << " as collected" << std::endl;
             if (collectible) {
                 collectible->state = 2;
@@ -866,6 +866,8 @@ void Robot::game1Loop() {
             wheels(3, 0);
         }
     }
+
+    wheels(2, 1);
 
     lastProgramCycle = Timer::now();
 }
