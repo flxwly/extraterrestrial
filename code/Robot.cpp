@@ -222,8 +222,9 @@ PVector Robot::getVelocity() const {
                (static_cast<double>(wheelLeft) * ROBOT_SPEED / penalty);
     }
 
-    double v1 = static_cast<double>(wheelLeft) * ROBOT_SPEED / penalty;
-    double v2 = static_cast<double>(wheelRight) * ROBOT_SPEED / penalty;
+    // v1 and v2 are the linear velocities at the wheels
+    double v1 = angularToLinear(LWHEEL_RADIUS, REVPERS * static_cast<double>(wheelLeft) / penalty);
+    double v2 = angularToLinear(RWHEEL_RADIUS, REVPERS * static_cast<double>(wheelRight) / penalty);
 
     double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
 
@@ -234,8 +235,11 @@ PVector Robot::getVelocity() const {
                   PVector(-s * cos(v2 / (ROBOT_AXLE_LENGTH / 2 - s)) + s,
                           s * sin(v2 / (ROBOT_AXLE_LENGTH / 2 - s)));
 
+    ERROR_MESSAGE("Rotation: " + std::to_string(compass))
+    ERROR_MESSAGE("WheelLeft: " + std::to_string(wheelLeft))
+    ERROR_MESSAGE("WheelRight: " + std::to_string(wheelRight))
     ERROR_MESSAGE("1. Velocity: " + PVector::str(vel))
-    vel.rotate(toRadians(compass + 90));
+    vel.rotate(toRadians(compass));
 
     ERROR_MESSAGE("2. Velocity: " + PVector::str(vel))
 
