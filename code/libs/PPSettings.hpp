@@ -98,4 +98,10 @@
 ///      CoSpace constants
 /// ----------------------------- ///
 
+/// Time to deposit in ms
+#define DEPOSIT_TIME 6000
+
+/// Time to collect in ms
+#define COLLECT_TIME 4000
+
 #endif //PPSETTINGS_HPP

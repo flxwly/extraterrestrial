@@ -266,7 +266,7 @@ void Robot::updatePos() {
 bool Robot::shouldCollect() {
 
     // if the difference is less or equal to 3.5 seconds the robot is still collecting;
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - collectingSince).count() <= 3500)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - collectingSince).count() <= COLLECT_TIME)
         return true;
 
     // The robot is full; the robot cant collect items anyway
@@ -292,7 +292,7 @@ bool Robot::shouldCollect() {
 int Robot::collect() {
 
     // the robot is already collecting
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - collectingSince).count() <= 4000) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - collectingSince).count() < COLLECT_TIME) {
         // This is to prevent the robot from moving
         wheels(0, 0);
         led = 1;
@@ -322,7 +322,7 @@ int Robot::collect() {
 bool Robot::shouldDeposit() {
 
     // while timer - depositingSince < 6the robot is still depositting
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - depositingSince).count() <= 4000)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - depositingSince).count() < DEPOSIT_TIME)
         return true;
 
     // 145 = 2 red + 1 cyan + 1 black | 20 + 15 + 20 + 90
@@ -331,7 +331,7 @@ bool Robot::shouldDeposit() {
 
 void Robot::deposit() {
     // the robot is already depositing
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - depositingSince).count() <= 5000) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - depositingSince).count() <= DEPOSIT_TIME) {
         // This is to prevent the robot from moving
         wheels(0, 0);
         led = 2;
