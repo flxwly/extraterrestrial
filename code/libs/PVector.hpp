@@ -46,7 +46,7 @@ public:
     */
     PVector normalize();
 
-    /** calculates and returns the magnitude of the PVector
+    /** calculates the magnitude of the PVector
      *
      * @returns magnitude of the PVector
      *
@@ -133,7 +133,7 @@ public:
      *
      * @param d the double that should be compared to this
      *
-     * @returns true if both the x and the y coordinate of this PVector match with d
+     * @returns true if both the x and the y coordinate of this PVector match with lhs
      *
     */
     bool operator!=(const double &lhs) const;

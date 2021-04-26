@@ -172,6 +172,7 @@ std::vector<PVector> Field::getMapNodes(const std::vector<unsigned int> &indices
             case 2:
                 returnVector.insert(std::end(returnVector), std::begin(SwampNodes_),
                                     std::end(SwampNodes_));
+                break;
             default: ERROR_MESSAGE("index out of range/invalid")
                 break;
         }

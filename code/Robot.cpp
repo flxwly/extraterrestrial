@@ -223,8 +223,8 @@ PVector Robot::getVelocity() const {
     }
 
     // v1 and v2 are the linear velocities at the wheels
-    double v1 = angularToLinear(LWHEEL_RADIUS, REVPERS * static_cast<double>(wheelLeft) / penalty);
-    double v2 = angularToLinear(RWHEEL_RADIUS, REVPERS * static_cast<double>(wheelRight) / penalty);
+    double v1 = angularToLinear(LWHEEL_RADIUS, REVPERMS * static_cast<double>(wheelLeft) / penalty);
+    double v2 = angularToLinear(RWHEEL_RADIUS, REVPERMS * static_cast<double>(wheelRight) / penalty);
 
     double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
 
@@ -238,9 +238,13 @@ PVector Robot::getVelocity() const {
     ERROR_MESSAGE("Rotation: " + std::to_string(compass))
     ERROR_MESSAGE("WheelLeft: " + std::to_string(wheelLeft))
     ERROR_MESSAGE("WheelRight: " + std::to_string(wheelRight))
+
+    ERROR_MESSAGE("WheelLeft: " + std::to_string(v1))
+    ERROR_MESSAGE("WheelLeft: " + std::to_string(v2))
+
+
     ERROR_MESSAGE("1. Velocity: " + PVector::str(vel))
     vel.rotate(toRadians(compass));
-
     ERROR_MESSAGE("2. Velocity: " + PVector::str(vel))
 
     return vel;
@@ -575,7 +579,6 @@ int Robot::checkUsSensors(int l, int f, int r) {
     return sum;
 }
 
-
 std::array<int, 4> Robot::getDesiredLoad() const {
     if (huntingSuperObj) {
         return {1, 1, 1, 3};
@@ -807,7 +810,7 @@ void Robot::game1Loop() {
                 // mark the collectible as collected since it seems to be missing
                 collectible->state = 2;
 
-                std::cout << "Mark Collectible: " << collectible << " as not existing." << std::endl;
+                std::cout << "Mark Collectible: " << collectible->pos.str() << " as not existing." << std::endl;
             }
             collectible->visited++;
         }

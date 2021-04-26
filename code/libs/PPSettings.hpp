@@ -63,8 +63,8 @@
 #define LCOLOR_X 3.6
 #define LCOLOR_Y 6
 
-/// Revolutions per second at 1% of robot's max wheel speed (1/30 rev/ms)
-#define REVPERS 0.00003333
+/// Revolutions per millisecond at 1% of robot's max wheel speed (1/30 rev/ms)
+#define REVPERMS 0.00003333
 
 /// X Distance of the right wheel to the robot's center in cm
 #define RWHEEL_X -6.3

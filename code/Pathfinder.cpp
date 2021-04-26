@@ -9,7 +9,6 @@
 Node::Node(PVector _pos, Field *_field) : pos(_pos), field(_field),
                                           isClosed(false), isOpen(false),
                                           g(0), f(0), previous(nullptr), neighbours() {
-    ERROR_MESSAGE("Constructed node")
 }
 
 
@@ -223,6 +222,8 @@ double Pathfinder::heuristic(const PVector &cur, const PVector &end) {
 
 Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 
+    ERROR_MESSAGE("Running Pathfinder from " + begin.str() + " to " + goal.str())
+
     // If the begin is also the goal a path is just the goal
     if (begin == goal)
         return Path({goal}, PATH_RADIUS);
@@ -283,6 +284,8 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
                 openList.top()->isOpen = false;
                 openList.pop();
             }
+
+            ERROR_MESSAGE("Found path")
 
             return path;
         }

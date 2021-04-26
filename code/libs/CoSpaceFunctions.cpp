@@ -108,6 +108,8 @@ DLL_EXPORT void GetCommand(int *AI_OUT) {
 DLL_EXPORT void OnTimer() {
     if (cycle == 1) {
         Setup();
+    } else if (INPUT && OUTPUT) {
+        Game1();
     }
     cycle++;
 }

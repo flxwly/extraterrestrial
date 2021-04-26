@@ -34,7 +34,7 @@ bool runAsyncLoop = false;
 std::thread *AsyncLoopThread = nullptr;
 
 void startAsyncLoop() {
-    runAsyncLoop = true;
+    runAsyncLoop = false;
     while (runAsyncLoop) {
         Bot->updateLoop();
         if (CurGame == 0) {
