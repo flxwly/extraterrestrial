@@ -1,10 +1,10 @@
 import random
 import xml.etree.ElementTree as ET
 from os import path
-from sys import setrecursionlimit, exit
 
 from PIL import Image, ImageDraw
 from cv2 import resize, imread, INTER_NEAREST
+from sys import setrecursionlimit, exit
 
 setrecursionlimit(10000)
 
@@ -719,9 +719,9 @@ class MapData:
 
             print("\tConverting ImageArray...")
 
-            img_arr.expand_all(1, int(detail * 20))  # standard 16
-            img_arr.expand_all(2, int(detail * 20))
-            img_arr.expand_all(3, int(detail * 16))
+            img_arr.expand_all(1, int(detail * 2))  # standard 16
+            img_arr.expand_all(2, int(detail * 2))
+            img_arr.expand_all(3, int(detail * 2))
             img_arr.expand_all(5, int(detail * 2))
 
             temp_map_objects = [
@@ -900,29 +900,31 @@ def main():
 
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
     mapData = MapData(img_dirs=[FieldA, FieldB], fd_dir=FieldFD)
-    # mapData.show(10)
+    mapData.show(10)
+    print(mapData)
 
-    begin = "\n\n\n" \
-            "///   _______                _____          __\n" \
-            "///  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
-            "///  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
-            "///  |__|_|__||___._||   __||_____/ |___._||____||___._|\n" \
-            "///                  |__|\n"
 
-    f = open("../code/MapData.cpp")
-    content = f.read()
-    f.close()
-    content_data = content.split(begin)
-    if len(content_data) == 2:
-        content_data[1] = begin + "\n\n\n" + str(mapData)
-    else:
-        content_data.append(begin + "\n\n\n" + str(mapData))
-
-    data = "".join(content_data)
-
-    f = open("../code/MapData.cpp", "w")
-    f.write(data)
-    f.close()
+    # begin = "\n\n\n" \
+    #         "///   _______                _____          __\n" \
+    #         "///  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
+    #         "///  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
+    #         "///  |__|_|__||___._||   __||_____/ |___._||____||___._|\n" \
+    #         "///                  |__|\n"
+    #
+    # f = open("../code/MapData.cpp")
+    # content = f.read()
+    # f.close()
+    # content_data = content.split(begin)
+    # if len(content_data) == 2:
+    #     content_data[1] = begin + "\n\n\n" + str(mapData)
+    # else:
+    #     content_data.append(begin + "\n\n\n" + str(mapData))
+    #
+    # data = "".join(content_data)
+    #
+    # f = open("../code/MapData.cpp", "w")
+    # f.write(data)
+    # f.close()
 
 
 if __name__ == '__main__':

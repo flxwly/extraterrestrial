@@ -11,21 +11,16 @@
 #include <cmath>
 #include <algorithm>
 
-/** A type of PVector that can be collected by a robot.
+/** An Object that can be collected by a robot.
  *
- * <p>Collectibles have a color value in addition to normal points in
- * 2D-plane. They can be picked up by the robot in the CoSpace-SE.
- * However the robot can't interact directly with this program and the map
- * the robot uses is actually created by the @b map_interpreter.py script.
- * This can result in imprecise movement and calculations. The method
- * @b Collectible::isCorrectCollectible() resolves this problem taking
- * the imprecision into account.
+ * <p>A Collectible has two variables to determine it's value,
+ * one variable that stores it's position and another one that
+ * represents the state of the Collectible. A collectible doesn't know
+ * which field it is operating on.
  *
  * @tparam p Position of the Collectible.
  * @tparam c Color of the Collectible.
- *
- * @note Generally Collectibles are only created upon initializing members
- * of the field class. The only exception is made when a super-object spawns
+ * @tparam worthDouble If the Collectible is worth double the points
 */
 class Collectible {
 public:
@@ -60,20 +55,28 @@ public:
      *
      * <p>Everytime the robot passes by this collectible, this variable
      * should be counted upwards. This allows to only mark collectibles as missing
-     * if the robot has visited them a certain number of times
+     * if the robot has visited them a certain number of times.
     */
     unsigned int visited;
 
     /** Represents the color
      *
      * <p>Normally a collectible can have either of the 3 colors (red, cyan, black,
-     * [special case for superobjects: pink]).
+     * [special case for super-objects: pink]).
      * Collectibles with different colors give different amounts of score points.
-     * In addition certain combinations of colors create bonus score. To track
-     * maximize the score the robot needs to now which color each object.
+     * In addition certain combinations of colors create bonus score. To maximize
+     * the score the robot needs to now which color each collectible has.
      */
     unsigned int color;
 
+    /** Tells if a collectible is worth double
+     *
+     * <p> Collectibles that are found in the cyan zones, also known as water,
+     * are worth double the points. This counts only for the 3 common types:
+     * red, cyan and black collectibles. Super-objects are worth double
+     * if they are spawned by a double RGB-Bonus. This variable is used to
+     * calculate what the value of a collection of collectibles is.
+    */
     bool isWorthDouble;
 
     bool operator==(const Collectible &lhs) const;
@@ -121,16 +124,16 @@ public:
     explicit Area(const std::vector<PVector> &p_s);
 
     /// Getter method for Area::Corners_
-    const std::vector<PVector> &getCorners() const;
+    [[nodiscard]] const std::vector<PVector> &getCorners() const;
 
     /// Getter method for Area::Edges_
-    const std::vector<Line> &getEdges() const;
+    [[nodiscard]] const std::vector<Line> &getEdges() const;
 
     /// Getter method for Area::min_
-    const PVector &getMin() const;
+    [[nodiscard]] const PVector &getMin() const;
 
     /// Getter method for Area::max_
-    const PVector &getMax() const;
+    [[nodiscard]] const PVector &getMax() const;
 
 private:
 
@@ -160,8 +163,6 @@ private:
  *  @tparam waters All waters/bonus areas
  *  @tparam deposits All deposits
  *  @tparam collectibles All collectibles
- *
- *  TODO: show function for Field class. (for Debugging)
  *
 */
 class Field {

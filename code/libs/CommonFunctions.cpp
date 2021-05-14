@@ -16,7 +16,7 @@ double reverseAngle(double angle) {
 
 
 bool isInRange(double value, double min, double max) {
-    return value >= min && value <= max;
+	return min <= value && value <= max;
 }
 
 double map(double Mmin, double Mmax, double Imin, double Imax, double input) {
