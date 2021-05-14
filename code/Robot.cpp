@@ -222,8 +222,9 @@ PVector Robot::getVelocity() const {
                (static_cast<double>(wheelLeft) * ROBOT_SPEED / penalty);
     }
 
-    double v1 = static_cast<double>(wheelLeft) * ROBOT_SPEED / penalty;
-    double v2 = static_cast<double>(wheelRight) * ROBOT_SPEED / penalty;
+    // v1 and v2 are the linear velocities at the wheels
+    double v1 = angularToLinear(LWHEEL_RADIUS, REVPERS * static_cast<double>(wheelLeft) / penalty);
+    double v2 = angularToLinear(RWHEEL_RADIUS, REVPERS * static_cast<double>(wheelRight) / penalty);
 
     double s = (ROBOT_AXLE_LENGTH * (v1 + v2)) / (2 * (v1 - v2));
 
@@ -234,8 +235,11 @@ PVector Robot::getVelocity() const {
                   PVector(-s * cos(v2 / (ROBOT_AXLE_LENGTH / 2 - s)) + s,
                           s * sin(v2 / (ROBOT_AXLE_LENGTH / 2 - s)));
 
+    ERROR_MESSAGE("Rotation: " + std::to_string(compass))
+    ERROR_MESSAGE("WheelLeft: " + std::to_string(wheelLeft))
+    ERROR_MESSAGE("WheelRight: " + std::to_string(wheelRight))
     ERROR_MESSAGE("1. Velocity: " + PVector::str(vel))
-    vel.rotate(toRadians(compass + 90));
+    vel.rotate(toRadians(compass));
 
     ERROR_MESSAGE("2. Velocity: " + PVector::str(vel))
 
@@ -262,7 +266,7 @@ void Robot::updatePos() {
 bool Robot::shouldCollect() {
 
     // if the difference is less or equal to 3.5 seconds the robot is still collecting;
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - collectingSince).count() <= 3500)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - collectingSince).count() <= COLLECT_TIME)
         return true;
 
     // The robot is full; the robot cant collect items anyway
@@ -288,7 +292,7 @@ bool Robot::shouldCollect() {
 int Robot::collect() {
 
     // the robot is already collecting
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - collectingSince).count() <= 4000) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - collectingSince).count() < COLLECT_TIME) {
         // This is to prevent the robot from moving
         wheels(0, 0);
         led = 1;
@@ -318,7 +322,7 @@ int Robot::collect() {
 bool Robot::shouldDeposit() {
 
     // while timer - depositingSince < 6the robot is still depositting
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - depositingSince).count() <= 4000)
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - depositingSince).count() < DEPOSIT_TIME)
         return true;
 
     // 145 = 2 red + 1 cyan + 1 black | 20 + 15 + 20 + 90
@@ -327,7 +331,7 @@ bool Robot::shouldDeposit() {
 
 void Robot::deposit() {
     // the robot is already depositing
-    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - depositingSince).count() <= 5000) {
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer::now() - depositingSince).count() <= DEPOSIT_TIME) {
         // This is to prevent the robot from moving
         wheels(0, 0);
         led = 2;

@@ -19,25 +19,14 @@ bool isInRange(double value, double min, double max) {
 	return min <= value && value <= max;
 }
 
-double map(double Mmin, double Mmax, double Imin, double Imax, double input) {
-    if (Mmin > Mmax) {
-        double temp = Mmin;
-        Mmin = Mmax;
-        Mmax = temp;
-    }
-    if (Imin > Imax) {
-        double temp = Imin;
-        Imin = Imax;
-        Imax = temp;
-    }
-    double output = Mmin + ((Mmax - Mmin) / (Imax - Imin)) * (input - Imin);
-    return output;
-}
-
 
 // Anything to String
 
 template<class T1, class T2>
 std::string str(T1 x, T2 y) {
 	return std::to_string(x) + " | " + std::to_string(y);
+}
+
+double angularToLinear(double r, double revPerS) {
+    return r * 2 * M_PI * revPerS;
 }

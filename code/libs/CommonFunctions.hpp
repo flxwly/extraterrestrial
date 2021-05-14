@@ -8,11 +8,11 @@ double toRadians(double n);
 
 double toDegrees(double n);
 
+double angularToLinear(double r, double revPerS);
+
 double reverseAngle(double angle);
 
 bool isInRange(double value, double min, double max);
-
-double map(double Mmin, double Mmax, double Imin, double Imax, double input);
 
 // Any 2D coord to string
 template<class T1, class T2>

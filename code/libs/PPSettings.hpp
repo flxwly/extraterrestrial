@@ -63,13 +63,22 @@
 #define LCOLOR_X 3.6
 #define LCOLOR_Y 6
 
+/// Revolutions per second at 1% of robot's max wheel speed (1/30 rev/ms)
+#define REVPERS 0.00003333
+
+/// X Distance of the right wheel to the robot's center in cm
 #define RWHEEL_X -6.3
+/// Y Distance of the right wheel to the robot's center in cm
 #define RWHEEL_Y -4.2
+/// Radius of the right wheel in cm
 #define RWHEEL_RADIUS 3
 
 
+/// X Distance of the left wheel to the robot's center in cm
 #define LWHEEL_X 6.3
+/// Y Distance of the left wheel to the robot's center in cm
 #define LWHEEL_Y -4.2
+/// Radius of the left wheel in cm
 #define LWHEEL_RADIUS 3
 
 
@@ -88,5 +97,11 @@
 /// ----------------------------- ///
 ///      CoSpace constants
 /// ----------------------------- ///
+
+/// Time to deposit in ms
+#define DEPOSIT_TIME 6000
+
+/// Time to collect in ms
+#define COLLECT_TIME 4000
 
 #endif //PPSETTINGS_HPP
