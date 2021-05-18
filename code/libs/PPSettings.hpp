@@ -30,7 +30,7 @@
 /// ----------------------------- ///
 
 #ifdef SFML
-//#undef DEBUG
+#undef DEBUG
 #endif
 
 #ifdef DEBUG
