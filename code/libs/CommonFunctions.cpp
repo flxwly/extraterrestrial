@@ -11,7 +11,7 @@ double toDegrees(double r) {
 }
 
 bool isInRange(double value, double min, double max) {
-    return value >= min && value <= max;
+	return min <= value && value <= max;
 }
 
 double angularToLinear(double r, double revPerS) {

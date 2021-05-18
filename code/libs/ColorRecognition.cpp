@@ -9,7 +9,6 @@ bool isSwamp(HSLColor c) { return c.s <= 60 && isInRange(c.l, 40, 80) && isInRan
 bool isSuperObj(HSLColor c) { return c.s >= 80 && c.l >= 30 && isInRange(c.h, 290, 310); }
 bool isColor(HSLColor c) { return isBlack(c) || isRed(c), isCyan(c), isSuperObj(c); }
 
-
 float rgb2h(RGBColor c) {
 
     // map the r, g, b values to a minimum of 0 and a max of 1
