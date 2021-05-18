@@ -590,20 +590,21 @@ std::array<int, 4> Robot::getDesiredLoad() const {
     }
 }
 
-std::vector<PVector> Robot::getPointPath(std::array<int, 4> max) {
+std::vector<Collectible *> Robot::getPathOfCollectibles(std::array<int, 4> desiredLoad) {
 
     // the field currently operating on
     Field *field = (level == 0) ? map0 : map1;
 
     // the point path
-    std::vector<PVector> points = {};
+    std::vector<Collectible *> collectibles = {};
+    Collectible *curCollectible = nullptr;
 
     // start and end position of one point path segment
-    PVector start, end = pos;
+    PVector start = pos;
 
     // number of objects that need to be added to the point path
     int num = -static_cast<int> (loadedObjects.num());
-    for (int i : max) {
+    for (int i : desiredLoad) {
         num += i;
     }
 
@@ -615,43 +616,31 @@ std::vector<PVector> Robot::getPointPath(std::array<int, 4> max) {
         unsigned int color = 0;
         double dist = INFINITY;
 
-        // ------------- normal objects --------------------
-        for (unsigned int i = 0; i < 3; ++i) {
-            if (tLoadedObjects[i] < max[i]) {
+        // ------------- objects [0 - red, 1 - cyan, 2 - black, 3 - super] --------------------
+        for (unsigned int i = 0; i < 4; ++i) {
+            if (tLoadedObjects[i] < desiredLoad[i]) {
                 for (auto collectible : field->getCollectibles({i})) {
-                    if ((geometry::dist(start, collectible.pos) < dist) && collectible.pos != start &&
-                        collectible.state != 2) {
-
-                        color = collectible.color;
-                        end = collectible.pos;
-                        dist = geometry::dist(start, end);
+                    if ((geometry::dist(start, collectible->pos) < dist) && collectible->state != 2
+                    && std::find(collectibles.begin(), collectibles.end(), collectible) == collectibles.end()) {
+                        curCollectible = collectible;
+                        dist = geometry::dist(start, collectible->pos);
                     }
                 }
             }
         }
 
-        // -------------- super objects ----------------------
-        if (tLoadedObjects[3] < max[3]) {
-            for (auto superObj : superObjects) {
-                if (geometry::dist(start, superObj->pos) < dist) {
-                    color = 3;
-                    end = superObj->pos;
-                    dist = geometry::dist(start, end);
-                }
-            }
-        }
-
         // -------------- add object / super object to point path ----------------
-        if (start != end) {
-            start = end;
-            points.push_back(end);
-            tLoadedObjects[color]++;
+        if (curCollectible) {
+            start = curCollectible->pos;
+            collectibles.push_back(curCollectible);
+            tLoadedObjects[curCollectible->color]++;
+            ERROR_MESSAGE(curCollectible)
         } else {
-            return points;
+            return collectibles;
         }
 
     }
-    return points;
+    return collectibles;
 }
 
 //====================================
@@ -748,10 +737,12 @@ void Robot::game1Loop() {
     //    Get a new Path    //
     // -------------------- //
     if (completePath.empty()) {
+
+        // We want to collect
         if (loadedObjects.num() < 6 && remainingMapTime > 30) {
 
             // get a path of points
-            std::vector<PVector> pathOfCollectibles = getPointPath(getDesiredLoad());
+            std::vector<Collectible *> pathOfCollectibles = getPathOfCollectibles(getDesiredLoad());
 
             // the first start point should be the current position of the robot
             PVector start = pos;
@@ -759,14 +750,14 @@ void Robot::game1Loop() {
             // calculate a path from one point to the next
             for (unsigned int i = 0; i < pathOfCollectibles.size(); i++) {
 
-                auto end = pathOfCollectibles[i];
+                PVector end = pathOfCollectibles[i]->pos;
 
                 // depending on the current number of objects traps should be avoided or ignored
                 Path path = (loadedObjects.num() > 0 || i > 0) ? pathfinder1T.AStar(start, end)
                                                                : pathfinder1.AStar(start, end);
 
                 if (!path.isEmpty()) {
-                    completePath.push_back(path);
+                    completePath.emplace_back(path, pathOfCollectibles[i]);
                 } else {
                     ERROR_MESSAGE("No Path found")
                 }
@@ -775,6 +766,8 @@ void Robot::game1Loop() {
                 start = end;
 
             }
+
+            // We want to deposit
         } else {
 
             std::vector<PVector> deposits = map1->getDeposits();
@@ -794,16 +787,20 @@ void Robot::game1Loop() {
 
             }
 
-            completePath.push_back(path);
+            completePath.emplace_back(path, nullptr);
 
         }
     }
 
+    if (completePath.empty()) {
+        ERROR_MESSAGE("There's nothing to do")
+        return;
+    }
+
     // remove path if point reached
-    if (geometry::dist(completePath.front().getLast(), pos) < 5) {
-        completePath.erase(completePath.begin());
-        Collectible *collectible = map1->getCollectible(pos, compass, 5, -1, {0, 1});
-        if (collectible) {
+    if (geometry::dist(completePath.front().first.getLast(), pos) < 2) {
+        if (completePath.front().second) {
+            Collectible* collectible = static_cast<Collectible *>(completePath.front().second);
 
             if (collectible->visited > 3) {
 
@@ -814,6 +811,7 @@ void Robot::game1Loop() {
             }
             collectible->visited++;
         }
+        completePath.erase(completePath.begin());
     }
 
 
@@ -861,7 +859,7 @@ void Robot::game1Loop() {
 
         led = 0;
         if (!completePath.empty()) {
-            moveAlongPath(completePath.front());
+            moveAlongPath(completePath.front().first);
         }
 
         // avoid the void by driving left || avoid trap on the right if objects are loaded
@@ -873,8 +871,6 @@ void Robot::game1Loop() {
             wheels(3, 0);
         }
     }
-
-    wheels(2, 1);
 
     lastProgramCycle = Timer::now();
 }

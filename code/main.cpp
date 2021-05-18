@@ -34,18 +34,25 @@ bool runAsyncLoop = false;
 std::thread *AsyncLoopThread = nullptr;
 
 void startAsyncLoop() {
+    ERROR_MESSAGE("Async Cycle num: 0")
+
     runAsyncLoop = false;
+    long long int asyncCycleNum = 1;
+
     while (runAsyncLoop) {
         Bot->updateLoop();
         if (CurGame == 0) {
             Bot->game0Loop();
-        } else if (CurGame != -1){
+        } else if (CurGame != -1) {
             Bot->game1Loop();
         }
 
         #ifdef SFML
             debugWindow->updateLoop();
         #endif
+
+        ERROR_MESSAGE("Async Cycle num: " + std::to_string(asyncCycleNum))
+        asyncCycleNum++;
 
     }
 }
@@ -59,12 +66,20 @@ void Setup() {
 	                   GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES);
 	GAME0 = &Game0;
 
+    ERROR_MESSAGE("Initialized Game0")
+
 	static Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
 	                   GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
 	GAME1 = &Game1;
 
+    ERROR_MESSAGE("Initialized Game1")
+
 	static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, &Teleport, GAME0, GAME1);
 	Bot = &bot;
+
+	Bot->teleport();
+
+    ERROR_MESSAGE("Initialized Robot")
 
 #ifdef SFML
 	static DebugWindow window(Bot);

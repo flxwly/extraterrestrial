@@ -189,13 +189,14 @@ std::vector<PVector> Field::getDeposits() {
 }
 
 /** Getter for field::collectibles **/
-std::vector<Collectible> Field::getCollectibles(const std::vector<unsigned int> &colors) {
-    std::vector<Collectible> returnVector = {};
+std::vector<Collectible *> Field::getCollectibles(const std::vector<unsigned int> &colors) {
+    std::vector<Collectible *>returnVector = {};
     // return after all indices have been checked.
     for (unsigned int index : colors) {
         if (index <= 3) {
-            returnVector.insert(std::end(returnVector), std::begin(Collectibles_[index]),
-                                std::end(Collectibles_[index]));
+            for (Collectible &collectible : Collectibles_[index]) {
+                returnVector.push_back(&collectible);
+            }
         } else {
             ERROR_MESSAGE("index out of range");
         }
@@ -206,17 +207,17 @@ std::vector<Collectible> Field::getCollectibles(const std::vector<unsigned int> 
 Collectible *
 Field::getCollectible(PVector robotPos, double angle, double uncertainty, int color, std::vector<int> possibleStates) {
 
-    std::vector<Collectible> collectibles;
+    std::vector<Collectible *> collectibles;
 
     if (color == -1) {
         collectibles = getCollectibles({0, 1, 2, 3});
     } else if (color >= 0 && color <= 3) {
-        collectibles = Collectibles_[color];
+        collectibles = getCollectibles({static_cast<unsigned int> (color)});
     }
 
-    for (auto &collectible : collectibles) {
-        if (collectible.isCorrectCollectible(robotPos, angle, uncertainty, possibleStates)) {
-            return &collectible;
+    for (auto collectible : collectibles) {
+        if (collectible->isCorrectCollectible(robotPos, angle, uncertainty, possibleStates)) {
+            return collectible;
         }
     }
 

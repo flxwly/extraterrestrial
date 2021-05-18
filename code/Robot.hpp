@@ -95,7 +95,7 @@ public:
 
 	PVector pos{0, 0};
 
-	std::vector<Path> completePath{};
+	std::vector<std::pair<Path, void*>> completePath{};
 	Field *map0, *map1;
 	Pathfinder pathfinder0, pathfinder1;
 	Pathfinder pathfinder0T, pathfinder1T;
@@ -173,7 +173,7 @@ public:
 
 	[[nodiscard]] std::array<int, 4> getDesiredLoad() const;
 
-	std::vector<PVector> getPointPath(std::array<int, 4> desiredLoad);
+	std::vector<Collectible *> getPathOfCollectibles(std::array<int, 4> desiredLoad);
 };
 
 

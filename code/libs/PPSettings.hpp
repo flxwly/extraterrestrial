@@ -17,7 +17,7 @@
 /// ---------------------------------
 
 /// define SFML to enable debugging via SFML
-//#define SFML
+#define SFML
 
 /// define DEBUG_PATHFINDER_NODES
 //#define DEBUG_PATHFINDER_NODES
@@ -30,7 +30,7 @@
 /// ----------------------------- ///
 
 #ifdef SFML
-#undef DEBUG
+//#undef DEBUG
 #endif
 
 #ifdef DEBUG

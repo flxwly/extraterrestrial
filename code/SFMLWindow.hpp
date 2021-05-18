@@ -24,6 +24,8 @@ public:
 	void stopDebugging(unsigned int ID);
     void stopAll();
 
+    sf::Color getCollectibleSFMLColor(Collectible *collectible);
+
 
 	void GameDebug(unsigned int mapIndex);
 

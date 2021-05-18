@@ -209,7 +209,7 @@ public:
     std::vector<PVector> getDeposits();
 
     /// Getter method for collectibles
-    std::vector<Collectible> getCollectibles(const std::vector<unsigned int> &colors);
+    std::vector<Collectible *> getCollectibles(const std::vector<unsigned int> &colors);
 
 private:
     /// Contains all walls
