@@ -138,10 +138,10 @@ unsigned int ObjectLoad::num() const {
 
 
 Robot::Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, int *teleport,
-             Field *map0, Field *map1) :
-        pathfinder0(*map0, false), pathfinder1(*map1, false),
-        pathfinder0T(*map0, true), pathfinder1T(*map1, true),
-        map0(map0), map1(map1), SUPER_OBJECT(superObject) {
+             Field map0, Field map1) :
+        pathfinder0(map0, false), pathfinder1(map1, false),
+        pathfinder0T(map0, true), pathfinder1T(map1, true),
+        map0(map0), map1(map1), SUPER_OBJECT_INFO(superObject) {
 
     TELEPORT = teleport;
     setIN(IN);
@@ -180,8 +180,8 @@ void Robot::updateSimVars() {
             (AI_IN[10] != 0) ? static_cast<float>(AI_IN[10]) : NAN);
 
     compass = AI_IN[11];
-    superObject.set(*SUPER_OBJECT[0], *SUPER_OBJECT[1]);
-    superObjectNum = *SUPER_OBJECT[2];
+    superObject.set(*SUPER_OBJECT_INFO[0], *SUPER_OBJECT_INFO[1]);
+    superObjectNum = *SUPER_OBJECT_INFO[2];
 
     leftColor = rgb2hsl({
                                 static_cast<float>(AI_IN[3]),
@@ -593,7 +593,7 @@ std::array<int, 4> Robot::getDesiredLoad() const {
 std::vector<Collectible *> Robot::getPathOfCollectibles(std::array<int, 4> desiredLoad) {
 
     // the field currently operating on
-    Field *field = (level == 0) ? map0 : map1;
+    Field &field = (level == 0) ? map0 : map1;
 
     // the point path
     std::vector<Collectible *> collectibles = {};
@@ -619,7 +619,7 @@ std::vector<Collectible *> Robot::getPathOfCollectibles(std::array<int, 4> desir
         // ------------- objects [0 - red, 1 - cyan, 2 - black, 3 - super] --------------------
         for (unsigned int i = 0; i < 4; ++i) {
             if (tLoadedObjects[i] < desiredLoad[i]) {
-                for (auto collectible : field->getCollectibles({i})) {
+                for (auto collectible : field.getCollectibles({i})) {
                     if ((geometry::dist(start, collectible->pos) < dist) && collectible->state != 2
                     && std::find(collectibles.begin(), collectibles.end(), collectible) == collectibles.end()) {
                         curCollectible = collectible;
@@ -659,7 +659,7 @@ void Robot::updateLoop() {
     // ---------- superObjects -----------
     if (superObject) {
 
-        Collectible *newSuperObject = map1->addCollectible(
+        Collectible *newSuperObject = map1.addCollectible(
                 Collectible(superObject, 3, lastRGBBonus == 2));
         superObjects.emplace_back(newSuperObject);
         superObject.set(NAN, NAN);
@@ -770,7 +770,7 @@ void Robot::game1Loop() {
             // We want to deposit
         } else {
 
-            std::vector<PVector> deposits = map1->getDeposits();
+            std::vector<PVector> deposits = map1.getDeposits();
 
             if (deposits.empty()) {
                 std::cout << "NO DEPOSITS EXISTING!!!!" << std::endl;
@@ -841,7 +841,7 @@ void Robot::game1Loop() {
 
         if (color != -1) {
 
-            Collectible *collectible = map1->getCollectible(pos, compass, 10, color, {0, 1});
+            Collectible *collectible = map1.getCollectible(pos, compass, 10, color, {0, 1});
             std::cout << "Mark Collectible: " << collectible << " as collected" << std::endl;
             if (collectible) {
                 collectible->state = 2;

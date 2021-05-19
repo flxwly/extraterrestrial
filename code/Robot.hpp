@@ -65,7 +65,9 @@ private:
 
 	// Direct Input/Output to the Sim
 	volatile int *AI_IN{nullptr}, *AI_OUT{nullptr};
-	std::array<int *, 3> SUPER_OBJECT{nullptr, nullptr, nullptr};
+
+	/// The info is organized like this: [x-coordinate, y-coordinate, num]
+	std::array<int *, 3> SUPER_OBJECT_INFO{nullptr, nullptr, nullptr};
 	int *TELEPORT = nullptr;
 
 	bool setIN(volatile int **IN);
@@ -96,7 +98,7 @@ public:
 	PVector pos{0, 0};
 
 	std::vector<std::pair<Path, void*>> completePath{};
-	Field *map0, *map1;
+	Field map0, map1;
 	Pathfinder pathfinder0, pathfinder1;
 	Pathfinder pathfinder0T, pathfinder1T;
 
@@ -119,7 +121,7 @@ public:
 
 public:
 
-	Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, int *teleport, Field *map0, Field *map1);
+	Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, int *teleport, Field map0, Field map1);
 
 #pragma endregion
 

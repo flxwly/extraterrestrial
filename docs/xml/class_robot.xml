@@ -49,9 +49,9 @@
       </memberdef>
       <memberdef kind="variable" id="class_robot_1a6dca8ac2c7eb6f1a114cbfb5c2143020" prot="private" static="no" mutable="no">
         <type>std::array&lt; int *, 3 &gt;</type>
-        <definition>std::array&lt;int *, 3&gt; Robot::SUPER_OBJECT</definition>
+        <definition>std::array&lt;int *, 3&gt; Robot::SUPER_OBJECT_INFO</definition>
         <argsstring></argsstring>
-        <name>SUPER_OBJECT</name>
+        <name>SUPER_OBJECT_INFO</name>
         <initializer>{nullptr, nullptr, nullptr}</initializer>
         <briefdescription>
         </briefdescription>
@@ -1145,7 +1145,7 @@
       <member refid="class_robot_1acb30cea7c6baee7977193845aeabe009" prot="public" virt="non-virtual"><scope>Robot</scope><name>shouldDeposit</name></member>
       <member refid="class_robot_1ac6da9c5a61f4ae0aa57314b027ed898e" prot="public" virt="non-virtual"><scope>Robot</scope><name>shouldTeleport</name></member>
       <member refid="class_robot_1aaf23537ebeb2942cb73f1f3203c009a7" prot="private" virt="non-virtual"><scope>Robot</scope><name>simPos</name></member>
-      <member refid="class_robot_1a6dca8ac2c7eb6f1a114cbfb5c2143020" prot="private" virt="non-virtual"><scope>Robot</scope><name>SUPER_OBJECT</name></member>
+      <member refid="class_robot_1a6dca8ac2c7eb6f1a114cbfb5c2143020" prot="private" virt="non-virtual"><scope>Robot</scope><name>SUPER_OBJECT_INFO</name></member>
       <member refid="class_robot_1a7840d799cdd20b611847bcccc7ca953b" prot="private" virt="non-virtual"><scope>Robot</scope><name>superObject</name></member>
       <member refid="class_robot_1aec269882a4d4edbb6167f959792b12fd" prot="private" virt="non-virtual"><scope>Robot</scope><name>superObjectNum</name></member>
       <member refid="class_robot_1ad45d8f1011a473e9b158d240dd9b6766" prot="public" virt="non-virtual"><scope>Robot</scope><name>superObjects</name></member>

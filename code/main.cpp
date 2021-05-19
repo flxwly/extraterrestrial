@@ -64,17 +64,15 @@ void Setup() {
 
 	static Field Game0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
 	                   GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES);
-	GAME0 = &Game0;
 
     ERROR_MESSAGE("Initialized Game0")
 
-	static Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
+	Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
 	                   GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
-	GAME1 = &Game1;
 
     ERROR_MESSAGE("Initialized Game1")
 
-	static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, &Teleport, GAME0, GAME1);
+	static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, &Teleport, Game0, Game1);
 	Bot = &bot;
 
 	Bot->teleport();

@@ -297,7 +297,7 @@
 <codeline lineno="143"><highlight class="normal"></highlight></codeline>
 <codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>setIN(IN);</highlight></codeline>
 <codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>setOUT(OUT);</highlight></codeline>
-<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>SUPER_OBJECT<sp/>=<sp/>superObject;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>SUPER_OBJECT_INFO<sp/>=<sp/>superObject;</highlight></codeline>
 <codeline lineno="147"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="148"><highlight class="normal"></highlight></codeline>
 <codeline lineno="149"><highlight class="normal"></highlight></codeline>
@@ -329,8 +329,8 @@
 <codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(AI_IN[10]<sp/>!=<sp/>0)<sp/>?<sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">float</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(AI_IN[10])<sp/>:<sp/>NAN);</highlight></codeline>
 <codeline lineno="176"><highlight class="normal"></highlight></codeline>
 <codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/>compass<sp/>=<sp/>AI_IN[12];</highlight></codeline>
-<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>superObject.<ref refid="class_p_vector_1a9cc31db5ab8d080b0f44e2229ba34a7c" kindref="member">set</ref>(*SUPER_OBJECT[0],<sp/>*SUPER_OBJECT[1]);</highlight></codeline>
-<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/>superObjectNum<sp/>=<sp/>*SUPER_OBJECT[2];</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>superObject.<ref refid="class_p_vector_1a9cc31db5ab8d080b0f44e2229ba34a7c" kindref="member">set</ref>(*SUPER_OBJECT_INFO[0],<sp/>*SUPER_OBJECT_INFO[1]);</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/>superObjectNum<sp/>=<sp/>*SUPER_OBJECT_INFO[2];</highlight></codeline>
 <codeline lineno="180"><highlight class="normal"></highlight></codeline>
 <codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/>leftColor<sp/>=<sp/><ref refid="_color_recognition_8cpp_1a373498008155314dabf15eafdd4b511f" kindref="member">rgb2hsl</ref>({</highlight></codeline>
 <codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static_cast&lt;</highlight><highlight class="keywordtype">float</highlight><highlight class="keyword">&gt;</highlight><highlight class="normal">(AI_IN[3]),</highlight></codeline>

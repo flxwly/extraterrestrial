@@ -127,11 +127,11 @@ Field::Field(const int &width, const int &height,
     }
 }
 
-PVector Field::getSize() {
+PVector Field::getSize() const{
     return size_;
 }
 
-std::vector<Area> Field::getMapObjects(const std::vector<unsigned int> &indices) {
+std::vector<Area> Field::getMapObjects(const std::vector<unsigned int> &indices) const {
     std::vector<Area> returnVector = {};
     // return after all indices have been checked.
     for (unsigned int index : indices) {
@@ -155,7 +155,7 @@ std::vector<Area> Field::getMapObjects(const std::vector<unsigned int> &indices)
     return returnVector;
 }
 
-std::vector<PVector> Field::getMapNodes(const std::vector<unsigned int> &indices) {
+std::vector<PVector> Field::getMapNodes(const std::vector<unsigned int> &indices) const {
     std::vector<PVector> returnVector = {};
 
     // return after all indices have been checked.
@@ -183,9 +183,8 @@ std::vector<PVector> Field::getMapNodes(const std::vector<unsigned int> &indices
 }
 
 /** Getter for field::collectibles **/
-std::vector<PVector> Field::getDeposits() {
-    std::vector<PVector> returnVector(Deposits_);
-    return returnVector;
+std::vector<PVector> Field::getDeposits() const {
+    return Deposits_;
 }
 
 /** Getter for field::collectibles **/
@@ -194,7 +193,7 @@ std::vector<Collectible *> Field::getCollectibles(const std::vector<unsigned int
     // return after all indices have been checked.
     for (unsigned int index : colors) {
         if (index <= 3) {
-            for (Collectible &collectible : Collectibles_[index]) {
+            for (Collectible &collectible : Collectibles_.at(index)) {
                 returnVector.push_back(&collectible);
             }
         } else {

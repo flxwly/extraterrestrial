@@ -187,7 +187,7 @@ public:
 
 
     /// Getter for the size
-    PVector getSize();
+    PVector getSize() const;
 
     /** gets map objects based on their index
      *
@@ -195,7 +195,7 @@ public:
      *
      * @returns a vector containing all map object areas with the indices
      */
-    std::vector<Area> getMapObjects(const std::vector<unsigned int> &indices);
+    std::vector<Area> getMapObjects(const std::vector<unsigned int> &indices) const;
 
     /**  gets map nodes based on their index
      *
@@ -203,10 +203,10 @@ public:
      *
      * @returns a vector containing all map object areas with the indices
      */
-    std::vector<PVector> getMapNodes(const std::vector<unsigned int> &indices);
+    std::vector<PVector> getMapNodes(const std::vector<unsigned int> &indices) const;
 
     /// Getter method for deposits
-    std::vector<PVector> getDeposits();
+    std::vector<PVector> getDeposits() const;
 
     /// Getter method for collectibles
     std::vector<Collectible *> getCollectibles(const std::vector<unsigned int> &colors);

@@ -166,7 +166,7 @@
     <member refid="class_robot_1a27ef3b6f5da83dba4423fb44bbf8aa87" kind="typedef"><name>Timer</name></member>
     <member refid="class_robot_1a462896595e90ba3b90a671f977d3f0ae" kind="variable"><name>AI_IN</name></member>
     <member refid="class_robot_1ae205e7748b708944a7157acf4ef39290" kind="variable"><name>AI_OUT</name></member>
-    <member refid="class_robot_1a6dca8ac2c7eb6f1a114cbfb5c2143020" kind="variable"><name>SUPER_OBJECT</name></member>
+    <member refid="class_robot_1a6dca8ac2c7eb6f1a114cbfb5c2143020" kind="variable"><name>SUPER_OBJECT_INFO</name></member>
     <member refid="class_robot_1aaf23537ebeb2942cb73f1f3203c009a7" kind="variable"><name>simPos</name></member>
     <member refid="class_robot_1ae0f2a000c43f438cdde2da0a517810be" kind="variable"><name>compass</name></member>
     <member refid="class_robot_1a7840d799cdd20b611847bcccc7ca953b" kind="variable"><name>superObject</name></member>
