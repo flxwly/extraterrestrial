@@ -34,12 +34,16 @@ bool runAsyncLoop = false;
 std::thread *AsyncLoopThread = nullptr;
 
 void startAsyncLoop() {
-    ERROR_MESSAGE("Async Cycle num: 0")
 
-    runAsyncLoop = false;
+    runAsyncLoop = true;
     long long int asyncCycleNum = 1;
 
+    ERROR_MESSAGE("Starting Async Loop")
+
     while (runAsyncLoop) {
+
+        ERROR_MESSAGE("Async Cycle num: " + std::to_string(asyncCycleNum))
+
         Bot->updateLoop();
         if (CurGame == 0) {
             Bot->game0Loop();
@@ -51,10 +55,12 @@ void startAsyncLoop() {
             debugWindow->updateLoop();
         #endif
 
-        ERROR_MESSAGE("Async Cycle num: " + std::to_string(asyncCycleNum))
         asyncCycleNum++;
 
     }
+
+    ERROR_MESSAGE("Exiting Async Loop")
+
 }
 
 void Setup() {
@@ -62,17 +68,17 @@ void Setup() {
 	// TODO: Move static objects back to static space so the objects get initialized upon load
 	// ----------- Initialisation of static objects -------------------- //
 
-	static Field Game0(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
+	Field Game0Field(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
 	                   GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES);
 
     ERROR_MESSAGE("Initialized Game0")
 
-	Field Game1(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
+	Field Game1Field(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
 	                   GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
 
     ERROR_MESSAGE("Initialized Game1")
 
-	static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, &Teleport, Game0, Game1);
+	static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, &Teleport, Game0Field, Game1Field);
 	Bot = &bot;
 
 	Bot->teleport();
@@ -98,10 +104,12 @@ void Game0() {
 #endif
 }
 
-
 void Game1() {
     Bot->updateLoop();
     Bot->game1Loop();
+#ifdef SFML
+    debugWindow->updateLoop();
+#endif
 }
 
 void Stop() {

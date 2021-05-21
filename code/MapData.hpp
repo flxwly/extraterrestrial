@@ -195,7 +195,7 @@ public:
      *
      * @returns a vector containing all map object areas with the indices
      */
-    std::vector<Area> getMapObjects(const std::vector<unsigned int> &indices) const;
+    std::vector<Area> getMapObjects(const std::vector<unsigned int> &indices);
 
     /**  gets map nodes based on their index
      *
@@ -203,10 +203,10 @@ public:
      *
      * @returns a vector containing all map object areas with the indices
      */
-    std::vector<PVector> getMapNodes(const std::vector<unsigned int> &indices) const;
+    std::vector<PVector> getMapNodes(const std::vector<unsigned int> &indices);
 
     /// Getter method for deposits
-    std::vector<PVector> getDeposits() const;
+    std::vector<PVector> getDeposits();
 
     /// Getter method for collectibles
     std::vector<Collectible *> getCollectibles(const std::vector<unsigned int> &colors);

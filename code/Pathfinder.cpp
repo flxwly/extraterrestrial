@@ -225,18 +225,21 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
     ERROR_MESSAGE("Running Pathfinder from " + begin.str() + " to " + goal.str())
 
     // If the begin is also the goal a path is just the goal
-    if (begin == goal)
+    if (begin == goal) {
+        ERROR_MESSAGE("\tStart and end are the same.")
         return Path({goal}, PATH_RADIUS);
+    }
 
     Node start = Node(begin, field);
     Node end = Node(goal, field);
 
+    ERROR_MESSAGE("\tBuilding Map...")
     // If the pathfinder is trap sensitive traps have to be taken into account
     std::vector<Area> mapObjects = {};
     if (trapSensitive) mapObjects = field->getMapObjects({0, 1});
     else mapObjects = field->getMapObjects({0});
 
-
+    ERROR_MESSAGE("\t\tinitialize start and end nodes...")
     // Initialize the start and end nodes
     start.findNeighbours(map, mapObjects);
     if (start.canSee(end, mapObjects))
@@ -246,6 +249,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
     for (auto &neighbour : end.neighbours)
         neighbour.first->addNeighbour(&end, neighbour.second);
 
+    ERROR_MESSAGE("\tCreate priority queue..")
 
     // init open- & closedList
     std::priority_queue<Node *, std::vector<Node *>, Pathfinder::PRIORITY> openList;
@@ -259,6 +263,8 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
     // update start.g & start.f
     start.g = 0;
     start.f = (start.g + heuristic(start.pos, end.pos));
+
+    ERROR_MESSAGE("\tBegin pathfinding..")
 
     // loop until solution is found or no solution possible
     while (!openList.empty()) {

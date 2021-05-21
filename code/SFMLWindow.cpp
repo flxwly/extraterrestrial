@@ -73,6 +73,7 @@ void DebugWindow::GameDebug(unsigned int ID) {
             }
         }
 
+#ifdef DEBUG_POINTS
         block.setSize({scale.x * 2, scale.y * 2});
         block.setOrigin(scale.x, scale.y);
         for (auto &collectible : map->getCollectibles({0, 1, 2})) {
@@ -81,12 +82,15 @@ void DebugWindow::GameDebug(unsigned int ID) {
             block.setFillColor(color);
             window.draw(block);
         }
+#endif
+
 #ifdef DEBUG_PATHFINDER_NODES
+        block.setFillColor({255, 0, 0});
 
         int nodeIndex = static_cast<int>(std::floor(static_cast<float>(index) / 500)) %
                         static_cast<int>(Bot->pathfinder1T.map.size());
+        index %= 100000000000;
 
-        block.setFillColor({255, 0, 0});
         auto node = Bot->pathfinder1T.map[nodeIndex];
 
         sf::Vector2f p1(static_cast<float>(node.pos.x * scale.x),
@@ -108,14 +112,10 @@ void DebugWindow::GameDebug(unsigned int ID) {
             window.draw(line, 2, sf::Lines);
         }
 
-
         window.draw(block);
-
 #endif
 
-
-
-        // Path
+#ifdef DEBUG_PATH
         block.setSize(sf::Vector2f(scale.x * 3, scale.y * 3));
         block.setOrigin(scale.x * 1.5f, scale.y * 1.5f);
         sf::VertexArray path_lines(sf::LineStrip);
@@ -168,6 +168,7 @@ void DebugWindow::GameDebug(unsigned int ID) {
         }
 
         window.draw(path_lines);
+#endif
 
         // Position
         block.setSize(sf::Vector2f(scale.x * 4, scale.y * 4));

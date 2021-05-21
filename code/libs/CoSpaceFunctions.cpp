@@ -47,7 +47,7 @@ int ObjPositionY;//The Y coordinate of the last state-changed object.
 int ObjDuration; //The duration(seconds) of the object maintains the current state;
 
 DLL_EXPORT void SetGameID(int GameID) {
-    if (GameID == -1) {
+    if (GameID == -1 && cycle > 0) {
         Stop();
     }
     CurGame = GameID;
@@ -106,10 +106,9 @@ DLL_EXPORT void GetCommand(int *AI_OUT) {
 }
 
 DLL_EXPORT void OnTimer() {
-    if (cycle == 1) {
+    // Wait two cycles before starting the actual so all vars can be set by the simulator
+    if (cycle == 2) {
         Setup();
-    } else if (INPUT && OUTPUT) {
-        Game1();
     }
     cycle++;
 }

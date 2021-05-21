@@ -10,17 +10,23 @@
 //#define COLOR_LOGGING
 
 /// define DEBUG to enable debug messages
-#define DEBUG
+#define DEBUG_CONSOLE
 
 /// ---------------------------------
 ///         SFML settings
 /// ---------------------------------
 
 /// define SFML to enable debugging via SFML
-#define SFML
+//#define SFML
 
 /// define DEBUG_PATHFINDER_NODES
-//#define DEBUG_PATHFINDER_NODES
+#define DEBUG_PATHFINDER_NODES
+
+/// define DEBUG_PATH to show the robot's path in SFML
+//#define DEBUG_PATH
+
+/// define DEBUG_POINTS to show available collectibles in SFML
+//#define DEBUG_POINTS
 
 
 
@@ -29,16 +35,12 @@
 ///       some debug logic
 /// ----------------------------- ///
 
-#ifdef SFML
-#undef DEBUG
-#endif
-
-#ifdef DEBUG
+#ifdef DEBUG_CONSOLE
 /// DEBUG is defined so ERROR_MESSAGE prints out the function it is called in joined by a message
 #define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
 #endif
 
-#ifndef DEBUG
+#ifndef DEBUG_CONSOLE
 /// DEBUG is not defined so ERROR_MESSAGE does nothing
 #define ERROR_MESSAGE(message) {}
 #endif
