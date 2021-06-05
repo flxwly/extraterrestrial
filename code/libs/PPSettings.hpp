@@ -9,8 +9,16 @@
 /// define COLOR_LOGGING to enable color logging to console
 //#define COLOR_LOGGING
 
-/// define DEBUG to enable debug messages
-#define DEBUG_CONSOLE
+#define DEBUG_CONSOLE_COLLECTIBLE 1
+
+#define DEBUG_CONSOLE_FIELD 1
+
+#define DEBUG_CONSOLE_NODE 1
+#define DEBUG_CONSOLE_PATHFINDER 1
+
+#define DEBUG_CONSOLE_ROBOT 1
+
+#define DEBUG_CONSOLE_MISC 1
 
 /// ---------------------------------
 ///         SFML settings
@@ -35,15 +43,120 @@
 ///       some debug logic
 /// ----------------------------- ///
 
-#ifdef DEBUG_CONSOLE
-/// DEBUG is defined so ERROR_MESSAGE prints out the function it is called in joined by a message
-#define ERROR_MESSAGE(MESSAGE) {std::cerr << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
-#endif
 
-#ifndef DEBUG_CONSOLE
-/// DEBUG is not defined so ERROR_MESSAGE does nothing
-#define ERROR_MESSAGE(message) {}
+// COLLECTIBLE
+#pragma region COLLECTIBLE
+#if DEBUG_CONSOLE_COLLECTIBLE <= 3
+#define COLLECTIBLE_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define COLLECTIBLE_ERROR(MESSAGE) {}
 #endif
+#if DEBUG_CONSOLE_COLLECTIBLE <= 2
+#define COLLECTIBLE_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define COLLECTIBLE_WARNING(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_COLLECTIBLE <= 1
+#define COLLECTIBLE_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define COLLECTIBLE_LOG(MESSAGE) {}
+#endif
+#pragma endregion
+
+// FIELD
+#pragma region FIELD
+#if DEBUG_CONSOLE_FIELD <= 3
+#define FIELD_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define FIELD_ERROR(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_FIELD <= 2
+#define FIELD_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define FIELD_WARNING(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_FIELD <= 1
+#define FIELD_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define FIELD_LOG(MESSAGE) {}
+#endif
+#pragma endregion
+
+// NODE
+#pragma region NODE
+#if DEBUG_CONSOLE_NODE <= 3
+#define NODE_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define NODE_ERROR(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_NODE <= 2
+#define NODE_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define NODE_WARNING(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_NODE <= 1
+#define NODE_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define NODE_LOG(MESSAGE) {}
+#endif
+#pragma endregion
+
+// PATHFINDER
+#pragma region PATHFINDER
+#if DEBUG_CONSOLE_PATHFINDER <= 3
+#define PATHFINDER_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define PATHFINDER_ERROR(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_PATHFINDER <= 2
+#define PATHFINDER_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define PATHFINDER_WARNING(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_PATHFINDER <= 1
+#define PATHFINDER_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define PATHFINDER_LOG(MESSAGE) {}
+#endif
+#pragma endregion
+
+// ROBOT
+#pragma region ROBOT
+#if DEBUG_CONSOLE_ROBOT <= 3
+#define ROBOT_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define ROBOT_ERROR(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_ROBOT <= 2
+#define ROBOT_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define ROBOT_WARNING(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_ROBOT <= 1
+#define ROBOT_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define ROBOT_LOG(MESSAGE) {}
+#endif
+#pragma endregion
+
+// MISC
+#pragma region MISC
+#if DEBUG_CONSOLE_MISC <= 3
+#define MISC_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define MISC_ERROR(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_MISC <= 2
+#define MISC_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define MISC_WARNING(MESSAGE) {}
+#endif
+#if DEBUG_CONSOLE_MISC <= 1
+#define MISC_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#else
+#define MISC_LOG(MESSAGE) {}
+#endif
+#pragma endregion
 
 
 /// ----------------------------- ///

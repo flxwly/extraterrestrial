@@ -100,3 +100,8 @@ std::string PVector::str() const {
 std::string PVector::str(PVector pVector) {
     return std::to_string(pVector.x) + " | " + std::to_string(pVector.y);
 }
+
+std::ostream &operator<<(std::ostream &os, const PVector &vec) {
+    os << std::to_string(vec.x) + " | " + std::to_string(vec.y);
+    return os;
+}

@@ -98,11 +98,12 @@ DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN) {
         packet[i] = AI_IN[i];
         packet[14] += packet[i];
     }
-
     INPUT = AI_IN;
+    MISC_LOG("INPUT POINTER IS: " << INPUT)
 }
 DLL_EXPORT void GetCommand(int *AI_OUT) {
     OUTPUT = AI_OUT;
+    MISC_LOG("OUTPUT POINTER IS: " << OUTPUT)
 }
 
 DLL_EXPORT void OnTimer() {

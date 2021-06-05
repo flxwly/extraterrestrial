@@ -38,11 +38,11 @@ void startAsyncLoop() {
     runAsyncLoop = true;
     long long int asyncCycleNum = 1;
 
-    ERROR_MESSAGE("Starting Async Loop")
+    MISC_LOG("Starting Async Loop")
 
     while (runAsyncLoop) {
 
-        ERROR_MESSAGE("Async Cycle num: " + std::to_string(asyncCycleNum))
+        MISC_LOG("Async Cycle num: " + std::to_string(asyncCycleNum))
 
         Bot->updateLoop();
         if (CurGame == 0) {
@@ -59,11 +59,15 @@ void startAsyncLoop() {
 
     }
 
-    ERROR_MESSAGE("Exiting Async Loop")
+    MISC_LOG("Exiting Async Loop")
 
 }
 
 void Setup() {
+
+    freopen ("out.txt", "w", stdout);
+
+    //freopen("out.txt","w", stdout);
 
 	// TODO: Move static objects back to static space so the objects get initialized upon load
 	// ----------- Initialisation of static objects -------------------- //
@@ -71,19 +75,19 @@ void Setup() {
 	Field Game0Field(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
 	                   GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES);
 
-    ERROR_MESSAGE("Initialized Game0")
+    MISC_LOG("Initialized Game0")
 
 	Field Game1Field(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
 	                   GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
 
-    ERROR_MESSAGE("Initialized Game1")
+    MISC_LOG("Initialized Game1")
 
 	static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, &Teleport, Game0Field, Game1Field);
 	Bot = &bot;
 
 	Bot->teleport();
 
-    ERROR_MESSAGE("Initialized Robot")
+    MISC_LOG("Initialized Robot")
 
 #ifdef SFML
 	static DebugWindow window(Bot);

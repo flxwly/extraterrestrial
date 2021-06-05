@@ -154,7 +154,7 @@ bool Robot::setIN(volatile int **IN) {
         AI_GLOBAL_IN = IN;
         return true;
     } else {
-        ERROR_MESSAGE("Input pointer is nullptr")
+        ROBOT_ERROR("Input pointer is nullptr")
         return false;
     }
 }
@@ -164,7 +164,7 @@ bool Robot::setOUT(volatile int **OUT) {
         AI_GLOBAL_OUT = OUT;
         return true;
     } else {
-        ERROR_MESSAGE("Output pointer is nullptr")
+        ROBOT_ERROR("Output pointer is nullptr")
         return false;
     }
 }
@@ -235,17 +235,17 @@ PVector Robot::getVelocity() const {
                   PVector(-s * cos(v2 / (ROBOT_AXLE_LENGTH / 2 - s)) + s,
                           s * sin(v2 / (ROBOT_AXLE_LENGTH / 2 - s)));
 
-    ERROR_MESSAGE("Rotation: " + std::to_string(compass))
-    ERROR_MESSAGE("WheelLeft: " + std::to_string(wheelLeft))
-    ERROR_MESSAGE("WheelRight: " + std::to_string(wheelRight))
+    ROBOT_LOG("Rotation: " + std::to_string(compass))
+    ROBOT_LOG("WheelLeft: " + std::to_string(wheelLeft))
+    ROBOT_LOG("WheelRight: " + std::to_string(wheelRight))
 
-    ERROR_MESSAGE("WheelLeft: " + std::to_string(v1))
-    ERROR_MESSAGE("WheelLeft: " + std::to_string(v2))
+    ROBOT_LOG("WheelLeft: " + std::to_string(v1))
+    ROBOT_LOG("WheelLeft: " + std::to_string(v2))
 
 
-    ERROR_MESSAGE("1. Velocity: " + PVector::str(vel))
+    ROBOT_LOG("1. Velocity: " + PVector::str(vel))
     vel.rotate(toRadians(compass));
-    ERROR_MESSAGE("2. Velocity: " + PVector::str(vel))
+    ROBOT_LOG("2. Velocity: " + PVector::str(vel))
 
     return vel;
 }
@@ -634,7 +634,9 @@ std::vector<Collectible *> Robot::getPathOfCollectibles(std::array<int, 4> desir
             start = curCollectible->pos;
             collectibles.push_back(curCollectible);
             tLoadedObjects[curCollectible->color]++;
-            ERROR_MESSAGE(curCollectible)
+
+            ROBOT_LOG("Added Collectible at " << curCollectible->pos << " to collectible path")
+
         } else {
             return collectibles;
         }
@@ -759,7 +761,7 @@ void Robot::game1Loop() {
                 if (!path.isEmpty()) {
                     completePath.emplace_back(path, pathOfCollectibles[i]);
                 } else {
-                    ERROR_MESSAGE("No Path found")
+                    ROBOT_WARNING("No Path found")
                 }
 
                 //std::cout << "Path from: " << str(start) << " to " << str(end) << std::endl;
@@ -793,7 +795,7 @@ void Robot::game1Loop() {
     }
 
     if (completePath.empty()) {
-        ERROR_MESSAGE("There's nothing to do")
+        ROBOT_WARNING("There's nothing to do")
         return;
     }
 

@@ -222,34 +222,36 @@ double Pathfinder::heuristic(const PVector &cur, const PVector &end) {
 
 Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 
-    ERROR_MESSAGE("Running Pathfinder from " + begin.str() + " to " + goal.str())
+    PATHFINDER_LOG("Running Pathfinder from " + begin.str() + " to " + goal.str())
 
     // If the begin is also the goal a path is just the goal
     if (begin == goal) {
-        ERROR_MESSAGE("\tStart and end are the same.")
+        PATHFINDER_WARNING("\tStart and end are the same.")
         return Path({goal}, PATH_RADIUS);
     }
 
     Node start = Node(begin, field);
     Node end = Node(goal, field);
 
-    ERROR_MESSAGE("\tBuilding Map...")
+    PATHFINDER_LOG("\tBuilding Map...")
     // If the pathfinder is trap sensitive traps have to be taken into account
-    std::vector<Area> mapObjects = {};
-    if (trapSensitive) mapObjects = field->getMapObjects({0, 1});
-    else mapObjects = field->getMapObjects({0});
+    std::vector<Area> mapObjects;
+    mapObjects = (trapSensitive) ? field->getMapObjects({0, 1}) : field->getMapObjects({0});
 
-    ERROR_MESSAGE("\t\tinitialize start and end nodes...")
+    PATHFINDER_LOG("\t\tinitialize start and end nodes...")
     // Initialize the start and end nodes
-    start.findNeighbours(map, mapObjects);
-    if (start.canSee(end, mapObjects))
+    PATHFINDER_LOG("\t\tFound " << start.findNeighbours(map, mapObjects) << " neighbours for start node")
+    if (start.canSee(end, mapObjects)) {
+        PATHFINDER_WARNING("\t\t\tStart and End are directly connected!!!")
         start.addNeighbour(&end, start.calculateCost(end));
+    }
 
-    end.findNeighbours(map, mapObjects);
-    for (auto &neighbour : end.neighbours)
+    PATHFINDER_LOG("\t\tFound " << end.findNeighbours(map, mapObjects) << " neighbours for end node");
+    for (auto &neighbour : end.neighbours) {
         neighbour.first->addNeighbour(&end, neighbour.second);
+    }
 
-    ERROR_MESSAGE("\tCreate priority queue..")
+    PATHFINDER_LOG("\tCreate priority queue..")
 
     // init open- & closedList
     std::priority_queue<Node *, std::vector<Node *>, Pathfinder::PRIORITY> openList;
@@ -264,7 +266,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
     start.g = 0;
     start.f = (start.g + heuristic(start.pos, end.pos));
 
-    ERROR_MESSAGE("\tBegin pathfinding..")
+    PATHFINDER_LOG("\tBegin pathfinding...")
 
     // loop until solution is found or no solution possible
     while (!openList.empty()) {
@@ -275,8 +277,11 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
         // if cur and end are the same, the path is found
         if (cur == &end) {
 
+            PATHFINDER_LOG("Found path")
+
             Path path = Pathfinder::traverse(&end);
 
+            PATHFINDER_LOG("Cleaning up")
             // remove end node from map nodes neighbour list
             for (auto &neighbour : end.neighbours) {
                 neighbour.first->removeNeighbour(&end);
@@ -290,8 +295,6 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
                 openList.top()->isOpen = false;
                 openList.pop();
             }
-
-            ERROR_MESSAGE("Found path")
 
             return path;
         }
@@ -339,6 +342,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
     }
 
     // resetting everything
+    PATHFINDER_LOG("Cleaning up")
     for (auto &neighbour : end.neighbours) {
         neighbour.first->removeNeighbour(&end);
     }
@@ -362,6 +366,8 @@ Path Pathfinder::traverse(Node *end) {
         end = end->previous;
     }
     std::reverse(path.begin(), path.end());
+
+    PATHFINDER_LOG("Traversed " << path.size() << " points.")
 
     return Path(path, PATH_RADIUS);
 }

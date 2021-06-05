@@ -842,7 +842,7 @@ class MapData:
             im.save("debugging/Map%s.png" % i, "png")
             i += 1
 
-    def __str__(self):
+    def convert(self, empty=False):
         file_content = ""
         i = 0
         for img_arr in self.img_arrs:
@@ -855,22 +855,32 @@ class MapData:
             trap_nodes_str = "const std::vector<PVector>GAME%sTRAPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             swamp_nodes_str = "const std::vector<PVector>GAME%sSWAMPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
             collectibles_str = "const std::vector<Collectible> GAME%sCOLLECTIBLES = " % i
+            if not empty:
+                wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
+                trap_str += convert_arr_to_area_vector_string(self.map_objects[i][1])
+                swamp_str += convert_arr_to_area_vector_string(self.map_objects[i][2])
+                deposit_area_str += str(self.map_objects[i][3]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+                bonus_area_str += convert_arr_to_area_vector_string(self.map_objects[i][4])
 
-            wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
-            trap_str += convert_arr_to_area_vector_string(self.map_objects[i][1])
-            swamp_str += convert_arr_to_area_vector_string(self.map_objects[i][2])
-            deposit_area_str += str(self.map_objects[i][3]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-            bonus_area_str += convert_arr_to_area_vector_string(self.map_objects[i][4])
+                wall_nodes_str += str(self.map_objects_nodes[i][0]).replace("[", "{").replace("]", "}").replace(" ",
+                                                                                                                "") + ";"
+                trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
+                                                                                                                "") + ";"
+                swamp_nodes_str += str(self.map_objects_nodes[i][2]).replace("[", "{").replace("]", "}").replace(" ",
+                                                                                                                 "") + ";"
 
-            wall_nodes_str += str(self.map_objects_nodes[i][0]).replace("[", "{").replace("]", "}").replace(" ",
-                                                                                                            "") + ";"
-            trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
-                                                                                                            "") + ";"
-            swamp_nodes_str += str(self.map_objects_nodes[i][2]).replace("[", "{").replace("]", "}").replace(" ",
-                                                                                                             "") + ";"
-
-            collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-            collectibles_str = collectibles_str.replace("False", "false").replace("True", "true")
+                collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+                collectibles_str = collectibles_str.replace("False", "false").replace("True", "true")
+            else:
+                wall_str += "{};"
+                trap_str += "{};"
+                swamp_str += "{};"
+                bonus_area_str += "{};"
+                deposit_area_str += "{};"
+                wall_nodes_str += "{};"
+                trap_nodes_str += "{};"
+                swamp_nodes_str += "{};"
+                collectibles_str += "{};"
 
             file_content += "//------------- Game%s_Objects --------------//\n\n" % i
 
@@ -894,37 +904,38 @@ class MapData:
 
         return file_content
 
+    def __str__(self):
+        return self.convert()
+
 
 def main():
     print("setting up...")
 
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
     mapData = MapData(img_dirs=[FieldA, FieldB], fd_dir=FieldFD)
-    mapData.show(10)
-    print(mapData)
+    # mapData.show(10)
 
 
-    # begin = "\n\n\n" \
-    #         "///   _______                _____          __\n" \
-    #         "///  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
-    #         "///  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
-    #         "///  |__|_|__||___._||   __||_____/ |___._||____||___._|\n" \
-    #         "///                  |__|\n"
-    #
-    # f = open("../code/MapData.cpp")
-    # content = f.read()
-    # f.close()
-    # content_data = content.split(begin)
-    # if len(content_data) == 2:
-    #     content_data[1] = begin + "\n\n\n" + str(mapData)
-    # else:
-    #     content_data.append(begin + "\n\n\n" + str(mapData))
-    #
-    # data = "".join(content_data)
-    #
-    # f = open("../code/MapData.cpp", "w")
-    # f.write(data)
-    # f.close()
+    begin = "\n\n\n" \
+            "///   _______                _____          __\n" \
+            "///  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
+            "///  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
+            "///  |__|_|__||___._||   __||_____/ |___._||____||___._|\n" \
+            "///                  |__|\n"
+
+    with open("../code/MapData.cpp") as f:
+        file = f.read().split(begin)
+
+    mapData_str = begin + "\n #pragma region MapData\n\n\n\n" + mapData.convert(empty=True) + "\n #pragma endregion\n";
+    if len(file) == 2:
+        file[1] = mapData_str
+    else:
+        file.append(mapData_str)
+
+    file_str = "".join(file)
+
+    with open("../code/MapData.cpp", "w") as f:
+        f.write(file_str)
 
 
 if __name__ == '__main__':

@@ -163,6 +163,8 @@ public:
 
     [[nodiscard]] std::string str() const;
 
+    friend std::ostream& operator<<(std::ostream& os, const PVector& vec);
+
     static std::string str(PVector pVector);
 };
 
