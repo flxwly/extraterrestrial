@@ -8,7 +8,7 @@
 
 Node::Node(PVector _pos, Field *_field) : pos(_pos), field(_field),
                                           isClosed(false), isOpen(false),
-                                          g(0), f(0), previous(nullptr), neighbours() {
+                                          g(0), f(0), previous(nullptr), neighbours({}) {
 }
 
 
@@ -235,8 +235,7 @@ Path Pathfinder::AStar(PVector &begin, PVector &goal) {
 
     PATHFINDER_LOG("\tBuilding Map...")
     // If the pathfinder is trap sensitive traps have to be taken into account
-    std::vector<Area> mapObjects;
-    mapObjects = (trapSensitive) ? field->getMapObjects({0, 1}) : field->getMapObjects({0});
+    std::vector<Area> mapObjects = (trapSensitive) ? field->getMapObjects({0, 1}) : field->getMapObjects({0});
 
     PATHFINDER_LOG("\t\tinitialize start and end nodes...")
     // Initialize the start and end nodes

@@ -9,14 +9,14 @@
 /// define COLOR_LOGGING to enable color logging to console
 //#define COLOR_LOGGING
 
-#define DEBUG_CONSOLE_COLLECTIBLE 1
+#define DEBUG_CONSOLE_COLLECTIBLE 2
 
 #define DEBUG_CONSOLE_FIELD 1
 
-#define DEBUG_CONSOLE_NODE 1
+#define DEBUG_CONSOLE_NODE 3
 #define DEBUG_CONSOLE_PATHFINDER 1
 
-#define DEBUG_CONSOLE_ROBOT 1
+#define DEBUG_CONSOLE_ROBOT 3
 
 #define DEBUG_CONSOLE_MISC 1
 
@@ -43,21 +43,25 @@
 ///       some debug logic
 /// ----------------------------- ///
 
+#define GENERAL_LOG(MESSAGE) {std::cout << "log " << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define GENERAL_WARNING(MESSAGE) {std::cout << "warning " << __FUNCTION__ << "\t" <<  MESSAGE << std::endl;}
+#define GENERAL_ERROR(MESSAGE) {std::cout << "error " << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+
 
 // COLLECTIBLE
 #pragma region COLLECTIBLE
 #if DEBUG_CONSOLE_COLLECTIBLE <= 3
-#define COLLECTIBLE_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define COLLECTIBLE_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
 #define COLLECTIBLE_ERROR(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_COLLECTIBLE <= 2
-#define COLLECTIBLE_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define COLLECTIBLE_WARNING(MESSAGE) GENERAL_WARNING(MESSAGE)
 #else
 #define COLLECTIBLE_WARNING(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_COLLECTIBLE <= 1
-#define COLLECTIBLE_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define COLLECTIBLE_LOG(MESSAGE) GENERAL_LOG(MESSAGE)
 #else
 #define COLLECTIBLE_LOG(MESSAGE) {}
 #endif
@@ -66,17 +70,17 @@
 // FIELD
 #pragma region FIELD
 #if DEBUG_CONSOLE_FIELD <= 3
-#define FIELD_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define FIELD_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
 #define FIELD_ERROR(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_FIELD <= 2
-#define FIELD_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define FIELD_WARNING(MESSAGE) GENERAL_WARNING(MESSAGE)
 #else
 #define FIELD_WARNING(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_FIELD <= 1
-#define FIELD_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define FIELD_LOG(MESSAGE) GENERAL_LOG(MESSAGE)
 #else
 #define FIELD_LOG(MESSAGE) {}
 #endif
@@ -85,17 +89,17 @@
 // NODE
 #pragma region NODE
 #if DEBUG_CONSOLE_NODE <= 3
-#define NODE_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define NODE_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
 #define NODE_ERROR(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_NODE <= 2
-#define NODE_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define NODE_WARNING(MESSAGE) GENERAL_WARNING(MESSAGE)
 #else
 #define NODE_WARNING(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_NODE <= 1
-#define NODE_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define NODE_LOG(MESSAGE) GENERAL_LOG(MESSAGE)
 #else
 #define NODE_LOG(MESSAGE) {}
 #endif
@@ -104,17 +108,17 @@
 // PATHFINDER
 #pragma region PATHFINDER
 #if DEBUG_CONSOLE_PATHFINDER <= 3
-#define PATHFINDER_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define PATHFINDER_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
 #define PATHFINDER_ERROR(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_PATHFINDER <= 2
-#define PATHFINDER_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define PATHFINDER_WARNING(MESSAGE) GENERAL_WARNING(MESSAGE)
 #else
 #define PATHFINDER_WARNING(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_PATHFINDER <= 1
-#define PATHFINDER_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define PATHFINDER_LOG(MESSAGE) GENERAL_LOG(MESSAGE)
 #else
 #define PATHFINDER_LOG(MESSAGE) {}
 #endif
@@ -123,17 +127,17 @@
 // ROBOT
 #pragma region ROBOT
 #if DEBUG_CONSOLE_ROBOT <= 3
-#define ROBOT_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define ROBOT_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
 #define ROBOT_ERROR(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_ROBOT <= 2
-#define ROBOT_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define ROBOT_WARNING(MESSAGE) GENERAL_WARNING(MESSAGE)
 #else
 #define ROBOT_WARNING(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_ROBOT <= 1
-#define ROBOT_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define ROBOT_LOG(MESSAGE) GENERAL_LOG(MESSAGE)
 #else
 #define ROBOT_LOG(MESSAGE) {}
 #endif
@@ -142,17 +146,17 @@
 // MISC
 #pragma region MISC
 #if DEBUG_CONSOLE_MISC <= 3
-#define MISC_ERROR(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define MISC_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
 #define MISC_ERROR(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_MISC <= 2
-#define MISC_WARNING(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define MISC_WARNING(MESSAGE) GENERAL_WARNING(MESSAGE)
 #else
 #define MISC_WARNING(MESSAGE) {}
 #endif
 #if DEBUG_CONSOLE_MISC <= 1
-#define MISC_LOG(MESSAGE) {std::cout << __FUNCTION__ << "\t" << MESSAGE << std::endl;}
+#define MISC_LOG(MESSAGE) GENERAL_LOG(MESSAGE)
 #else
 #define MISC_LOG(MESSAGE) {}
 #endif

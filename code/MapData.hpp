@@ -187,7 +187,7 @@ public:
 
 
     /// Getter for the size
-    PVector getSize() const;
+    [[nodiscard]] PVector getSize() const;
 
     /** gets map objects based on their index
      *

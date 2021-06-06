@@ -123,7 +123,7 @@ Field::Field(const double &width, const double &height,
 
     // field::deposits: Deposit Areas of the field
     Deposits_ = deposits;
-    FIELD_LOG("\t" << Walls_.size() << " walls")
+    FIELD_LOG("\t" << deposits.size() << " deposits")
 
     // Different nodes
     WallNodes_ = wallNodes;
@@ -156,15 +156,19 @@ std::vector<Area> Field::getMapObjects(const std::vector<unsigned int> &indices)
     for (unsigned int index : indices) {
         switch (index) {
             case 0:
+            FIELD_LOG("Returnvector capacity (case 0): " << returnVector.capacity() << " reserving space for " << Walls_.size() << " elements")
                 returnVector.insert(std::end(returnVector), std::begin(Walls_), std::end(Walls_));
                 break;
             case 1:
+            FIELD_LOG("Returnvector capacity (case 1): " << returnVector.capacity() << " reserving space for " << Traps_.size() << " elements")
                 returnVector.insert(std::end(returnVector), std::begin(Traps_), std::end(Traps_));
                 break;
             case 2:
+            FIELD_LOG("Returnvector capacity (case 2): " << returnVector.capacity() << " reserving space for " << Swamps_.size() << " elements")
                 returnVector.insert(std::end(returnVector), std::begin(Swamps_), std::end(Swamps_));
                 break;
             case 3:
+            FIELD_LOG("Returnvector capacity (case 3): " << returnVector.capacity() << " reserving space for " << Waters_.size() << " elements")
                 returnVector.insert(std::end(returnVector), std::begin(Waters_), std::end(Waters_));
                 break;
             default: FIELD_ERROR("index out of range/invalid")
@@ -403,7 +407,7 @@ PVector geometry::getNormalPoint(Line line, PVector point) {
 //------------- Game0_Objects --------------//
 
 /*walls*/
-const std::vector<Area> GAME0WALLS = {};
+const std::vector<Area> GAME0WALLS = {Area({{10, 10},{10, 20},{20, 20}})};
 /*traps*/
 const std::vector<Area> GAME0TRAPS = {};
 /*swamps*/

@@ -65,11 +65,13 @@ void startAsyncLoop() {
 
 void Setup() {
 
-    freopen ("out.txt", "w", stdout);
 
-    //freopen("out.txt","w", stdout);
 
-	// TODO: Move static objects back to static space so the objects get initialized upon load
+    freopen ("../../User/RSC/extraterrestrial/stdout.txt", "w", stdout);
+    freopen ("../../User/RSC/extraterrestrial/stderr.txt", "w", stderr);
+    system("cls");
+
+    // TODO: Move static objects back to static space so the objects get initialized upon load
 	// ----------- Initialisation of static objects -------------------- //
 
 	Field Game0Field(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
