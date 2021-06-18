@@ -168,7 +168,9 @@ private:
 class Field {
 public:
 
-    Field(const double &width, const double &height,
+	Field() = default;
+
+    Field(const int &width, const int &height,
           const std::vector<Area> &walls,
           const std::vector<Area> &traps,
           const std::vector<Area> &swamps,

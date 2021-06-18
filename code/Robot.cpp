@@ -140,10 +140,14 @@ unsigned int ObjectLoad::num() const {
 Robot::Robot(volatile int **IN, volatile int **OUT, std::array<int *, 3> superObject, int *teleport,
              Field map0, Field map1) :
         pathfinder0(map0, false), pathfinder1(map1, false),
-        pathfinder0T(map0, true), pathfinder1T(map1, true),
-        map0(map0), map1(map1), SUPER_OBJECT_INFO(superObject) {
+        pathfinder0T(map0, true), pathfinder1T(map1, true), SUPER_OBJECT_INFO(superObject) {
 
     TELEPORT = teleport;
+
+    Robot::map0 = map0;
+    Robot::map1 = map1;
+
+
     setIN(IN);
     setOUT(OUT);
 }

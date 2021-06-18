@@ -97,7 +97,7 @@ const PVector &Area::getMax() const {
 /**     -----------     **/
 
 
-Field::Field(const double &width, const double &height,
+Field::Field(const int &width, const int &height,
              const std::vector<Area> &walls,
              const std::vector<Area> &traps,
              const std::vector<Area> &swamps,
@@ -107,7 +107,7 @@ Field::Field(const double &width, const double &height,
              const std::vector<PVector> &trapNodes,
              const std::vector<PVector> &swampNodes,
              const std::vector<Collectible> &collectibles) :
-        size_{width, height} {
+        size_{static_cast<double> (width), static_cast<double> (height)} {
 
     FIELD_LOG("Creating new Field-object")
 
