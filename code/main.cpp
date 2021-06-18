@@ -36,13 +36,10 @@ std::thread *AsyncLoopThread = nullptr;
 void startAsyncLoop() {
 
     runAsyncLoop = true;
-    long long int asyncCycleNum = 1;
 
     MISC_LOG("Starting Async Loop")
 
     while (runAsyncLoop) {
-
-        MISC_LOG("Async Cycle num: " + std::to_string(asyncCycleNum))
 
         Bot->updateLoop();
         if (CurGame == 0) {
@@ -51,11 +48,9 @@ void startAsyncLoop() {
             Bot->game1Loop();
         }
 
-        #ifdef SFML
-            debugWindow->updateLoop();
-        #endif
-
-        asyncCycleNum++;
+#ifdef SFML
+        debugWindow->updateLoop();
+#endif
 
     }
 
@@ -66,39 +61,44 @@ void startAsyncLoop() {
 void Setup() {
 
 
-
-    freopen ("../../User/RSC/extraterrestrial/stdout.txt", "w", stdout);
-    freopen ("../../User/RSC/extraterrestrial/stderr.txt", "w", stderr);
+    freopen("../../User/RSC/extraterrestrial/stdout.txt", "w", stdout);
+    freopen("../../User/RSC/extraterrestrial/stderr.txt", "w", stderr);
     system("cls");
 
     // TODO: Move static objects back to static space so the objects get initialized upon load
-	// ----------- Initialisation of static objects -------------------- //
+    // ----------- Initialisation of static objects -------------------- //
+/*
 
-	Field Game0Field(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
-	                   GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES);
+    Field Game0Field(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
+                     GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES);
+*/
 
     MISC_LOG("Initialized Game0")
 
-	Field Game1Field(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
-	                   GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
+   /* Field Game1Field(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
+                     GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);*/
 
     MISC_LOG("Initialized Game1")
 
-	static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, &Teleport, Game0Field, Game1Field);
-	Bot = &bot;
+    static Robot bot(&INPUT, &OUTPUT, {&SuperObj_X, &SuperObj_Y, &SuperObj_Num}, &Teleport,
+                     {270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
+                      GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES},
+                     {360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
+                      GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES});
+    Bot = &bot;
 
-	Bot->teleport();
+    Bot->teleport();
 
     MISC_LOG("Initialized Robot")
 
 #ifdef SFML
-	static DebugWindow window(Bot);
-	window.startDebugging(GAME1);
-	debugWindow = &window;
+    static DebugWindow window(Bot);
+    window.startDebugging(GAME1);
+    debugWindow = &window;
 #endif
 
-	static std::thread Thread(&startAsyncLoop);
-	AsyncLoopThread = &Thread;
+    static std::thread Thread(&startAsyncLoop);
+    AsyncLoopThread = &Thread;
 }
 
 
@@ -106,7 +106,7 @@ void Game0() {
     //Bot->updateLoop();
     //Bot->game0Loop();
 #ifdef SFML
-	debugWindow->updateLoop();
+    debugWindow->updateLoop();
 #endif
 }
 

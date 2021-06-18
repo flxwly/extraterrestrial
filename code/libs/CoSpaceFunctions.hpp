@@ -48,7 +48,7 @@ extern int WheelLeft;
 extern int WheelRight;
 extern int LED_1;
 extern int MyState;
-extern unsigned int cycle;
+extern bool runSetup;
 extern int AI_SensorNum;
 extern int OtherRob_PositionX;//The X coordinate of the other robot.
 extern int OtherRob_PositionY;//The Y coordinate of the other robot.

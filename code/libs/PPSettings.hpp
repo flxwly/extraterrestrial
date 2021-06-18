@@ -1,6 +1,8 @@
 #ifndef PPSETTINGS_HPP
 #define PPSETTINGS_HPP
 
+#include <chrono>
+
 /// ----------------------------- ///
 ///       program settings
 /// ----------------------------- ///

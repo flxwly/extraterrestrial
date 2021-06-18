@@ -155,21 +155,21 @@ std::vector<Area> Field::getMapObjects(const std::vector<unsigned int> &indices)
     // return after all indices have been checked.
     for (unsigned int index : indices) {
         switch (index) {
-            case 0:
-            FIELD_LOG("Returnvector capacity (case 0): " << returnVector.capacity() << " reserving space for " << Walls_.size() << " elements")
-                returnVector.insert(std::end(returnVector), std::begin(Walls_), std::end(Walls_));
+            case 0: FIELD_LOG("Returnvector capacity (case 0): " << returnVector.capacity() << " reserving space for "
+                                                                 << Walls_.size() << " elements")
+                returnVector.insert(std::end(returnVector), std::begin(GAME1WALLS), std::end(GAME1WALLS));
                 break;
-            case 1:
-            FIELD_LOG("Returnvector capacity (case 1): " << returnVector.capacity() << " reserving space for " << Traps_.size() << " elements")
-                returnVector.insert(std::end(returnVector), std::begin(Traps_), std::end(Traps_));
+            case 1: FIELD_LOG("Returnvector capacity (case 1): " << returnVector.capacity() << " reserving space for "
+                                                                 << Traps_.size() << " elements")
+                returnVector.insert(std::end(returnVector), std::begin(GAME1TRAPS), std::end(GAME1TRAPS));
                 break;
-            case 2:
-            FIELD_LOG("Returnvector capacity (case 2): " << returnVector.capacity() << " reserving space for " << Swamps_.size() << " elements")
-                returnVector.insert(std::end(returnVector), std::begin(Swamps_), std::end(Swamps_));
+            case 2: FIELD_LOG("Returnvector capacity (case 2): " << returnVector.capacity() << " reserving space for "
+                                                                 << Swamps_.size() << " elements")
+                returnVector.insert(std::end(returnVector), std::begin(GAME1SWAMPS), std::end(GAME1SWAMPS));
                 break;
-            case 3:
-            FIELD_LOG("Returnvector capacity (case 3): " << returnVector.capacity() << " reserving space for " << Waters_.size() << " elements")
-                returnVector.insert(std::end(returnVector), std::begin(Waters_), std::end(Waters_));
+            case 3: FIELD_LOG("Returnvector capacity (case 3): " << returnVector.capacity() << " reserving space for "
+                                                                 << Waters_.size() << " elements")
+                returnVector.insert(std::end(returnVector), std::begin(GAME1WATERS), std::end(GAME1WATERS));
                 break;
             default: FIELD_ERROR("index out of range/invalid")
         }
@@ -407,7 +407,9 @@ PVector geometry::getNormalPoint(Line line, PVector point) {
 //------------- Game0_Objects --------------//
 
 /*walls*/
-const std::vector<Area> GAME0WALLS = {Area({{10, 10},{10, 20},{20, 20}})};
+const std::vector<Area> GAME0WALLS = {Area({{10, 10},
+                                            {10, 20},
+                                            {20, 20}})};
 /*traps*/
 const std::vector<Area> GAME0TRAPS = {};
 /*swamps*/
@@ -434,7 +436,9 @@ const std::vector<Collectible> GAME0COLLECTIBLES = {};
 //------------- Game1_Objects --------------//
 
 /*walls*/
-const std::vector<Area> GAME1WALLS = {};
+const std::vector<Area> GAME1WALLS = {Area({{10, 10},
+                                            {10, 20},
+                                            {20, 20}})};
 /*traps*/
 const std::vector<Area> GAME1TRAPS = {};
 /*swamps*/

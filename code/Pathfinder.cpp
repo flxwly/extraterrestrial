@@ -193,6 +193,7 @@ Pathfinder::Pathfinder(Field &MAP, bool trap_sensitive) : trapSensitive{trap_sen
     std::vector<Area> mapObjects = {};
     if (trap_sensitive) {
         mapObjects = field->getMapObjects({0, 1});
+        mapObjects = field->getMapObjects({0, 1});
     } else {
         mapObjects = field->getMapObjects({0});
     }

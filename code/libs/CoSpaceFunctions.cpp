@@ -32,7 +32,7 @@ int WheelLeft = 0;
 int WheelRight = 0;
 int LED_1 = 0;
 int MyState = 0;
-unsigned int cycle = 0;
+bool runSetup = true;
 int AI_SensorNum = 13;
 
 // only for superTeam challenge
@@ -47,7 +47,7 @@ int ObjPositionY;//The Y coordinate of the last state-changed object.
 int ObjDuration; //The duration(seconds) of the object maintains the current state;
 
 DLL_EXPORT void SetGameID(int GameID) {
-    if (GameID == -1 && cycle > 0) {
+    if (GameID == -1 && !runSetup) {
         Stop();
     }
     CurGame = GameID;
@@ -108,8 +108,8 @@ DLL_EXPORT void GetCommand(int *AI_OUT) {
 
 DLL_EXPORT void OnTimer() {
     // Wait two cycles before starting the actual so all vars can be set by the simulator
-    if (cycle == 2) {
+    if (runSetup) {
         Setup();
+        runSetup = false;
     }
-    cycle++;
 }
