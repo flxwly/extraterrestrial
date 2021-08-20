@@ -1,12 +1,11 @@
 #ifndef COLORRECOGNITION_HPP
 #define COLORRECOGNITION_HPP
 
-#include "CoSpaceFunctions.hpp"
-#include "CommonFunctions.hpp"
+#include <algorithm>
 
 struct RGBColor {
-    float r = 0;
-    float g = 0;
+	float r = 0;
+	float g = 0;
     float b = 0;
 };
 
@@ -22,7 +21,7 @@ bool isBlack(HSLColor c);
 bool isYellow(HSLColor c);
 bool isOrange(HSLColor c);
 bool isSwamp(HSLColor c);
-bool isColor(HSLColor c);
+
 bool isSuperObj(HSLColor c);
 
 float rgb2h(HSLColor c);
