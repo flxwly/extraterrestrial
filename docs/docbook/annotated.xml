@@ -1,4 +1,0 @@
-<?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<section xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="_annotated" xml:lang="en-US">
-<title>Class List</title>
-Here are the classes, structs, unions and interfaces with brief descriptions:<link linkend="_class_area">Area</link><link linkend="_class_collectible">Collectible</link><link linkend="_class_debug_window">DebugWindow</link><link linkend="_class_field">Field</link><link linkend="_struct_h_s_l_color">HSLColor</link><link linkend="_class_line">Line</link><link linkend="_class_node">Node</link><link linkend="_class_object_load">ObjectLoad</link><link linkend="_class_path">Path</link><link linkend="_class_pathfinder">Pathfinder</link><link linkend="_class_p_vector">PVector</link><link linkend="_struct_r_g_b_color">RGBColor</link><link linkend="_class_robot">Robot</link></section>

@@ -89,12 +89,15 @@ public:
  * <p>A line is defined by to points p1 and p2. It does not provide much
  * functionality by itself and is simply a container for two points
  * under a namespace.
- *
- * @tparam p1 Position of the 1st PVector.
- * @tparam p2 Position of the 2nd PVector.
 */
 class Line {
 public:
+
+	/** Constructor for a Line object
+     *
+     * @tparam p1 Position of the 1st PVector.
+     * @tparam p2 Position of the 2nd PVector.
+     */
     Line(const PVector &_p1, const PVector &_p2);
 
     /// One end of the line

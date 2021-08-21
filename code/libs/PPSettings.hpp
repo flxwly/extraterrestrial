@@ -11,18 +11,18 @@
 /// define COLOR_LOGGING to enable color logging to console
 //#define COLOR_LOGGING
 
-#define DEBUG_CONSOLE_COLLECTIBLE 0
+#define DEBUG_CONSOLE_COLLECTIBLE 2
 
-#define DEBUG_CONSOLE_FIELD 0
+#define DEBUG_CONSOLE_FIELD 2
 
-#define DEBUG_CONSOLE_NODE 0
-#define DEBUG_CONSOLE_PATHFINDER 0
+#define DEBUG_CONSOLE_NODE 2
+#define DEBUG_CONSOLE_PATHFINDER 2
 
-#define DEBUG_CONSOLE_ROBOT 0
+#define DEBUG_CONSOLE_ROBOT 2
 
-#define DEBUG_CONSOLE_MISC 0
+#define DEBUG_CONSOLE_MISC 2
 
-#define MINIMUM_TIME_BETWEEN_CYCLE 500
+#define MINIMUM_TIME_BETWEEN_CYCLE 5
 
 
 /// ----------------------------- ///
@@ -153,6 +153,9 @@
 ///         robot settings
 /// ----------------------------- ///
 
+/// Absolute minimum Distance of Robot to walls and map end
+#define ABSOLUT_MIN_DISTANCE 5
+
 /// The speed of the robot in cm/ms for 1 % of maximum speed (wheels(1, 1))
 #define ROBOT_SPEED 0.0005
 #define BREAKING_COEFFICIENT 0.01
@@ -194,10 +197,16 @@
 #define GAME1_TIME 300
 
 /// The factor by what speed is reduced in swamps TODO
-#define SWAMP_SPEED_PENALITY 10
+#define SWAMP_SPEED_PENALTY 10
+
+/// The maximum force the robot is allowed to steer with
+#define MAX_STEERING_FORCE 10
 
 /// Standard radius of a path in cm
 #define PATH_RADIUS 10
+
+/// Maximum number of loaded objects at a time
+#define MAX_LOADED_OBJECTS 6
 
 /// ----------------------------- ///
 ///      CoSpace constants

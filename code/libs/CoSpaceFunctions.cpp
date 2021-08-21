@@ -188,10 +188,10 @@ DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN) {
 }
 
 DLL_EXPORT void GetCommand(int *AI_OUT) {
-	AI_OUT[0] = WheelLeft;
-	AI_OUT[1] = WheelRight;
-	AI_OUT[2] = LED_1;
-	AI_OUT[3] = MyState;
+//	AI_OUT[0] = WheelLeft;
+//	AI_OUT[1] = WheelRight;
+//	AI_OUT[2] = LED_1;
+//	AI_OUT[3] = MyState;
 
 	Out = AI_OUT;
 }

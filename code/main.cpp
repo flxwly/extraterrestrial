@@ -5,15 +5,23 @@
 #include "libs/PPSettings.hpp"
 #include "libs/CoSpaceFunctions.hpp"
 #include "libs/ColorRecognition.hpp"
+#include "Robot.hpp"
+
+Robot *robot = nullptr;
 
 void Setup() {
-	std::cout << "running setup" << std::endl;
+	MISC_LOG("Running Setup");
+
+	static Robot robot1(In, Out);
+	robot = &robot1;
 }
 
 void Game0() {
-	std::cout << "running game0" << std::endl;
+	MISC_LOG("Running Game0");
+	robot->Update();
+	robot->Game0();
 }
 
 void Game1() {
-	std::cout << "running game1" << std::endl;
+	MISC_LOG("Running Game1");
 }

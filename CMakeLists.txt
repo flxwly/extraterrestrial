@@ -11,13 +11,10 @@ set (CMAKE_CXX_STANDARD 20)
 set (SOURCE_FILES
         code/main.cpp
         code/MapData.cpp
-        code/Pathfinder.cpp
-        code/Robot.cpp
-        code/SFMLWindow.cpp
         code/libs/ColorRecognition.cpp
-        code/libs/CommonFunctions.cpp
         code/libs/CoSpaceFunctions.cpp
-        code/libs/PVector.cpp)
+        code/libs/PVector.cpp
+        code/Robot.cpp code/Robot.hpp)
 
 add_executable(Extraterrestrial ${SOURCE_FILES})
 
