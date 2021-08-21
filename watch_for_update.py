@@ -1,11 +1,11 @@
 import glob
 import logging
 import subprocess
-import sys
-import time
 from datetime import datetime, timedelta
 from os import system
 
+import sys
+import time
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
 
@@ -37,7 +37,7 @@ def compile_code(out_path, file_name, optimisation_level, more_warnings):
     for file_path in file_list:
         print(file_path)
         command += " " + file_path
-    command += " -o " + "\"" + out_path + file_name + "\"" + SFML
+    command += " -o " + "\"" + out_path + file_name + "\""  # + SFML
 
     print("\n" + command + "\n")
     subprocess.run(command, shell=True)

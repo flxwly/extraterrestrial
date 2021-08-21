@@ -6,7 +6,6 @@
 #include "libs/CoSpaceFunctions.hpp"
 #include "libs/ColorRecognition.hpp"
 
-
 void Setup() {
 	std::cout << "running setup" << std::endl;
 }

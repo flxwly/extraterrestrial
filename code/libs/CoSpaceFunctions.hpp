@@ -1,9 +1,9 @@
 #ifndef COSPACE_SETTINGS
 #define COSPACE_SETTINGS
 
-#define CsBot_AI_H
-#define DLL_EXPORT extern __declspec(dllexport)
+#include <bits/stdc++.h>
 
+#define DLL_EXPORT extern "C" __declspec(dllexport)
 
 
 #ifdef _MSC_VER
@@ -19,7 +19,7 @@
 #include "PPSettings.hpp"
 
 
-extern char AI_MyID[6];
+extern char AI_MyID[2];
 
 extern int Duration;
 extern int SuperDuration;
@@ -68,16 +68,13 @@ extern int ObjPositionX;//The X coordinate of the last state-changed object.
 extern int ObjPositionY;//The Y coordinate of the last state-changed object.
 extern int ObjDuration; //The duration(seconds) of the object maintains the current state;
 
-
-#define CsBot_AI_C //DO NOT delete this line
-
 DLL_EXPORT void SetGameID(int GameID);
 
 DLL_EXPORT void SetTeamID(int TeamID);
 
 DLL_EXPORT int GetGameID();
 
-#ifndef CSBOT_REAL
+DLL_EXPORT int IsGameEnd();
 
 DLL_EXPORT char *GetDebugInfo();
 
@@ -98,8 +95,6 @@ DLL_EXPORT void UpdateObjectInfo(int X, int Y, int state, int duration);
 
 DLL_EXPORT int GetMySMS();
 
-#endif ////CSBOT_REAL
-
 DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN);
 
 DLL_EXPORT void GetCommand(int *AI_OUT);
@@ -116,6 +111,8 @@ extern bool RunUpdateLoop;
 extern void UpdateLoop();
 
 extern void EndUpdateLoop();
+
+extern void StartUpdateLoop();
 
 extern void Update();
 

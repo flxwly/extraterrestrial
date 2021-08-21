@@ -1,6 +1,8 @@
 #include "CoSpaceFunctions.hpp"
 
-char AI_MyID[6] = {'1', '2', '3', '4', '5', '6'};
+char AI_MyID[] = {'0', '2'};
+char TeamName[] = {'E', 'x', 't', 'r', 'a', 't', 'e', 'r', 'r', 'e', 's', 't', 'r', 'i', 'a', 'l'};
+char DebugInfo[1024] = {};
 
 int Duration = 0;
 int SuperDuration = 0;
@@ -50,8 +52,6 @@ int ObjPositionY;//The Y coordinate of the last state-changed object.
 int ObjDuration; //The duration(seconds) of the object maintains the current state;
 
 
-#define CsBot_AI_C
-
 // Is called periodically, after the user pressed the "go" button
 DLL_EXPORT void SetGameID(int GameID) {
 
@@ -79,22 +79,19 @@ DLL_EXPORT int IsGameEnd() {
 	return bGameEnd;
 }
 
-#ifndef CSBOT_REAL
-
 // Is only called if the user opens the debug panel in the simulator
 DLL_EXPORT char *GetDebugInfo() {
-	char info[3000];
-	sprintf(info,
+	sprintf(DebugInfo,
 	        "Duration=%d;SuperDuration=%d;bGameEnd=%d;CurAction=%d;CurGame=%d;SuperObj_Num=%d;SuperObj_X=%d;SuperObj_Y=%d;Teleport=%d;LoadedObjects=%d;US_Front=%d;US_Left=%d;US_Right=%d;CSLeft_R=%d;CSLeft_G=%d;CSLeft_B=%d;CSRight_R=%d;CSRight_G=%d;CSRight_B=%d;PositionX=%d;PositionY=%d;TM_State=%d;Compass=%d;Time=%d;WheelLeft=%d;WheelRight=%d;LED_1=%d;MyState=%d;",
 	        Duration, SuperDuration, bGameEnd, CurAction, CurGame, SuperObj_Num, SuperObj_X, SuperObj_Y, Teleport,
 	        LoadedObjects, US_Front, US_Left, US_Right, CSLeft_R, CSLeft_G, CSLeft_B, CSRight_R, CSRight_G, CSRight_B,
 	        PositionX, PositionY, TM_State, Compass, Time, WheelLeft, WheelRight, LED_1, MyState);
-	return info;
+	return DebugInfo;
 }
 
 
 DLL_EXPORT char *GetTeamName() {
-	return "Extraterrestrial";
+	return TeamName;
 }
 
 DLL_EXPORT int GetCurAction() {
@@ -137,8 +134,6 @@ DLL_EXPORT void UpdateObjectInfo(int X, int Y, int state, int duration) {
 DLL_EXPORT int GetMySMS() {
 	return MySMS;
 }
-
-#endif ////CSBOT_REAL
 
 DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN) {
 
@@ -198,8 +193,6 @@ DLL_EXPORT void GetCommand(int *AI_OUT) {
 	AI_OUT[2] = LED_1;
 	AI_OUT[3] = MyState;
 
-	std::cout << "test" << std::endl;
-
 	Out = AI_OUT;
 }
 
@@ -222,7 +215,6 @@ void Update() {
 }
 
 void UpdateLoop() {
-	RunUpdateLoop = true;
 
 	MISC_LOG("Starting UpdateLoop")
 
@@ -232,12 +224,12 @@ void UpdateLoop() {
 
 		Update();
 
-		auto timeDif = std::chrono::duration_cast<std::chrono::milliseconds>(begin - std::chrono::high_resolution_clock::now());
-		auto maxTime = std::chrono::duration<int, std::milli>(MINIMUM_TIME_BETWEEN_CYCLE);
-		auto waitingTime = maxTime - timeDif;
+		auto waitingTime = std::chrono::duration<int, std::milli>(MINIMUM_TIME_BETWEEN_CYCLE) -
+		                   std::chrono::duration_cast<std::chrono::milliseconds>(
+				                   begin - std::chrono::high_resolution_clock::now());
 
 		MISC_LOG("Waiting " << waitingTime.count() << " milliseconds")
-		std::this_thread::sleep_for(maxTime - timeDif);
+		std::this_thread::sleep_for(waitingTime);
 	}
 
 	MISC_LOG("Exit UpdateLoop")
@@ -248,6 +240,19 @@ void EndUpdateLoop() {
 	if (Thread) {
 		Thread->join();
 	}
+}
+
+void StartUpdateLoop() {
+	if (Thread) {
+		if (!Thread->joinable()) {
+			MISC_ERROR("The thread has not been joined yet")
+			return;
+		}
+	}
+	RunUpdateLoop = true;
+	static std::thread t(&UpdateLoop);
+	Thread = &t;
+
 }
 
 DLL_EXPORT void OnTimer() {
@@ -266,9 +271,8 @@ DLL_EXPORT void OnTimer() {
 			InitialisingState = 3;
 		case 3:
 			// start loop
+			StartUpdateLoop();
 
-			static std::thread t(&UpdateLoop);
-			Thread = &t;
 			InitialisingState = -1;
 			break;
 		default:

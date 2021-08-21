@@ -22,7 +22,7 @@
 
 #define DEBUG_CONSOLE_MISC 0
 
-#define MINIMUM_TIME_BETWEEN_CYCLE 20
+#define MINIMUM_TIME_BETWEEN_CYCLE 500
 
 
 /// ----------------------------- ///
