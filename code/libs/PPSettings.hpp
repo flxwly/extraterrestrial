@@ -208,6 +208,11 @@
 /// Maximum number of loaded objects at a time
 #define MAX_LOADED_OBJECTS 6
 
+#define ULTRASONIC_SENSOR_DIST_TO_CORE_F 6.5
+#define ULTRASONIC_SENSOR_ANGLE_OFFSET 45
+#define ULTRASONIC_SENSOR_DIST_TO_CORE 6.40312
+
+
 /// ----------------------------- ///
 ///      CoSpace constants
 /// ----------------------------- ///

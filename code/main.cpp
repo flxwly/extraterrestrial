@@ -24,4 +24,6 @@ void Game0() {
 
 void Game1() {
 	MISC_LOG("Running Game1");
+	robot->Update();
+	robot->Game1();
 }

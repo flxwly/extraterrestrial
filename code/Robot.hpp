@@ -2,6 +2,7 @@
 #define EXTRATERRESTRIAL_ROBOT_HPP
 
 #include <list>
+#include <chrono>
 
 #include "libs/ColorRecognition.hpp"
 #include "libs/PVector.hpp"
@@ -9,11 +10,20 @@
 #include "MapData.hpp"
 
 struct Wheels {
+
+	const static int minVel = -100;
+	const static int maxVel = 100;
+
 	int l = 0, r = 0;
 
 	void set(int pL, int pR) {
-		l = pL;
-		r = pR;
+		l = std::max(minVel, std::min(pL, maxVel));
+		r = std::max(minVel, std::min(pR, maxVel));
+	};
+
+	void accelerate(int pL, int pR) {
+		l += (pL + l < minVel) ? minVel - l : ((pL + l > maxVel) ? maxVel - l : pL);
+		r += (pR + r < minVel) ? minVel - r : ((pR + r > maxVel) ? maxVel - r : pR);
 	};
 };
 
@@ -113,8 +123,9 @@ public:
 	int led = 0;
 
 	// Own vars
+	int level = 0;
 	CollectibleLoad loadedCollectibles;
-	PVector desiredVelocity = {0, 0};
+	PVector desiredVelocity = {1, 0};
 
 	/// Constructor
 	Robot(volatile int *pIn, volatile int *pOut);
@@ -127,9 +138,19 @@ public:
 
 	void Game1();
 
+	void Teleport();
+
 	PVector getVelocity();
 
-	bool collisionAvoidance(int minDistanceToWallLeft, int minDistanceToWallFront, int minDistanceToWallRight, int minDistanceToMapEnd)
+	// Returns a vector that tells the robot in what direction it should move to avoid walls
+	PVector collisionAvoidance(double maxForce);
+
+	std::vector<Collectible> getPointPath(CollectibleLoad desiredLoad, bool finishOnDeposit);
+
+
+
+	void move(PVector velocity);
+	void moveTo(PVector point);
 
 };
 

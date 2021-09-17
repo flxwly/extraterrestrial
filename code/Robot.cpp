@@ -15,7 +15,7 @@ void Robot::Update() {
 			rgb2hsl({static_cast<float>(In[3]), static_cast<float>(In[4]), static_cast<float>(In[5])}),
 			rgb2hsl({static_cast<float>(In[6]), static_cast<float>(In[7]), static_cast<float>(In[8])}));
 	simPos.set(In[9], In[10]);
-	compass = In[12];
+	compass = In[11];
 	time = In[13];
 
 	// Update out information
@@ -28,41 +28,67 @@ void Robot::Game0() {
 
 	ROBOT_LOG("Robot is running game0")
 
+	std::cout << simPos << std::endl;
 
+	if (desiredVelocity.x < 0 && simPos.x > 240) {
+		desiredVelocity.set(1, 0);
+	}
+	if (desiredVelocity.x > 0 && simPos.x < 80){
+		desiredVelocity.set(-1, 0);
+	}
 
+	desiredVelocity += collisionAvoidance(10);
 
-	// Steer towards desired velocity
-	PVector steer = desiredVelocity - getVelocity();
+	std::cout << desiredVelocity << std::endl;
 
+	desiredVelocity.normalize();
 
+	std::cout << desiredVelocity << std::endl;
+
+	move(desiredVelocity);
 }
 
 void Robot::Game1() {
 
+	std::cout << simPos << std::endl;
+
+	if (desiredVelocity.x < 0 && simPos.x > 240) {
+		desiredVelocity.set(1, 0);
+	}
+	if (desiredVelocity.x > 0 && simPos.x < 80){
+		desiredVelocity.set(-1, 0);
+	}
+
+	desiredVelocity += collisionAvoidance(10);
+
+	std::cout << desiredVelocity << std::endl;
+
+	desiredVelocity.normalize();
+
+	std::cout << desiredVelocity << std::endl;
+
+	move(desiredVelocity);
 }
 
-bool Robot::collisionAvoidance(int minDistanceToWallLeft, int minDistanceToWallFront, int minDistanceToWallRight,
-                               int minDistanceToMapEnd) {
+PVector Robot::collisionAvoidance(double maxForce) {
 
-	int binaryState = 0;
-	if (ultraSonicSensors.l < minDistanceToWallLeft) {
-		binaryState += 1;
-	}
-	if (ultraSonicSensors.f < minDistanceToWallFront) {
-		binaryState += 2;
-	}
-	if (ultraSonicSensors.r < minDistanceToWallRight) {
-		binaryState += 4;
-	}
+	PVector force = {0, 0};
 
-	switch (binaryState) {
-		case 0:
-			// No need to adjust
-			break;
+	//TODO: Tweak constants
+	const double G = 1;
+	const double C = 1;
+
+	force += geometry::angle2Vector(compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 180).setMag(
+			G * C / (ultraSonicSensors.l * ultraSonicSensors.l));
+	force += geometry::angle2Vector(compass - 180).setMag(G * C / (ultraSonicSensors.f * ultraSonicSensors.f));
+	force += geometry::angle2Vector(compass + ULTRASONIC_SENSOR_ANGLE_OFFSET - 180).setMag(
+			G * C / (ultraSonicSensors.r * ultraSonicSensors.r));
+
+	if (force.getMag() > maxForce) {
+		force.setMag(maxForce);
 	}
 
-
-	return false;
+	return force;
 }
 
 PVector Robot::getVelocity() {
@@ -90,17 +116,127 @@ PVector Robot::getVelocity() {
 	              PVector(-s * cos(v2 / (ROBOT_AXLE_LENGTH / 2 - s)) + s,
 	                      s * sin(v2 / (ROBOT_AXLE_LENGTH / 2 - s)));
 
-	ROBOT_LOG("Rotation: " + std::to_string(compass))
-	ROBOT_LOG("WheelLeft: " + std::to_string(wheelLeft))
-	ROBOT_LOG("WheelRight: " + std::to_string(wheelRight))
-
 	ROBOT_LOG("WheelLeft: " + std::to_string(v1))
 	ROBOT_LOG("WheelLeft: " + std::to_string(v2))
 
-
-	ROBOT_LOG("1. Velocity: " + PVector::str(vel))
 	vel.rotate(compass * M_PI / 180);
-	ROBOT_LOG("2. Velocity: " + PVector::str(vel))
 
 	return vel;
+}
+
+void Robot::moveTo(PVector point) {
+
+	double angleDif = std::fmod(geometry::vector2Angle(point - simPos) - compass, 360);
+	if (angleDif > 180) {
+		angleDif -= 360;
+	} else if (angleDif < -180) {
+		angleDif += 360;
+	}
+
+
+}
+
+void Robot::move(PVector velocity) {
+
+	std::cout << geometry::vector2Angle(velocity) * 180 / M_PI << std::endl;
+
+	double angleDif = std::fmod(geometry::vector2Angle(velocity) * 180 / M_PI - compass + 90, 360);
+	if (angleDif > 180) {
+		angleDif -= 360;
+	} else if (angleDif < -180) {
+		angleDif += 360;
+	}
+
+
+	int action = -1;
+	if (std::fabs(angleDif) < 5) {
+		action = 0;
+	} else if (std::fabs(angleDif) < 15) {
+		action = 1;
+	} else if (std::fabs(angleDif) < 30) {
+		action = 2;
+	} else if (std::fabs(angleDif) < 45) {
+		action = 3;
+	} else if (std::fabs(angleDif) < 60) {
+		action = 4;
+	} else if (std::fabs(angleDif) < 75) {
+		action = 5;
+	} else {
+		action = 16;
+	}
+
+	std::cout << std::pow(2, velocity.getMag()) * 20 - 1 << std::endl;
+
+	switch (action) {
+		case 0:
+			wheels.set((std::pow(2, velocity.getMag()) - 1) * 100, (std::pow(2, velocity.getMag()) - 1) * 100);
+			break;
+		case 1:
+			if (angleDif > 0) {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * 80, (std::pow(2, velocity.getMag()) - 1) * 100);
+			} else {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * 100, (std::pow(2, velocity.getMag()) - 1) * 80);
+			}
+			break;
+		case 2:
+			if (angleDif > 0) {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * 20, (std::pow(2, velocity.getMag()) - 1) * 100);
+			} else {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * 100, (std::pow(2, velocity.getMag()) - 1) * 20);
+			}
+			break;
+		case 3:
+			if (angleDif > 0) {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * -20, (std::pow(2, velocity.getMag()) - 1) * 100);
+			} else {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * 100, (std::pow(2, velocity.getMag()) - 1) * -20);
+			}
+			break;
+		case 4:
+			if (angleDif > 0) {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * -40, (std::pow(2, velocity.getMag()) - 1) * 100);
+			} else {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * 100, (std::pow(2, velocity.getMag()) - 1) * -40);
+			}
+			break;
+		case 5:
+			if (angleDif > 0) {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * -80, (std::pow(2, velocity.getMag()) - 1) * 100);
+			} else {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * 100, (std::pow(2, velocity.getMag()) - 1) * -80);
+			}
+			break;
+		default:
+			if (angleDif > 0) {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * -100, (std::pow(2, velocity.getMag()) - 1) * 100);
+			} else {
+				wheels.set((std::pow(2, velocity.getMag()) - 1) * 100, (std::pow(2, velocity.getMag()) - 1) * -100);
+			}
+			break;
+	}
+
+
+}
+
+std::vector<Collectible> Robot::getPointPath(CollectibleLoad desiredLoad, bool finishOnDeposit) {
+
+	const double power = 5;
+	const int agents = 0;
+
+
+	// TODO: Add field pointers
+	Field *field = (level == 0) ? nullptr : nullptr;
+
+
+
+
+
+
+
+	return std::vector<Collectible>();
+}
+
+void Robot::Teleport() {
+	level = 1;
+	loadedCollectibles.clear();
 }

@@ -172,12 +172,12 @@ DLL_EXPORT void SetDataAI(volatile int *packet, volatile int *AI_IN) {
 	PositionY = AI_IN[10];
 	packet[10] = PositionY;
 	sum += PositionY;
-	TM_State = AI_IN[11];
-	packet[11] = TM_State;
-	sum += TM_State;
-	Compass = AI_IN[12];
-	packet[12] = Compass;
+	Compass = AI_IN[11];
+	packet[11] = Compass;
 	sum += Compass;
+	TM_State = AI_IN[12];
+	packet[12] = TM_State;
+	sum += TM_State;
 	Time = AI_IN[13];
 	packet[13] = Time;
 	sum += Time;

@@ -161,9 +161,9 @@ public:
     */
     explicit operator bool() const;
 
-    [[nodiscard]] std::string str() const;
+	friend std::ostream& operator<<(std::ostream& os, const PVector& vec);
 
-    friend std::ostream& operator<<(std::ostream& os, const PVector& vec);
+    [[nodiscard]] std::string str() const;
 
     static std::string str(PVector pVector);
 };
