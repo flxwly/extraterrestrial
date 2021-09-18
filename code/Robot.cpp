@@ -1,5 +1,8 @@
 #include "Robot.hpp"
 
+const int Wheels::minVel;
+const int Wheels::maxVel;
+
 Robot::Robot(volatile int *pIn, volatile int *pOut) {
 	In = pIn;
 	Out = pOut;
@@ -26,48 +29,24 @@ void Robot::Update() {
 
 void Robot::Game0() {
 
+    Teleport();
 	ROBOT_LOG("Robot is running game0")
 
-	std::cout << simPos << std::endl;
-
-	if (desiredVelocity.x < 0 && simPos.x > 240) {
-		desiredVelocity.set(1, 0);
-	}
-	if (desiredVelocity.x > 0 && simPos.x < 80){
-		desiredVelocity.set(-1, 0);
-	}
-
-	desiredVelocity += collisionAvoidance(10);
-
-	std::cout << desiredVelocity << std::endl;
-
-	desiredVelocity.normalize();
-
-	std::cout << desiredVelocity << std::endl;
-
-    moveTo(desiredVelocity);
 }
+std::list<PVector> path = {{80, 20}, {50,250}, {280, 250}, {280,20}};
 
 void Robot::Game1() {
 
-	std::cout << simPos << std::endl;
+    ROBOT_LOG("Robot is running game1")
 
-	if (desiredVelocity.x < 0 && simPos.x > 240) {
-		desiredVelocity.set(1, 0);
-	}
-	if (desiredVelocity.x > 0 && simPos.x < 80){
-		desiredVelocity.set(-1, 0);
-	}
+    if (geometry::sqDist(path.front(), simPos) < 4) {
+        path.push_back(path.front());
+        path.pop_front();
+    }
 
-	desiredVelocity += collisionAvoidance(10);
+    std::cout << "Target: " << path.front() << std::endl;
 
-	std::cout << desiredVelocity << std::endl;
-
-	desiredVelocity.normalize();
-
-	std::cout << desiredVelocity << std::endl;
-
-    moveTo(desiredVelocity);
+    moveTo(path.front());
 }
 
 PVector Robot::collisionAvoidance(double maxForce) {
@@ -126,10 +105,11 @@ PVector Robot::getVelocity() {
 
 void Robot::moveTo(PVector position) {
 
-	std::cout << geometry::vector2Angle(position) * 180 / M_PI << std::endl;
+    double angleDif = std::fmod(geometry::vector2Angle(simPos - position) * 180 / M_PI - compass + 90, 360);
 
-	double angleDif = std::fmod(geometry::vector2Angle(position) * 180 / M_PI - compass + 90, 360);
-	if (angleDif > 180) {
+    std::cout << "Angle dif: "<< angleDif << std::endl;
+
+    if (angleDif > 180) {
 		angleDif -= 360;
 	} else if (angleDif < -180) {
 		angleDif += 360;
@@ -153,52 +133,53 @@ void Robot::moveTo(PVector position) {
 		action = 16;
 	}
 
-	std::cout << std::pow(2, position.getMag()) * 20 - 1 << std::endl;
+    double magnitude = std::pow(2, std::min((position - simPos).getMag() / 10, 4.0)) / 16;
+	std::cout << "Magnitude: " << magnitude << std::endl;
 
-	switch (action) {
+    switch (action) {
 		case 0:
-			wheels.set((std::pow(2, position.getMag()) - 1) * 100, (std::pow(2, position.getMag()) - 1) * 100);
+			wheels.set(magnitude * 100, magnitude * 100);
 			break;
 		case 1:
 			if (angleDif > 0) {
-				wheels.set((std::pow(2, position.getMag()) - 1) * 80, (std::pow(2, position.getMag()) - 1) * 100);
+				wheels.set(magnitude * 90, magnitude * 100);
 			} else {
-				wheels.set((std::pow(2, position.getMag()) - 1) * 100, (std::pow(2, position.getMag()) - 1) * 80);
+				wheels.set(magnitude * 100, magnitude * 90);
 			}
 			break;
 		case 2:
 			if (angleDif > 0) {
-				wheels.set((std::pow(2, position.getMag()) - 1) * 20, (std::pow(2, position.getMag()) - 1) * 100);
+				wheels.set(magnitude * 50, magnitude * 100);
 			} else {
-				wheels.set((std::pow(2, position.getMag()) - 1) * 100, (std::pow(2, position.getMag()) - 1) * 20);
+				wheels.set(magnitude * 100, magnitude * 50);
 			}
 			break;
 		case 3:
 			if (angleDif > 0) {
-				wheels.set((std::pow(2, position.getMag()) - 1) * -20, (std::pow(2, position.getMag()) - 1) * 100);
+				wheels.set(magnitude * -20, magnitude * 100);
 			} else {
-				wheels.set((std::pow(2, position.getMag()) - 1) * 100, (std::pow(2, position.getMag()) - 1) * -20);
+				wheels.set(magnitude * 70, magnitude * -70);
 			}
 			break;
 		case 4:
 			if (angleDif > 0) {
-				wheels.set((std::pow(2, position.getMag()) - 1) * -40, (std::pow(2, position.getMag()) - 1) * 100);
+				wheels.set(magnitude * -40, magnitude * 70);
 			} else {
-				wheels.set((std::pow(2, position.getMag()) - 1) * 100, (std::pow(2, position.getMag()) - 1) * -40);
+				wheels.set(magnitude * 70, magnitude * -40);
 			}
 			break;
 		case 5:
 			if (angleDif > 0) {
-				wheels.set((std::pow(2, position.getMag()) - 1) * -80, (std::pow(2, position.getMag()) - 1) * 100);
+				wheels.set(magnitude * -80, magnitude * 80);
 			} else {
-				wheels.set((std::pow(2, position.getMag()) - 1) * 100, (std::pow(2, position.getMag()) - 1) * -80);
+				wheels.set(magnitude * 80, magnitude * -80);
 			}
 			break;
 		default:
 			if (angleDif > 0) {
-				wheels.set((std::pow(2, position.getMag()) - 1) * -100, (std::pow(2, position.getMag()) - 1) * 100);
+				wheels.set(magnitude * -100, magnitude * 100);
 			} else {
-				wheels.set((std::pow(2, position.getMag()) - 1) * 100, (std::pow(2, position.getMag()) - 1) * -100);
+				wheels.set(magnitude * 100, magnitude * -100);
 			}
 			break;
 	}
