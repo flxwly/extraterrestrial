@@ -19,7 +19,7 @@ def compile_code(out_path, file_name, optimisation_level, more_warnings):
     system('cls')
     code_path = "./code/"
 
-    file_list = glob.glob(code_path + "**/*.cpp", recursive=True)
+    file_list = glob.glob(code_path + "**/*.*", recursive=True)
 
     command = "g++" + " -shared -static "
     if 0.5 < optimisation_level < 3.5:
@@ -73,7 +73,7 @@ def handle_arguments(command_line_args):
     if "-o" in command_line_args:
         i = command_line_args.index("-o") + 1
         if len(command_line_args) <= i:
-            print("No out path found. Please provide an out path after using -op")
+            print("No out path found. Please provide an out path after using -o")
             exit()
         else:
             out_path = command_line_args[i]
@@ -83,7 +83,7 @@ def handle_arguments(command_line_args):
     if "-f" in command_line_args:
         i = command_line_args.index("-f") + 1
         if len(command_line_args) <= i:
-            print("No filename found. Please provide a filename after using -fn")
+            print("No filename found. Please provide a filename after using -f")
             exit()
         else:
             file_name = command_line_args[i]
@@ -93,10 +93,14 @@ def handle_arguments(command_line_args):
     if "-O" in command_line_args:
         i = command_line_args.index("-O") + 1
         if len(command_line_args) <= i:
-            print("No optimisation level found. Please provide an optimisation level after using -ol")
+            print("No optimisation level found. Please provide an optimisation level after using -O")
             exit()
         else:
-            optimisation_level = int(command_line_args[i])
+            try:
+                optimisation_level = int(command_line_args[i])
+            except ValueError:
+                pass
+
 
     return [out_path, file_name, optimisation_level, more_warnings, auto_update]
 

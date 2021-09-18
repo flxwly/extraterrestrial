@@ -58,7 +58,7 @@ public:
 	}
 
 	unsigned int value() {
-		return _value;
+		return _value + 90 * rgb();
 	}
 
 	unsigned int rgb() {
@@ -142,15 +142,19 @@ public:
 
 	PVector getVelocity();
 
-	// Returns a vector that tells the robot in what direction it should move to avoid walls
+	// Returns a vector that tells the robot in what direction it should moveTo to avoid walls
 	PVector collisionAvoidance(double maxForce);
 
-	std::vector<Collectible> getPointPath(CollectibleLoad desiredLoad, bool finishOnDeposit);
+	std::vector<Collectible> getCollectiblePath(CollectibleLoad desiredLoad, bool finishOnDeposit);
 
 
 
-	void move(PVector velocity);
-	void moveTo(PVector point);
+    /** Let's the robot move towards a position
+     *
+     * @param position the position the robot should move to
+     *
+     * */
+	void moveTo(PVector position);
 
 };
 
