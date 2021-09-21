@@ -187,7 +187,7 @@ void Robot::moveTo(PVector position) {
 
 }
 
-std::vector<Collectible> Robot::getCollectiblePath(CollectibleLoad desiredLoad, bool finishOnDeposit) {
+std::vector<Collectible *> Robot::getCollectiblePath(const CollectibleLoad& desiredLoad, bool finishOnDeposit) {
 
 	const double power = 5;
 	const int agents = 0;
@@ -202,7 +202,7 @@ std::vector<Collectible> Robot::getCollectiblePath(CollectibleLoad desiredLoad, 
 
 
 
-	return std::vector<Collectible>();
+	return std::vector<Collectible *>();
 }
 
 void Robot::Teleport() {

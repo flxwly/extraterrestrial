@@ -14,7 +14,7 @@ set (SOURCE_FILES
         code/libs/ColorRecognition.cpp
         code/libs/CoSpaceFunctions.cpp
         code/libs/PVector.cpp
-        code/Robot.cpp code/Robot.hpp)
+        code/Robot.cpp code/Robot.hpp code/Pathfinding.cpp code/Pathfinding.hpp)
 
 add_executable(Extraterrestrial ${SOURCE_FILES})
 

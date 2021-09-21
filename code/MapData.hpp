@@ -270,7 +270,7 @@ namespace geometry {
 
 	bool isIntersecting(Line &l1, Line &l2);
 
-	bool isIntersecting(Line l1, const std::vector<Area>& Obstacles);
+	bool isIntersecting(Line l1, const Area &Obstacle);
 
     double sqDist(const PVector &p1, const PVector &p2);
 
