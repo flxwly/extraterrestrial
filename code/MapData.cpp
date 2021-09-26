@@ -286,7 +286,7 @@ bool geometry::isLeft(PVector p0, PVector p1, PVector p2) {
 // geometry::isInside():  Test if a point p2 is left/on/right a line through p0 and p1.
 //      Input:  PVector p0, p1, p2
 //      Return: >0 left; =0 on; <0 right
-bool geometry::isInside(const PVector &p, Area &area) {
+bool geometry::isInside(const PVector &p, const Area &area) {
     // PVector in Polygon(PIP) using the winding number algorithm:
     // source: https://en.wikipedia.ord/wiki/Point_in_polygon
 
@@ -349,12 +349,20 @@ bool geometry::isIntersecting(Line l1, const Area &Obstacle) {
     return false;
 }
 
+double geometry::sqDist(double x1, double y1, double x2, double y2) {
+    return pow(x1 - x2, 2) + pow(y1 - y2, 2);
+}
+
 double geometry::sqDist(const PVector &p1, const PVector &p2) {
     return pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2);
 }
 
 double geometry::dist(const PVector &p1, const PVector &p2) {
-    return sqrt(geometry::sqDist(p1, p2));
+    return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
+}
+
+double geometry::dist(double x1, double y1, double x2, double y2) {
+    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
 
 PVector geometry::angle2Vector(double a) {
@@ -397,67 +405,81 @@ PVector geometry::getNormalPoint(Line line, PVector point) {
 ///  |__|_|__||___._||   __||_____/ |___._||____||___._|
 ///                  |__|
 
-#pragma region MapData
+ #pragma region MapData
 
 
 
-//------------- Game0_Objects --------------//
+//------------- GAME0_Objects --------------//
 
-/*walls*/
-const std::vector<Area> GAME0WALLS = {Area({{10, 10},
-                                            {10, 20},
-                                            {20, 20}})};
-/*traps*/
-const std::vector<Area> GAME0TRAPS = {};
-/*swamps*/
-const std::vector<Area> GAME0SWAMPS = {};
-/*Water*/
-const std::vector<Area> GAME0WATERS = {};
-/*deposit*/
-const std::vector<PVector> GAME0DEPOSITS = {};
+		/*walls*/
+const std::vector<Area>GAME0WALLS = {
+	Area({{49,78},{73,78},{73,77},{49,77}}),
+	Area({{28,60},{29,60},{29,36},{28,36}}),
+	Area({{100,60},{100,36}}),
+	Area({{51,11},{74,11}})};
+		/*traps*/
+const std::vector<Area>GAME0TRAPS = {
+	Area({{58,52},{64,52},{64,47},{58,47}})};
+		/*swamps*/
+const std::vector<Area>GAME0SWAMPS = {};
+		/*Water*/
+const std::vector<Area>GAME0WATERS = {
+	Area({{30,75},{51,75},{51,56},{30,56}})};
+		/*deposit*/
+const std::vector<PVector>GAME0DEPOSITS = {{98,13},{19,73}};
 
-//------ Nodes ------//
-/*wall_nodes*/
-const std::vector<PVector> GAME0WALLNODES = {};
-/*trap_nodes*/
-const std::vector<PVector> GAME0TRAPNODES = {};
-/*swamp_nodes*/
-const std::vector<PVector> GAME0SWAMPNODES = {};
+	//------ Nodes ------//
+		/*wall_nodes*/
+const std::vector<PVector>GAME0WALLNODES = {{48,79},{74,79},{74,76},{48,76},{27,61},{30,61},{30,35},{27,35},{101,61},{101,35},{50,10},{75,10}};
+		/*trap_nodes*/
+const std::vector<PVector>GAME0TRAPNODES = {{57,53},{65,53},{65,46},{57,46}};
+		/*swamp_nodes*/
+const std::vector<PVector>GAME0SWAMPNODES = {};
 
 
 
-//------ Collectibles ------//
-/*collectibles*/
+	//------ Collectibles ------//
+		/*collectibles*/
 const std::vector<Collectible> GAME0COLLECTIBLES = {};
 
-//------------- Game1_Objects --------------//
+//------------- GAME1_Objects --------------//
 
-/*walls*/
-const std::vector<Area> GAME1WALLS = {Area({{10, 10},
-                                            {10, 20},
-                                            {20, 20}})};
-/*traps*/
-const std::vector<Area> GAME1TRAPS = {};
-/*swamps*/
-const std::vector<Area> GAME1SWAMPS = {};
-/*Water*/
-const std::vector<Area> GAME1WATERS = {};
-/*deposit*/
-const std::vector<PVector> GAME1DEPOSITS = {};
+		/*walls*/
+const std::vector<Area>GAME1WALLS = {
+	Area({{49,115},{126,115},{126,79},{122,79},{122,111},{53,111},{53,79},{49,79}}),
+	Area({{122,63},{126,63},{126,25},{49,25},{49,62},{53,62},{53,29},{122,29}}),
+	Area({{18,25},{25,25},{25,24},{28,21},{29,21},{29,15},{28,15},{26,13},{26,12},{23,12},{23,11},{20,11},{20,12},{17,12},{17,14},{16,14},{16,15},{15,15},{15,21},{16,21},{16,23},{17,23},{18,24}})};
+		/*traps*/
+const std::vector<Area>GAME1TRAPS = {
+	Area({{86,75},{89,75},{89,74},{90,73},{91,73},{91,71},{92,71},{92,70},{91,70},{91,68},{89,68},{89,67},{86,67},{86,68},{85,69},{84,69},{84,73},{85,73},{86,74}})};
+		/*swamps*/
+const std::vector<Area>GAME1SWAMPS = {
+	Area({{19,94},{19,93},{22,93},{22,92},{25,89},{26,89},{26,85},{26,82},{25,82},{25,80},{23,80},{23,79},{22,79},{22,78},{19,78},{19,77},{17,77},{17,78},{14,78},{14,79},{12,79},{12,80},{11,80},{11,82},{10,82},{10,84},{9,84},{9,87},{10,87},{10,89},{11,89},{11,91},{13,91},{13,92},{14,92},{14,93}}),
+	Area({{54,94},{79,94},{79,90},{78,90},{78,89},{76,89},{76,88},{75,88},{75,87},{73,87},{73,86},{70,83},{69,83},{69,81},{68,81},{68,79},{54,79}}),
+	Area({{95,94},{121,94},{121,79},{107,79},{107,80},{106,80},{106,82},{105,82},{99,88},{99,89},{97,89},{97,90},{95,90}}),
+	Area({{164,63},{165,63},{165,62},{169,62},{169,61},{172,58},{173,58},{173,51},{172,51},{170,49},{170,48},{168,48},{168,47},{165,47},{165,46}}),
+	Area({{107,62},{121,62},{121,46},{97,46},{97,51},{99,51},{99,52},{101,52},{101,53},{104,56},{105,56},{105,58},{106,58},{106,59},{107,59}}),
+	Area({{54,61},{68,61},{68,59},{69,59},{69,57},{71,57},{71,55},{72,55},{75,52},{75,51},{77,51},{77,50},{79,50},{79,49},{80,49},{80,46},{54,46}})};
+		/*Water*/
+const std::vector<Area>GAME1WATERS = {
+	Area({{52,135},{125,135},{125,122},{52,122}}),
+	Area({{53,13},{125,13},{125,1},{53,1}})};
+		/*deposit*/
+const std::vector<PVector>GAME1DEPOSITS = {{87,32},{89,98}};
 
-//------ Nodes ------//
-/*wall_nodes*/
-const std::vector<PVector> GAME1WALLNODES = {};
-/*trap_nodes*/
-const std::vector<PVector> GAME1TRAPNODES = {};
-/*swamp_nodes*/
-const std::vector<PVector> GAME1SWAMPNODES = {};
+	//------ Nodes ------//
+		/*wall_nodes*/
+const std::vector<PVector>GAME1WALLNODES = {{48,116},{127,116},{127,78},{121,78},{121,110},{54,110},{54,78},{48,78},{121,64},{127,64},{127,24},{48,24},{48,63},{54,63},{54,30},{121,30},{17,26},{26,26},{26,25},{29,22},{30,22},{30,14},{29,14},{27,12},{27,11},{24,11},{24,10},{19,10},{19,11},{16,11},{16,13},{15,13},{15,14},{14,14},{14,22},{15,22},{15,24},{16,24},{17,25}};
+		/*trap_nodes*/
+const std::vector<PVector>GAME1TRAPNODES = {{85,76},{90,76},{90,75},{91,74},{92,74},{92,72},{93,72},{93,69},{92,69},{92,67},{90,67},{90,66},{85,66},{85,67},{84,68},{83,68},{83,74},{84,74},{85,75}};
+		/*swamp_nodes*/
+const std::vector<PVector>GAME1SWAMPNODES = {{20,95},{20,94},{23,94},{23,93},{26,90},{27,90},{27,84},{27,81},{26,81},{26,79},{24,79},{24,78},{23,78},{23,77},{20,77},{20,76},{16,76},{16,77},{13,77},{13,78},{11,78},{11,79},{10,79},{10,81},{9,81},{9,83},{8,83},{8,88},{9,88},{9,90},{10,90},{10,92},{12,92},{12,93},{13,93},{13,94},{53,95},{80,95},{80,89},{79,89},{79,88},{77,88},{77,87},{76,87},{76,86},{74,86},{74,85},{71,82},{70,82},{70,80},{69,80},{69,78},{53,78},{94,95},{122,95},{122,78},{106,78},{106,79},{105,79},{105,81},{104,81},{98,87},{98,88},{96,88},{96,89},{94,89},{163,64},{166,64},{166,63},{170,63},{170,62},{173,59},{174,59},{174,50},{173,50},{171,48},{171,47},{169,47},{169,46},{166,46},{166,45},{106,63},{122,63},{122,45},{96,45},{96,52},{98,52},{98,53},{100,53},{100,54},{103,57},{104,57},{104,59},{105,59},{105,60},{106,60},{53,62},{69,62},{69,60},{70,60},{70,58},{72,58},{72,56},{73,56},{76,53},{76,52},{78,52},{78,51},{80,51},{80,50},{81,50},{81,45},{53,45}};
 
 
 
-//------ Collectibles ------//
-/*collectibles*/
+	//------ Collectibles ------//
+		/*collectibles*/
 const std::vector<Collectible> GAME1COLLECTIBLES = {};
 
 
-#pragma endregion
+ #pragma endregion

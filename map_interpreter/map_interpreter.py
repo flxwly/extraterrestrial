@@ -8,13 +8,24 @@ from sys import setrecursionlimit, exit
 
 setrecursionlimit(10000)
 
-# 1 is max detail
-detail = 0.5
+grid_size_x = 90
+grid_size_y = 60
 
-# for old CoSpace Versions
-FieldA = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldA"
-FieldB = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldB"
+
+use_map_directory = True
+
+TestField = "./map/test/Background.bmp"
+
+# Standard CoSpace Directory
+FieldA = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldA/Background.bmp"
+FieldB = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldB/Background.bmp"
 FieldFD = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field"
+
+if use_map_directory:
+    # map directory
+    FieldA = "./map/map0/Background.bmp"
+    FieldB = "./map/map1/Background.bmp"
+    FieldFD = "./map/Field.FD"
 
 
 def is_left(p0, p1, p2):
@@ -41,14 +52,6 @@ def is_in_area(p_, area):
                     wn -= 1
     return wn != 0
 
-
-def convert_arr_to_area_vector_string(arr):
-    if len(arr) == 0:
-        return "{};"
-    return "{\n\t" + str(arr).replace("[", "{").replace("]", "}").replace(" ", "").replace("{{{", "{{") \
-        .replace("}},", "}}),\n\t").replace("{{", "Area({{").replace("}}}", "}})}") + ";"
-
-
 def collectible_type_switch(obj_type):
     # format: b, g, r
     switcher = {
@@ -57,17 +60,6 @@ def collectible_type_switch(obj_type):
         "Object_Black": 2
     }
     return switcher.get(obj_type, 0)
-
-
-def index_switch(index):
-    switcher = {
-        0: "walls",
-        1: "traps",
-        2: "swamps",
-        3: "deposits",
-        4: "waters"
-    }
-    return switcher.get(index, 0)
 
 
 def find_color_points(world, field):
@@ -86,73 +78,9 @@ def find_color_points(world, field):
 
     return arr
 
-
-def remove_dif_pixels(pixels, val):
-    """A method to check if all pixels in Pixels have the value val. It returns all different pixels"""
-
-    different_pixels = []
-
-    #  loop through every pixel in pixels
-    for struct in pixels:
-        for pixel in struct:
-            # value check
-            if abs(pixel.val) != val:
-                #  remove pixel right away
-                struct.remove(pixel)
-                print("removed")
-                different_pixels.append(pixel)
-
-    return different_pixels
-
-
-def draw_polygons(draw, polygons, scale, starting_hue=0, sat=255, lum=255, hue_dif=40):
-    """draw the boundaries of each polygon in polygons"""
-
-    x_off = scale
-    y_off = scale
-
-    # j is to differentiate each polygon from each other
-    j = 0
-    for polygon in polygons:
-        for k in range(0, len(polygon)):
-            p1 = polygon[k]
-            p2 = polygon[(k + 1) % (len(polygon))]
-            for p in get_line(p1.x, p1.y, p2.x, p2.y):
-                coord = (
-                    p[0] * scale - scale / 2 + x_off, p[1] * scale - scale / 2 + y_off,
-                    p[0] * scale + scale / 2 + x_off, p[1] * scale + scale / 2 + y_off)
-                draw.rectangle(coord, width=scale, fill=(starting_hue + j * hue_dif, sat, lum))
-
-            coord = (
-                p1.x * scale - scale / 2 + x_off, p1.y * scale - scale / 2 + y_off,
-                p1.x * scale + scale / 2 + x_off, p1.y * scale + scale / 2 + y_off)
-            draw.rectangle(coord, width=scale, fill=(2 * starting_hue + j * hue_dif, sat + 50, lum))
-
-        j += 1
-
-
 #####################
 #       points      #
 #####################
-
-class Point:
-
-    def __init__(self, field, x, y):
-        """A simple Point in a 2D grid"""
-        # coords
-        self.x = x
-        self.y = y
-
-        #  The object where this Point is saved in
-        self.field = field
-
-    def __repr__(self):
-        """Returns Point as typical C++ pair coord"""
-        return "{%s,%s}" % (self.x, self.field.height - self.y)
-
-    def __str__(self):
-        return "[%s | %s]" % (self.x, self.field.height - self.y)
-
 
 def color_switch(color):
     # format: b, g, r
@@ -171,168 +99,13 @@ def color_switch(color):
     return switcher.get(color, 0)
 
 
-class Pixel(Point):
-    """A type of point used to represent the actual image"""
-
-    def __init__(self, field, x, y, color):
-        super().__init__(field, x, y)
-
-        #  value of the Pixel (easier to handle than rgb colors)
-        self.val = color_switch(tuple([color[0], color[1], color[2]]))
-
-    def __str__(self):
-        """Returns Pixel as coord including it's val"""
-
-        return "Pixel at [%s | %s] has value %s" % (self.x, self.field.height - self.y, self.val)
-
-
-def get_line(x1, y1, x2, y2):
-    """Returns all Points on a line from (x1, y1) to (x2, y2)"""
-
-    points = []
-    issteep = abs(y2 - y1) > abs(x2 - x1)
-    if issteep:
-        x1, y1 = y1, x1
-        x2, y2 = y2, x2
-    rev = False
-    if x1 > x2:
-        x1, x2 = x2, x1
-        y1, y2 = y2, y1
-        rev = True
-    deltax = x2 - x1
-    deltay = abs(y2 - y1)
-    error = int(deltax / 2)
-    y = y1
-    ystep = None
-    if y1 < y2:
-        ystep = 1
-    else:
-        ystep = -1
-    for x in range(x1, x2 + 1):
-        if issteep:
-            points.append((y, x))
-        else:
-            points.append((x, y))
-        error -= deltay
-        if error < 0:
-            y += ystep
-            error += deltax
-    # Reverse the list if the coordinates were reversed
-    if rev:
-        points.reverse()
-    return points
-
-
-class Boundary(Point):
-    """A type of Point to represent corners. Each corner is bound to a wall boundary and vise versa"""
-
-    def __init__(self, field, match: []):
-        super().__init__(field, match[0].x, match[0].y)
-
-        self.match = match
-        self.connections = []  # max 2
-
-    def find_connections(self, corners):
-
-        # NOTE: (x, y) rotated around (0, 0) by 90° (clockwise) becomes (y, -x)
-
-        #  value (color)
-        val = self.field.img_arr[self.y][self.x].val
-
-        connections = (self.match[0], self.match[0])
-
-        direction_x, direction_y = self.match[2].x - self.x, self.match[2].y - self.y
-
-        side = -1  # 1 = hug right side, -1 = hug left side
-
-        if self.match[1].x - self.x != self.match[1].y - self.y:
-            side = 1
-
-        for connection in connections:
-
-            x, y = self.x, self.y
-            connection_found = False
-
-            while not connection_found:
-
-                # coords in front of the current position
-                front_x, front_y = x + direction_x, y + direction_y
-
-                # the pixel in front of the last checked pixel --> pixel that is now checked
-                p = self.field.get_pixel(front_x, front_y)
-                if p and p.val == val:  # if p is a valid next step
-
-                    # check if p is a corner
-                    for corner in corners:
-                        if corner is not self:
-                            if p is corner.match[0]:
-                                self.connections.append(corner)
-                                connection_found = True
-                                break
-
-                    # clockwise turn if side == 1 otherwise counter clockwise
-                    # the pixel on one side of the current pixel
-                    direction_x, direction_y = side * direction_y, -side * direction_x
-
-                    x, y = front_x, front_y
-
-                else:
-                    #  counter-clockwise turn (if side = 1)
-                    direction_x, direction_y = -side * direction_y, side * direction_x
-
-            #  for the other connection
-            direction_x, direction_y = self.match[3].x - self.x, self.match[3].y - self.y
-            side *= -1
-
-    def show(self, draw, scale, show_connections=True,
-             hue=90, sat=255, lum=255):
-        """This function displays the corner in the given draw object"""
-        random.seed()
-        visible_hue = random.randint(0, 255)
-        boundary_hue = random.randint(100, 360)
-
-        x_off = scale + int(scale / 2)
-        y_off = scale + int(scale / 2)
-
-        #  The upper left and bottom right corner coords of the corner itself
-        coord = (
-            self.x * scale - scale / 2 + x_off, self.y * scale - scale / 2 + y_off,
-            self.x * scale + scale / 2 + x_off, self.y * scale + scale / 2 + y_off)
-
-        #  draw a rectangle at the position. Color = green if reachable; red if not
-        draw.rectangle(coord, width=scale,
-                       fill=(hue, sat, lum))
-        #  draw a number above the corner to display it's position in the ordered array
-
-        draw.text((self.x * scale + x_off, self.y * scale - y_off), str(len(self.connections)), stroke_fill=2,
-                  stroke_width=2)
-
-        #  line to boundaries
-        if show_connections:
-            for connection in self.connections:
-                coord = (
-                    self.x * scale + x_off, self.y * scale + + y_off,
-                    connection.x * scale + x_off, connection.y * scale + + y_off)
-                draw.line(coord, fill=(boundary_hue, 255, 255, 50))
-
-            #  line to boundaries
-            if show_connections:
-                for match in self.match:
-                    coord = (
-                        self.x * scale + x_off, self.y * scale + + y_off,
-                        match.x * scale + x_off, match.y * scale + + y_off)
-                    draw.line(coord, fill=(boundary_hue, 255, 255, 100))
-
-    def __str__(self):
-        """Returns corner as coord including how many other corners this corner can see. For Debugging"""
-
-        return "Boundary at [%s | %s]" % (self.x, self.field.height - self.y)
-
-
-class Collectible(Point):
+class Collectible():
     def __init__(self, t, x, y, field):
-        super().__init__(field, float(x), float(y))
         """A type of Point to represent Collectible points"""
+
+        self.field = field
+        self.x = x
+        self.y = y
 
         # x and y are real coordinates in the simulator. Not the coordinates used by the robot
         #  Virtual coordinates are the ones used by the robot
@@ -360,42 +133,46 @@ class Collectible(Point):
 
 class FieldObject:
 
-    def __init__(self, _dir):
+    def __init__(self, _dir: str, name: str):
         """A class to collect one single map as Pixels by converting _dir/Background.bmp"""
 
-        global detail
+        global grid_size_x, grid_size_y
+
+        self.correct = False
 
         # The array all pixels are stored in
         self.img_arr = []
 
+        self.name = name
+
         # The dimensions of the map
         self.width, self.height = 0, 0
 
-        # if _dir doesn't exist the user has to change the input files
-        if path.isdir(_dir):
+        _dir = _dir if path.isfile(_dir) else _dir + "/Background.bmp"
+        if path.isfile(_dir):
+
+            img = imread(path.abspath(_dir))
+
+            x_factor = len(img[0]) / grid_size_x
+            y_factor = len(img) / grid_size_y
 
             # resize the image for less detail but less ram usage and duration
-            t_img = None
-            if path.isfile(_dir + "\Background(complete).bmp"):
-                t_img = resize(imread(_dir + "/Background(complete).bmp"), None, fx=detail, fy=detail,
-                               interpolation=INTER_NEAREST)
-            else:
-                t_img = resize(imread(_dir + "/Background.bmp"), None, fx=detail, fy=detail,
+            t_img = resize(img, None, fx=x_factor, fy=y_factor,
                                interpolation=INTER_NEAREST)
 
             # img = Image.fromarray(t_img)
             # img.show("orig")
 
             # convert the Image into pixels
-            self.img_arr = [[Pixel(self, i, j, t_img[j][i]) for i in range(len(t_img[j]))] for j in
-                            range(len(t_img))]
+            self.img_arr = t_img
 
             # set the dimensions
             self.width = len(self.img_arr[0])
             self.height = len(self.img_arr)
+
+            self.correct = True
         else:
-            # Error
-            print("Path \"" + _dir + "\" does not exist")
+            print("Can't find image file for \"" + self.name + "\"")
 
     def get_pixel(self, x, y):
         if 0 <= x < self.width and 0 <= y < self.height:
@@ -536,7 +313,7 @@ class FieldObject:
 
         return pixels
 
-    def check_pattern(self, pixel, patterns=None, val=1):
+    def check_pattern(self, pixel: Pixel, patterns=None, val=1):
         """Function to check if the pattern matches.
             There are default patterns and the default value the pattern is referring to is 1"""
 
@@ -588,7 +365,7 @@ class FieldObject:
 
         return matches
 
-    def avg(self, pixels):
+    def avg(self, pixels: [Pixel]):
         """This function calculates the average point of all adjacent Pixels to the Pixel at i, j"""
 
         # Calculate the average
@@ -611,111 +388,40 @@ class FieldObject:
         return s
 
 
-def get_corners(field: FieldObject, pixels: [Pixel]):
-    corners = []
-
-    #  collect all possible corners by pattern recognition
-    for pixel in pixels:
-        matches = field.check_pattern(pixel, val=pixel.val)
-        for match in matches:
-            corners.append(Boundary(field, match))
-
-        #  collect all corners that are unescessary
-    corners_to_delete = []
-    checking_neighbour_steps = [[1, 1], [-1, 1]]
-    for corner in corners:
-        for step in checking_neighbour_steps:
-            neighbour_count = 0
-            for c_corner in corners:
-                if c_corner.x == corner.x + step[0] and c_corner.y == corner.y + step[1]:
-                    neighbour_count += 1
-                elif c_corner.x == corner.x - step[0] and c_corner.y == corner.y - step[1]:
-                    neighbour_count += 1
-
-                if neighbour_count >= 2:
-                    corners_to_delete.append(corner)
-
-    #  delete them
-    for corner in corners_to_delete:
-        if corner in corners:
-            corners.remove(corner)
-
-    for corner in corners:
-        corner.find_connections(corners)
-
-    return corners
-
-
-def order_corners(corners):
-    """Returns an array of corners in order, so that "neighboring" corners in the array represent a wall connection"""
-
-    ordered = []
-
-    #  corners are already ordered by structs
-    for corner_struct in corners:
-
-        #  print("ordering cornerstruct: " + str(corner_struct))
-
-        #  open_corners are all unsorted corners
-        open_corners = corner_struct
-
-        #  corners should be ordered in structs afterwards too
-        ordered.append([])
-
-        #  n is the corner that is currently checked
-        n = open_corners[0]
-
-        #  the first corner that is checked is alays at the front
-        ordered[len(ordered) - 1].append(n)
-        open_corners.pop(0)
-
-        #  as long as there are corners to be sorted
-        while len(open_corners) > 0:
-
-            # print("len of open_corners: " + str(len(open_corners)))
-            # print("len of boundaries: " + str(len(n.connections)))
-
-            #  loop over the wall_connections and get the connection that is not already ordered
-            for boundary_connection in n.connections:
-                #  there should always be at least one boundary_connection in open_corners
-                if boundary_connection in open_corners:
-                    # print(boundary_connection)
-                    #  the boundary_connection in open_corners is the new corner that has to be checked.
-                    n = boundary_connection
-
-            #  add last add boundary to ordered and remove it from open_corners
-            open_corners.remove(n)
-            ordered[len(ordered) - 1].append(n)
-
-            # print("open corners (after remove(n)): " + str(open_corners))
-
-    return ordered
-
-
-#################
-#    MapData    #
-#################
-
-
 class MapData:
-    def __init__(self, img_dirs, fd_dir):
+    def __init__(self, img_files: dict, fd_file: str):
         """A Object to collect all other map objects and also convert them to string or to a picture"""
         print("Creating MapData-Object...")
 
-        self.map_objects = []
-        self.map_objects_nodes = []
+        self.map_objects = {}
+        self.map_objects_nodes = {}
+        self.collectibles = {}
+        self.img_arrs = {}  # collection of ImageArray objects
 
-        self.collectibles = []
-
-        self.img_arrs = []  # collection of ImageArray objects
 
         """ In this loop the img_arrays are created and converted """
-        for _dir in img_dirs:
-            print("Creating ImageArray-Object for %s" % _dir)
+        for key in img_files.keys():
+            file = img_files[key]
+            print("Creating ImageArray-Object for %s" % file)
 
-            self.img_arrs.append(FieldObject(_dir))
-            world_index = len(self.img_arrs) - 1
-            img_arr = self.img_arrs[world_index]
+            self.img_arrs[key] = FieldObject(file, key)
+
+            img_arr = self.img_arrs[key]
+
+            if not img_arr.correct:
+                self.map_objects[key] = [
+                    [],  # walls
+                    [],  # traps
+                    [],  # swamps
+                    [],  # deposits
+                    []  # waters
+                ]
+
+                self.map_objects_nodes[key] = [
+                    [],  # walls
+                    [],  # traps
+                    []  # swamps
+                ]
 
             print("\tConverting ImageArray...")
 
@@ -769,8 +475,8 @@ class MapData:
                         if c.match[1].field:
                             temp_map_objects_nodes[i].append(c.match[1])
 
-            self.map_objects.append(temp_map_objects)
-            self.map_objects_nodes.append(temp_map_objects_nodes)
+            self.map_objects[key] = temp_map_objects
+            self.map_objects_nodes[key] = temp_map_objects_nodes
 
             for i in range(5):
                 if len(temp_map_objects[i]) == 0:
@@ -781,54 +487,56 @@ class MapData:
 
             print("\tfinished")
 
-        if path.isfile(fd_dir + "/Field.FD"):
-            tree = ET.parse(fd_dir + "/Field.FD")
+        if path.isfile(fd_file):
+            tree = ET.parse(fd_file)
             root = tree.getroot()
-            w1 = root.find("World1")
-            w2 = root.find("World2")
-            self.collectibles.append(find_color_points(w1, self.img_arrs[0]))
-            self.collectibles.append(find_color_points(w2, self.img_arrs[1]))
+            for key in self.img_arrs.keys():
+                world = root.find(key)
+                if world:
+                    self.collectibles[key] = find_color_points(world, self.img_arrs[key])
+                else:
+                    self.collectibles[key] = []
 
-            for i in range(2):
-                for collectible in self.collectibles[i]:
-                    for water in self.map_objects[i][4]:
+            for key in self.collectibles.keys():
+                for collectible in self.collectibles[key]:
+                    for water in self.map_objects[key][4]:
                         if is_in_area(collectible, water):
                             collectible.is_worth_double = True
                             break
 
                             # print(self.collectibles)
         else:
-            print("File: " + fd_dir + "/Field.FD not found")
+            print("File: " + fd_file + " not found")
 
     def show(self, scale):
 
         x_off = scale
         y_off = scale
 
-        i = 0
-        for img_arr in self.img_arrs:
+        for key in self.img_arrs.keys():
+            img_arr = self.img_arrs[key]
             im = Image.new('HSV', ((img_arr.width + 2) * scale, (img_arr.height + 2) * scale))
             draw = ImageDraw.Draw(im)
 
             # show the walls
-            draw_polygons(draw, self.map_objects[i][0], scale, sat=0, lum=255)
+            draw_polygons(draw, self.map_objects[key][0], scale, sat=0, lum=255)
 
             # show the traps
-            draw_polygons(draw, self.map_objects[i][1], scale, starting_hue=40, hue_dif=0)
+            draw_polygons(draw, self.map_objects[key][1], scale, starting_hue=40, hue_dif=0)
 
             # show the swamps
-            draw_polygons(draw, self.map_objects[i][2], scale, sat=0, lum=50)
+            draw_polygons(draw, self.map_objects[key][2], scale, sat=0, lum=50)
 
             # show the bonus_areas
-            draw_polygons(draw, self.map_objects[i][4], scale, starting_hue=80, hue_dif=0)
+            draw_polygons(draw, self.map_objects[key][4], scale, starting_hue=80, hue_dif=0)
 
-            for deposit in self.map_objects[i][3]:
+            for deposit in self.map_objects[key][3]:
                 coord = (
                     deposit[0] * scale - scale / 2 + x_off, deposit[1] * scale - scale / 2 + y_off,
                     deposit[0] * scale + scale / 2 + x_off, deposit[1] * scale + scale / 2 + y_off)
                 draw.rectangle(coord, (200, 100, 100), (0, 0, 100))
 
-            for collectible in self.collectibles[i]:
+            for collectible in self.collectibles[key]:
                 coord = (
                     collectible.virtual_x * scale - scale / 2 + x_off, collectible.virtual_y * scale - scale / 2 + y_off,
                     collectible.virtual_x * scale + scale / 2 + x_off, collectible.virtual_y * scale + scale / 2 + y_off)
@@ -837,39 +545,37 @@ class MapData:
                 else:
                     draw.rectangle(coord, (0, 100, 100), (0, 100, 100))
 
-            im.show("Map%s" % i)
+            im.show("%s" % key)
             im = im.convert(mode="RGB")
-            im.save("debugging/Map%s.png" % i, "png")
-            i += 1
+            im.save("debugging/%s.png" % key, "png")
 
     def convert(self, empty=False):
         file_content = ""
-        i = 0
-        for img_arr in self.img_arrs:
-            wall_str = "const std::vector<Area>GAME%sWALLS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
-            trap_str = "const std::vector<Area>GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
-            swamp_str = "const std::vector<Area>GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Polygon)
-            bonus_area_str = "const std::vector<Area>GAME%sWATERS = " % i  # {{x1, y1}, {x2, y2}...} (Polygon)
-            deposit_area_str = "const std::vector<PVector>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            wall_nodes_str = "const std::vector<PVector>GAME%sWALLNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            trap_nodes_str = "const std::vector<PVector>GAME%sTRAPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            swamp_nodes_str = "const std::vector<PVector>GAME%sSWAMPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            collectibles_str = "const std::vector<Collectible> GAME%sCOLLECTIBLES = " % i
+        for key in self.img_arrs.keys():
+            wall_str = "const std::vector<Area>%sWALLS = " % key  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
+            trap_str = "const std::vector<Area>%sTRAPS = " % key  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
+            swamp_str = "const std::vector<Area>%sSWAMPS = " % key  # {{x1, y1}, {x2, y2}...} (Polygon)
+            bonus_area_str = "const std::vector<Area>%sWATERS = " % key  # {{x1, y1}, {x2, y2}...} (Polygon)
+            deposit_area_str = "const std::vector<PVector>%sDEPOSITS = " % key  # {{x1, y1}, {x2, y2}...} (Single points)
+            wall_nodes_str = "const std::vector<PVector>%sWALLNODES = " % key  # {{x1, y1}, {x2, y2}...} (Single points)
+            trap_nodes_str = "const std::vector<PVector>%sTRAPNODES = " % key  # {{x1, y1}, {x2, y2}...} (Single points)
+            swamp_nodes_str = "const std::vector<PVector>%sSWAMPNODES = " % key  # {{x1, y1}, {x2, y2}...} (Single points)
+            collectibles_str = "const std::vector<Collectible> %sCOLLECTIBLES = " % key
             if not empty:
-                wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
-                trap_str += convert_arr_to_area_vector_string(self.map_objects[i][1])
-                swamp_str += convert_arr_to_area_vector_string(self.map_objects[i][2])
-                deposit_area_str += str(self.map_objects[i][3]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-                bonus_area_str += convert_arr_to_area_vector_string(self.map_objects[i][4])
+                wall_str += convert_arr_to_area_vector_string(self.map_objects[key][0])
+                trap_str += convert_arr_to_area_vector_string(self.map_objects[key][1])
+                swamp_str += convert_arr_to_area_vector_string(self.map_objects[key][2])
+                deposit_area_str += str(self.map_objects[key][3]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+                bonus_area_str += convert_arr_to_area_vector_string(self.map_objects[key][4])
 
-                wall_nodes_str += str(self.map_objects_nodes[i][0]).replace("[", "{").replace("]", "}").replace(" ",
+                wall_nodes_str += str(self.map_objects_nodes[key][0]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                                 "") + ";"
-                trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
+                trap_nodes_str += str(self.map_objects_nodes[key][1]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                                 "") + ";"
-                swamp_nodes_str += str(self.map_objects_nodes[i][2]).replace("[", "{").replace("]", "}").replace(" ",
+                swamp_nodes_str += str(self.map_objects_nodes[key][2]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                                  "") + ";"
 
-                collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+                collectibles_str += str(self.collectibles[key]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
                 collectibles_str = collectibles_str.replace("False", "false").replace("True", "true")
             else:
                 wall_str += "{};"
@@ -882,7 +588,7 @@ class MapData:
                 swamp_nodes_str += "{};"
                 collectibles_str += "{};"
 
-            file_content += "//------------- Game%s_Objects --------------//\n\n" % i
+            file_content += "//------------- %s_Objects --------------//\n\n" % key
 
             file_content += "\t\t/*walls*/\n" + wall_str + \
                             "\n\t\t/*traps*/\n" + trap_str + \
@@ -900,8 +606,6 @@ class MapData:
 
             file_content += "\t\t/*collectibles*/\n" + collectibles_str + "\n\n"
 
-            i += 1
-
         return file_content
 
     def __str__(self):
@@ -912,9 +616,7 @@ def main():
     print("setting up...")
 
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
-    mapData = MapData(img_dirs=[FieldA, FieldB], fd_dir=FieldFD)
-    # mapData.show(10)
-
+    mapData = MapData(img_files={"GAME0": FieldA, "GAME1": FieldB}, fd_file=FieldFD)
 
     begin = "\n\n\n" \
             "///   _______                _____          __\n" \
@@ -926,7 +628,7 @@ def main():
     with open("../code/MapData.cpp") as f:
         file = f.read().split(begin)
 
-    mapData_str = begin + "\n #pragma region MapData\n\n\n\n" + mapData.convert(empty=True) + "\n #pragma endregion\n";
+    mapData_str = begin + "\n #pragma region MapData\n\n\n\n" + mapData.convert(empty=False) + "\n #pragma endregion\n";
     if len(file) == 2:
         file[1] = mapData_str
     else:
@@ -936,6 +638,7 @@ def main():
 
     with open("../code/MapData.cpp", "w") as f:
         f.write(file_str)
+        pass
 
 
 if __name__ == '__main__':

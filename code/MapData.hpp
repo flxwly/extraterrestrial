@@ -16,13 +16,15 @@
  * one variable that stores it's position and another one that
  * represents the state of the Collectible. A collectible doesn't know
  * which field it is operating on.
- *
- * @tparam p Position of the Collectible.
- * @tparam c Color of the Collectible.
- * @tparam worthDouble If the Collectible is worth double the points
 */
 class Collectible {
 public:
+
+    /*! Constructs a Collectible object
+     * @tparam p Position of the Collectible.
+     * @tparam c Color of the Collectible.
+     * @tparam worthDouble If the Collectible is worth double the points
+     */
     Collectible(const PVector &p, const unsigned int &c, bool worthDouble);
 
     /** Checks if this collectible could be the seen one (position wise)
@@ -36,7 +38,8 @@ public:
      * @param uncertainty how imprecise the position and the angle is
      * @param possibleStates which states the collectible can have. An empty vector means any state
      */
-    [[nodiscard]] bool isCorrectCollectible(PVector robotPos, double angle, double uncertainty, std::vector<int> possibleStates) const;
+    [[nodiscard]] bool
+    isCorrectCollectible(PVector robotPos, double angle, double uncertainty, std::vector<int> possibleStates) const;
 
     /** Represents the state
      *
@@ -93,7 +96,7 @@ public:
 class Line {
 public:
 
-	/** Constructor for a Line object
+    /** Constructor for a Line object
      *
      * @tparam p1 Position of the 1st PVector.
      * @tparam p2 Position of the 2nd PVector.
@@ -107,7 +110,7 @@ public:
     PVector p2;
 
     static std::string str(Line &l) {
-	    return "from " + PVector::str(l.p1) + "to " + PVector::str(l.p2);
+        return "from " + PVector::str(l.p1) + "to " + PVector::str(l.p2);
     }
 };
 
@@ -170,7 +173,7 @@ private:
 class Field {
 public:
 
-	Field() = default;
+    Field() = default;
 
     Field(const int &width, const int &height,
           const std::vector<Area> &walls,
@@ -184,10 +187,12 @@ public:
           const std::vector<Collectible> &collectibles);
 
 
-    Collectible* addCollectible(Collectible collectible);
+    Collectible *addCollectible(Collectible collectible);
+
     bool removeCollectible(Collectible collectible);
 
-    Collectible *getCollectible(PVector pos, double angle, double uncertainty, int color, std::vector<int> possibleStates);
+    Collectible *
+    getCollectible(PVector pos, double angle, double uncertainty, int color, std::vector<int> possibleStates);
 
 
     /// Getter for the size
@@ -217,23 +222,16 @@ public:
 
 private:
     /// Contains all walls
-    std::vector<Area> Walls_;
+    std::vector<std::vector<bool>> Walls_;
     /// Contains all traps
-    std::vector<Area> Traps_;
+    std::vector<std::vector<bool>> Traps_;
     /// Contains all swamps
-    std::vector<Area> Swamps_;
+    std::vector<std::vector<bool>> Swamps_;
     /// Contains all waters / bonus areas
-    std::vector<Area> Waters_;
+    std::vector<std::vector<bool>> Waters_;
 
     /// The deposits saved as points in their respective center
     std::vector<PVector> Deposits_;
-
-    /// Contains all wall nodes
-    std::vector<PVector> WallNodes_;
-    /// Contains all trap nodes
-    std::vector<PVector> TrapNodes_;
-    /// Contains all trap nodes
-    std::vector<PVector> SwampNodes_;
 
     /** contains collectibles of all colors
      * They're ordered the following: index = 0 <=> Red; 1 <=> Cyan/Green; 2 <=> Black; 3 <=> SuperObject
@@ -259,7 +257,7 @@ namespace geometry {
      * @param p A point
      * @return true if point lies inside of the Area. Otherwise false
     */
-    bool isInside(const PVector &p, Area &area);
+    bool isInside(const PVector &p, const Area &area);
 
     /** calculates an intersection point between two lines
      * @param l1 a line
@@ -268,12 +266,14 @@ namespace geometry {
     */
     PVector intersection(Line &l1, Line &l2);
 
-	bool isIntersecting(Line &l1, Line &l2);
+    bool isIntersecting(Line &l1, Line &l2);
 
-	bool isIntersecting(Line l1, const Area &Obstacle);
+    bool isIntersecting(Line l1, const Area &Obstacle);
 
+    double sqDist(double x1, double y1, double x2, double y2);
     double sqDist(const PVector &p1, const PVector &p2);
 
+    double dist(double x1, double y1, double x2, double y2);
     double dist(const PVector &p1, const PVector &p2);
 
     double dot(PVector p1, PVector p2);
