@@ -8,13 +8,23 @@ from sys import setrecursionlimit, exit
 
 setrecursionlimit(10000)
 
-# 1 is max detail
-detail = 0.5
+# only use 0.5. Map standard image size is 720 | 540 for map 2
+detail = 0.25
 
-# for old CoSpace Versions
-FieldA = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldA"
-FieldB = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldB"
+use_map_directory = True
+
+TestField = "./map/test/Background.bmp"
+
+# Standard CoSpace Directory
+FieldA = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldA/Background.bmp"
+FieldB = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldB/Background.bmp"
 FieldFD = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field"
+
+if use_map_directory:
+    # map directory
+    FieldA = "./map/map0/Background.bmp"
+    FieldB = "./map/map1/Background.bmp"
+    FieldFD = "./map/Field.FD"
 
 
 def is_left(p0, p1, p2):
@@ -360,27 +370,26 @@ class Collectible(Point):
 
 class FieldObject:
 
-    def __init__(self, _dir):
+    def __init__(self, _dir: str, name: str):
         """A class to collect one single map as Pixels by converting _dir/Background.bmp"""
 
         global detail
 
+        self.correct = False
+
         # The array all pixels are stored in
         self.img_arr = []
+
+        self.name = name
 
         # The dimensions of the map
         self.width, self.height = 0, 0
 
-        # if _dir doesn't exist the user has to change the input files
-        if path.isdir(_dir):
+        _dir = _dir if path.isfile(_dir) else _dir + "/Background.bmp"
+        if path.isfile(_dir):
 
             # resize the image for less detail but less ram usage and duration
-            t_img = None
-            if path.isfile(_dir + "\Background(complete).bmp"):
-                t_img = resize(imread(_dir + "/Background(complete).bmp"), None, fx=detail, fy=detail,
-                               interpolation=INTER_NEAREST)
-            else:
-                t_img = resize(imread(_dir + "/Background.bmp"), None, fx=detail, fy=detail,
+            t_img = resize(imread(path.abspath(_dir)), None, fx=detail, fy=detail,
                                interpolation=INTER_NEAREST)
 
             # img = Image.fromarray(t_img)
@@ -393,9 +402,10 @@ class FieldObject:
             # set the dimensions
             self.width = len(self.img_arr[0])
             self.height = len(self.img_arr)
+
+            self.correct = True
         else:
-            # Error
-            print("Path \"" + _dir + "\" does not exist")
+            print("Can't find image file for \"" + self.name + "\"")
 
     def get_pixel(self, x, y):
         if 0 <= x < self.width and 0 <= y < self.height:
@@ -536,7 +546,7 @@ class FieldObject:
 
         return pixels
 
-    def check_pattern(self, pixel, patterns=None, val=1):
+    def check_pattern(self, pixel: Pixel, patterns=None, val=1):
         """Function to check if the pattern matches.
             There are default patterns and the default value the pattern is referring to is 1"""
 
@@ -588,7 +598,7 @@ class FieldObject:
 
         return matches
 
-    def avg(self, pixels):
+    def avg(self, pixels: [Pixel]):
         """This function calculates the average point of all adjacent Pixels to the Pixel at i, j"""
 
         # Calculate the average
@@ -640,8 +650,24 @@ def get_corners(field: FieldObject, pixels: [Pixel]):
         if corner in corners:
             corners.remove(corner)
 
+    # remove any duplicate corners
+    dupe_list = []
+    for c1 in corners:
+        is_dupe = False
+        for c2 in dupe_list:
+            if c1.x == c2.x and c1.y == c2.y:
+                is_dupe = True
+                break
+
+        if not is_dupe:
+            dupe_list.append(c1)
+
+    corners = dupe_list
+
     for corner in corners:
         corner.find_connections(corners)
+
+    print(corners)
 
     return corners
 
@@ -658,6 +684,7 @@ def order_corners(corners):
 
         #  open_corners are all unsorted corners
         open_corners = corner_struct
+        print(open_corners)
 
         #  corners should be ordered in structs afterwards too
         ordered.append([])
@@ -665,9 +692,11 @@ def order_corners(corners):
         #  n is the corner that is currently checked
         n = open_corners[0]
 
-        #  the first corner that is checked is alays at the front
+        #  the first corner that is checked is always at the front
         ordered[len(ordered) - 1].append(n)
         open_corners.pop(0)
+
+        last_n = None
 
         #  as long as there are corners to be sorted
         while len(open_corners) > 0:
@@ -683,9 +712,14 @@ def order_corners(corners):
                     #  the boundary_connection in open_corners is the new corner that has to be checked.
                     n = boundary_connection
 
+            if n is last_n:
+                break
+
             #  add last add boundary to ordered and remove it from open_corners
             open_corners.remove(n)
             ordered[len(ordered) - 1].append(n)
+
+            last_n = n
 
             # print("open corners (after remove(n)): " + str(open_corners))
 
@@ -698,24 +732,39 @@ def order_corners(corners):
 
 
 class MapData:
-    def __init__(self, img_dirs, fd_dir):
+    def __init__(self, img_files: dict, fd_file: str):
         """A Object to collect all other map objects and also convert them to string or to a picture"""
         print("Creating MapData-Object...")
 
-        self.map_objects = []
-        self.map_objects_nodes = []
+        self.map_objects = {}
+        self.map_objects_nodes = {}
+        self.collectibles = {}
+        self.img_arrs = {}  # collection of ImageArray objects
 
-        self.collectibles = []
-
-        self.img_arrs = []  # collection of ImageArray objects
 
         """ In this loop the img_arrays are created and converted """
-        for _dir in img_dirs:
-            print("Creating ImageArray-Object for %s" % _dir)
+        for key in img_files.keys():
+            file = img_files[key]
+            print("Creating ImageArray-Object for %s" % file)
 
-            self.img_arrs.append(FieldObject(_dir))
-            world_index = len(self.img_arrs) - 1
-            img_arr = self.img_arrs[world_index]
+            self.img_arrs[key] = FieldObject(file, key)
+
+            img_arr = self.img_arrs[key]
+
+            if not img_arr.correct:
+                self.map_objects[key] = [
+                    [],  # walls
+                    [],  # traps
+                    [],  # swamps
+                    [],  # deposits
+                    []  # waters
+                ]
+
+                self.map_objects_nodes[key] = [
+                    [],  # walls
+                    [],  # traps
+                    []  # swamps
+                ]
 
             print("\tConverting ImageArray...")
 
@@ -769,8 +818,8 @@ class MapData:
                         if c.match[1].field:
                             temp_map_objects_nodes[i].append(c.match[1])
 
-            self.map_objects.append(temp_map_objects)
-            self.map_objects_nodes.append(temp_map_objects_nodes)
+            self.map_objects[key] = temp_map_objects
+            self.map_objects_nodes[key] = temp_map_objects_nodes
 
             for i in range(5):
                 if len(temp_map_objects[i]) == 0:
@@ -781,54 +830,56 @@ class MapData:
 
             print("\tfinished")
 
-        if path.isfile(fd_dir + "/Field.FD"):
-            tree = ET.parse(fd_dir + "/Field.FD")
+        if path.isfile(fd_file):
+            tree = ET.parse(fd_file)
             root = tree.getroot()
-            w1 = root.find("World1")
-            w2 = root.find("World2")
-            self.collectibles.append(find_color_points(w1, self.img_arrs[0]))
-            self.collectibles.append(find_color_points(w2, self.img_arrs[1]))
+            for key in self.img_arrs.keys():
+                world = root.find(key)
+                if world:
+                    self.collectibles[key] = find_color_points(world, self.img_arrs[key])
+                else:
+                    self.collectibles[key] = []
 
-            for i in range(2):
-                for collectible in self.collectibles[i]:
-                    for water in self.map_objects[i][4]:
+            for key in self.collectibles.keys():
+                for collectible in self.collectibles[key]:
+                    for water in self.map_objects[key][4]:
                         if is_in_area(collectible, water):
                             collectible.is_worth_double = True
                             break
 
                             # print(self.collectibles)
         else:
-            print("File: " + fd_dir + "/Field.FD not found")
+            print("File: " + fd_file + " not found")
 
     def show(self, scale):
 
         x_off = scale
         y_off = scale
 
-        i = 0
-        for img_arr in self.img_arrs:
+        for key in self.img_arrs.keys():
+            img_arr = self.img_arrs[key]
             im = Image.new('HSV', ((img_arr.width + 2) * scale, (img_arr.height + 2) * scale))
             draw = ImageDraw.Draw(im)
 
             # show the walls
-            draw_polygons(draw, self.map_objects[i][0], scale, sat=0, lum=255)
+            draw_polygons(draw, self.map_objects[key][0], scale, sat=0, lum=255)
 
             # show the traps
-            draw_polygons(draw, self.map_objects[i][1], scale, starting_hue=40, hue_dif=0)
+            draw_polygons(draw, self.map_objects[key][1], scale, starting_hue=40, hue_dif=0)
 
             # show the swamps
-            draw_polygons(draw, self.map_objects[i][2], scale, sat=0, lum=50)
+            draw_polygons(draw, self.map_objects[key][2], scale, sat=0, lum=50)
 
             # show the bonus_areas
-            draw_polygons(draw, self.map_objects[i][4], scale, starting_hue=80, hue_dif=0)
+            draw_polygons(draw, self.map_objects[key][4], scale, starting_hue=80, hue_dif=0)
 
-            for deposit in self.map_objects[i][3]:
+            for deposit in self.map_objects[key][3]:
                 coord = (
                     deposit[0] * scale - scale / 2 + x_off, deposit[1] * scale - scale / 2 + y_off,
                     deposit[0] * scale + scale / 2 + x_off, deposit[1] * scale + scale / 2 + y_off)
                 draw.rectangle(coord, (200, 100, 100), (0, 0, 100))
 
-            for collectible in self.collectibles[i]:
+            for collectible in self.collectibles[key]:
                 coord = (
                     collectible.virtual_x * scale - scale / 2 + x_off, collectible.virtual_y * scale - scale / 2 + y_off,
                     collectible.virtual_x * scale + scale / 2 + x_off, collectible.virtual_y * scale + scale / 2 + y_off)
@@ -837,39 +888,37 @@ class MapData:
                 else:
                     draw.rectangle(coord, (0, 100, 100), (0, 100, 100))
 
-            im.show("Map%s" % i)
+            im.show("%s" % key)
             im = im.convert(mode="RGB")
-            im.save("debugging/Map%s.png" % i, "png")
-            i += 1
+            im.save("debugging/%s.png" % key, "png")
 
     def convert(self, empty=False):
         file_content = ""
-        i = 0
-        for img_arr in self.img_arrs:
-            wall_str = "const std::vector<Area>GAME%sWALLS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
-            trap_str = "const std::vector<Area>GAME%sTRAPS = " % i  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
-            swamp_str = "const std::vector<Area>GAME%sSWAMPS = " % i  # {{x1, y1}, {x2, y2}...} (Polygon)
-            bonus_area_str = "const std::vector<Area>GAME%sWATERS = " % i  # {{x1, y1}, {x2, y2}...} (Polygon)
-            deposit_area_str = "const std::vector<PVector>GAME%sDEPOSITS = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            wall_nodes_str = "const std::vector<PVector>GAME%sWALLNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            trap_nodes_str = "const std::vector<PVector>GAME%sTRAPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            swamp_nodes_str = "const std::vector<PVector>GAME%sSWAMPNODES = " % i  # {{x1, y1}, {x2, y2}...} (Single points)
-            collectibles_str = "const std::vector<Collectible> GAME%sCOLLECTIBLES = " % i
+        for key in self.img_arrs.keys():
+            wall_str = "const std::vector<Area>%sWALLS = " % key  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
+            trap_str = "const std::vector<Area>%sTRAPS = " % key  # {{{x1, y1}, {x2, y2}...}, {...}} (Polygon)
+            swamp_str = "const std::vector<Area>%sSWAMPS = " % key  # {{x1, y1}, {x2, y2}...} (Polygon)
+            bonus_area_str = "const std::vector<Area>%sWATERS = " % key  # {{x1, y1}, {x2, y2}...} (Polygon)
+            deposit_area_str = "const std::vector<PVector>%sDEPOSITS = " % key  # {{x1, y1}, {x2, y2}...} (Single points)
+            wall_nodes_str = "const std::vector<PVector>%sWALLNODES = " % key  # {{x1, y1}, {x2, y2}...} (Single points)
+            trap_nodes_str = "const std::vector<PVector>%sTRAPNODES = " % key  # {{x1, y1}, {x2, y2}...} (Single points)
+            swamp_nodes_str = "const std::vector<PVector>%sSWAMPNODES = " % key  # {{x1, y1}, {x2, y2}...} (Single points)
+            collectibles_str = "const std::vector<Collectible> %sCOLLECTIBLES = " % key
             if not empty:
-                wall_str += convert_arr_to_area_vector_string(self.map_objects[i][0])
-                trap_str += convert_arr_to_area_vector_string(self.map_objects[i][1])
-                swamp_str += convert_arr_to_area_vector_string(self.map_objects[i][2])
-                deposit_area_str += str(self.map_objects[i][3]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
-                bonus_area_str += convert_arr_to_area_vector_string(self.map_objects[i][4])
+                wall_str += convert_arr_to_area_vector_string(self.map_objects[key][0])
+                trap_str += convert_arr_to_area_vector_string(self.map_objects[key][1])
+                swamp_str += convert_arr_to_area_vector_string(self.map_objects[key][2])
+                deposit_area_str += str(self.map_objects[key][3]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+                bonus_area_str += convert_arr_to_area_vector_string(self.map_objects[key][4])
 
-                wall_nodes_str += str(self.map_objects_nodes[i][0]).replace("[", "{").replace("]", "}").replace(" ",
+                wall_nodes_str += str(self.map_objects_nodes[key][0]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                                 "") + ";"
-                trap_nodes_str += str(self.map_objects_nodes[i][1]).replace("[", "{").replace("]", "}").replace(" ",
+                trap_nodes_str += str(self.map_objects_nodes[key][1]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                                 "") + ";"
-                swamp_nodes_str += str(self.map_objects_nodes[i][2]).replace("[", "{").replace("]", "}").replace(" ",
+                swamp_nodes_str += str(self.map_objects_nodes[key][2]).replace("[", "{").replace("]", "}").replace(" ",
                                                                                                                  "") + ";"
 
-                collectibles_str += str(self.collectibles[i]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
+                collectibles_str += str(self.collectibles[key]).replace("[", "{").replace("]", "}").replace(" ", "") + ";"
                 collectibles_str = collectibles_str.replace("False", "false").replace("True", "true")
             else:
                 wall_str += "{};"
@@ -882,7 +931,7 @@ class MapData:
                 swamp_nodes_str += "{};"
                 collectibles_str += "{};"
 
-            file_content += "//------------- Game%s_Objects --------------//\n\n" % i
+            file_content += "//------------- %s_Objects --------------//\n\n" % key
 
             file_content += "\t\t/*walls*/\n" + wall_str + \
                             "\n\t\t/*traps*/\n" + trap_str + \
@@ -900,8 +949,6 @@ class MapData:
 
             file_content += "\t\t/*collectibles*/\n" + collectibles_str + "\n\n"
 
-            i += 1
-
         return file_content
 
     def __str__(self):
@@ -912,9 +959,7 @@ def main():
     print("setting up...")
 
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
-    mapData = MapData(img_dirs=[FieldA, FieldB], fd_dir=FieldFD)
-    # mapData.show(10)
-
+    mapData = MapData(img_files={"GAME0": FieldA, "GAME1": FieldB}, fd_file=FieldFD)
 
     begin = "\n\n\n" \
             "///   _______                _____          __\n" \
@@ -926,7 +971,7 @@ def main():
     with open("../code/MapData.cpp") as f:
         file = f.read().split(begin)
 
-    mapData_str = begin + "\n #pragma region MapData\n\n\n\n" + mapData.convert(empty=True) + "\n #pragma endregion\n";
+    mapData_str = begin + "\n #pragma region MapData\n\n\n\n" + mapData.convert(empty=False) + "\n #pragma endregion\n";
     if len(file) == 2:
         file[1] = mapData_str
     else:
@@ -936,6 +981,7 @@ def main():
 
     with open("../code/MapData.cpp", "w") as f:
         f.write(file_str)
+        pass
 
 
 if __name__ == '__main__':
