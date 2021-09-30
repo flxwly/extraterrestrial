@@ -1,20 +1,12 @@
-//
-// Created by flxwl on 19.09.2021.
-//
-
 #include "Pathfinding.hpp"
 
-Node::Node(double _x, double _y) : x(_x), y(_y) {
-}
-
-Node::Node(PVector pos) : x(pos.x), y(pos.y) {
-
-}
+Node::Node(double _x, double _y) : x(_x), y(_y) {}
 
 std::ostream &operator<<(std::ostream &os, const Node &node) {
     os << std::to_string(node.x) + " | " + std::to_string(node.y);
     return os;
 }
+
 
 Graph::Graph(const std::vector<Area> &impassableAreas, const std::vector<PVector> &_nodes,
              const std::vector<Area> &swampAreas, const std::vector<PVector> &swampNodes) {
@@ -30,28 +22,24 @@ Graph::Graph(const std::vector<Area> &impassableAreas, const std::vector<PVector
     Node *n2 = nullptr;
 
     bool canSee;
+    double dist;
 
     for (int i = 0; i < nodes.size(); i++) {
         n1 = &nodes[i];
         for (int j = i + 1; j < nodes.size(); j++) {
             n2 = &nodes[j];
-            Edge edge(n1, n2);
             canSee = true;
-            if (std::find(edges.begin(), edges.end(), edge) == edges.end()) {
-                for (const auto &area : impassableAreas) {
-                    if (geometry::isIntersecting(Line(PVector(n1->x, n1->y), PVector(n2->x, n2->y)), area)) {
-                        canSee = false;
-                        break;
-                    }
+            for (const auto &area : impassableAreas) {
+                if (geometry::isIntersecting(Line(PVector(n1->x, n1->y), PVector(n2->x, n2->y)), area)) {
+                    canSee = false;
+                    break;
                 }
-                if (canSee) {
-                    double dist = calculateCost(*n1, *n2, swampAreas);
+            }
+            if (canSee) {
+                dist = calculateCost(*n1, *n2, swampAreas);
 
-                    edges.push_back(edge);
-
-                    n1->edges.emplace_back(n2, dist);
-                    n2->edges.emplace_back(n1, dist);
-                }
+                n1->edges.emplace_back(n2, dist);
+                n2->edges.emplace_back(n1, dist);
             }
         }
     }
@@ -93,34 +81,54 @@ double Graph::calculateCost(const Node &n1, const Node &n2, const std::vector<Ar
     return dist;
 }
 
-Path::Path(std::vector<PVector> _path) : path(std::move(_path)) {}
 
-Path AStar::Pathfind(PVector start, PVector end) {
+Pathfinder::Pathfinder(const std::vector<Area> &strictAreas, const std::vector<PVector> &strictNodes,
+                       const std::vector<Area> &softAreas, const std::vector<PVector> &softNodes,
+                       const std::vector<Area> &slowAreas, const std::vector<PVector> &slowNodes) {
 
-
-    return Path({});
+    rebuildGraphs(strictAreas, strictNodes, softAreas, softNodes, slowAreas, slowNodes);
 }
 
-AStar::AStar(const std::vector<Area> &strictImpassableAreas, const std::vector<PVector> &strictNodes,
-             const std::vector<Area> &softImpassableAreas, const std::vector<PVector> &softNodes,
-             const std::vector<Area> &slowAreas, const std::vector<PVector> &slowNodes) :
-        strictGraph(strictImpassableAreas, strictNodes, slowAreas, slowNodes),
-        softGraph(softImpassableAreas, softNodes, slowAreas, slowNodes) {
 
-    for (auto edge : strictGraph.edges) {
+void Pathfinder::rebuildGraphs(const std::vector<Area> &strictAreas, const std::vector<PVector> &strictNodes,
+                               const std::vector<Area> &softAreas, const std::vector<PVector> &softNodes,
+                               const std::vector<Area> &slowAreas, const std::vector<PVector> &slowNodes) {
 
-        // TODO: Swamps
+    std::vector<Area> allAreas;
+    allAreas.reserve(strictAreas.size() + softAreas.size());
+    allAreas.insert(allAreas.end(), softAreas.begin(), softAreas.end());
+    allAreas.insert(allAreas.end(), strictAreas.begin(), strictAreas.end());
+
+    std::vector<PVector> allNodes;
+    allNodes.reserve(strictNodes.size() + softNodes.size());
+    allNodes.insert(allNodes.end(), softNodes.begin(), softNodes.end());
+    allNodes.insert(allNodes.end(), strictNodes.begin(), strictNodes.end());
+
+
+    strictGraph = Graph(allAreas, allNodes, slowAreas, slowNodes);
+    softGraph = Graph(strictAreas, strictNodes, slowAreas, slowNodes);
+
+}
+
+void Pathfinder::addObstacles(const std::vector<Area> &strictAreas, const std::vector<Area> &softAreas,
+                              const std::vector<Area> &slowAreas) {
+
+    std::array<PVector, 4> possibleMoves = {PVector(-1, -1),
+                                            PVector(1, -1),
+                                            PVector(-1, 1),
+                                            PVector(1, 1)};
+
+    // Get Nodes for strictAreas
+    std::vector<PVector> strictNodes;
+    for (const auto& area: strictAreas) {
+        for (auto corner: area.getCorners()) {
+            for (auto move : possibleMoves) {
+                if (!geometry::isInside(corner + move, area)) {
+                    strictNodes.push_back(corner + move);
+                }
+            }
+        }
     }
-    for (auto edge : softGraph.edges) {
-        // TODO: Swamps
-    }
 
 
-}
-
-Edge::Edge(Node *_n1, Node *_n2) : n1(_n1), n2(_n2) {
-}
-
-bool Edge::operator==(const Edge &lhs) const {
-    return (n1 == lhs.n1 && n2 == lhs.n2) || (n1 == lhs.n2 && n2 == lhs.n1);
 }

@@ -135,12 +135,12 @@ public:
             map1 = Field(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
                          GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
 
-    AStar pathfinderMap0 = AStar(map0.getMapObjects({0}), map0.getMapNodes({0}),
-                                 map0.getMapObjects({1}), map0.getMapNodes({1}),
-                                 map0.getMapObjects({2}), map0.getMapNodes({2})),
-            PathfinderMap1 = AStar(map1.getMapObjects({0}), map1.getMapNodes({0}),
-                                   map1.getMapObjects({1}), map1.getMapNodes({1}),
-                                   map1.getMapObjects({2}), map1.getMapNodes({2}));
+    Pathfinder pathfinderMap0 = Pathfinder(map0.getMapObjects({0}), map0.getMapNodes({0}),
+                                           map0.getMapObjects({1}), map0.getMapNodes({1}),
+                                           map0.getMapObjects({2}), map0.getMapNodes({2})),
+            PathfinderMap1 = Pathfinder(map1.getMapObjects({0}), map1.getMapNodes({0}),
+                                        map1.getMapObjects({1}), map1.getMapNodes({1}),
+                                        map1.getMapObjects({2}), map1.getMapNodes({2}));
 
 
     /*! Constructs a Robot object

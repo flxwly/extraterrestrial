@@ -222,23 +222,16 @@ public:
 
 private:
     /// Contains all walls
-    std::vector<Area> Walls_;
+    std::vector<std::vector<bool>> Walls_;
     /// Contains all traps
-    std::vector<Area> Traps_;
+    std::vector<std::vector<bool>> Traps_;
     /// Contains all swamps
-    std::vector<Area> Swamps_;
+    std::vector<std::vector<bool>> Swamps_;
     /// Contains all waters / bonus areas
-    std::vector<Area> Waters_;
+    std::vector<std::vector<bool>> Waters_;
 
     /// The deposits saved as points in their respective center
     std::vector<PVector> Deposits_;
-
-    /// Contains all wall nodes
-    std::vector<PVector> WallNodes_;
-    /// Contains all trap nodes
-    std::vector<PVector> TrapNodes_;
-    /// Contains all trap nodes
-    std::vector<PVector> SwampNodes_;
 
     /** contains collectibles of all colors
      * They're ordered the following: index = 0 <=> Red; 1 <=> Cyan/Green; 2 <=> Black; 3 <=> SuperObject

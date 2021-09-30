@@ -1,7 +1,3 @@
-//
-// Created by flxwl on 19.09.2021.
-//
-
 #ifndef EXTRATERRESTRIAL_PATHFINDING_HPP
 #define EXTRATERRESTRIAL_PATHFINDING_HPP
 
@@ -19,7 +15,6 @@
  */
 class Node{
 public:
-    explicit Node(PVector pos);
     Node(double _x, double _y);
 
     const double x, y;
@@ -31,54 +26,21 @@ public:
 };
 
 
-
-
-class Edge {
-public:
-    const Node *n1, *n2;
-
-    Edge(Node *_n1, Node *_n2);
-
-    /** binary operator to compare two Edges with each other
-     *
-     * @param lhs the other Edge that should be compared to this
-     *
-     * @returns true if both pointers match
-     *
-    */
-    bool operator==(const Edge &lhs) const;
-};
-
-
-
-
 class Graph {
-public:
-    std::vector<Node> nodes;
-    std::vector<Edge> edges;
+    std::vector<Node> nodes{};
 
+public:
     Graph() = default;
     Graph(const std::vector<Area>& impassableAreas, const std::vector<PVector>& nodes,
           const std::vector<Area>& swampAreas, const std::vector<PVector>& swampNodes);
 
-    double calculateCost(const Node& n1, const Node& n2, const std::vector<Area>& swampAreas);
+    static double calculateCost(const Node& n1, const Node& n2, const std::vector<Area>& swampAreas);
 };
 
 
 
 
-class Path {
-    std::vector<PVector> path;
-
-public:
-    explicit Path(std::vector<PVector> _path);
-};
-
-
-
-
-
-class AStar {
+class Pathfinder {
     // A graph ignoring soft areas
     Graph softGraph;
 
@@ -87,23 +49,33 @@ class AStar {
 
 public:
 
-    /*!
+    /*! Constructor for an Pathfinder Object
      *
-     * @param strictImpassableAreas
+     * @param strictAreas
      * @param strictNodes
-     * @param softImpassableAreas
+     * @param softAreas
      * @param softNodes
      * @param slowAreas
      * @param slowNodes
      */
-    AStar(const std::vector<Area>& strictImpassableAreas, const std::vector<PVector>& strictNodes,
-          const std::vector<Area>& softImpassableAreas = {}, const std::vector<PVector>& softNodes = {},
-          const std::vector<Area>& slowAreas = {}, const std::vector<PVector>& slowNodes = {});
+    Pathfinder(const std::vector<Area>& strictAreas, const std::vector<PVector>& strictNodes,
+               const std::vector<Area>& softAreas = {}, const std::vector<PVector>& softNodes = {},
+               const std::vector<Area>& slowAreas = {}, const std::vector<PVector>& slowNodes = {});
 
+    /*! Rebuilds the graph from scratch
+     *
+     * @param strictAreas
+     * @param strictNodes
+     * @param softAreas
+     * @param softNodes
+     * @param slowAreas
+     * @param slowNodes
+     */
+    void rebuildGraphs(const std::vector<Area>& strictAreas, const std::vector<PVector>& strictNodes,
+                       const std::vector<Area>& softAreas = {}, const std::vector<PVector>& softNodes = {},
+                       const std::vector<Area>& slowAreas = {}, const std::vector<PVector>& slowNodes = {});
 
-
-    Path Pathfind(PVector start, PVector end);
-
+    void addObstacles(const std::vector<Area>& strictAreas, const std::vector<Area>& softAreas, const std::vector<Area>& slowAreas);
 
 };
 
