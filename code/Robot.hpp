@@ -8,7 +8,6 @@
 #include "libs/PVector.hpp"
 #include "libs/PPSettings.hpp"
 #include "MapData.hpp"
-#include "Pathfinding.hpp"
 
 struct Wheels {
 
@@ -130,18 +129,12 @@ public:
     CollectibleLoad loadedCollectibles;
     PVector desiredVelocity = {1, 0};
 
-    Field map0 = Field(270, 180, GAME0WALLS, GAME0TRAPS, GAME0SWAMPS, GAME0WATERS, GAME0DEPOSITS,
-                       GAME0WALLNODES, GAME0TRAPNODES, GAME0SWAMPNODES, GAME0COLLECTIBLES),
-            map1 = Field(360, 270, GAME1WALLS, GAME1TRAPS, GAME1SWAMPS, GAME1WATERS, GAME1DEPOSITS,
-                         GAME1WALLNODES, GAME1TRAPNODES, GAME1SWAMPNODES, GAME1COLLECTIBLES);
-
-    Pathfinder pathfinderMap0 = Pathfinder(map0.getMapObjects({0}), map0.getMapNodes({0}),
-                                           map0.getMapObjects({1}), map0.getMapNodes({1}),
-                                           map0.getMapObjects({2}), map0.getMapNodes({2})),
-            PathfinderMap1 = Pathfinder(map1.getMapObjects({0}), map1.getMapNodes({0}),
-                                        map1.getMapObjects({1}), map1.getMapNodes({1}),
-                                        map1.getMapObjects({2}), map1.getMapNodes({2}));
-
+    Field map0 = Field(World1MAP_WIDTH, World1MAP_HEIGHT, static_cast<double > (World1MAP_WIDTH) / REAL_GAME0MAP_WIDTH,
+                       static_cast<double > (World1MAP_HEIGHT) / REAL_GAME0MAP_HEIGHT, World1MAP, World1DEPOSITS,
+                       World1COLLECTIBLES),
+            map1 = Field(World2MAP_WIDTH, World2MAP_HEIGHT, static_cast<double > (World2MAP_WIDTH) / REAL_GAME1MAP_WIDTH,
+                         static_cast<double > (World2MAP_HEIGHT) / REAL_GAME1MAP_HEIGHT, World2MAP, World2DEPOSITS,
+                         World2COLLECTIBLES);
 
     /*! Constructs a Robot object
      *

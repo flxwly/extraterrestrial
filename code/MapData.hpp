@@ -8,7 +8,11 @@
 #include <iostream>
 #include <array>
 #include <cmath>
+#include <string>
 #include <algorithm>
+#include <queue>
+#include <tuple>
+#include <cstdlib>
 
 /** An Object that can be collected by a robot.
  *
@@ -19,6 +23,8 @@
 */
 class Collectible {
 public:
+
+    Collectible() = default;
 
     /*! Constructs a Collectible object
      * @tparam p Position of the Collectible.
@@ -51,7 +57,7 @@ public:
      *
      * @note state = 0 => never seen; state = 1 => seen; state = 2 => collected
     */
-    unsigned int state;
+    unsigned int state = 0;
 
     /** Represents the number a collectible has been visited
      *
@@ -59,7 +65,7 @@ public:
      * should be counted upwards. This allows to only mark collectibles as missing
      * if the robot has visited them a certain number of times.
     */
-    unsigned int visited;
+    unsigned int visited = 0;
 
     /** Represents the color
      *
@@ -69,7 +75,7 @@ public:
      * In addition certain combinations of colors create bonus score. To maximize
      * the score the robot needs to now which color each collectible has.
      */
-    unsigned int color;
+    unsigned int color = 0;
 
     /** Tells if a collectible is worth double
      *
@@ -79,80 +85,12 @@ public:
      * if they are spawned by a double RGB-Bonus. This variable is used to
      * calculate what the value of a collection of collectibles is.
     */
-    bool isWorthDouble;
+    bool isWorthDouble = false;
 
     bool operator==(const Collectible &lhs) const;
 
     /// Represents the position
-    PVector pos;
-};
-
-/** A Line in a 2D grid.
- *
- * <p>A line is defined by to points p1 and p2. It does not provide much
- * functionality by itself and is simply a container for two points
- * under a namespace.
-*/
-class Line {
-public:
-
-    /** Constructor for a Line object
-     *
-     * @tparam p1 Position of the 1st PVector.
-     * @tparam p2 Position of the 2nd PVector.
-     */
-    Line(const PVector &_p1, const PVector &_p2);
-
-    /// One end of the line
-    PVector p1;
-
-    /// The other end of the line
-    PVector p2;
-
-    static std::string str(Line &l) {
-        return "from " + PVector::str(l.p1) + "to " + PVector::str(l.p2);
-    }
-};
-
-/** A polygon in a 2D grid
- *
- * <p>The area is defined by a collection of points (also known as polygons).
- * The points have to be stored in a specific order to prevent mistakes.
- * The edge a is defined by line(p_s[i], p_s[i+1]) with the only exception
- * being the last element of p that is connected with the first one
- *
- * @tparam p_s The Corners of the Area
- */
-class Area {
-public:
-
-    explicit Area(const std::vector<PVector> &p_s);
-
-    /// Getter method for Area::Corners_
-    [[nodiscard]] const std::vector<PVector> &getCorners() const;
-
-    /// Getter method for Area::Edges_
-    [[nodiscard]] const std::vector<Line> &getEdges() const;
-
-    /// Getter method for Area::min_
-    [[nodiscard]] const PVector &getMin() const;
-
-    /// Getter method for Area::max_
-    [[nodiscard]] const PVector &getMax() const;
-
-private:
-
-    /// Holds all corners of the Area as ordered points.
-    std::vector<PVector> Corners_;
-
-    /// Holds all edges of the Area as ordered lines.
-    std::vector<Line> Edges_;
-
-    /// Lowest posX and posY coordinates
-    PVector min_;
-
-    /// Highest posX and posY coordinates
-    PVector max_;
+    PVector pos = {0, 0};
 };
 
 /** Contains all important map data about the map
@@ -173,19 +111,12 @@ private:
 class Field {
 public:
 
-    Field() = default;
-
     Field(const int &width, const int &height,
-          const std::vector<Area> &walls,
-          const std::vector<Area> &traps,
-          const std::vector<Area> &swamps,
-          const std::vector<Area> &waters,
+          const double &scaleX, const double &scaleY, const std::string &map,
           const std::vector<PVector> &deposits,
-          const std::vector<PVector> &wallNodes,
-          const std::vector<PVector> &trapNodes,
-          const std::vector<PVector> &swampNodes,
           const std::vector<Collectible> &collectibles);
 
+    std::vector<PVector> AStarFindPath(PVector start, PVector end);
 
     Collectible *addCollectible(Collectible collectible);
 
@@ -198,37 +129,19 @@ public:
     /// Getter for the size
     [[nodiscard]] PVector getSize() const;
 
-    /** gets map objects based on their index
-     *
-     * @param indices the index of the wanted map objects 0 -> walls; 1 -> traps; 2 -> swamps; 3 -> bonus areas;
-     *
-     * @returns a vector containing all map object areas with the indices
-     */
-    std::vector<Area> getMapObjects(const std::vector<unsigned int> &indices);
-
-    /**  gets map nodes based on their index
-     *
-     * @param indices 0 -> walls; 1 -> traps; 2 -> swamps
-     *
-     * @returns a vector containing all map object areas with the indices
-     */
-    std::vector<PVector> getMapNodes(const std::vector<unsigned int> &indices);
-
     /// Getter method for deposits
     std::vector<PVector> getDeposits();
 
     /// Getter method for collectibles
-    std::vector<Collectible *> getCollectibles(const std::vector<unsigned int> &colors);
+    std::vector<Collectible *> getCollectibles(const std::vector<unsigned int> &colors = {0, 1, 2, 3});
 
 private:
-    /// Contains all walls
-    std::vector<std::vector<bool>> Walls_;
-    /// Contains all traps
-    std::vector<std::vector<bool>> Traps_;
-    /// Contains all swamps
-    std::vector<std::vector<bool>> Swamps_;
-    /// Contains all waters / bonus areas
-    std::vector<std::vector<bool>> Waters_;
+
+    ///
+    std::string Map_;
+    [[nodiscard]] int idx(int x, int y) const;
+    PVector coord(int idx);
+    double heuristic(int idx1, int idx2);
 
     /// The deposits saved as points in their respective center
     std::vector<PVector> Deposits_;
@@ -238,12 +151,12 @@ private:
     */
     std::array<std::vector<Collectible>, 4> Collectibles_;
 
-    /** represents the size in cm of the field object
-     *
-     * @note There can never be a negative sized Field. The size is
-     * also defined by the CoSpace-Rules so FieldA = {270, 180}; FieldB = {360, 270})
-    */
-    PVector size_;
+    /// represents the dimensions of the char array
+    const int width_, height_;
+
+    /// the x and y scale to convert coordinates from objects map to the real world coordinates
+    PVector scale_;
+
 
 };
 
@@ -253,23 +166,6 @@ namespace geometry {
 
     bool isLeft(PVector p0, PVector p1, PVector p2);
 
-    /** checks if a point lies inside the Area
-     * @param p A point
-     * @return true if point lies inside of the Area. Otherwise false
-    */
-    bool isInside(const PVector &p, const Area &area);
-
-    /** calculates an intersection point between two lines
-     * @param l1 a line
-     * @param l2 another line
-     * @return intersection point if existing. Otherwise (-1, -1)
-    */
-    PVector intersection(Line &l1, Line &l2);
-
-    bool isIntersecting(Line &l1, Line &l2);
-
-    bool isIntersecting(Line l1, const Area &Obstacle);
-
     double sqDist(double x1, double y1, double x2, double y2);
     double sqDist(const PVector &p1, const PVector &p2);
 
@@ -277,18 +173,6 @@ namespace geometry {
     double dist(const PVector &p1, const PVector &p2);
 
     double dot(PVector p1, PVector p2);
-
-    /** Calculates normal point on a line to another point
-     *
-     * @param line The line
-     * @param point The point
-     *
-     * @details This function returns the intersection between the line
-     * and a line which goes through the point p and is orthogonal to the line
-     * This point however doesn't need to be on the line and can also lie on
-     * a extension of this line
-    */
-    PVector getNormalPoint(Line line, PVector point);
 
     PVector angle2Vector(double a);
 
@@ -304,28 +188,16 @@ namespace geometry {
 ///  |__|_|__||___._||   __||_____/ |___._||____||___._|
 ///                  |__|
 
-extern const std::vector<Area> GAME0WALLS;
-extern const std::vector<Area> GAME0TRAPS;
-extern const std::vector<Area> GAME0SWAMPS;
-extern const std::vector<Area> GAME0WATERS;
-extern const std::vector<PVector> GAME0DEPOSITS;
+extern const std::vector<PVector> World1DEPOSITS;
+extern const int World1MAP_WIDTH;
+extern const int World1MAP_HEIGHT;
+extern const std::string World1MAP;
+extern const std::vector<Collectible> World1COLLECTIBLES;
 
-extern const std::vector<PVector> GAME0WALLNODES;
-extern const std::vector<PVector> GAME0TRAPNODES;
-extern const std::vector<PVector> GAME0SWAMPNODES;
-
-extern const std::vector<Collectible> GAME0COLLECTIBLES;
-
-extern const std::vector<Area> GAME1WALLS;
-extern const std::vector<Area> GAME1TRAPS;
-extern const std::vector<Area> GAME1SWAMPS;
-extern const std::vector<Area> GAME1WATERS;
-extern const std::vector<PVector> GAME1DEPOSITS;
-
-extern const std::vector<PVector> GAME1WALLNODES;
-extern const std::vector<PVector> GAME1TRAPNODES;
-extern const std::vector<PVector> GAME1SWAMPNODES;
-
-extern const std::vector<Collectible> GAME1COLLECTIBLES;
+extern const std::vector<PVector> World2DEPOSITS;
+extern const int World2MAP_WIDTH;
+extern const int World2MAP_HEIGHT;
+extern const std::string World2MAP;
+extern const std::vector<Collectible> World2COLLECTIBLES;
 
 #endif // !MAPDATA_HPP

@@ -29,24 +29,38 @@ void Robot::Update() {
 
 void Robot::Game0() {
 
+
+
     Teleport();
 	ROBOT_LOG("Robot is running game0")
 
 }
-std::list<PVector> path = {{80, 20}, {50,250}, {280, 250}, {280,20}};
+std::vector<PVector> path = {};
 
 void Robot::Game1() {
 
     ROBOT_LOG("Robot is running game1")
 
-    if (geometry::sqDist(path.front(), simPos) < 4) {
-        path.push_back(path.front());
-        path.pop_front();
+    if (path.empty()) {
+        std::vector<Collectible *> vector = map1.getCollectibles();
+        int index = rand() % vector.size();
+        path = map1.AStarFindPath(simPos, vector[index]->pos);
+        if (path.empty())
+            return;
+
+        std::cout << "Path: ";
+        for (auto item : path) {
+            std::cout << " - " << item << " - ";
+        }
+        std::cout << std::endl;
     }
 
-    std::cout << "Target: " << path.front() << std::endl;
 
-    moveTo(path.front());
+    if (geometry::dist(path.back(), simPos) < 5) {
+        path.pop_back();
+    }
+
+    moveTo(path.back());
 }
 
 PVector Robot::collisionAvoidance(double maxForce) {
@@ -107,7 +121,7 @@ void Robot::moveTo(PVector position) {
 
     double angleDif = std::fmod(geometry::vector2Angle(simPos - position) * 180 / M_PI - compass + 90, 360);
 
-    std::cout << "Angle dif: "<< angleDif << std::endl;
+    ROBOT_LOG("Angle dif: "<< angleDif)
 
     if (angleDif > 180) {
 		angleDif -= 360;
@@ -133,8 +147,11 @@ void Robot::moveTo(PVector position) {
 		action = 16;
 	}
 
-    double magnitude = std::pow(2, std::min((position - simPos).getMag() / 10, 4.0)) / 16;
-	std::cout << "Magnitude: " << magnitude << std::endl;
+	const int div = (isSwamp(colorSensors.l) || isSwamp(colorSensors.r)) ? 2 : 16;
+
+    double magnitude = std::pow(2, std::min((position - simPos).getMag() / 10, 4.0)) / div;
+
+	ROBOT_LOG("Magnitude: " << magnitude)
 
     switch (action) {
 		case 0:
