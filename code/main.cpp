@@ -1,4 +1,4 @@
-#define CsBot_AI_H //DO NOT delete this line
+﻿#define CsBot_AI_H //DO NOT delete this line
 #define CsBot_AI_C  //DO NOT delete this line
 
 // Libs
