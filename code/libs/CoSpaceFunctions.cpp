@@ -214,27 +214,6 @@ void Update() {
 	}
 }
 
-void UpdateLoop() {
-
-	MISC_LOG("Starting UpdateLoop")
-
-	while (RunUpdateLoop) {
-
-		std::chrono::time_point<std::chrono::high_resolution_clock> begin = std::chrono::high_resolution_clock::now();
-
-		Update();
-
-		auto waitingTime = std::chrono::duration<int, std::milli>(MINIMUM_TIME_BETWEEN_CYCLE) -
-		                   std::chrono::duration_cast<std::chrono::milliseconds>(
-				                   begin - std::chrono::high_resolution_clock::now());
-
-		MISC_LOG("Waiting " << waitingTime.count() << " milliseconds")
-		std::this_thread::sleep_for(waitingTime);
-	}
-
-	MISC_LOG("Exit UpdateLoop")
-}
-
 void EndUpdateLoop() {
 	RunUpdateLoop = false;
 	if (Thread) {

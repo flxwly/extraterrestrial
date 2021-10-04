@@ -3,6 +3,7 @@
 
 #include <list>
 #include <chrono>
+#include <Windows.h>
 
 #include "libs/ColorRecognition.hpp"
 #include "libs/PVector.hpp"
@@ -136,6 +137,8 @@ public:
                          static_cast<double > (World2MAP_HEIGHT) / REAL_GAME1MAP_HEIGHT, World2MAP, World2DEPOSITS,
                          World2COLLECTIBLES);
 
+    std::chrono::time_point<std::chrono::steady_clock> lastCycle;
+
     /*! Constructs a Robot object
      *
      * @param pIn
@@ -181,6 +184,7 @@ public:
      */
     void moveTo(PVector position);
 
+    std::array<PVector, 3> ultraSonicContactPosition();
 };
 
 

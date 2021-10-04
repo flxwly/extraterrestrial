@@ -19,6 +19,14 @@ FieldA = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldA/Background.bmp"
 FieldB = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field/FieldB/Background.bmp"
 FieldFD = "C:/CoSpaceRobot Studio/RCJ-2021/RSC/Field"
 
+# Maptiles
+empty = 'E'
+wall = 'W'
+trap = 'T'
+swamp = 'S'
+temp_wall = 'w'
+unknown = 'U'
+
 if use_map_directory:
     # map directory
     FieldA = "./map/map0/Background.bmp"
@@ -90,14 +98,14 @@ def rev_color_switch(color):
 def char_switch(num):
     # format: b, g, r
     switcher = {
-        0: "0",
-        1: "W",
-        2: "T",
-        3: "S",  # swamp
-        4: "0",  # deposit
-        5: "0"  # water
+        0: empty,
+        1: wall,
+        2: trap,
+        3: swamp,  # swamp
+        4: empty,  # deposit
+        5: empty  # water
     }
-    return switcher.get(num, "0")
+    return switcher.get(num, unknown)
 
 
 def collectible_color_switch(color):
@@ -182,7 +190,6 @@ class FieldObject:
 
             # resize the image for less detail but less ram usage and duration
             img = resize(img, None, fx=self.scale_x, fy=self.scale_y, interpolation=INTER_NEAREST)
-
 
             self.map = [[color_switch(tuple([img[j][i][0], img[j][i][1], img[j][i][2]])) for i in range(len(img[j]))]
                         for j in range(len(img))]
@@ -284,7 +291,7 @@ class FieldObject:
             # set val in radius r
             for n in range(p[1] - r if p[1] - r >= 0 else 0, p[1] + r + 1 if p[1] + r < self.height else self.height):
                 for m in range(p[0] - r if p[0] - r >= 0 else 0, p[0] + r + 1 if p[0] + r < self.width else self.width):
-                    if math.sqrt((n-p[1])*(n-p[1]) + (m-p[0])*(m-p[0])) <= r:
+                    if math.sqrt((n - p[1]) * (n - p[1]) + (m - p[0]) * (m - p[0])) <= r:
 
                         # disable expanding over walls
                         if self.map[n][m] != 1:
@@ -334,7 +341,8 @@ class MapData:
                 to_remove = []
                 for collectible in self.collectibles[key]:
                     if self.field_objects[key].map[round(collectible.virtual_y)][round(collectible.virtual_x)] == 1 or \
-                            self.field_objects[key].map[round(collectible.virtual_y)][round(collectible.virtual_x)] == 2:
+                            self.field_objects[key].map[round(collectible.virtual_y)][
+                                round(collectible.virtual_x)] == 2:
                         to_remove.append(collectible)
 
                     elif self.field_objects[key].map[round(collectible.virtual_y)][round(collectible.virtual_x)] == 5:
@@ -381,8 +389,16 @@ class MapData:
         return imgs
 
     def convert(self, empty=False):
-        file_content = ""
+        cpp_content = ""
+        hpp_content = ""
         for key in self.field_objects.keys():
+
+            externs = f"extern const std::vector<PVector> {key}DEPOSITS;\n" \
+                      f"extern const int {key}MAP_WIDTH;\n" \
+                      f"extern const int {key}MAP_HEIGHT;\n" \
+                      f"extern const std::string {key}MAP;\n" \
+                      f"extern const std::vector<Collectible> {key}COLLECTIBLES;\n"
+
             deposit_str = f"const std::vector<PVector> {key}DEPOSITS = "
             map_str = f"const int {key}MAP_WIDTH = {self.field_objects[key].width}; \n" \
                       f"const int {key}MAP_HEIGHT = {self.field_objects[key].height}; \n" \
@@ -405,19 +421,19 @@ class MapData:
                 map_str += "\"\";"
                 collectibles_str += "{};"
 
-            file_content += "//------------- %s_Map --------------//\n\n" % key
+            hpp_content += f"//------------- {key}_Map --------------//\n\n"
+            hpp_content += externs + "\n"
 
-            file_content += "\t\t/*deposits*/\n" + deposit_str + "\n"
-            file_content += "\t\t/*map*/\n" + map_str + "\n"
+            cpp_content += f"//------------- {key}_Map --------------//\n\n"
 
-            file_content += "\n\n\t//------ Collectibles ------//\n"
+            cpp_content += deposit_str + "\n"
+            cpp_content += map_str + "\n"
+            cpp_content += collectibles_str + "\n\n"
 
-            file_content += "\t\t/*collectibles*/\n" + collectibles_str + "\n\n"
-
-        return file_content
+        return [hpp_content, cpp_content]
 
     def __str__(self):
-        return self.convert()
+        return "".join(self.convert())
 
 
 def main():
@@ -427,27 +443,62 @@ def main():
     mapData = MapData(img_files={"World1": [FieldA, [96, 72]], "World2": [FieldB, [144, 108]]}, fd_file=FieldFD)
     mapData.save(10)
 
-    begin = "\n\n\n" \
-            "///   _______                _____          __\n" \
-            "///  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
-            "///  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
-            "///  |__|_|__||___._||   __||_____/ |___._||____||___._|\n" \
-            "///                  |__|\n"
+    data_begin = "///   _______                _____          __\n" \
+                 "///  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
+                 "///  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
+                 "///  |__|_|__||___._||   __||_____/ |___._||____||___._|\n" \
+                 "///                  |__|\n"
+
+    header_part = ""
+    code_part = ""
+
+    with open("../code/MapData.hpp") as f:
+        parts = f.read().split(data_begin)
+        header_part = parts[0]
+
+    data = mapData.convert()
+
+    header_part += data_begin + "\n"
+    header_part += f"#define MAP_EMPTY_TILE '{empty}'\n" \
+                   f"#define MAP_WALL_TILE '{wall}'\n" \
+                   f"#define MAP_TRAP_TILE '{trap}'\n" \
+                   f"#define MAP_SWAMP_TILE '{swamp}'\n" \
+                   f"#define MAP_TEMP_WALL_TILE '{temp_wall}'\n" \
+                   f"#define MAP_UNKNOWN_TILE '{unknown}'\n\n"
+    header_part += data[0] + "\n"
+    header_part += "#endif // !MAPDATA_HPP"
 
     with open("../code/MapData.cpp") as f:
-        file = f.read().split(begin)
+        parts = f.read().split(data_begin)
+        code_part = parts[0]
 
-    mapData_str = begin + "\n #pragma region MapData\n\n\n\n" + mapData.convert(empty=False) + "\n #pragma endregion\n";
-    if len(file) == 2:
-        file[1] = mapData_str
-    else:
-        file.append(mapData_str)
+    code_part += data_begin + "\n"
+    code_part += data[1] + "\n"
 
-    file_str = "".join(file)
+    with open("../code/MapData.hpp", "w+") as f:
+        if header_part is not f.read():
+            print("Writing header file")
+            f.write(header_part)
 
-    with open("../code/MapData.cpp", "w") as f:
-        f.write(file_str)
-        pass
+    with open("../code/MapData.cpp", "w+") as f:
+        if code_part is not f.read():
+            print("Writing code file")
+            f.write(code_part)
+
+
+    #
+    # mapData_str += mapData.convert(empty=False) + "\n #pragma endregion\n"
+    #
+    # if len(file) == 2:
+    #     file[1] = mapData_str
+    # else:
+    #     file.append(mapData_str)
+    #
+    # file_str = "".join(file)
+    #
+    # with open("../code/MapData.cpp", "w") as f:
+    #     f.write(file_str)
+    #     pass
 
 
 if __name__ == '__main__':
