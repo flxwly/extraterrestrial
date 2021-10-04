@@ -16,6 +16,12 @@
 #include <list>
 #include <chrono>
 
+//   ______            __
+//  |      |.-----..--|  |.-----.
+//  |   ---||  _  ||  _  ||  -__|
+//  |______||_____||_____||_____|
+//
+
 /** An Object that can be collected by a robot.
  *
  * <p>A Collectible has two variables to determine it's value,
@@ -121,14 +127,16 @@ public:
     std::vector<PVector> AStarFindPath(PVector start, PVector end);
 
     Collectible *addCollectible(Collectible collectible);
-
     bool removeCollectible(Collectible collectible);
 
     void spawnTempWall(PVector pos, int r);
-    void clearTempWall(long long int lifetime);
+    void clearTempWall(double lifetime);
 
     Collectible *
     getCollectible(PVector pos, double angle, double uncertainty, int color, std::vector<int> possibleStates);
+
+    /// Getter method for collectibles
+    std::vector<Collectible *> getCollectibles(const std::vector<unsigned int> &colors = {0, 1, 2, 3});
 
 
     /// Getter for the size
@@ -137,8 +145,12 @@ public:
     /// Getter method for deposits
     std::vector<PVector> getDeposits();
 
-    /// Getter method for collectibles
-    std::vector<Collectible *> getCollectibles(const std::vector<unsigned int> &colors = {0, 1, 2, 3});
+    /// Returns the value as char of a point in the map, no boundary check, real world coordinates;
+    char getMapAtPos(PVector pos);
+
+    std::string Map_;
+    /// represents the dimensions of the char array
+    const int width_, height_;
 
 private:
 
@@ -146,7 +158,7 @@ private:
     std::list<std::pair<std::chrono::time_point<std::chrono::steady_clock>, std::list<int>>> tempWallTiles_;
 
     ///
-    std::string Map_;
+
     [[nodiscard]] int idx(int x, int y) const;
     PVector coord(int idx);
     double heuristic(int idx1, int idx2);
@@ -159,8 +171,6 @@ private:
     */
     std::array<std::vector<Collectible>, 4> Collectibles_;
 
-    /// represents the dimensions of the char array
-    const int width_, height_;
 
     /// the x and y scale to convert coordinates from objects map to the real world coordinates
     PVector scale_;
@@ -196,16 +206,28 @@ namespace geometry {
 ///  |__|_|__||___._||   __||_____/ |___._||____||___._|
 ///                  |__|
 
+#define MAP_EMPTY_TILE 'E'
+#define MAP_WALL_TILE 'W'
+#define MAP_TRAP_TILE 'T'
+#define MAP_SWAMP_TILE 'S'
+#define MAP_TEMP_WALL_TILE 'w'
+#define MAP_UNKNOWN_TILE 'U'
+
+//------------- World1_Map --------------//
+
 extern const std::vector<PVector> World1DEPOSITS;
 extern const int World1MAP_WIDTH;
 extern const int World1MAP_HEIGHT;
 extern const std::string World1MAP;
 extern const std::vector<Collectible> World1COLLECTIBLES;
 
+//------------- World2_Map --------------//
+
 extern const std::vector<PVector> World2DEPOSITS;
 extern const int World2MAP_WIDTH;
 extern const int World2MAP_HEIGHT;
 extern const std::string World2MAP;
 extern const std::vector<Collectible> World2COLLECTIBLES;
+
 
 #endif // !MAPDATA_HPP

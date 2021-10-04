@@ -3,6 +3,7 @@
 
 #include <list>
 #include <chrono>
+#include <Windows.h>
 
 #include "libs/ColorRecognition.hpp"
 #include "libs/PVector.hpp"
@@ -181,6 +182,7 @@ public:
      */
     void moveTo(PVector position);
 
+    std::array<PVector, 3> ultraSonicContactPosition();
 };
 
 
