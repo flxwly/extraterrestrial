@@ -91,9 +91,9 @@ def char_switch(num):
     # format: b, g, r
     switcher = {
         0: "0",
-        1: "1",
-        2: "2",
-        3: "3",  # swamp
+        1: "W",
+        2: "T",
+        3: "S",  # swamp
         4: "0",  # deposit
         5: "0"  # water
     }

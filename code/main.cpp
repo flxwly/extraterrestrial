@@ -10,7 +10,10 @@
 Robot *robot = nullptr;
 
 void Setup() {
-	MISC_LOG("Running Setup");
+    // Clear console
+    system("cls");
+
+    MISC_LOG("Running Setup");
 
 	static Robot robot1(In, Out);
 	robot = &robot1;

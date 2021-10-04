@@ -42,17 +42,14 @@ void Robot::Game1() {
     ROBOT_LOG("Robot is running game1")
 
     if (path.empty()) {
+
         std::vector<Collectible *> vector = map1.getCollectibles();
         int index = rand() % vector.size();
         path = map1.AStarFindPath(simPos, vector[index]->pos);
         if (path.empty())
             return;
 
-        std::cout << "Path: ";
-        for (auto item : path) {
-            std::cout << " - " << item << " - ";
-        }
-        std::cout << std::endl;
+        map1.spawnTempWall(simPos, 10);
     }
 
 
@@ -61,6 +58,7 @@ void Robot::Game1() {
     }
 
     moveTo(path.back());
+    map1.clearTempWall(2000);
 }
 
 PVector Robot::collisionAvoidance(double maxForce) {

@@ -13,6 +13,8 @@
 #include <queue>
 #include <tuple>
 #include <cstdlib>
+#include <list>
+#include <chrono>
 
 /** An Object that can be collected by a robot.
  *
@@ -122,6 +124,9 @@ public:
 
     bool removeCollectible(Collectible collectible);
 
+    void spawnTempWall(PVector pos, int r);
+    void clearTempWall(long long int lifetime);
+
     Collectible *
     getCollectible(PVector pos, double angle, double uncertainty, int color, std::vector<int> possibleStates);
 
@@ -136,6 +141,9 @@ public:
     std::vector<Collectible *> getCollectibles(const std::vector<unsigned int> &colors = {0, 1, 2, 3});
 
 private:
+
+    /// A list containing each temporal wall
+    std::list<std::pair<std::chrono::time_point<std::chrono::steady_clock>, std::list<int>>> tempWallTiles_;
 
     ///
     std::string Map_;
