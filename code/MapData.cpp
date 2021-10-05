@@ -243,17 +243,45 @@ std::vector<PVector> Field::AStarFindPath(PVector start, PVector end) {
 
                     if (v == endIdx) {
                         PATHFINDER_LOG("Path finder found a path")
-                        std::vector<PVector> path{};
-                        int curr = endIdx;
-                        PVector cord;
-                        while (curr != startIdx) {
-                            cord = coord(curr);
-                            path.emplace_back(cord.x / scale_.x, cord.y / scale_.y);
-                            curr = p[curr];
-                        }
-                        path.push_back(start);
 
+                        std::vector<PVector> tPath{}, path{};
+                        int i = endIdx, j = 0;
+                        PVector cur{}, partner{};
+                        while (i != startIdx) {
+                            cur = coord(i);
+                            tPath.emplace_back(cur.x / scale_.x, cur.y / scale_.y);
+                            i = p[i];
+                        }
+                        tPath.push_back(start);
+
+                        i = 0;
+                        while (i < tPath.size() - 1 && j < tPath.size()) {
+                            PATHFINDER_ERROR("Cur: " << tPath[i])
+                            // Select a start node
+                            cur = tPath[i];
+                            path.push_back(cur);
+
+                            for (j = i + 1; j < tPath.size(); ++j) {
+                                PATHFINDER_ERROR("Partner: " << tPath[j])
+
+                                // Select a partner node
+                                partner = tPath[j];
+
+                                for (int k = i; k < j; ++k) {
+                                    // Check if inbetween nodes are one a line
+                                    if (geometry::distToLine(cur, partner, tPath[k]) > 1) {
+                                        // inbetween node is not on a line, go back one and break out of the checking loop
+                                        PATHFINDER_ERROR("Not on line at: " << tPath[k + 1])
+                                        i = j - 1;
+                                        goto nested_break;
+                                    }
+                                }
+                            }
+                            nested_break:;
+                        }
+                        PATHFINDER_ERROR("Length: " << path.size())
                         return path;
+
                     }
 
                     pq.push(std::make_tuple(d[v] + heuristic(v, endIdx), v));
@@ -327,6 +355,14 @@ double geometry::vector2Angle(PVector v) {
 
 double geometry::dot(PVector p1, PVector p2) {
     return p1.x * p2.x + p1.y * p2.y;
+}
+
+double geometry::distToLine(double p1_x, double p1_y, double p2_x, double p2_y, double p0_x, double p0_y) {
+    return fabs((p2_x - p1_x) * (p1_y - p0_y) - (p1_x - p0_x) * (p2_y - p1_y)) / sqrt((p2_x - p1_x) * (p2_x - p1_x) + (p2_y - p1_y) * (p2_y - p1_y));
+}
+
+double geometry::distToLine(PVector p1, PVector p2, PVector p0) {
+    return distToLine(p1.x, p1.y, p2.x, p2.y, p0.x, p0.y);
 }
 
 

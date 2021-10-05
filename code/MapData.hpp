@@ -190,6 +190,9 @@ namespace geometry {
     double dist(double x1, double y1, double x2, double y2);
     double dist(const PVector &p1, const PVector &p2);
 
+    double distToLine(double p1_x, double p1_y, double p2_x, double p2_y, double p0_x, double p0_y);
+    double distToLine(PVector p1, PVector p2, PVector p0);
+
     double dot(PVector p1, PVector p2);
 
     PVector angle2Vector(double a);

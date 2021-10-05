@@ -14,6 +14,7 @@ Robot *robot = nullptr;
 
 void UpdateLoop() {
 
+/*
     HANDLE hStdout, hNewScreenBuffer, hNewScreenBuffer2;
     SMALL_RECT srctWriteRect;
     CHAR_INFO chiBuffer[robot->map1.Map_.size()];
@@ -71,13 +72,11 @@ void UpdateLoop() {
             printf("SetConsoleActiveScreenBuffer failed - (%d)\n", GetLastError());
             return;
         }
+*/
 
+    MISC_LOG("Starting UpdateLoop")
 
-
-
-
-
-
+    while (RunUpdateLoop) {
 
         std::chrono::time_point<std::chrono::high_resolution_clock> begin = std::chrono::high_resolution_clock::now();
 

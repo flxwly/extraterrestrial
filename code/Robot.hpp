@@ -128,7 +128,6 @@ public:
     // Own vars
     int level = 0;
     CollectibleLoad loadedCollectibles;
-    PVector desiredVelocity = {1, 0};
 
     Field map0 = Field(World1MAP_WIDTH, World1MAP_HEIGHT, static_cast<double > (World1MAP_WIDTH) / REAL_GAME0MAP_WIDTH,
                        static_cast<double > (World1MAP_HEIGHT) / REAL_GAME0MAP_HEIGHT, World1MAP, World1DEPOSITS,

@@ -77,8 +77,7 @@ void Robot::Game1() {
     if (path.empty()) {
 
         std::vector<Collectible *> vector = map1.getCollectibles();
-        int index = rand() % vector.size();
-        path = map1.AStarFindPath(simPos, vector[index]->pos);
+        path = map1.AStarFindPath(simPos, PVector(50, 80));
         if (path.empty())
             return;
     }
@@ -175,7 +174,7 @@ void Robot::moveTo(PVector position) {
         action = 16;
     }
 
-    const int div = (isSwamp(colorSensors.l) || isSwamp(colorSensors.r)) ? 2 : 16;
+    const int div = (isSwamp(colorSensors.l) || isSwamp(colorSensors.r)) ? 1 : 16;
 
     double magnitude = std::pow(2, std::min((position - simPos).getMag() / 10, 4.0)) / div;
 
@@ -255,7 +254,7 @@ std::array<PVector, 3> Robot::ultraSonicContactPosition() {
     std::array<PVector, 3> array = {PVector(NAN, NAN), PVector(NAN, NAN), PVector(NAN, NAN)};
 
     if (ultraSonicSensors.l < 100) {
-        array[0] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 180) * M_PI / 180) *
+        array[0] = simPos + geometry::angle2Vector((compass + ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
                             (ultraSonicSensors.l + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
@@ -265,7 +264,7 @@ std::array<PVector, 3> Robot::ultraSonicContactPosition() {
     }
 
     if (ultraSonicSensors.r < 100) {
-        array[0] = simPos + geometry::angle2Vector((compass + ULTRASONIC_SENSOR_ANGLE_OFFSET - 180)* M_PI / 180) *
+        array[0] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 90)* M_PI / 180) *
                             (ultraSonicSensors.r + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
