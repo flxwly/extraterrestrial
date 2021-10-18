@@ -7,7 +7,6 @@
 ///       program settings
 /// ----------------------------- ///
 
-
 /// define COLOR_LOGGING to enable color logging to console
 //#define COLOR_LOGGING
 

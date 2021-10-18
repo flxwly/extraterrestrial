@@ -140,17 +140,24 @@ public:
 
 
     /// Getter for the size
-    [[nodiscard]] PVector getSize() const;
+    [[nodiscard]] PVector getScale() const;
+
+    int getWidth();
+    int getHeight() const;
+
+    std::string getMap();
+    std::string getFlippedMap();
 
     /// Getter method for deposits
     std::vector<PVector> getDeposits();
 
     /// Returns the value as char of a point in the map, no boundary check, real world coordinates;
-    char getMapAtPos(PVector pos);
+    char getCharAtRealPos(PVector pos);
 
-    std::string Map_;
-    /// represents the dimensions of the char array
-    const int width_, height_;
+
+    [[nodiscard]] int idx(int x, int y) const;
+    [[nodiscard]] PVector coord(int idx) const;
+    [[nodiscard]] double heuristic(int idx1, int idx2) const;
 
 private:
 
@@ -158,10 +165,9 @@ private:
     std::list<std::pair<std::chrono::time_point<std::chrono::steady_clock>, std::list<int>>> tempWallTiles_;
 
     ///
-
-    [[nodiscard]] int idx(int x, int y) const;
-    PVector coord(int idx);
-    double heuristic(int idx1, int idx2);
+    std::string Map_;
+    /// represents the dimensions of the char array
+    const int width_, height_;
 
     /// The deposits saved as points in their respective center
     std::vector<PVector> Deposits_;
@@ -175,7 +181,8 @@ private:
     /// the x and y scale to convert coordinates from objects map to the real world coordinates
     PVector scale_;
 
-
+    /// Returns the char at map width / height, map coordinates;
+    char getCharAt(int x, int y);
 };
 
 

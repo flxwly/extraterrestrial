@@ -202,35 +202,57 @@ std::thread *Thread = nullptr;
 int InitialisingState = 0;
 bool RunUpdateLoop = true;
 
+void UpdateLoop() {
+
+    MISC_LOG("Starting UpdateLoop")
+
+    while (RunUpdateLoop) {
+
+        std::chrono::time_point<std::chrono::high_resolution_clock> begin = std::chrono::high_resolution_clock::now();
+
+        Update();
+
+        auto waitingTime = std::chrono::duration<int, std::milli>(MINIMUM_TIME_BETWEEN_CYCLE) -
+                           std::chrono::duration_cast<std::chrono::milliseconds>(
+                                   begin - std::chrono::high_resolution_clock::now());
+
+        MISC_LOG("Waiting " << waitingTime.count() << " milliseconds")
+        std::this_thread::sleep_for(waitingTime);
+    }
+
+    MISC_LOG("Exit UpdateLoop")
+}
+
+
 void Update() {
-	switch (CurGame) {
-		case 0:
-			Game0();
-			break;
-		case 1:
-			Game1();
-			break;
-		default: MISC_WARNING("CurGame has a non logical value: " << CurGame)
-	}
+    switch (CurGame) {
+        case 0:
+            Game0();
+            break;
+        case 1:
+            Game1();
+            break;
+        default: MISC_WARNING("CurGame has a non logical value: " << CurGame)
+    }
 }
 
 void EndUpdateLoop() {
-	RunUpdateLoop = false;
-	if (Thread) {
-		Thread->join();
-	}
+    RunUpdateLoop = false;
+    if (Thread) {
+        Thread->join();
+    }
 }
 
 void StartUpdateLoop() {
-	if (Thread) {
-		if (!Thread->joinable()) {
-			MISC_ERROR("The thread has not been joined yet")
-			return;
-		}
-	}
-	RunUpdateLoop = true;
-	static std::thread t(&UpdateLoop);
-	Thread = &t;
+    if (Thread) {
+        if (!Thread->joinable()) {
+            MISC_ERROR("The thread has not been joined yet")
+            return;
+        }
+    }
+    RunUpdateLoop = true;
+    static std::thread t(&UpdateLoop);
+    Thread = &t;
 
 }
 

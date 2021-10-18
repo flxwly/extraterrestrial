@@ -69,18 +69,19 @@ Field::Field(const int &width, const int &height,
     }
 }
 
-PVector Field::getSize() const {
-    return {static_cast<double>(width_), static_cast<double>(height_)};
-}
-
-
 /** Getter for field::collectibles **/
 std::vector<PVector> Field::getDeposits() {
     return Deposits_;
 }
 
-char Field::getMapAtPos(PVector pos) {
+char Field::getCharAtRealPos(PVector pos) {
     const int index = idx(static_cast<int>(round(pos.x * scale_.x)), static_cast<int>(round(pos.y * scale_.y)));
+    return (index >= 0 && index <= width_ * height_) ? Map_[index] : MAP_UNKNOWN_TILE;
+}
+
+
+char Field::getCharAt(int x, int y) {
+    const int index = idx(x, y);
     return (index >= 0 && index <= width_ * height_) ? Map_[index] : MAP_UNKNOWN_TILE;
 }
 
@@ -299,12 +300,39 @@ int Field::idx(int x, int y) const {
     return x + y * width_;
 }
 
-double Field::heuristic(int idx1, int idx2) {
+double Field::heuristic(int idx1, int idx2) const {
     return sqrt(pow(idx1 % width_ - idx2 % width_, 2) + pow(idx1 / width_ - idx2 / width_, 2));
 }
 
-PVector Field::coord(int idx) {
+PVector Field::coord(int idx) const {
     return PVector(idx % width_, idx / width_);
+}
+
+PVector Field::getScale() const {
+    return scale_;
+}
+
+std::string Field::getMap() {
+    return Map_;
+}
+
+std::string Field::getFlippedMap() {
+    std::string newMap = Map_;
+    for (int j = 0; j < height_; ++j) {
+        for (int i = 0; i < width_; ++i) {
+            newMap.at(i + (height_ - j - 1) * width_) = Map_.at(i + j * width_);
+        }
+    }
+    return newMap;
+}
+
+
+int Field::getHeight() const {
+    return height_;
+}
+
+[[maybe_unused]] int Field::getWidth() {
+    return width_;
 }
 
 

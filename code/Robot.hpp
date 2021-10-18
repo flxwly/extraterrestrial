@@ -8,6 +8,7 @@
 #include "libs/ColorRecognition.hpp"
 #include "libs/PVector.hpp"
 #include "libs/PPSettings.hpp"
+#include "libs/ConsolePainter.hpp"
 #include "MapData.hpp"
 
 struct Wheels {
@@ -135,6 +136,8 @@ public:
             map1 = Field(World2MAP_WIDTH, World2MAP_HEIGHT, static_cast<double > (World2MAP_WIDTH) / REAL_GAME1MAP_WIDTH,
                          static_cast<double > (World2MAP_HEIGHT) / REAL_GAME1MAP_HEIGHT, World2MAP, World2DEPOSITS,
                          World2COLLECTIBLES);
+
+    ConsolePainter debugger = ConsolePainter("Debug");
 
     std::chrono::time_point<std::chrono::steady_clock> lastCycle;
 

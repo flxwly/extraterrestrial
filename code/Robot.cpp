@@ -24,14 +24,14 @@ void Robot::Update() {
     if (In[9] != 0 or In[10] != 0) {
         simPos.set(In[9], In[10]);
     } else {
-        simPos += getVelocity() * std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - lastCycle).count();
+        simPos += getVelocity() *
+                  std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - lastCycle).count();
     }
 
     // Update out information
     Out[0] = wheels.l;
     Out[1] = wheels.r;
     Out[2] = led;
-
 
     // Update cycle time
     lastCycle = std::chrono::steady_clock::now();
@@ -47,7 +47,7 @@ void Robot::Game0() {
     // Add moving objects / things that are not in the map
     for (auto collision : ultraSonicContactPosition()) {
         if (collision) {
-            if (map0.getMapAtPos(collision) == MAP_EMPTY_TILE) {
+            if (map0.getCharAtRealPos(collision) == MAP_EMPTY_TILE) {
                 map0.spawnTempWall(collision, 1);
             }
         }
@@ -55,6 +55,7 @@ void Robot::Game0() {
     // Remove temp walls that have been around for some time
     map0.clearTempWall(4000);
 }
+
 std::vector<PVector> path = {};
 
 void Robot::Game1() {
@@ -64,7 +65,7 @@ void Robot::Game1() {
     // Add moving objects / things that are not in the map
     for (auto collision : ultraSonicContactPosition()) {
         if (collision) {
-            if (map1.getMapAtPos(collision) == MAP_EMPTY_TILE) {
+            if (map1.getCharAtRealPos(collision) == MAP_EMPTY_TILE) {
                 map1.spawnTempWall(collision, 1);
             }
         }
@@ -77,7 +78,7 @@ void Robot::Game1() {
     if (path.empty()) {
 
         std::vector<Collectible *> vector = map1.getCollectibles();
-        path = map1.AStarFindPath(simPos, PVector(50, 80));
+        path = map1.AStarFindPath(simPos, simPos + PVector(0, 30));
         if (path.empty())
             return;
     }
@@ -88,6 +89,16 @@ void Robot::Game1() {
     }
 
     moveTo(path.back());
+
+    debugger.clear();
+    debugger.paintBuffer(map1.getFlippedMap(), map1.getWidth(), 10, 10);
+    for (auto p : path) {
+        debugger.paintCircle(p.x, p.y, 2, UnicodeChar('A', FOREGROUND_GREEN));
+    }
+
+    debugger.paintConvexPolygon({{10, 10}, {20, 10}, {20, 20}, {15, 20}}, UnicodeChar('Q', FOREGROUND_BLUE));
+    debugger.printToConsole();
+
 }
 
 PVector Robot::collisionAvoidance(double maxForce) {
@@ -259,12 +270,12 @@ std::array<PVector, 3> Robot::ultraSonicContactPosition() {
     }
 
     if (ultraSonicSensors.f < 100) {
-        array[0] = simPos + geometry::angle2Vector((compass - 180)* M_PI / 180) *
+        array[0] = simPos + geometry::angle2Vector((compass - 180) * M_PI / 180) *
                             (ultraSonicSensors.f + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
     if (ultraSonicSensors.r < 100) {
-        array[0] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 90)* M_PI / 180) *
+        array[0] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
                             (ultraSonicSensors.r + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
