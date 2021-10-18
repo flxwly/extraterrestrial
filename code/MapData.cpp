@@ -196,6 +196,8 @@ bool Field::removeCollectible(Collectible collectible) {
     return false;
 }
 
+// TODO: The pathfinding function seems to fail or delete the found path entirely.
+//  Fix it so that it doesn't fail anymore
 std::vector<PVector> Field::AStarFindPath(PVector start, PVector end) {
 
     PATHFINDER_LOG("Setting up path finder... from " << round(start.x * scale_.x) << " | " << round(start.y * scale_.y)
@@ -257,13 +259,11 @@ std::vector<PVector> Field::AStarFindPath(PVector start, PVector end) {
 
                         i = 0;
                         while (i < tPath.size() - 1 && j < tPath.size()) {
-                            PATHFINDER_ERROR("Cur: " << tPath[i])
                             // Select a start node
                             cur = tPath[i];
                             path.push_back(cur);
 
                             for (j = i + 1; j < tPath.size(); ++j) {
-                                PATHFINDER_ERROR("Partner: " << tPath[j])
 
                                 // Select a partner node
                                 partner = tPath[j];
@@ -272,7 +272,6 @@ std::vector<PVector> Field::AStarFindPath(PVector start, PVector end) {
                                     // Check if inbetween nodes are one a line
                                     if (geometry::distToLine(cur, partner, tPath[k]) > 1) {
                                         // inbetween node is not on a line, go back one and break out of the checking loop
-                                        PATHFINDER_ERROR("Not on line at: " << tPath[k + 1])
                                         i = j - 1;
                                         goto nested_break;
                                     }
@@ -280,7 +279,6 @@ std::vector<PVector> Field::AStarFindPath(PVector start, PVector end) {
                             }
                             nested_break:;
                         }
-                        PATHFINDER_ERROR("Length: " << path.size())
                         return path;
 
                     }
