@@ -117,6 +117,10 @@ def collectible_color_switch(color):
     return switcher.get(color, tuple([0, 0, 0]))
 
 
+def round_dec(x, n):
+    return math.floor(x * pow(10, n)) / pow(10, n)
+
+
 class Collectible:
     def __init__(self, color: int, x: float, y: float, field):
         """A type of Point to represent Collectible points"""
@@ -144,7 +148,8 @@ class Collectible:
 
     def __repr__(self):
         """Returns Collectible as typical C++ pair coord"""
-        return "{{%s,%s},%s,%s}" % (self.virtual_x, self.virtual_y, self.color, self.is_worth_double)
+        return "{{" + f"{round_dec(self.virtual_x, 2)}, {round_dec(self.virtual_y, 2)}" + "}," + \
+               f"{self.color}, {self.is_worth_double}" + "}"
 
 
 ###########################
@@ -198,8 +203,8 @@ class FieldObject:
             self.height = len(self.map)
 
             self.expand_all(1, 5)  # standard 16
-            self.expand_all(2, 5)
-            self.expand_all(3, 5)
+            self.expand_all(2, 6)
+            self.expand_all(3, 6)
 
 
 
@@ -327,32 +332,34 @@ class MapData:
                     if self.field_objects[key].map[j][i] == 4:
                         self.deposits[key].append(avg(self.field_objects[key].flood_fill(i, j, 4, -4, store=True)))
 
-        if path.isfile(fd_file):
-            tree = ET.parse(fd_file)
-            root = tree.getroot()
-            for key in self.field_objects.keys():
+            if path.isfile(fd_file):
+                tree = ET.parse(fd_file)
+                root = tree.getroot()
                 world = root.find(key)
                 if world:
                     self.collectibles[key] = find_color_points(world, self.field_objects[key])
                 else:
                     self.collectibles[key] = []
 
-            for key in self.collectibles.keys():
                 to_remove = []
-                for collectible in self.collectibles[key]:
-                    if self.field_objects[key].map[round(collectible.virtual_y)][round(collectible.virtual_x)] == 1 or \
-                            self.field_objects[key].map[round(collectible.virtual_y)][
-                                round(collectible.virtual_x)] == 2:
-                        to_remove.append(collectible)
+                for c in self.collectibles[key]:
+                    # print(self.field_objects[key].map[round(collectible.virtual_y)][round(collectible.virtual_x)])
+                    if self.field_objects[key].map[round(c.virtual_y)][round(c.virtual_x)] == 1 or \
+                            self.field_objects[key].map[round(c.virtual_y)][
+                                round(c.virtual_x)] == 2:
+                        # print("Remove" + str(collectible))
+                        to_remove.append(c)
 
-                    elif self.field_objects[key].map[round(collectible.virtual_y)][round(collectible.virtual_x)] == 5:
-                        collectible.is_worth_double = True
-                        break
+                    elif self.field_objects[key].map[round(c.virtual_y)][round(c.virtual_x)] == 5:
+                        # print("Make double" + str(collectible))
+                        c.is_worth_double = True
+
                 for c in to_remove:
                     self.collectibles[key].remove(c)
 
-        else:
-            print("File: " + fd_file + " not found")
+            else:
+                print("File: " + fd_file + " not found")
+
 
     def show(self, scale):
         for key, img in self.getImages(scale):
@@ -382,7 +389,7 @@ class MapData:
                 draw.rectangle((c.virtual_x * scale, c.virtual_y * scale,
                                 c.virtual_x * scale + x_off,
                                 c.virtual_y * scale + y_off), collectible_color_switch(c.color),
-                               (0, 0, 0))
+                               (0, 255, 0) if c.is_worth_double else (0, 0, 0))
 
             imgs[key] = imgs[key].convert(mode="RGB")
 
@@ -436,13 +443,7 @@ class MapData:
         return "".join(self.convert())
 
 
-def main():
-    print("setting up...")
-
-    # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
-    mapData = MapData(img_files={"World1": [FieldA, [96, 72]], "World2": [FieldB, [144, 108]]}, fd_file=FieldFD)
-    mapData.save(10)
-
+def write(data: MapData):
     data_begin = "///   _______                _____          __\n" \
                  "///  |   |   |.---.-..-----.|     \ .---.-.|  |_ .---.-.\n" \
                  "///  |       ||  _  ||  _  ||  --  ||  _  ||   _||  _  |\n" \
@@ -456,7 +457,7 @@ def main():
         parts = f.read().split(data_begin)
         header_part = parts[0]
 
-    data = mapData.convert()
+    data = data.convert()
 
     header_part += data_begin + "\n"
     header_part += f"#define MAP_EMPTY_TILE '{empty}'\n" \
@@ -486,19 +487,14 @@ def main():
             f.write(code_part)
 
 
-    #
-    # mapData_str += mapData.convert(empty=False) + "\n #pragma endregion\n"
-    #
-    # if len(file) == 2:
-    #     file[1] = mapData_str
-    # else:
-    #     file.append(mapData_str)
-    #
-    # file_str = "".join(file)
-    #
-    # with open("../code/MapData.cpp", "w") as f:
-    #     f.write(file_str)
-    #     pass
+def main():
+    print("setting up...")
+
+    # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
+    mapData = MapData(img_files={"World1": [FieldA, [96, 72]], "World2": [FieldB, [144, 108]]}, fd_file=FieldFD)
+    mapData.save(10)
+
+    # write(mapData)
 
 
 if __name__ == '__main__':

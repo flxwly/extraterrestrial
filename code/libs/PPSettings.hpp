@@ -34,7 +34,6 @@
 
 
 // COLLECTIBLE
-#pragma region COLLECTIBLE
 #if DEBUG_CONSOLE_COLLECTIBLE <= 3
    #define COLLECTIBLE_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
@@ -50,10 +49,8 @@
 #else
    #define COLLECTIBLE_LOG(MESSAGE) {}
 #endif
-#pragma endregion
 
 // FIELD
-#pragma region FIELD
 #if DEBUG_CONSOLE_FIELD <= 3
    #define FIELD_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
@@ -69,10 +66,8 @@
 #else
    #define FIELD_LOG(MESSAGE) {}
 #endif
-#pragma endregion
 
 // NODE
-#pragma region NODE
 #if DEBUG_CONSOLE_NODE <= 3
    #define NODE_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
@@ -88,10 +83,8 @@
 #else
    #define NODE_LOG(MESSAGE) {}
 #endif
-#pragma endregion
 
 // PATHFINDER
-#pragma region PATHFINDER
 #if DEBUG_CONSOLE_PATHFINDER <= 3
    #define PATHFINDER_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
@@ -107,10 +100,8 @@
 #else
    #define PATHFINDER_LOG(MESSAGE) {}
 #endif
-#pragma endregion
 
 // ROBOT
-#pragma region ROBOT
 #if DEBUG_CONSOLE_ROBOT <= 3
    #define ROBOT_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
@@ -126,10 +117,8 @@
 #else
    #define ROBOT_LOG(MESSAGE) {}
 #endif
-#pragma endregion
 
 // MISC
-#pragma region MISC
 #if DEBUG_CONSOLE_MISC <= 3
    #define MISC_ERROR(MESSAGE) GENERAL_ERROR(MESSAGE)
 #else
@@ -145,8 +134,6 @@
 #else
    #define MISC_LOG(MESSAGE) {}
 #endif
-#pragma endregion
-
 
 /// ----------------------------- ///
 ///         robot settings

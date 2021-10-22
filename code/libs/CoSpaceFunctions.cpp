@@ -267,9 +267,11 @@ DLL_EXPORT void OnTimer() {
 			if (Out) {
 				InitialisingState = 2;
 			}
+            break;
 		case 2:
 			Setup();
 			InitialisingState = 3;
+            break;;
 		case 3:
 			// start loop
 			StartUpdateLoop();

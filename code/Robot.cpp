@@ -33,6 +33,10 @@ void Robot::Update() {
     Out[1] = wheels.r;
     Out[2] = led;
 
+    // Update remaining Map time
+
+    remainingMapTime = max((level == 0) ? GAME0_TIME - time : GAME1_TIME - time, 0);
+
     // Update cycle time
     lastCycle = std::chrono::steady_clock::now();
 }
@@ -47,7 +51,7 @@ void Robot::Game0() {
     // Add moving objects / things that are not in the map
     for (auto collision : ultraSonicContactPosition()) {
         if (collision) {
-            if (map0.getCharAtRealPos(collision) == MAP_EMPTY_TILE) {
+            if (map0.getMapAtRealPos(collision) == MAP_EMPTY_TILE) {
                 map0.spawnTempWall(collision, 1);
             }
         }
@@ -65,20 +69,23 @@ void Robot::Game1() {
     // Add moving objects / things that are not in the map
     for (auto collision : ultraSonicContactPosition()) {
         if (collision) {
-            if (map1.getCharAtRealPos(collision) == MAP_EMPTY_TILE) {
+            // TODO: Not working as intended
+            if (map1.getMapAtRealPos(collision) == MAP_EMPTY_TILE) {
                 map1.spawnTempWall(collision, 1);
             }
         }
     }
+
     // Remove temp walls that have been around for some time
-    map1.clearTempWall(2000);
+    map1.clearTempWall(10000);
 
 
     // Pathfinding
     if (path.empty()) {
 
         std::vector<Collectible *> vector = map1.getCollectibles();
-        path = map1.AStarFindPath(simPos, simPos + PVector(0, 30));
+        const int index = rand() % (vector.size() - 1);
+        path = map1.AStarFindPath(simPos, {vector[index]->pos.x / map1.getScale().x, vector[index]->pos.y * map1.getScale().y});
         if (path.empty())
             return;
     }
@@ -90,15 +97,22 @@ void Robot::Game1() {
 
     moveTo(path.back());
 
+
+
     debugger.clear();
-    debugger.paintBuffer(map1.getFlippedMap(), map1.getWidth(), 10, 10);
+    /*CHAR_INFO c = {' '};
+    for (int j = 0; j < map1.getHeight(); ++j) {
+        for (int i = 0; i < map1.getWidth(); ++i) {
+            c.Char.AsciiChar = map1.getMapAt(i, j);
+            //debugger.paintPixel(i + 10, (map1.getHeight() - j - 1) + 10, c);
+        }
+    }*/
+
     for (auto p : path) {
-        debugger.paintCircle(p.x, p.y, 2, UnicodeChar('A', FOREGROUND_GREEN));
+        debugger.paintRectangle(10 + p.x, 10 + p.y, 1, 1, UnicodeChar('P', FOREGROUND_GREEN));
     }
 
-    debugger.paintConvexPolygon({{10, 10}, {20, 10}, {20, 20}, {15, 20}}, UnicodeChar('Q', FOREGROUND_BLUE));
     debugger.printToConsole();
-
 }
 
 PVector Robot::collisionAvoidance(double maxForce) {
@@ -265,19 +279,50 @@ std::array<PVector, 3> Robot::ultraSonicContactPosition() {
     std::array<PVector, 3> array = {PVector(NAN, NAN), PVector(NAN, NAN), PVector(NAN, NAN)};
 
     if (ultraSonicSensors.l < 100) {
-        array[0] = simPos + geometry::angle2Vector((compass + ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
-                            (ultraSonicSensors.l + ULTRASONIC_SENSOR_DIST_TO_CORE);
+        array[0] = simPos +
+                   geometry::angle2Vector((compass + ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
+                   ultraSonicSensors.l;
     }
 
     if (ultraSonicSensors.f < 100) {
-        array[0] = simPos + geometry::angle2Vector((compass - 180) * M_PI / 180) *
+        array[1] = simPos + geometry::angle2Vector((compass - 180) * M_PI / 180) *
                             (ultraSonicSensors.f + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
     if (ultraSonicSensors.r < 100) {
-        array[0] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
+        array[2] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
                             (ultraSonicSensors.r + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
     return array;
+}
+
+std::array<int, 4> Robot::getDesiredLoad() {
+
+    Field *field = (level == 0) ? &map0 : &map1;
+    std::array<int, 4> desiredLoad = {};
+
+    const int reds = static_cast<int> (field->getCollectibles({0}).size());
+    const int cyans = static_cast<int> (field->getCollectibles({1}).size());
+    const int blacks = static_cast<int> (field->getCollectibles({2}).size());
+    const int supers = static_cast<int> (field->getCollectibles({3}).size());
+
+    // Max points run
+    if (supers >= 3 || remainingMapTime < 40) {
+
+        desiredLoad[3] = min(supers, 6);
+        desiredLoad[2] = min(blacks, 6 - desiredLoad[3]);
+        desiredLoad[1] = min(cyans, 6 - desiredLoad[3] - desiredLoad[2]);
+        desiredLoad[0] = min(reds, 6 - desiredLoad[3] - desiredLoad[2] - desiredLoad[1]);
+
+        return desiredLoad;
+    }
+
+
+    desiredLoad[3] = 0;
+    desiredLoad[0] = min(reds, 2);
+    desiredLoad[1] = min(cyans, 2);
+    desiredLoad[2] = min(blacks, 2);
+
+    return desiredLoad;
 }

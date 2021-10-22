@@ -1,42 +1,47 @@
 #include "ConsolePainter.hpp"
 
 
-ConsolePainter::ConsolePainter(const std::string &title) : coordBufSize{bufferWidth, bufferHeight}, coordBufCoord{0, 0},
-                                                      srcWriteRect{0, 0, bufferWidth - 1, bufferHeight - 1} {
+ConsolePainter::ConsolePainter(const std::string &title) : coordBufSize{initialBufferWidth, initialBufferHeight}, coordBufCoord{0, 0},
+                                                           srcWriteRect{0, 0, initialBufferWidth - 1, initialBufferHeight - 1} {
+
+    bufWidth = coordBufSize.X;
+    bufHeight = coordBufSize.Y;
 
     hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    hNewScreenBuffer = CreateConsoleScreenBuffer(
+    hScreenBuffer = CreateConsoleScreenBuffer(
             GENERIC_WRITE,
             0,
             NULL,                    // default security attributes
             CONSOLE_TEXTMODE_BUFFER,                // must be TEXTMODE
             NULL);                   // reserved; must be NULL
 
-    if (hNewScreenBuffer == INVALID_HANDLE_VALUE) {
+
+    if (hScreenBuffer == INVALID_HANDLE_VALUE) {
         printf("CreateConsoleScreenBuffer failed - (%d)\n", GetLastError());
         return;
     }
 
     for (auto &i : chiBuffer) {
         i.Char.UnicodeChar = NULL_CHAR;
-        i.Attributes = FOREGROUND_BLUE;
     }
 
     SetConsoleTitle(title.c_str());
-    SetConsoleScreenBufferSize(hNewScreenBuffer, coordBufSize);
-    SetConsoleWindowInfo(hNewScreenBuffer, TRUE, &srcWriteRect);
+    SetConsoleScreenBufferSize(hScreenBuffer, coordBufSize);
+    SetConsoleWindowInfo(hScreenBuffer, TRUE, &srcWriteRect);
 }
 
-void ConsolePainter::paintBuffer(std::string data, int width, int x, int y) {
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < data.length() / width; ++j) {
-            if (data.at(i + width * j) != NULL_CHAR and x + i < bufferWidth and j + y < bufferHeight) {
-                chiBuffer[x + i + (y + j) * bufferWidth].Char.UnicodeChar = data[i + j * width];
-                chiBuffer[x + i + (y + j) * bufferWidth].Attributes = BACKGROUND_RED;
+
+void ConsolePainter::paintBuffer(CHAR_INFO data[], COORD bufSize, int x, int y) {
+    for (int i = 0; i < bufSize.X; ++i) {
+        for (int j = 0; j < bufSize.Y; ++j) {
+            if (data[i + bufSize.X * j].Char.UnicodeChar != NULL_CHAR and x + i < coordBufSize.X and
+                j + y < coordBufSize.X) {
+                chiBuffer[x + i + (y + j) * coordBufSize.X] = data[i + j * bufSize.X];
             }
         }
     }
+
 }
 
 void ConsolePainter::printToConsole() {
@@ -46,57 +51,66 @@ void ConsolePainter::printToConsole() {
 
 
     WriteConsoleOutput(
-            hNewScreenBuffer, // screen buffer to write to
+            hScreenBuffer, // screen buffer to write to
             chiBuffer,        // buffer to copy from
             coordBufSize,     // col-row size of chiBuffer
             coordBufCoord,    // top left src cell in chiBuffer
             &srcWriteRect);
 
-    if (!SetConsoleActiveScreenBuffer(hNewScreenBuffer)) {
+    if (!SetConsoleActiveScreenBuffer(hScreenBuffer)) {
         printf("SetConsoleActiveScreenBuffer failed - (%d)\n", GetLastError());
         return;
     }
 }
 
-void ConsolePainter::clear(int x, int y) {
-    x = min(bufferWidth, x);
-    y = min(bufferHeight, y);
-    for (int i = 0; i < x; ++i) {
-        for (int j = 0; j < y; ++j) {
-            chiBuffer[i + j * bufferWidth].Char.UnicodeChar = '0';
-            chiBuffer[i + j * bufferWidth].Attributes = FOREGROUND_GREEN;
+void ConsolePainter::clear() {
+    for (int i = 0; i < bufWidth; ++i) {
+        for (int j = 0; j < bufHeight; ++j) {
+            chiBuffer[i + j * bufWidth].Char.UnicodeChar = ' ';
+            chiBuffer[i + j * bufWidth].Attributes = 0;
         }
     }
+}
+
+
+void ConsolePainter::paintPixel(int x, int y, CHAR_INFO charInfo) {
+    if (x >= bufWidth || y >= bufHeight || x < 0 || y < 0) {
+        throw out_of_range("(" + std::to_string(x) + ", " + std::to_string(y) + ") "
+                                                                                "is not in the dimensions of (" +
+                           std::to_string(bufWidth) + ", " + std::to_string(bufHeight) + ")");
+    }
+
+    chiBuffer[max((x, bufWidth), 0) + max(min(y, bufHeight), 0) * bufWidth] = charInfo;
 }
 
 void ConsolePainter::paintRectangle(int topLeftX, int topLeftY, int width, int height, CHAR_INFO charInfo) {
     topLeftX = max(topLeftX, 0);
     topLeftY = max(topLeftY, 0);
-    width = min(topLeftX + width, bufferWidth);
-    height = min(topLeftY + height, bufferHeight);
+    width = min(topLeftX + width, bufWidth);
+    height = min(topLeftY + height, bufHeight);
 
     for (int i = topLeftX; i < width; ++i) {
         for (int j = topLeftY; j < height; ++j) {
-            chiBuffer[i + j * bufferWidth] = charInfo;
+            chiBuffer[i + j * bufWidth] = charInfo;
         }
     }
 }
 
 void ConsolePainter::paintCircle(int centerX, int centerY, int radius, CHAR_INFO charInfo) {
-    int width = min(centerX + radius, bufferWidth);
-    int height = min(centerY + radius, bufferHeight);
+    int width = min(centerX + radius, bufWidth);
+    int height = min(centerY + radius, bufHeight);
 
     for (int i = max(centerX - radius, 0); i < width; ++i) {
         for (int j = max(centerY - radius, 0); j < height; ++j) {
             if ((i - centerX) * (i - centerX) + (j - centerY) * (j - centerY) < radius * radius) {
-                chiBuffer[i + j * bufferWidth] = charInfo;
+                chiBuffer[i + j * bufWidth] = charInfo;
             }
         }
     }
 }
 
 void ConsolePainter::paintConvexPolygon(std::vector<std::pair<int, int>> vertices, CHAR_INFO charInfo) {
-    int minY = bufferHeight;
+    int minY = bufHeight;
     int maxY = 0;
 
     for (auto vertex: vertices) {
@@ -107,11 +121,11 @@ void ConsolePainter::paintConvexPolygon(std::vector<std::pair<int, int>> vertice
         }
     }
     minY = max(minY - 1, 0);
-    maxY = min(maxY + 1, bufferHeight);
+    maxY = min(maxY + 1, bufHeight);
     vertices.push_back(vertices.front());
 
     std::pair<int, int> p1(0, minY);
-    std::pair<int, int> p2(bufferWidth - 1, minY);
+    std::pair<int, int> p2(bufWidth - 1, minY);
     std::pair<int, int> intersection(-1, -1);
     std::array<std::pair<int, int>, 2> intersections;
 
@@ -129,12 +143,12 @@ void ConsolePainter::paintConvexPolygon(std::vector<std::pair<int, int>> vertice
 
         switch (index) {
             case 1:
-                chiBuffer[intersections[0].first + j * bufferWidth] = charInfo;
+                chiBuffer[intersections[0].first + j * bufWidth] = charInfo;
                 break;
             case 2:
                 for (int i = min(intersections[0].first, intersections[1].first);
                      i < max(intersections[0].first, intersections[1].first); ++i) {
-                    chiBuffer[i + j * bufferWidth] = charInfo;
+                    chiBuffer[i + j * bufWidth] = charInfo;
                 }
                 break;
             default:
@@ -145,7 +159,8 @@ void ConsolePainter::paintConvexPolygon(std::vector<std::pair<int, int>> vertice
 }
 
 std::pair<int, int>
-ConsolePainter::lineLineIntersection(std::pair<int, int> p1, std::pair<int, int> p2, std::pair<int, int> p3, std::pair<int, int> p4) {
+ConsolePainter::lineLineIntersection(std::pair<int, int> p1, std::pair<int, int> p2, std::pair<int, int> p3,
+                                     std::pair<int, int> p4) {
     // Store the values for fast access and easy
 // equations-to-code conversion
     float x1 = p1.first, x2 = p2.first, x3 = p3.first, x4 = p4.first;
