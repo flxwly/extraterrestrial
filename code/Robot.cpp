@@ -17,7 +17,8 @@ void Robot::Update() {
     colorSensors.set(
             rgb2hsl({static_cast<float>(In[3]), static_cast<float>(In[4]), static_cast<float>(In[5])}),
             rgb2hsl({static_cast<float>(In[6]), static_cast<float>(In[7]), static_cast<float>(In[8])}));
-    compass = In[11];
+    int tm_state = In[11];
+    compass = In[12];
     time = In[13];
 
     // Update position
@@ -32,6 +33,20 @@ void Robot::Update() {
     Out[0] = wheels.l;
     Out[1] = wheels.r;
     Out[2] = led;
+
+#ifdef ROBOT_UPDATE_DUMB
+    ROBOT_LOG("Ultra sonic sensors: " << ultraSonicSensors.l << " | " << ultraSonicSensors.f << " | "
+                                      << ultraSonicSensors.r)
+    ROBOT_LOG(
+            "Color sensors: " << "\n\t\thue: " << colorSensors.r.h << " | " << colorSensors.l.h << "\n\t\tsaturation: "
+                              << colorSensors.r.s << " | " << colorSensors.l.s << "\n\t\tluminance: "
+                              << colorSensors.r.l << " | " << colorSensors.l.l)
+    ROBOT_LOG("Pos: " << simPos.x << " | " << simPos.y)
+    ROBOT_LOG("TM_STATE: " << tm_state)
+    ROBOT_LOG("Compass: " << compass)
+    ROBOT_LOG("Time: " << time)
+
+#endif
 
     // Update remaining Map time
 
@@ -49,7 +64,7 @@ void Robot::Game0() {
     ROBOT_LOG("Robot is running game0")
 
     // Add moving objects / things that are not in the map
-    for (auto collision : ultraSonicContactPosition()) {
+    for (auto collision: ultraSonicContactPosition()) {
         if (collision) {
             if (map0.getMapAtRealPos(collision) == MAP_EMPTY_TILE) {
                 map0.spawnTempWall(collision, 1);
@@ -60,14 +75,16 @@ void Robot::Game0() {
     map0.clearTempWall(4000);
 }
 
-std::vector<PVector> path = {};
-
 void Robot::Game1() {
 
     ROBOT_LOG("Robot is running game1")
+    wheels.set(0, 0);
     led = 0;
+
+
+    ROBOT_LOG("Temp walls")
     // Add moving objects / things that are not in the map
-    for (auto collision : ultraSonicContactPosition()) {
+    for (auto collision: ultraSonicContactPosition()) {
         if (collision) {
             // TODO: Not working as intended
             if (map1.getMapAtRealPos(collision) == MAP_EMPTY_TILE) {
@@ -77,42 +94,44 @@ void Robot::Game1() {
     }
 
     // Remove temp walls that have been around for some time
-    map1.clearTempWall(10000);
+    map1.clearTempWall(2000);
 
 
     // Pathfinding
-    if (path.empty()) {
+    if (path.empty() || geometry::dist(path.back(), simPos) < 5) {
+        ROBOT_LOG("Running path finding")
 
-        std::vector<Collectible *> vector = map1.getCollectibles();
-        const int index = rand() % (vector.size() - 1);
-        path = map1.AStarFindPath(simPos, {vector[index]->pos.x / map1.getScale().x, vector[index]->pos.y * map1.getScale().y});
-        if (path.empty())
-            return;
-    }
+        std::vector<Collectible *> collectibles = getCollectiblePath({2, 2, 2, 0}, map1.getCollectibles(), false);
+        path = map1.AStarFindPath(simPos, collectibles.front()->pos);
 
-
-    if (geometry::dist(path.back(), simPos) < 5) {
-        path.pop_back();
-    }
-
-    moveTo(path.back());
-
-
-
-    debugger.clear();
-    /*CHAR_INFO c = {' '};
-    for (int j = 0; j < map1.getHeight(); ++j) {
-        for (int i = 0; i < map1.getWidth(); ++i) {
-            c.Char.AsciiChar = map1.getMapAt(i, j);
-            //debugger.paintPixel(i + 10, (map1.getHeight() - j - 1) + 10, c);
+        //path = map1.AStarFindPath(simPos, collectibles.back()->pos);
+        ROBOT_LOG("PATH: ")
+        for (auto p: path) {
+            ROBOT_LOG("\t" + p.str())
         }
-    }*/
-
-    for (auto p : path) {
-        debugger.paintRectangle(10 + p.x, 10 + p.y, 1, 1, UnicodeChar('P', FOREGROUND_GREEN));
+    }
+    if (path.empty()) {
+        ROBOT_WARNING("No path")
+        wheels.set(0, 0);
+        return;
     }
 
-    debugger.printToConsole();
+    followPath(path);
+
+
+//    moveTo(path.back());
+//    if (geometry::dist(path.back(), simPos) < 5) {
+//        path.pop_back();
+//    }
+
+
+//    debugger.clear();
+//    debugger.paintBuffer(map1.getFlippedMap(), map1.getWidth(), 10, 10);
+//    for (auto p : path) {
+//        debugger.paintCircle(p.x, p.y, 2, UnicodeChar('A', FOREGROUND_BLUE));
+//    }
+//    debugger.printToConsole();
+
 }
 
 PVector Robot::collisionAvoidance(double maxForce) {
@@ -169,11 +188,11 @@ PVector Robot::getVelocity() {
     return vel;
 }
 
-void Robot::moveTo(PVector position) {
+void Robot::moveTo(PVector position, double speed) {
 
     double angleDif = std::fmod(geometry::vector2Angle(simPos - position) * 180 / M_PI - compass + 90, 360);
 
-    ROBOT_LOG("Angle dif: " << angleDif)
+    ROBOT_LOG("Angle dif: " << angleDif << " | compass: " << compass)
 
     if (angleDif > 180) {
         angleDif -= 360;
@@ -183,7 +202,7 @@ void Robot::moveTo(PVector position) {
 
 
     int action = -1;
-    if (std::fabs(angleDif) < 5) {
+    if (std::fabs(angleDif) < 7.5) {
         action = 0;
     } else if (std::fabs(angleDif) < 15) {
         action = 1;
@@ -201,7 +220,7 @@ void Robot::moveTo(PVector position) {
 
     const int div = (isSwamp(colorSensors.l) || isSwamp(colorSensors.r)) ? 1 : 16;
 
-    double magnitude = std::pow(2, std::min((position - simPos).getMag() / 10, 4.0)) / div;
+    double magnitude = std::pow(2, speed) / div;
 
     ROBOT_LOG("Magnitude: " << magnitude)
 
@@ -256,17 +275,122 @@ void Robot::moveTo(PVector position) {
 
 }
 
-std::vector<Collectible *> Robot::getCollectiblePath(const CollectibleLoad &desiredLoad, bool finishOnDeposit) {
+void Robot::followPath(std::vector<PVector> local_path) {
+    // Predict position 50 (arbitrary choice) frames ahead
+    // This could be based on speed
+    PVector predictpos = simPos + getVelocity().setMag(10);
 
-    const double power = 5;
-    const int agents = 0;
+    // Now we must find the normal to the local_path from the predicted position
+    // We look at the normal for each line segment and pick out the closest one
+
+    PVector target;
+    double worldRecord = INFINITY;  // Start with a very high record distance that can easily be beaten
+
+    // Loop through all points of the local_path
+    for (int i = 0; i < local_path.size() - 1; i++) {
+
+        // --------------
+
+        // Look at a line segment
+        PVector a = local_path.at(i);
+        PVector b = local_path.at(i + 1);
+
+        // Vector from a to b
+        PVector ab = (b - a);
+        ab.normalize();
+        PVector normalPoint = a + (ab * PVector::dot(predictpos - a, ab));
+
+        // --------------
+
+        // Rotate the line segment by 90° to get an orthogonal line to the segment
+        ab.rotate(M_PI / 2);
+
+        if (geometry::isLeft(a, a + ab, normalPoint) || !geometry::isLeft(b, b + ab, normalPoint)) {
+            // This is something of a hacky solution, but if it's not within the line segment
+            // consider the normal to just be the end of the line segment (point b)
+            normalPoint = b;
+        }
+
+        // How far away are we from the local_path?
+        double distance = geometry::dist(predictpos, normalPoint);
+        // Did we beat the record and find the closest line segment?
+        if (distance < worldRecord) {
+            worldRecord = distance;
+
+            // Look at the direction of the line segment so we can seek a little bit ahead of the normal
+            PVector dir = b - a;
+
+            // This is an oversimplification
+            // TODO: Should be based on distance to local_path & velocity
+            dir.setMag(10);
+            target = normalPoint;
+            target += dir;
+        }
+    }
+
+    if (target) {
+        if (geometry::dist(target, local_path.back()) < 5) {
+            moveTo(target, 1);
+        } else {
+            moveTo(target, 4);
+        }
+    } else {
+        ROBOT_ERROR("No target for local_path following")
+        wheels.set(0, 0);
+    }
+}
+
+std::vector<Collectible *> Robot::getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles, bool finishOnDeposit) {
+
+    // the point path
+    std::vector<Collectible *> chosenCollectibles = {};
+    Collectible *curCollectible = nullptr;
+
+    // start and end position of one point path segment
+    PVector start = simPos;
+
+    // number of objects that need to be added to the point path
+    int num = -static_cast<int> (loadedCollectibles.num());
+    for (auto item: desiredLoad) {
+        num += item;
+    }
 
 
-    // TODO: Add field pointers
-    Field *field = (level == 0) ? nullptr : nullptr;
+    // copy of loaded objects array that can be modified
+    auto tLoadedObjects = loadedCollectibles;
 
+    // add a certain number of objects and super objects to the point path
+    for (unsigned int iter = 0; iter < num; iter++) {
+        unsigned int color = 0;
+        double dist = INFINITY;
 
-    return std::vector<Collectible *>();
+        // ------------- objects [0 - red, 1 - cyan, 2 - black, 3 - super] --------------------
+        for (unsigned int i = 0; i < 4; ++i) {
+            if (tLoadedObjects.getColor(i).size() <desiredLoad.at(i)) {
+                for (auto collectible : collectibles) {
+                    if ((geometry::dist(start, collectible->pos) < dist) && collectible->state != 2
+                        && std::find(collectibles.begin(), collectibles.end(), collectible) == collectibles.end()) {
+                        curCollectible = collectible;
+                        dist = geometry::dist(start, collectible->pos);
+                    }
+                }
+            }
+        }
+
+        // -------------- add object / super object to point path ----------------
+        if (curCollectible) {
+            start = curCollectible->pos;
+            chosenCollectibles.push_back(curCollectible);
+            tLoadedObjects.add(curCollectible);
+
+            ROBOT_LOG("Added Collectible at " << curCollectible->pos << " to collectible path")
+
+        } else {
+            return chosenCollectibles;
+        }
+
+    }
+    return chosenCollectibles;
 }
 
 void Robot::Teleport() {

@@ -91,6 +91,8 @@ public:
     */
     PVector round();
 
+    static double dot(PVector v1, PVector v2);
+
     /** rounds the coordinates of a given pVector
      *
      * @param pVector the PVector the coordinates should be rounded of

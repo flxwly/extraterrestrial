@@ -10,14 +10,16 @@
 /// define COLOR_LOGGING to enable color logging to console
 //#define COLOR_LOGGING
 
+/// define ROBOT_UPDATE_DUMB to output all in and out vars of the robot
+// #define ROBOT_UPDATE_DUMB
+
 #define DEBUG_CONSOLE_COLLECTIBLE 2
 
 #define DEBUG_CONSOLE_FIELD 2
-
 #define DEBUG_CONSOLE_NODE 2
-#define DEBUG_CONSOLE_PATHFINDER 2
 
-#define DEBUG_CONSOLE_ROBOT 2
+#define DEBUG_CONSOLE_PATHFINDER 1
+#define DEBUG_CONSOLE_ROBOT 1
 
 #define DEBUG_CONSOLE_MISC 2
 
