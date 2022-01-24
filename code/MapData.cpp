@@ -279,6 +279,7 @@ std::vector<PVector> Field::AStarFindPath(PVector start, PVector end) {
                             }
                             nested_break:;
                         }
+                        path.push_back(start);
                         return path;
 
                     }

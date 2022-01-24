@@ -60,6 +60,21 @@ public:
         return _num;
     }
 
+    std::vector<Collectible *> getColor(unsigned int color) {
+        switch (color) {
+            default:
+                return {};
+            case 0:
+                return _load[0];
+            case 1:
+                return _load[1];
+            case 2:
+                return _load[2];
+            case 3:
+                return _load[3];
+        }
+    }
+
     unsigned int value() {
         return _value + 90 * rgb();
     }
@@ -136,8 +151,9 @@ public:
             map1 = Field(World2MAP_WIDTH, World2MAP_HEIGHT, static_cast<double > (World2MAP_WIDTH) / REAL_GAME1MAP_WIDTH,
                          static_cast<double > (World2MAP_HEIGHT) / REAL_GAME1MAP_HEIGHT, World2MAP, World2DEPOSITS,
                          World2COLLECTIBLES);
+    std::vector<PVector> path;
 
-    ConsolePainter debugger = ConsolePainter("Debug");
+    //ConsolePainter debugger = ConsolePainter("Debug");
 
     std::chrono::time_point<std::chrono::steady_clock> lastCycle;
 
@@ -177,14 +193,17 @@ public:
      * @param finishOnDeposit Whether the path should end on a deposit or not
      * @return a path of pointers to collectibles
      */
-    std::vector<Collectible *> getCollectiblePath(const CollectibleLoad &desiredLoad, bool finishOnDeposit);
+    std::vector<Collectible *> getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles, bool finishOnDeposit);
 
 
-    /*! Let's the robot move towards a position
+    /*! Lets the robot move towards a position
      *
      * @param position the position the robot should move to
+     * @param speed
      */
-    void moveTo(PVector position);
+    void moveTo(PVector position, double speed);
+
+    void followPath(std::vector<PVector> local_path);
 
     std::array<PVector, 3> ultraSonicContactPosition();
 };
