@@ -394,6 +394,10 @@ double geometry::distToLine(PVector p1, PVector p2, PVector p0) {
     return distToLine(p1.x, p1.y, p2.x, p2.y, p0.x, p0.y);
 }
 
+bool geometry::isInside(PVector point, PVector min, PVector max) {
+    return min.x <= point.x && point.x < max.x && min.y <= point.y && point.y < max.y;
+}
+
 
 
 

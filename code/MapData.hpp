@@ -207,6 +207,8 @@ namespace geometry {
     double vector2Angle(PVector v);
 
     double vector2Angle(double x, double y);
+
+    bool isInside(PVector point, PVector min, PVector max);
 }
 
 

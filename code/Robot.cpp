@@ -86,10 +86,16 @@ void Robot::Game1() {
     // Add moving objects / things that are not in the map
     for (auto collision: ultraSonicContactPosition()) {
         if (collision) {
-            // TODO: Not working as intended
-            if (map1.getMapAtRealPos(collision) == MAP_EMPTY_TILE) {
-                map1.spawnTempWall(collision, 1);
+
+            if (0 <= collision.x && collision.x < map1.getWidth() * map1.getScale().x
+                && 0 <= collision.y && collision.y < map1.getHeight() * map1.getScale().y) {
+                if (map1.getMapAtRealPos(collision) == MAP_EMPTY_TILE) {
+                    map1.spawnTempWall(collision, 1);
+                }
+            } else {
+                ROBOT_WARNING("Collision is out of bounds")
             }
+
         }
     }
 
@@ -101,8 +107,13 @@ void Robot::Game1() {
     if (path.empty() || geometry::dist(path.back(), simPos) < 5) {
         ROBOT_LOG("Running path finding")
 
-        std::vector<Collectible *> collectibles = getCollectiblePath({2, 2, 2, 0}, map1.getCollectibles(), false);
-        path = map1.AStarFindPath(simPos, collectibles.front()->pos);
+        std::vector<Collectible *> collectibles = getCollectiblePath(getDesiredLoad(), map1.getCollectibles(), false);
+        if (collectibles.empty()) {
+            ROBOT_ERROR("No Collectible Path found!")
+        } else {
+            path = map1.AStarFindPath(simPos, collectibles.front()->pos);
+        }
+
 
         //path = map1.AStarFindPath(simPos, collectibles.back()->pos);
         ROBOT_LOG("PATH: ")
@@ -340,11 +351,12 @@ void Robot::followPath(std::vector<PVector> local_path) {
     }
 }
 
-std::vector<Collectible *> Robot::getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles, bool finishOnDeposit) {
+std::vector<Collectible *>
+Robot::getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles,
+                          bool finishOnDeposit) {
 
     // the point path
     std::vector<Collectible *> chosenCollectibles = {};
-    Collectible *curCollectible = nullptr;
 
     // start and end position of one point path segment
     PVector start = simPos;
@@ -352,29 +364,47 @@ std::vector<Collectible *> Robot::getCollectiblePath(std::array<unsigned int, 4>
     // number of objects that need to be added to the point path
     int num = -static_cast<int> (loadedCollectibles.num());
     for (auto item: desiredLoad) {
-        num += item;
+        num += static_cast<int>(item);
     }
 
+    ROBOT_LOG("Collectibles to add: " << num)
 
     // copy of loaded objects array that can be modified
     auto tLoadedObjects = loadedCollectibles;
 
     // add a certain number of objects and super objects to the point path
     for (unsigned int iter = 0; iter < num; iter++) {
+        Collectible *curCollectible = nullptr;
         unsigned int color = 0;
         double dist = INFINITY;
 
         // ------------- objects [0 - red, 1 - cyan, 2 - black, 3 - super] --------------------
         for (unsigned int i = 0; i < 4; ++i) {
-            if (tLoadedObjects.getColor(i).size() <desiredLoad.at(i)) {
-                for (auto collectible : collectibles) {
-                    if ((geometry::dist(start, collectible->pos) < dist) && collectible->state != 2
-                        && std::find(collectibles.begin(), collectibles.end(), collectible) == collectibles.end()) {
-                        curCollectible = collectible;
-                        dist = geometry::dist(start, collectible->pos);
-                    }
+
+            // If there are already enough collectibles of the color added
+            if (tLoadedObjects.getColor(i).size() >= desiredLoad.at(i)) {
+                continue;
+            }
+
+            // loop through all collectibles
+            for (Collectible *collectible: collectibles) {
+
+                // Find the closest to the start location or the last collectible
+                // that hasn't been collected already
+                if (geometry::dist(start, collectible->pos) >= dist || collectible->state == 2) {
+                    continue;
+                }
+
+                // It should not be chosen already
+                if (std::find(chosenCollectibles.begin(), chosenCollectibles.end(), collectible) ==
+                    chosenCollectibles.end()) {
+
+                    // update the curCollectible pointer and the dist
+                    curCollectible = collectible;
+                    dist = geometry::dist(start, curCollectible->pos);
                 }
             }
+
         }
 
         // -------------- add object / super object to point path ----------------
@@ -386,6 +416,7 @@ std::vector<Collectible *> Robot::getCollectiblePath(std::array<unsigned int, 4>
             ROBOT_LOG("Added Collectible at " << curCollectible->pos << " to collectible path")
 
         } else {
+            ROBOT_WARNING("Got nullptr")
             return chosenCollectibles;
         }
 
@@ -398,43 +429,44 @@ void Robot::Teleport() {
     loadedCollectibles.clear();
 }
 
+// TODO: Not working as intended
 std::array<PVector, 3> Robot::ultraSonicContactPosition() {
 
     std::array<PVector, 3> array = {PVector(NAN, NAN), PVector(NAN, NAN), PVector(NAN, NAN)};
 
     if (ultraSonicSensors.l < 100) {
         array[0] = simPos +
-                   geometry::angle2Vector((compass + ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
+                   geometry::angle2Vector((compass + ULTRASONIC_SENSOR_ANGLE_OFFSET) * M_PI / 180) *
                    ultraSonicSensors.l;
     }
 
     if (ultraSonicSensors.f < 100) {
-        array[1] = simPos + geometry::angle2Vector((compass - 180) * M_PI / 180) *
+        array[1] = simPos + geometry::angle2Vector((compass) * M_PI / 180) *
                             (ultraSonicSensors.f + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
     if (ultraSonicSensors.r < 100) {
-        array[2] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
+        array[2] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET) * M_PI / 180) *
                             (ultraSonicSensors.r + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
     return array;
 }
 
-std::array<int, 4> Robot::getDesiredLoad() {
+std::array<unsigned int, 4> Robot::getDesiredLoad() {
 
     Field *field = (level == 0) ? &map0 : &map1;
-    std::array<int, 4> desiredLoad = {};
+    std::array<unsigned int, 4> desiredLoad = {};
 
-    const int reds = static_cast<int> (field->getCollectibles({0}).size());
-    const int cyans = static_cast<int> (field->getCollectibles({1}).size());
-    const int blacks = static_cast<int> (field->getCollectibles({2}).size());
-    const int supers = static_cast<int> (field->getCollectibles({3}).size());
+    const unsigned int reds = (field->getCollectibles({0}).size());
+    const unsigned int cyans = (field->getCollectibles({1}).size());
+    const unsigned int blacks = (field->getCollectibles({2}).size());
+    const unsigned int supers = (field->getCollectibles({3}).size());
 
     // Max points run
     if (supers >= 3 || remainingMapTime < 40) {
 
-        desiredLoad[3] = min(supers, 6);
+        desiredLoad[3] = min(supers, static_cast<unsigned int> (6));
         desiredLoad[2] = min(blacks, 6 - desiredLoad[3]);
         desiredLoad[1] = min(cyans, 6 - desiredLoad[3] - desiredLoad[2]);
         desiredLoad[0] = min(reds, 6 - desiredLoad[3] - desiredLoad[2] - desiredLoad[1]);
@@ -444,9 +476,9 @@ std::array<int, 4> Robot::getDesiredLoad() {
 
 
     desiredLoad[3] = 0;
-    desiredLoad[0] = min(reds, 2);
-    desiredLoad[1] = min(cyans, 2);
-    desiredLoad[2] = min(blacks, 2);
+    desiredLoad[0] = min(reds, static_cast<unsigned int> (2));
+    desiredLoad[1] = min(cyans, static_cast<unsigned int> (2));
+    desiredLoad[2] = min(blacks, static_cast<unsigned int> (2));
 
     return desiredLoad;
 }

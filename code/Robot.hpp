@@ -197,7 +197,7 @@ public:
      */
     std::vector<Collectible *> getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles, bool finishOnDeposit);
 
-    std::array<int, 4> getDesiredLoad();
+    std::array<unsigned int, 4> getDesiredLoad();
 
 
     /*! Lets the robot move towards a position
