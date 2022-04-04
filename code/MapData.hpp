@@ -152,7 +152,10 @@ public:
     std::vector<PVector> getDeposits();
 
     /// Returns the value as char of a point in the map, no boundary check, real world coordinates;
-    char getCharAtRealPos(PVector pos);
+    char getMapAtRealPos(PVector pos);
+
+    /// Returns the char at map width / height, map coordinates;
+    char getMapAt(int x, int y);
 
 
     [[nodiscard]] int idx(int x, int y) const;
@@ -180,9 +183,6 @@ private:
 
     /// the x and y scale to convert coordinates from objects map to the real world coordinates
     PVector scale_;
-
-    /// Returns the char at map width / height, map coordinates;
-    char getCharAt(int x, int y);
 };
 
 
@@ -207,6 +207,8 @@ namespace geometry {
     double vector2Angle(PVector v);
 
     double vector2Angle(double x, double y);
+
+    bool isInside(PVector point, PVector min, PVector max);
 }
 
 

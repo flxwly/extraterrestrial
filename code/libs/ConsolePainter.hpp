@@ -10,19 +10,20 @@
 #include "PVector.hpp"
 
 
-#define NULL_CHAR '0'
-#define bufferWidth 200
-#define bufferHeight 200
+#define NULL_CHAR ' '
+#define initialBufferWidth 200
+#define initialBufferHeight 150
 #define maxPrintInterval 100
 
-#define UnicodeChar(_CHAR_, _ATTRIBUTE_) {(_CHAR_), (_ATTRIBUTE_)}
+#define UnicodeChar(_CHAR_, _ATTRIBUTE_) CHAR_INFO{static_cast<WCHAR>(_CHAR_), (_ATTRIBUTE_)}
 
 class ConsolePainter {
 
-    HANDLE hStdout, hNewScreenBuffer;
-    CHAR_INFO chiBuffer[bufferHeight * bufferWidth];
+    HANDLE hStdout, hScreenBuffer;
+    CHAR_INFO chiBuffer[initialBufferWidth * initialBufferHeight];
     SMALL_RECT srcWriteRect;
     COORD coordBufSize;
+    int bufWidth, bufHeight;
     COORD coordBufCoord;
 
     std::chrono::time_point<std::chrono::steady_clock> lastPrint;
@@ -30,12 +31,17 @@ class ConsolePainter {
 public:
     explicit ConsolePainter(const std::string& title = "Console");
 
-    void clear(int x = bufferWidth, int y = bufferHeight);
+    // TODO: Might implement it later
+    void resize(int width, int height);
+
+
+    void clear();
+    void paintPixel(int x, int y, CHAR_INFO charInfo);
     void paintRectangle(int topLeftX, int topLeftY, int width, int height, CHAR_INFO charInfo);
     void paintCircle(int centerX, int centerY, int radius, CHAR_INFO charInfo);
     void paintConvexPolygon(std::vector<std::pair<int, int>> vertices, CHAR_INFO charInfo);
+    void paintBuffer(CHAR_INFO data[], COORD bufSize, int x, int y);
 
-    void paintBuffer(std::string data, int width, int x, int y);
 
     void printToConsole();
 

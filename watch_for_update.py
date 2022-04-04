@@ -22,6 +22,7 @@ def compile_code(out_path, file_name, optimisation_level, more_warnings):
     file_list = glob.glob(code_path + "**/*.*", recursive=True)
 
     command = "g++" + " -shared -static "
+
     if 0.5 < optimisation_level < 3.5:
         print("Using optimisation level: " + str(optimisation_level))
         command += "-O" + str(int(optimisation_level)) + " " + \

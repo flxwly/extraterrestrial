@@ -11,6 +11,7 @@ Robot *robot = nullptr;
 
 void Setup() {
     // Clear console
+    //freopen("./log/std.txt", "w+", stdout);
     system("cls");
 
     MISC_LOG("Running Setup");

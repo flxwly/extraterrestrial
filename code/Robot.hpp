@@ -155,9 +155,11 @@ public:
 
     ConsolePainter debugger = ConsolePainter("Debug");
 
+    int remainingMapTime = 0;
     std::chrono::time_point<std::chrono::steady_clock> lastCycle;
     std::chrono::time_point<std::chrono::steady_clock> timeStartedCollecting;
     std::chrono::time_point<std::chrono::steady_clock> timeStartedDepositing;
+
 
     /*! Constructs a Robot object
      *
@@ -201,6 +203,8 @@ public:
      */
     std::vector<Collectible *> getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles, bool finishOnDeposit);
 
+    std::array<unsigned int, 4> getDesiredLoad();
+
 
     /*! Lets the robot move towards a position
      *
@@ -212,6 +216,8 @@ public:
     void followPath(std::vector<PVector> local_path);
 
     std::array<PVector, 3> ultraSonicContactPosition();
+
+
 };
 
 

@@ -97,11 +97,17 @@ void Robot::Game1() {
         ROBOT_LOG("Running path finding")
 
         std::vector<Collectible *> collectibles = getCollectiblePath({2, 2, 2, 0}, map1.getCollectibles(), false);
+        if (collectibles.empty()) {
+            ROBOT_ERROR("No Collectible Path found!")
+            return;
+        }
+
         collectibles.front()->visited += 1;
         if (collectibles.front()->visited >= 20) {
             collectibles.front()->state = 2;
         }
         path = map1.AStarFindPath(simPos, collectibles.front()->pos);
+
 
         ROBOT_LOG("PATH: ")
         for (auto p: path) {
@@ -145,7 +151,33 @@ void Robot::Game1() {
 
 
 std::array<int, 4> Robot::getDesiredLoad() {
-    return {2, 2, 2, 0};
+
+    Field *field = (level == 0) ? &map0 : &map1;
+    std::array<int, 4> desiredLoad = {};
+
+    const int reds = static_cast<int>(field->getCollectibles({0}).size());
+    const int cyans = static_cast<int>(field->getCollectibles({1}).size());
+    const int blacks = static_cast<int>(field->getCollectibles({2}).size());
+    const int supers = static_cast<int>(field->getCollectibles({3}).size());
+
+    // Max points run
+    if (supers >= 3 || remainingMapTime < 40) {
+
+        desiredLoad[3] = min(supers, 6);
+        desiredLoad[2] = min(blacks, 6 - desiredLoad[3]);
+        desiredLoad[1] = min(cyans, 6 - desiredLoad[3] - desiredLoad[2]);
+        desiredLoad[0] = min(reds, 6 - desiredLoad[3] - desiredLoad[2] - desiredLoad[1]);
+
+        return desiredLoad;
+    }
+
+
+    desiredLoad[3] = 0;
+    desiredLoad[0] = min(reds, 2);
+    desiredLoad[1] = min(cyans, 2);
+    desiredLoad[2] = min(blacks, 2);
+
+    return desiredLoad;
 }
 
 bool Robot::shouldCollect() {
@@ -413,7 +445,6 @@ void Robot::followPath(std::vector<PVector> local_path) {
         }
     }
 */
-
     if (target) {
         const double dist = geometry::dist(target, simPos);
         if (dist < 5) {
@@ -448,6 +479,7 @@ Robot::getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<C
         num += item;
     }
 
+    ROBOT_LOG("Collectibles to add: " << num)
 
     // copy of loaded objects array that can be modified
     auto tLoadedObjects = loadedCollectibles;
@@ -455,27 +487,35 @@ Robot::getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<C
     // add a certain number of objects and super objects to the point path
     for (unsigned int iter = 0; iter < num; iter++) {
         unsigned int color = 0;
-        double dist = INT_MAX;
+        double dist = INFINITY;
 
         // ------------- objects [0 - red, 1 - cyan, 2 - black, 3 - super] --------------------
         for (unsigned int i = 0; i < 4; ++i) {
-            if (tLoadedObjects.getColor(i).size() < desiredLoad.at(i)) {
-                for (auto collectible: collectibles) {
-                    const double d = geometry::dist(start, collectible->pos);
 
-                    const bool visitedCondition = !curCollectible ||
-                                                  (curCollectible->visited > collectible->visited + 2 &&
-                                                   curCollectible->state != 1);
-                    const bool distCondition = d < dist;
+            // If there are already enough collectibles of the color added
+            if (tLoadedObjects.getColor(i).size() >= desiredLoad.at(i)) {
+                continue;
+            }
+            // loop through all collectibles
+            for (auto collectible: collectibles) {
+                const double d = geometry::dist(start, collectible->pos);
 
-                    if ((distCondition || visitedCondition) && collectible->state != 2) {
+                const bool visitedCondition = !curCollectible ||
+                                              (curCollectible->visited > collectible->visited + 2 &&
+                                               curCollectible->state != 1);
+                const bool distCondition = d < dist;
 
-                        if (std::find(chosenCollectibles.begin(), chosenCollectibles.end(), collectible) ==
-                            chosenCollectibles.end()) {
-                            curCollectible = collectible;
-                            dist = d;
-                        }
-                    }
+                // Find the closest to the start location or the last collectible
+                // that hasn't been collected already
+                if (!(distCondition || visitedCondition) || collectible->state == 2) {
+                    continue;
+                }
+                // It should not be chosen already
+                if (std::find(chosenCollectibles.begin(), chosenCollectibles.end(), collectible) ==
+                    chosenCollectibles.end()) {
+                    // update the curCollectible pointer and the dist
+                    curCollectible = collectible;
+                    dist = d;
                 }
             }
         }
@@ -486,9 +526,10 @@ Robot::getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<C
             chosenCollectibles.push_back(curCollectible);
             tLoadedObjects.add(curCollectible);
 
-            ROBOT_ERROR("Added Collectible at " << curCollectible->pos << " to collectible path")
+            ROBOT_LOG("Added Collectible at " << curCollectible->pos << " to collectible path")
 
         } else {
+            ROBOT_WARNING("Got nullptr")
             return chosenCollectibles;
         }
 
@@ -511,12 +552,12 @@ std::array<PVector, 3> Robot::ultraSonicContactPosition() {
     }
 
     if (ultraSonicSensors.f < 100) {
-        array[0] = simPos + geometry::angle2Vector((compass - 180) * M_PI / 180) *
+        array[1] = simPos + geometry::angle2Vector((compass - 180) * M_PI / 180) *
                             (ultraSonicSensors.f + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
     if (ultraSonicSensors.r < 100) {
-        array[0] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
+        array[2] = simPos + geometry::angle2Vector((compass - ULTRASONIC_SENSOR_ANGLE_OFFSET - 90) * M_PI / 180) *
                             (ultraSonicSensors.r + ULTRASONIC_SENSOR_DIST_TO_CORE);
     }
 
