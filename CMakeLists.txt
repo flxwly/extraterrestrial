@@ -7,6 +7,8 @@ project(Extraterrestrial)
 #set the C++ standard to be used
 set(CMAKE_CXX_STANDARD 20)
 
+add_compile_definitions(RUNNING_WITHOUT_COSPACE)
+
 #set source files
 set(SOURCE_FILES
         code/main.cpp

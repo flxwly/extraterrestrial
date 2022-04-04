@@ -196,9 +196,9 @@ DLL_EXPORT void GetCommand(int *AI_OUT) {
 	Out = AI_OUT;
 }
 
-volatile int *Out = nullptr;
 volatile int *In = nullptr;
-std::thread *Thread = nullptr;
+volatile int *Out = nullptr;
+std::thread *programThread = nullptr;
 int InitialisingState = 0;
 bool RunUpdateLoop = true;
 
@@ -238,22 +238,21 @@ void Update() {
 
 void EndUpdateLoop() {
     RunUpdateLoop = false;
-    if (Thread) {
-        Thread->join();
+    if (programThread) {
+        programThread->join();
     }
 }
 
 void StartUpdateLoop() {
-    if (Thread) {
-        if (!Thread->joinable()) {
+    if (programThread) {
+        if (!programThread->joinable()) {
             MISC_ERROR("The thread has not been joined yet")
             return;
         }
     }
     RunUpdateLoop = true;
     static std::thread t(&UpdateLoop);
-    Thread = &t;
-
+    programThread = &t;
 }
 
 DLL_EXPORT void OnTimer() {

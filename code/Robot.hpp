@@ -153,9 +153,11 @@ public:
                          World2COLLECTIBLES);
     std::vector<PVector> path;
 
-    //ConsolePainter debugger = ConsolePainter("Debug");
+    ConsolePainter debugger = ConsolePainter("Debug");
 
     std::chrono::time_point<std::chrono::steady_clock> lastCycle;
+    std::chrono::time_point<std::chrono::steady_clock> timeStartedCollecting;
+    std::chrono::time_point<std::chrono::steady_clock> timeStartedDepositing;
 
     /*! Constructs a Robot object
      *
@@ -173,6 +175,10 @@ public:
     void Game1();
 
     void Teleport();
+
+    std::array<int, 4> getDesiredLoad();
+    bool shouldCollect();
+    int collect();
 
     /*! Calculates the current velocity of the robot
      *

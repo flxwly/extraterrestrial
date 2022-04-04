@@ -105,7 +105,7 @@ DLL_EXPORT void OnTimer();
 extern volatile int *In;
 extern volatile int *Out;
 
-extern std::thread *Thread;
+extern std::thread *programThread;
 extern bool RunUpdateLoop;
 
 extern void UpdateLoop();

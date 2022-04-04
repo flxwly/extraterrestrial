@@ -6,6 +6,7 @@ const int Wheels::maxVel;
 Robot::Robot(volatile int *pIn, volatile int *pOut) {
     In = pIn;
     Out = pOut;
+    simPos.set(0, 0);
 }
 
 void Robot::Update() {
@@ -96,21 +97,35 @@ void Robot::Game1() {
         ROBOT_LOG("Running path finding")
 
         std::vector<Collectible *> collectibles = getCollectiblePath({2, 2, 2, 0}, map1.getCollectibles(), false);
+        collectibles.front()->visited += 1;
+        if (collectibles.front()->visited >= 20) {
+            collectibles.front()->state = 2;
+        }
         path = map1.AStarFindPath(simPos, collectibles.front()->pos);
 
-        //path = map1.AStarFindPath(simPos, collectibles.back()->pos);
         ROBOT_LOG("PATH: ")
         for (auto p: path) {
             ROBOT_LOG("\t" + p.str())
         }
     }
+
     if (path.empty()) {
         ROBOT_WARNING("No path")
         wheels.set(0, 0);
         return;
     }
 
-    followPath(path);
+    if (shouldCollect()) {
+        const int color = collect();
+        auto collectible = map1.getCollectible(simPos, compass, 2, color);
+        if (collectible) {
+            collectible->state = 2;
+            loadedCollectibles.add(collectible);
+        }
+
+    } else {
+        followPath(path);
+    }
 
 
 //    moveTo(path.back());
@@ -126,6 +141,60 @@ void Robot::Game1() {
 //    }
 //    debugger.printToConsole();
 
+}
+
+
+std::array<int, 4> Robot::getDesiredLoad() {
+    return {2, 2, 2, 0};
+}
+
+bool Robot::shouldCollect() {
+
+    // if the difference is less or equal to 3.5 seconds the robot is still collecting;
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(lastCycle - timeStartedCollecting).count() <=
+        COLLECT_TIME)
+        return true;
+
+    // The robot is full; the robot cant collect items anyway
+    if (loadedCollectibles.num() >= 6)
+        return false;
+
+    // The objects color is Red
+    if (isRed(colorSensors.l) || isRed(colorSensors.r)) {
+        return loadedCollectibles.getColor(0).size() < getDesiredLoad().at(0);
+    } else if (isCyan(colorSensors.l) || isCyan(colorSensors.r)) {
+        // nothin' special here
+        return loadedCollectibles.getColor(1).size() < getDesiredLoad()[1];
+    } else if (isBlack(colorSensors.l) || isBlack(colorSensors.r)) {
+        // nothin' special here
+        return loadedCollectibles.getColor(2).size() < getDesiredLoad()[2];
+    } else if (isSuperObj(colorSensors.l) || isSuperObj(colorSensors.r)) {
+        return loadedCollectibles.getColor(3).size() < getDesiredLoad()[3];
+    }
+    // if there's no object beneath the robot, don't try to collect anything
+    return false;
+}
+
+int Robot::collect() {
+
+    // the robot is already collecting
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(lastCycle - timeStartedCollecting).count() <
+        COLLECT_TIME) {
+        // This is to prevent the robot from moving
+        wheels.set(0, 0);
+        led = 1;
+        return -1;
+    }
+        // the robot begins to collect
+    else {
+        // set collectingSince to now
+        timeStartedCollecting = lastCycle;
+
+        return (isRed(colorSensors.l) || isRed(colorSensors.r)) ? 0 :
+               (isCyan(colorSensors.l) || isCyan(colorSensors.r)) ? 1 :
+               (isBlack(colorSensors.l) || isBlack(colorSensors.r)) ? 2 :
+               (isSuperObj(colorSensors.l) || isSuperObj(colorSensors.r)) ? 3 : -1;
+    }
 }
 
 PVector Robot::collisionAvoidance(double maxForce) {
@@ -270,6 +339,28 @@ void Robot::moveTo(PVector position, double speed) {
 }
 
 void Robot::followPath(std::vector<PVector> local_path) {
+
+    unsigned int closestIndex = 0;
+    double record = std::pow(local_path.at(0).x - simPos.x, 2) +
+                    std::pow(local_path.at(0).y - simPos.y, 2);
+    for (unsigned int i = 1; i < local_path.size(); i++) {
+        const double d = std::pow(local_path.at(i).x - simPos.x, 2) +
+                         std::pow(local_path.at(i).y - simPos.y, 2);
+        if (d < record) {
+            closestIndex = i;
+            record = d;
+        }
+    }
+
+    PVector target;
+    if (closestIndex == 0) {
+        target = local_path.at(closestIndex);
+    } else {
+        target = local_path.at(closestIndex - 1);
+    }
+
+/*
+
     // Predict position 50 (arbitrary choice) frames ahead
     // This could be based on speed
     PVector predictpos = simPos + getVelocity().setMag(10);
@@ -321,10 +412,16 @@ void Robot::followPath(std::vector<PVector> local_path) {
             target += dir;
         }
     }
+*/
 
     if (target) {
-        if (geometry::dist(target, local_path.back()) < 5) {
+        const double dist = geometry::dist(target, simPos);
+        if (dist < 5) {
             moveTo(target, 1);
+        } else if (dist < 20) {
+            moveTo(target, 2);
+        } else if (dist < 50) {
+            moveTo(target, 3);
         } else {
             moveTo(target, 4);
         }
@@ -334,7 +431,9 @@ void Robot::followPath(std::vector<PVector> local_path) {
     }
 }
 
-std::vector<Collectible *> Robot::getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles, bool finishOnDeposit) {
+std::vector<Collectible *>
+Robot::getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles,
+                          bool finishOnDeposit) {
 
     // the point path
     std::vector<Collectible *> chosenCollectibles = {};
@@ -356,16 +455,26 @@ std::vector<Collectible *> Robot::getCollectiblePath(std::array<unsigned int, 4>
     // add a certain number of objects and super objects to the point path
     for (unsigned int iter = 0; iter < num; iter++) {
         unsigned int color = 0;
-        double dist = INFINITY;
+        double dist = INT_MAX;
 
         // ------------- objects [0 - red, 1 - cyan, 2 - black, 3 - super] --------------------
         for (unsigned int i = 0; i < 4; ++i) {
-            if (tLoadedObjects.getColor(i).size() <desiredLoad.at(i)) {
-                for (auto collectible : collectibles) {
-                    if ((geometry::dist(start, collectible->pos) < dist) && collectible->state != 2
-                        && std::find(collectibles.begin(), collectibles.end(), collectible) == collectibles.end()) {
-                        curCollectible = collectible;
-                        dist = geometry::dist(start, collectible->pos);
+            if (tLoadedObjects.getColor(i).size() < desiredLoad.at(i)) {
+                for (auto collectible: collectibles) {
+                    const double d = geometry::dist(start, collectible->pos);
+
+                    const bool visitedCondition = !curCollectible ||
+                                                  (curCollectible->visited > collectible->visited + 2 &&
+                                                   curCollectible->state != 1);
+                    const bool distCondition = d < dist;
+
+                    if ((distCondition || visitedCondition) && collectible->state != 2) {
+
+                        if (std::find(chosenCollectibles.begin(), chosenCollectibles.end(), collectible) ==
+                            chosenCollectibles.end()) {
+                            curCollectible = collectible;
+                            dist = d;
+                        }
                     }
                 }
             }
@@ -377,7 +486,7 @@ std::vector<Collectible *> Robot::getCollectiblePath(std::array<unsigned int, 4>
             chosenCollectibles.push_back(curCollectible);
             tLoadedObjects.add(curCollectible);
 
-            ROBOT_LOG("Added Collectible at " << curCollectible->pos << " to collectible path")
+            ROBOT_ERROR("Added Collectible at " << curCollectible->pos << " to collectible path")
 
         } else {
             return chosenCollectibles;

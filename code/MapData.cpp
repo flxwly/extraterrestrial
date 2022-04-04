@@ -272,14 +272,14 @@ std::vector<PVector> Field::AStarFindPath(PVector start, PVector end) {
                                     // Check if inbetween nodes are one a line
                                     if (geometry::distToLine(cur, partner, tPath[k]) > 1) {
                                         // inbetween node is not on a line, go back one and break out of the checking loop
-                                        i = j - 1;
-                                        goto nested_break;
+                                        k = j;
+                                        j = tPath.size();
                                     }
                                 }
                             }
-                            nested_break:;
                         }
                         path.push_back(start);
+                        PATHFINDER_LOG("Returning " << path.size() << " Nodes")
                         return path;
 
                     }

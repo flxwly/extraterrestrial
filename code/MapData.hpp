@@ -133,7 +133,7 @@ public:
     void clearTempWall(double lifetime);
 
     Collectible *
-    getCollectible(PVector pos, double angle, double uncertainty, int color, std::vector<int> possibleStates);
+    getCollectible(PVector pos, double angle, double uncertainty, int color, std::vector<int> possibleStates = {0, 1, 2});
 
     /// Getter method for collectibles
     std::vector<Collectible *> getCollectibles(const std::vector<unsigned int> &colors = {0, 1, 2, 3});

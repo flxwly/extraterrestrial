@@ -1,15 +1,10 @@
 ﻿#define CsBot_AI_H //DO NOT delete this line
 #define CsBot_AI_C  //DO NOT delete this line
 
-#include <windows.h>
-#include <cstdio>
-#include <thread>
 // Libs
 #include "libs/PPSettings.hpp"
 #include "libs/CoSpaceFunctions.hpp"
-#include "libs/ColorRecognition.hpp"
 #include "Robot.hpp"
-#include "libs/ConsolePainter.hpp"
 
 Robot *robot = nullptr;
 
@@ -34,5 +29,23 @@ void Game1() {
 	MISC_LOG("Running Game1");
 	robot->Update();
 	robot->Game1();
-
 }
+
+#ifdef RUNNING_WITHOUT_COSPACE
+int main() {
+
+    CurGame = 1;
+
+    static int AI_IN[] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0};
+    static int AI_OUT[] = {0, 0, 0, 0};
+
+    In = reinterpret_cast<volatile int *>(&AI_IN);
+    Out = reinterpret_cast<volatile int *>(&AI_OUT);
+
+    Setup();
+    StartUpdateLoop();
+    while(RunUpdateLoop) {
+
+    };
+}
+#endif
