@@ -63,7 +63,7 @@ void Robot::Game0() {
     // Add moving objects / things that are not in the map
     for (auto collision: ultraSonicContactPosition()) {
         if (collision) {
-            if (map0.getCharAtRealPos(collision) == MAP_EMPTY_TILE) {
+            if (map0.getMapAtRealPos(collision) == MAP_EMPTY_TILE) {
                 map0.spawnTempWall(collision, 1);
             }
         }
@@ -83,7 +83,7 @@ void Robot::Game1() {
     // Add moving objects / things that are not in the map
     for (auto collision: ultraSonicContactPosition()) {
         if (collision) {
-            if (map1.getCharAtRealPos(collision) == MAP_EMPTY_TILE) {
+            if (map1.getMapAtRealPos(collision) == MAP_EMPTY_TILE) {
                 map1.spawnTempWall(collision, 1);
             }
         }
