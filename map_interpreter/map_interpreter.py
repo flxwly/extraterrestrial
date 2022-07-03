@@ -491,10 +491,10 @@ def main():
     print("setting up...")
 
     # mapData = MapData(img_dirs=["debugging"], fd_dirs=FieldFD)
-    mapData = MapData(img_files={"World1": [FieldA, [96, 72]], "World2": [FieldB, [144, 108]]}, fd_file=FieldFD)
+    mapData = MapData(img_files={"World1": [FieldA, [270, 180]], "World2": [FieldB, [360, 270]]}, fd_file=FieldFD)
     mapData.save(10)
 
-    # write(mapData)
+    write(mapData)
 
 
 if __name__ == '__main__':

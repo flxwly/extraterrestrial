@@ -213,7 +213,7 @@ public:
      */
     void moveTo(PVector position, double speed);
 
-    void followPath(std::vector<PVector> local_path);
+    void followPath(std::vector<PVector> localPath);
 
     std::array<PVector, 3> ultraSonicContactPosition();
 

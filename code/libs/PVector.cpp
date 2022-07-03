@@ -29,6 +29,11 @@ PVector PVector::rotate(double angle) {
     return set(x * cos(angle) - y * sin(angle), x * sin(angle) + y * cos(angle));
 }
 
+
+PVector PVector::rotate(PVector &pVector, double angle) {
+    return {pVector.x * cos(angle) - pVector.y * sin(angle), pVector.x * sin(angle) + pVector.y * cos(angle)};
+}
+
 PVector PVector::round() {
     return set(std::round(x), std::round(y));
 }

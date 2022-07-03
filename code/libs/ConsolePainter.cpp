@@ -1,8 +1,10 @@
 #include "ConsolePainter.hpp"
 
 
-ConsolePainter::ConsolePainter(const std::string &title) : coordBufSize{initialBufferWidth, initialBufferHeight}, coordBufCoord{0, 0},
-                                                           srcWriteRect{0, 0, initialBufferWidth - 1, initialBufferHeight - 1} {
+ConsolePainter::ConsolePainter(const std::string &title) : coordBufSize{initialBufferWidth, initialBufferHeight},
+                                                           coordBufCoord{0, 0},
+                                                           srcWriteRect{0, 0, initialBufferWidth - 1,
+                                                                        initialBufferHeight - 1} {
 
     bufWidth = coordBufSize.X;
     bufHeight = coordBufSize.Y;
@@ -22,26 +24,13 @@ ConsolePainter::ConsolePainter(const std::string &title) : coordBufSize{initialB
         return;
     }
 
-    for (auto &i : chiBuffer) {
+    for (auto &i: chiBuffer) {
         i.Char.UnicodeChar = NULL_CHAR;
     }
 
     SetConsoleTitle(title.c_str());
     SetConsoleScreenBufferSize(hScreenBuffer, coordBufSize);
     SetConsoleWindowInfo(hScreenBuffer, TRUE, &srcWriteRect);
-}
-
-
-void ConsolePainter::paintBuffer(CHAR_INFO data[], COORD bufSize, int x, int y) {
-    for (int i = 0; i < bufSize.X; ++i) {
-        for (int j = 0; j < bufSize.Y; ++j) {
-            if (data[i + bufSize.X * j].Char.UnicodeChar != NULL_CHAR and x + i < coordBufSize.X and
-                j + y < coordBufSize.X) {
-                chiBuffer[x + i + (y + j) * coordBufSize.X] = data[i + j * bufSize.X];
-            }
-        }
-    }
-
 }
 
 void ConsolePainter::printToConsole() {
@@ -186,3 +175,44 @@ ConsolePainter::lineLineIntersection(std::pair<int, int> p1, std::pair<int, int>
 // Return the point of intersection
     return {round(x), round(y)};
 }
+
+
+void ConsolePainter::paintBuffer(CHAR_INFO data[], COORD bufSize, int x, int y) {
+    for (int i = 0; i < bufSize.X; ++i) {
+        for (int j = 0; j < bufSize.Y; ++j) {
+            if (x + i < coordBufSize.X and y + j < coordBufSize.X and
+                data[i + bufSize.X * j].Char.UnicodeChar != NULL_CHAR) {
+
+                chiBuffer[x + i + (y + j) * coordBufSize.X] = data[i + j * bufSize.X];
+            }
+        }
+    }
+
+}
+
+void ConsolePainter::paintBuffer(std::string data, int bufHeight, int x, int y, bool flippedY) {
+    const int width = data.length() / bufHeight;
+
+    if (flippedY) {
+
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < bufHeight; ++j) {
+                if (x + i < coordBufSize.X and j + y < coordBufSize.X) {
+                    chiBuffer[x + i + (y + j) * coordBufSize.X] = UnicodeChar(data.at(i + (bufHeight - j - 1) * width), BACKGROUND_GREEN + FOREGROUND_RED);
+                }
+            }
+        }
+
+    } else {
+
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < bufHeight; ++j) {
+                if (x + i < coordBufSize.X and j + y < coordBufSize.X) {
+                    chiBuffer[x + i + (y + j) * coordBufSize.X] = UnicodeChar(data.at(i + j * width), BACKGROUND_GREEN + FOREGROUND_RED);
+                }
+            }
+        }
+    }
+}
+
+

@@ -89,6 +89,16 @@ public:
      * @returns a copy this PVector after executing the method
      *
     */
+
+    static PVector rotate(PVector &pVector, double angle);
+
+    /** rotates a PVector by an angle (in radians)
+     *
+     * @returns the rotated PVector
+     *
+     * @note this is the static version of PVector::rotate();
+     *
+    */
     PVector round();
 
     static double dot(PVector v1, PVector v2);

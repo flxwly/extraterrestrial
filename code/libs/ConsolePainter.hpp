@@ -34,13 +34,13 @@ public:
     // TODO: Might implement it later
     void resize(int width, int height);
 
-
     void clear();
     void paintPixel(int x, int y, CHAR_INFO charInfo);
     void paintRectangle(int topLeftX, int topLeftY, int width, int height, CHAR_INFO charInfo);
     void paintCircle(int centerX, int centerY, int radius, CHAR_INFO charInfo);
     void paintConvexPolygon(std::vector<std::pair<int, int>> vertices, CHAR_INFO charInfo);
-    void paintBuffer(CHAR_INFO data[], COORD bufSize, int x, int y);
+    void paintBuffer(CHAR_INFO data[], COORD bufSize, int x = 0, int y = 0);
+    void paintBuffer(std::string data, int bufHeight, int x = 0, int y = 0, bool flippedY = false);
 
 
     void printToConsole();
