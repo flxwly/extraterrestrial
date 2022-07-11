@@ -93,10 +93,10 @@ void Robot::Game1() {
 
 
     // Pathfinding
-    if (path.empty() || geometry::dist(path.back(), simPos) < 5) {
+    if (path.empty()) {
         ROBOT_LOG("Running path finding")
 
-        std::vector<Collectible *> collectibles = getCollectiblePath({2, 2, 2, 0}, map1.getCollectibles(), false);
+        std::vector<Collectible *> collectibles = getCollectiblePath(getDesiredLoad(), map1.getCollectibles(), false);
         if (collectibles.empty()) {
             ROBOT_ERROR("No Collectible Path found!")
             return;
@@ -128,9 +128,22 @@ void Robot::Game1() {
             collectible->state = 2;
             loadedCollectibles.add(collectible);
         }
+        if (geometry::dist(path.front(), simPos) < 5) {
+            path.erase(path.begin());
+        }
 
     } else {
         followPath(path);
+        if (geometry::dist(path.front(), simPos) < 5) {
+            auto collectible = map1.getCollectible(path.front(), compass, 2, -1);
+            if (collectible) {
+                collectible->visited += 1;
+                if (collectible->visited >= 20) {
+                    collectible->state = 2;
+                    path.erase(path.begin());
+                }
+            }
+        }
     }
 
 
@@ -463,7 +476,7 @@ void Robot::followPath(std::vector<PVector> local_path) {
 }
 
 std::vector<Collectible *>
-Robot::getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles,
+Robot::getCollectiblePath(std::array<int, 4> desiredLoad, std::vector<Collectible *> collectibles,
                           bool finishOnDeposit) {
 
     // the point path

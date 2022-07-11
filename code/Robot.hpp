@@ -205,9 +205,7 @@ public:
      * @param finishOnDeposit Whether the path should end on a deposit or not
      * @return a path of pointers to collectibles
      */
-    std::vector<Collectible *> getCollectiblePath(std::array<unsigned int, 4> desiredLoad, std::vector<Collectible *> collectibles, bool finishOnDeposit);
-
-    std::array<unsigned int, 4> getDesiredLoad();
+    std::vector<Collectible *> getCollectiblePath(std::array<int, 4> desiredLoad, std::vector<Collectible *> collectibles, bool finishOnDeposit);
 
 
     /*! Lets the robot move towards a position
