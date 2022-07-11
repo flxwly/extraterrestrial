@@ -29,7 +29,7 @@ bool Collectible::isCorrectCollectible(PVector robotPos, double angle, double un
             || geometry::dist(robotPos + (geometry::angle2Vector((angle + COLOR_SENSOR_ANGLE_OFFSET) * M_PI / 180) *
                                           COLOR_SENSOR_DIST_TO_CORE), pos) < uncertainty)
            && (possibleStates.empty()
-           || std::find(possibleStates.begin(), possibleStates.end(), state) != possibleStates.end());
+               || std::find(possibleStates.begin(), possibleStates.end(), state) != possibleStates.end());
 }
 
 bool Collectible::operator==(const Collectible &lhs) const {
@@ -57,7 +57,7 @@ Field::Field(const int &width, const int &height,
     Map_ = map;
 
     // field::Collectibles: Collectible Points of the field
-    for (auto collectible : collectibles) {
+    for (auto collectible: collectibles) {
         if (collectible.color <= 3) {
             collectible.pos.x /= scaleX;
             collectible.pos.y /= scaleY;
@@ -78,9 +78,9 @@ std::vector<PVector> Field::getDeposits() {
 std::vector<Collectible *> Field::getCollectibles(const std::vector<unsigned int> &colors) {
     std::vector<Collectible *> returnVector = {};
     // return after all indices have been checked.
-    for (unsigned int index : colors) {
+    for (unsigned int index: colors) {
         if (index <= 3) {
-            for (Collectible &collectible : Collectibles_[index]) {
+            for (Collectible &collectible: Collectibles_[index]) {
                 returnVector.push_back(&collectible);
             }
         } else {
@@ -95,11 +95,13 @@ std::vector<Collectible *> Field::getCollectibles(const std::vector<unsigned int
 
 void Field::spawnTempWall(PVector pos, int r) {
 
-    tempWallTiles_.push_back({std::chrono::steady_clock::now(), {}});
+    tempWallTiles_.push_back(std::pair<std::chrono::time_point<std::chrono::steady_clock>, std::list<int>>(
+            std::chrono::steady_clock::now(), {}
+    ));
 
-    const int centerX = static_cast<int>(round(pos.x * scale_.x));
-    const int centerY = static_cast<int>(round(pos.y * scale_.y));
-    const int radius = static_cast<int>(round(pos.x * geometry::dist({0, 0}, scale_)));
+    const int centerX = static_cast<int>(pos.x * scale_.x);
+    const int centerY = static_cast<int>(pos.y * scale_.y);
+    const int radius = static_cast<int>(pos.x * geometry::dist({0, 0}, scale_));
     int index;
 
     for (int x = -radius + centerX; x < radius + centerX; ++x) {
@@ -114,7 +116,7 @@ void Field::spawnTempWall(PVector pos, int r) {
 
             if (Map_[index] == MAP_EMPTY_TILE) {
                 tempWallTiles_.back().second.push_back(index);
-                Map_.at(index) = MAP_TEMP_WALL_TILE;
+                Map_[index] = MAP_TEMP_WALL_TILE;
             }
         }
     }
@@ -129,7 +131,7 @@ void Field::clearTempWall(double lifetime) {
     while (!tempWallTiles_.empty()) {
         if (std::chrono::duration<double, std::milli>(
                 std::chrono::steady_clock::now() - tempWallTiles_.front().first).count() >= lifetime) {
-            for (auto index : tempWallTiles_.front().second) {
+            for (auto index: tempWallTiles_.front().second) {
                 Map_.at(index) = MAP_EMPTY_TILE;
             }
 
@@ -159,7 +161,7 @@ Field::getCollectible(PVector robotPos, double angle, double uncertainty, int co
         FIELD_ERROR(color << " is an invalid color")
     }
 
-    for (auto collectible : collectibles) {
+    for (auto collectible: collectibles) {
         if (collectible->isCorrectCollectible(robotPos, angle, uncertainty, possibleStates)) {
             return collectible;
         }
@@ -228,7 +230,7 @@ std::vector<PVector> Field::AStarFindPath(PVector start, PVector end) {
         int u = std::get<1>(pq.top());
         pq.pop(); // Get top element
 
-        for (auto e : {-width_ - 1, -width_ + 1, +width_ - 1, +width_ + 1, +1, -1, +width_, -width_}) {
+        for (auto e: {-width_ - 1, -width_ + 1, +width_ - 1, +width_ + 1, +1, -1, +width_, -width_}) {
             int v = u + e; // neighbor node
             if (((e == 1 || e == -width_ + 1 || e == width_ + 1) && (v % width_ == 0)) // x-bounds
                 || ((e == -1 || e == -width_ - 1 || e == width_ - 1) && (u % width_ == 0)))
@@ -324,7 +326,7 @@ char Field::getMapAt(int x, int y) {
 }
 
 char Field::getMapAtRealPos(PVector pos) {
-    return Map_.at(idx(static_cast<int>(round(pos.x * scale_.x)), static_cast<int>(round(pos.y * scale_.y))));
+    return getMapAt(static_cast<int>(pos.x * scale_.x), static_cast<int>(pos.y * scale_.y));
 }
 
 
@@ -332,7 +334,7 @@ int Field::getHeight() const {
     return height_;
 }
 
-[[maybe_unused]] int Field::getWidth() {
+[[maybe_unused]] int Field::getWidth() const {
     return width_;
 }
 

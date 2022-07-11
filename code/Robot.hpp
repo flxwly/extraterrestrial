@@ -4,6 +4,7 @@
 #include <list>
 #include <chrono>
 #include <Windows.h>
+#include <random>
 
 #include "libs/ColorRecognition.hpp"
 #include "libs/PVector.hpp"
@@ -125,6 +126,9 @@ public:
  */
 
 class Robot {
+
+private:
+    std::default_random_engine randomNumberGenerator;
 
 public:
     volatile int *In, *Out = nullptr;

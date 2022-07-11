@@ -142,7 +142,7 @@ public:
     /// Getter for the size
     [[nodiscard]] PVector getScale() const;
 
-    int getWidth();
+    int getWidth() const;
     int getHeight() const;
 
     std::string getMap();

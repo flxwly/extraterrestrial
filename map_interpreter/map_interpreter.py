@@ -469,7 +469,7 @@ def write(data: MapData):
     header_part += data[0] + "\n"
     header_part += "#endif // !MAPDATA_HPP"
 
-    with open("../code/MapData.cpp") as f:
+    with open("../code/Data.cpp") as f:
         parts = f.read().split(data_begin)
         code_part = parts[0]
 
@@ -481,7 +481,7 @@ def write(data: MapData):
             print("Writing header file")
             f.write(header_part)
 
-    with open("../code/MapData.cpp", "w+") as f:
+    with open("../code/Data.cpp", "w+") as f:
         if code_part is not f.read():
             print("Writing code file")
             f.write(code_part)
